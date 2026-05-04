@@ -1,0 +1,25 @@
+[package]
+name = "bundu-workos"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "WorkOS REST client for Bundu Identity — sole integration boundary with WorkOS"
+
+[dependencies]
+bundu-identity-core = { path = "../bundu-identity-core" }
+serde.workspace = true
+serde_json.workspace = true
+reqwest.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+thiserror.workspace = true
+async-trait.workspace = true
+tracing.workspace = true
+url = "2.5"
+
+[dev-dependencies]
+tokio = { workspace = true }
+wiremock.workspace = true

@@ -1,0 +1,41 @@
+[package]
+name = "bundu-identity-server"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Bundu Identity HTTP gateway — axum service binding WorkOS, Supabase, Cloudflare Queues"
+
+[[bin]]
+name = "bundu-identity-server"
+path = "src/main.rs"
+
+[dependencies]
+bundu-identity-core = { path = "../bundu-identity-core" }
+bundu-jwt = { path = "../bundu-jwt" }
+bundu-workos = { path = "../bundu-workos" }
+bundu-supabase = { path = "../bundu-supabase" }
+bundu-service-bus = { path = "../bundu-service-bus" }
+
+tokio.workspace = true
+axum.workspace = true
+tower.workspace = true
+tower-http.workspace = true
+hyper.workspace = true
+
+serde.workspace = true
+serde_json.workspace = true
+
+uuid.workspace = true
+chrono.workspace = true
+
+thiserror.workspace = true
+anyhow.workspace = true
+
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+config.workspace = true
+dotenvy.workspace = true

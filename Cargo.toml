@@ -1,69 +1,22 @@
-[workspace]
-resolver = "2"
-members = [
-    "crates/bundu-identity-server",
-    "crates/bundu-identity-core",
-    "crates/bundu-workos",
-    "crates/bundu-jwt",
-    "crates/bundu-supabase",
-    "crates/bundu-service-bus",
-]
-
-[workspace.package]
+[package]
+name = "bundu-vocab"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.83"
 license = "Apache-2.0"
 authors = ["Bundu Foundation <foundation@bundu.org>"]
-repository = "https://github.com/bundu-labs/bundu-identity"
-homepage = "https://id.mukoko.com"
-description = "Bundu Identity — sovereign identity gateway for the Bundu Family ecosystem"
+repository = "https://github.com/bundu-labs/identity"
+homepage = "https://vocab.bundu.org"
+description = "The Bundu vocabulary — RDF terms for concepts schema.org has no word for"
 
-[workspace.dependencies]
-# Async runtime + HTTP
-tokio = { version = "1.40", features = ["full"] }
-axum = { version = "0.7", features = ["macros", "tracing"] }
-tower = "0.5"
-tower-http = { version = "0.6", features = ["cors", "trace", "compression-br", "request-id"] }
-hyper = "1.5"
-reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
-
-# Serialisation
+[dependencies]
+tokio = { version = "1.40", features = ["macros", "rt-multi-thread", "signal"] }
+axum = "0.7"
+tower-http = { version = "0.6", features = ["trace", "compression-br"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-
-# Database
-sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "json"], default-features = false }
-
-# JWT signing
-jsonwebtoken = "9.3"
-
-# Identifiers and time
-uuid = { version = "1.10", features = ["v4", "v7", "serde"] }
-chrono = { version = "0.4", features = ["serde"] }
-
-# Errors
-thiserror = "1.0"
-anyhow = "1.0"
-
-# Observability
 tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
-opentelemetry = "0.27"
-opentelemetry-otlp = { version = "0.27", features = ["http-proto"] }
-tracing-opentelemetry = "0.28"
-
-# Configuration
-config = "0.14"
-dotenvy = "0.15"
-
-# Testing
-mockito = "1.5"
-wiremock = "0.6"
-
-# Misc
-once_cell = "1.20"
-async-trait = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 [profile.release]
 opt-level = 3
@@ -71,7 +24,3 @@ lto = "thin"
 codegen-units = 1
 strip = "symbols"
 panic = "abort"
-
-[profile.dev]
-opt-level = 0
-debug = true

@@ -23,7 +23,7 @@ use axum::{
     Router,
 };
 use serde_json::{json, Value};
-use terms::{Kind, Term};
+use terms::{Domain, Term};
 use tower_http::{compression::CompressionLayer, trace::TraceLayer};
 
 /// The namespace root. Every term URI is this plus the term id.
@@ -115,14 +115,26 @@ fn term_jsonld(t: &Term) -> Value {
     });
 
     let obj = v.as_object_mut().expect("object");
+    obj.insert("bundu:subjectArea".into(), json!(t.domain.label()));
     if let Some(parent) = t.sub_class_of {
         obj.insert("rdfs:subClassOf".into(), json!({ "@id": parent }));
     }
-    if let Some(domain) = t.domain {
-        obj.insert("schema:domainIncludes".into(), json!({ "@id": domain }));
+    if let Some(applies_to) = t.domain_includes {
+        obj.insert("schema:domainIncludes".into(), json!({ "@id": applies_to }));
     }
     if let Some(range) = t.range {
         obj.insert("schema:rangeIncludes".into(), json!({ "@id": range }));
+    }
+    if let Some(values) = t.values {
+        // Enumerated properties publish their permitted values, so an
+        // implementer never has to guess the spelling of one.
+        obj.insert(
+            "schema:valueReference".into(),
+            json!(values
+                .iter()
+                .map(|(v, desc)| json!({ "@type": "rdfs:Literal", "value": v, "rdfs:comment": desc }))
+                .collect::<Vec<_>>()),
+        );
     }
     v
 }
@@ -158,19 +170,27 @@ async fn index(headers: HeaderMap) -> Response {
         }));
     }
 
-    let section = |kind: Kind| -> String {
-        terms::of_kind(kind)
-            .map(|t| {
-                format!(
-                    r#"<li><a href="/{id}"><code>{id}</code></a><span>{label}</span><p>{comment}</p></li>"#,
-                    id = t.id,
-                    label = t.label,
-                    comment = esc(t.comment),
-                )
-            })
-            .collect::<Vec<_>>()
-            .join("\n")
-    };
+    // Grouped by subject area rather than by class/property: someone
+    // arriving here is looking for a topic, not a JSON-LD construct.
+    let sections = Domain::ALL
+        .iter()
+        .filter(|d| terms::in_domain(**d).next().is_some())
+        .map(|d| {
+            let items = terms::in_domain(*d)
+                .map(|t| {
+                    format!(
+                        r#"<li><a href="/{id}"><code>{id}</code></a><span>{kind}</span><p>{comment}</p></li>"#,
+                        id = t.id,
+                        kind = t.kind.label().to_lowercase(),
+                        comment = esc(t.comment),
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join("\n");
+            format!("<section>\n  <h2>{}</h2>\n  <ul class=\"terms\">{items}</ul>\n</section>", d.label())
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
 
     html(page(
         "The Bundu vocabulary",
@@ -178,18 +198,11 @@ async fn index(headers: HeaderMap) -> Response {
             r#"<header>
   <p class="eyebrow">vocab.bundu.org</p>
   <h1>The Bundu vocabulary</h1>
-  <p class="lede">RDF terms for concepts schema.org has no word for. Every term
-  here had to earn its place: if schema.org could express it, we use schema.org
-  and add nothing.</p>
+  <p class="lede">RDF terms for concepts schema.org has no word for, published
+  for every Bundu standard across every domain. Each term had to earn its
+  place: if schema.org could express it, we use schema.org and add nothing.</p>
 </header>
-<section>
-  <h2>Classes</h2>
-  <ul class="terms">{classes}</ul>
-</section>
-<section>
-  <h2>Properties</h2>
-  <ul class="terms">{properties}</ul>
-</section>
+{sections}
 <section>
   <h2>Using these terms</h2>
   <p>Fetch any term URI with <code>Accept: application/ld+json</code> for its
@@ -200,9 +213,11 @@ async fn index(headers: HeaderMap) -> Response {
   <code>schema:Organization</code> carrying
   <code>additionalType: {ns}Family</code>, so consumers that have never heard of
   this vocabulary still read something valid.</p>
+  <p>Term URIs are flat and permanent. Subject areas group this page only —
+  they never appear in a URI, because a path segment encodes a taxonomy that
+  will eventually be wrong, and by then the URI is already in someone's data.</p>
 </section>"#,
-            classes = section(Kind::Class),
-            properties = section(Kind::Property),
+            sections = sections,
             ns = NAMESPACE,
         ),
     ))
@@ -219,12 +234,13 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
 
     let mut rows = vec![
         ("Type".to_string(), t.kind.label().to_string()),
+        ("Subject area".to_string(), t.domain.label().to_string()),
         ("URI".to_string(), format!("<code>{NAMESPACE}{}</code>", t.id)),
     ];
     if let Some(p) = t.sub_class_of {
         rows.push(("Subclass of".into(), format!("<code>{p}</code>")));
     }
-    if let Some(d) = t.domain {
+    if let Some(d) = t.domain_includes {
         rows.push(("Applies to".into(), format!("<code>{d}</code>")));
     }
     if let Some(r) = t.range {
@@ -236,6 +252,20 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
         .collect::<Vec<_>>()
         .join("\n");
 
+    let values_section = t.values.map_or_else(String::new, |values| {
+        let rows = values
+            .iter()
+            .map(|(v, desc)| {
+                format!(
+                    "<tr><th><code>{v}</code></th><td>{}</td></tr>",
+                    esc(desc)
+                )
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+        format!("<section>\n  <h2>Permitted values</h2>\n  <table>{rows}</table>\n</section>")
+    });
+
     html(page(
         t.label,
         &format!(
@@ -245,6 +275,7 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
   <p class="lede">{comment}</p>
 </header>
 <table>{table}</table>
+{values_section}
 <section>
   <h2>Why this term exists</h2>
   <p>{rationale}</p>
@@ -259,6 +290,7 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
             comment = esc(t.comment),
             rationale = esc(t.rationale),
             table = table,
+            values_section = values_section,
             ns = NAMESPACE,
         ),
     ))

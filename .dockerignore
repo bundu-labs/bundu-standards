@@ -1,0 +1,11 @@
+# The build happens inside the image — shipping the host's build output makes
+# the context hundreds of megabytes and slows every deploy.
+target/
+.git/
+.github/
+
+# Docs and local files the binary does not need.
+*.md
+!README.md
+.env
+.env.*

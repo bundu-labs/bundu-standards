@@ -299,3 +299,174 @@ pub fn find(id: &str) -> Option<&'static Term> {
 pub fn in_domain(domain: Domain) -> impl Iterator<Item = &'static Term> {
     TERMS.iter().filter(move |t| t.domain == domain)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::HashSet;
+
+    /// A term id is the last segment of a permanent public URI. Anything
+    /// needing escaping, or containing a path separator, would either break
+    /// the URI or smuggle a taxonomy into it.
+    #[test]
+    fn ids_are_flat_and_uri_safe() {
+        for t in TERMS {
+            assert!(!t.id.is_empty(), "empty id");
+            assert!(
+                !t.id.contains('/'),
+                "{}: ids must be flat — subject areas group the index, never the URI",
+                t.id
+            );
+            assert!(
+                t.id.chars().all(|c| c.is_ascii_alphanumeric()),
+                "{}: ids must be plain ASCII alphanumerics so the URI never needs escaping",
+                t.id
+            );
+        }
+    }
+
+    #[test]
+    fn ids_are_unique() {
+        let mut seen = HashSet::new();
+        for t in TERMS {
+            assert!(seen.insert(t.id), "duplicate term id: {}", t.id);
+        }
+    }
+
+    /// The README sets this bar explicitly: a term without a defensible
+    /// rationale does not belong. Enforcing it here stops the vocabulary
+    /// growing by accretion.
+    #[test]
+    fn every_term_justifies_itself() {
+        for t in TERMS {
+            assert!(
+                t.rationale.len() > 80,
+                "{}: rationale must explain what was tried first and why \
+                 schema.org did not fit",
+                t.id
+            );
+            assert!(!t.comment.is_empty(), "{}: missing definition", t.id);
+            assert!(!t.label.is_empty(), "{}: missing label", t.id);
+        }
+    }
+
+    #[test]
+    fn classes_and_properties_carry_the_right_fields() {
+        for t in TERMS {
+            match t.kind {
+                Kind::Class => {
+                    assert!(
+                        t.sub_class_of.is_some(),
+                        "{}: a class must name its schema.org parent, or consumers \
+                         that do not know this vocabulary read nothing at all",
+                        t.id
+                    );
+                    assert!(t.range.is_none(), "{}: classes have no range", t.id);
+                }
+                Kind::Property => {
+                    assert!(
+                        t.domain_includes.is_some() && t.range.is_some(),
+                        "{}: a property must say what it applies to and what its \
+                         value is",
+                        t.id
+                    );
+                    assert!(
+                        t.sub_class_of.is_none(),
+                        "{}: properties are not subclasses",
+                        t.id
+                    );
+                }
+            }
+        }
+    }
+
+    /// Only properties enumerate, and an enumeration with an undocumented
+    /// value is worse than none — the implementer guesses a spelling.
+    #[test]
+    fn enumerations_are_documented_and_unique() {
+        for t in TERMS {
+            let Some(values) = t.values else { continue };
+            assert_eq!(
+                t.kind,
+                Kind::Property,
+                "{}: only properties enumerate",
+                t.id
+            );
+            assert!(!values.is_empty(), "{}: empty enumeration", t.id);
+
+            let mut seen = HashSet::new();
+            for (value, description) in values {
+                assert!(seen.insert(value), "{}: duplicate value {value}", t.id);
+                assert!(
+                    !description.is_empty(),
+                    "{}: value {value} has no description",
+                    t.id
+                );
+                assert!(
+                    value.chars().all(|c| c.is_ascii_lowercase() || c == '_'),
+                    "{}: value {value} should be lower_snake_case",
+                    t.id
+                );
+            }
+        }
+    }
+
+    /// `Domain::ALL` drives the index. A domain missing from it would hide
+    /// every term in that subject area from the only page listing them.
+    #[test]
+    fn every_domain_appears_in_the_index() {
+        for t in TERMS {
+            assert!(
+                Domain::ALL.contains(&t.domain),
+                "{}: subject area {:?} is missing from Domain::ALL, so the term \
+                 would not appear on the index page",
+                t.id,
+                t.domain
+            );
+        }
+    }
+
+    #[test]
+    fn every_term_is_findable() {
+        for t in TERMS {
+            assert!(find(t.id).is_some(), "{} not resolvable via find()", t.id);
+        }
+        assert!(find("NotATerm").is_none());
+        assert!(find("family").is_none(), "lookup must be case-sensitive");
+    }
+
+    #[test]
+    fn in_domain_partitions_the_vocabulary() {
+        let counted: usize = Domain::ALL.iter().map(|d| in_domain(*d).count()).sum();
+        assert_eq!(
+            counted,
+            TERMS.len(),
+            "every term must belong to exactly one subject area"
+        );
+    }
+
+    #[test]
+    fn recognition_basis_covers_the_researched_cases() {
+        // Each value exists because a real jurisdiction produced it. Dropping
+        // one silently reintroduces the bug the term was added to fix:
+        // an unregistered-but-real entity looking like a registered one with
+        // missing paperwork.
+        let t = find("recognitionBasis").expect("term present");
+        let values: Vec<_> = t
+            .values
+            .expect("enumerated")
+            .iter()
+            .map(|(v, _)| *v)
+            .collect();
+        for expected in [
+            "customary",      // Zimbabwean communal land under a village head
+            "statutory",      // Indonesian desa adat
+            "registry",       // Mexican ejido
+            "member_consent", // South African stokvel
+            "contested",      // overlapping Zimbabwean Acts
+            "none",
+        ] {
+            assert!(values.contains(&expected), "missing value: {expected}");
+        }
+    }
+}

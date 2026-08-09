@@ -132,7 +132,9 @@ fn term_jsonld(t: &Term) -> Value {
             "schema:valueReference".into(),
             json!(values
                 .iter()
-                .map(|(v, desc)| json!({ "@type": "rdfs:Literal", "value": v, "rdfs:comment": desc }))
+                .map(
+                    |(v, desc)| json!({ "@type": "rdfs:Literal", "value": v, "rdfs:comment": desc })
+                )
                 .collect::<Vec<_>>()),
         );
     }
@@ -235,7 +237,10 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
     let mut rows = vec![
         ("Type".to_string(), t.kind.label().to_string()),
         ("Subject area".to_string(), t.domain.label().to_string()),
-        ("URI".to_string(), format!("<code>{NAMESPACE}{}</code>", t.id)),
+        (
+            "URI".to_string(),
+            format!("<code>{NAMESPACE}{}</code>", t.id),
+        ),
     ];
     if let Some(p) = t.sub_class_of {
         rows.push(("Subclass of".into(), format!("<code>{p}</code>")));
@@ -255,12 +260,7 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
     let values_section = t.values.map_or_else(String::new, |values| {
         let rows = values
             .iter()
-            .map(|(v, desc)| {
-                format!(
-                    "<tr><th><code>{v}</code></th><td>{}</td></tr>",
-                    esc(desc)
-                )
-            })
+            .map(|(v, desc)| format!("<tr><th><code>{v}</code></th><td>{}</td></tr>", esc(desc)))
             .collect::<Vec<_>>()
             .join("\n");
         format!("<section>\n  <h2>Permitted values</h2>\n  <table>{rows}</table>\n</section>")
@@ -399,4 +399,88 @@ ul.terms li p {{ margin: .35em 0 0; color: var(--muted); font-size: .93rem; }}
 </main></body>
 </html>"#
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::http::HeaderValue;
+
+    fn accept(value: &str) -> HeaderMap {
+        let mut h = HeaderMap::new();
+        h.insert(header::ACCEPT, HeaderValue::from_str(value).unwrap());
+        h
+    }
+
+    /// Browsers ask for HTML explicitly; RDF tooling asks for JSON-LD or
+    /// nothing. Defaulting to JSON-LD is what makes `curl <term>` useful.
+    #[test]
+    fn content_negotiation_defaults_to_json_ld() {
+        assert!(wants_html(&accept("text/html,application/xhtml+xml")));
+        assert!(!wants_html(&accept("application/ld+json")));
+        assert!(!wants_html(&accept("*/*")));
+        assert!(!wants_html(&HeaderMap::new()));
+    }
+
+    #[test]
+    fn every_term_serialises_with_its_contract() {
+        for t in terms::TERMS {
+            let v = term_jsonld(t);
+            assert_eq!(v["@id"], format!("bundu:{}", t.id));
+            assert_eq!(v["@type"], t.kind.rdf_type());
+            assert_eq!(v["rdfs:isDefinedBy"], NAMESPACE);
+            assert!(
+                !v["bundu:rationale"].as_str().unwrap_or_default().is_empty(),
+                "{}: rationale must survive into the published JSON-LD",
+                t.id
+            );
+            assert_eq!(v["bundu:subjectArea"], t.domain.label());
+        }
+    }
+
+    #[test]
+    fn classes_publish_their_schema_org_parent() {
+        let family = terms::find("Family").unwrap();
+        let v = term_jsonld(family);
+        assert_eq!(v["rdfs:subClassOf"]["@id"], "schema:Organization");
+        // A family that did not serialise as an Organization would be
+        // invisible to every consumer that has not heard of this vocabulary.
+    }
+
+    #[test]
+    fn enumerated_properties_publish_their_values() {
+        let v = term_jsonld(terms::find("recognitionBasis").unwrap());
+        let published: Vec<&str> = v["schema:valueReference"]
+            .as_array()
+            .expect("values published")
+            .iter()
+            .map(|e| e["value"].as_str().unwrap())
+            .collect();
+        assert!(published.contains(&"customary"));
+        assert!(published.contains(&"contested"));
+        assert_eq!(published.len(), 6);
+    }
+
+    #[test]
+    fn non_enumerated_properties_publish_no_values() {
+        let v = term_jsonld(terms::find("verificationTier").unwrap());
+        assert!(v.get("schema:valueReference").is_none());
+    }
+
+    #[test]
+    fn escaping_protects_the_one_path_that_echoes_input() {
+        // The 404 page reflects a URL segment back. Everything else is
+        // compiled in, but escaping everywhere is cheaper than remembering
+        // which path is which.
+        let out = esc("<script>alert(1)</script>");
+        assert!(!out.contains('<') && !out.contains('>'));
+        assert!(out.contains("&lt;script&gt;"));
+    }
+
+    #[test]
+    fn namespace_has_a_trailing_slash() {
+        // Term URIs are built by concatenation; without it every published
+        // URI would be wrong.
+        assert!(NAMESPACE.ends_with('/'));
+    }
 }

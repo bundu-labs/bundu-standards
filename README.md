@@ -2,8 +2,9 @@
 
 > RDF terms for concepts schema.org has no word for.
 
+**Repository:** `bundu-labs/vocab`
 **Live at:** https://vocab.bundu.org
-**Licence:** Apache 2.0
+**Licence:** Apache 2.0 (code) · CC0 1.0 (the vocabulary itself)
 **Owner:** Bundu Foundation (Zimbabwe CLG)
 
 ---
@@ -19,6 +20,19 @@ That sounds trivial and mostly isn't. Plenty of published vocabularies serve
 404s at their own term URIs, and consumers quietly stop trusting them. This
 repository exists so ours resolves, forever, from a binary with no database
 and no runtime dependencies to rot.
+
+## Scope
+
+This namespace serves terms for **every Bundu standard, across every domain**.
+Identity and trust happen to be first because that is what was built first; a
+standard about health records, agricultural supply or education delivery would
+publish its terms here too.
+
+Terms carry a subject area for grouping, and **URIs stay flat** —
+`vocab.bundu.org/Family`, never `vocab.bundu.org/identity/Family`. A term URI
+becomes a permanent contract the moment someone embeds it in their data, and a
+path segment encodes a taxonomy that will eventually be wrong. schema.org keeps
+800+ terms flat for the same reason.
 
 ## Why it exists
 
@@ -52,14 +66,27 @@ does not belong.
 
 ## Terms
 
+**Identity and kinship**
+
 | Term | Kind | Extends |
 |---|---|---|
 | `Family` | class | `schema:Organization` |
 | `Community` | class | `schema:Organization` |
 | `PlaceOwner` | class | `schema:Organization` |
+
+**Trust and recognition**
+
+| Term | Kind | Value |
+|---|---|---|
+| `recognitionBasis` | property | `customary` · `statutory` · `registry` · `member_consent` · `contested` · `none` |
 | `verificationTier` | property | integer, 0–3 |
 | `ubuntuScore` | property | number |
 | `communityVouches` | property | integer |
+
+**Informal economy**
+
+| Term | Kind | Value |
+|---|---|---|
 | `isInformal` | property | boolean |
 
 ## Using it
@@ -128,4 +155,16 @@ whichever service happens to be issuing tokens.
 
 ## Licence
 
-Apache 2.0. See [LICENSE](LICENSE).
+**Code: Apache 2.0** — see [LICENSE](LICENSE). The server is software, and
+Apache's patent grant is the right instrument for it.
+
+**The vocabulary: CC0 1.0** — see [LICENSE-VOCAB](LICENSE-VOCAB). The terms and
+their definitions are content, not code, and a vocabulary's entire value is
+adoption. Attribution obligations inside machine-readable JSON-LD are
+impractical to discharge — there is nowhere in an embedded `additionalType` URI
+to put credit — and share-alike clauses make lawyers nervous about any metadata
+that touches them. schema.org's CC-BY-SA is a live example of that friction.
+
+CC0 says: take these terms, use them anywhere, no legal review needed. For
+terms describing African family and informal-economy structures that we want
+other systems to adopt, that is the point.

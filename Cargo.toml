@@ -5,7 +5,7 @@ edition = "2021"
 rust-version = "1.83"
 license = "Apache-2.0"
 authors = ["Bundu Foundation <foundation@bundu.org>"]
-repository = "https://github.com/bundu-labs/identity"
+repository = "https://github.com/bundu-labs/vocab"
 homepage = "https://vocab.bundu.org"
 description = "The Bundu vocabulary — RDF terms for concepts schema.org has no word for"
 

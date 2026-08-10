@@ -1,0 +1,183 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Org convention: feature → staging → main. Enforced here rather than by
+  # branch protection alone so the failure explains itself.
+  validate-target:
+    runs-on: ubuntu-latest
+    name: Validate PR Target
+    steps:
+      - name: Check PR target branch
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const baseBranch = context.payload.pull_request.base.ref;
+            const headBranch = context.payload.pull_request.head.ref;
+
+            if (baseBranch === 'main' && headBranch !== 'staging') {
+              core.setFailed(`❌ Direct PRs to 'main' are not allowed!\n\nOnly the 'staging' branch can be merged into 'main'.\n\nPlease:\n1. Create a PR to 'staging' first\n2. After testing on staging, create a PR from 'staging' to 'main'`);
+              return;
+            }
+
+            if (baseBranch === 'staging' && headBranch === 'main') {
+              core.setFailed(`❌ Cannot merge 'main' back into 'staging'.\n\nThe flow should be: feature → staging → main`);
+              return;
+            }
+
+            console.log(`✅ PR target is valid: ${headBranch} → ${baseBranch}`);
+
+  test:
+    runs-on: ubuntu-latest
+    name: Test & Build
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Format
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Test
+        run: cargo test --all-targets
+
+      - name: Build release
+        run: cargo build --release
+
+  # The published URIs are a permanent contract. This catches the failure
+  # mode that matters most: a term that stops resolving, or one whose
+  # definition silently changes shape.
+  contract:
+    runs-on: ubuntu-latest
+    name: Vocabulary Contract
+    needs: test
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Start server
+        run: |
+          LISTEN_ADDR=127.0.0.1:8080 ./target/release/bundu-vocab &
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:8080/health && break
+            sleep 1
+          done
+
+      - name: Every term resolves in both representations
+        run: |
+          set -euo pipefail
+          TERMS=$(curl -sf http://127.0.0.1:8080/context.jsonld \
+            | python3 -c "import json,sys; print(' '.join(k for k in json.load(sys.stdin)['@context'] if k not in ('schema','bundu')))")
+          echo "checking: $TERMS"
+          for t in $TERMS; do
+            curl -sf -o /dev/null -H 'Accept: application/ld+json' "http://127.0.0.1:8080/$t" \
+              || { echo "::error::$t does not resolve as JSON-LD"; exit 1; }
+            curl -sf -o /dev/null -H 'Accept: text/html' "http://127.0.0.1:8080/$t" \
+              || { echo "::error::$t does not resolve as HTML"; exit 1; }
+          done
+
+      - name: Content negotiation and 404 behaviour
+        run: |
+          set -euo pipefail
+          ct=$(curl -s -o /dev/null -w '%{content_type}' http://127.0.0.1:8080/Family)
+          [ "${ct%%;*}" = "application/ld+json" ] \
+            || { echo "::error::default representation must be JSON-LD, got $ct"; exit 1; }
+
+          ct=$(curl -s -o /dev/null -w '%{content_type}' -H 'Accept: text/html' http://127.0.0.1:8080/Family)
+          case "$ct" in text/html*) ;; *) echo "::error::HTML not served, got $ct"; exit 1;; esac
+
+          code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/NotATerm)
+          [ "$code" = "404" ] || { echo "::error::unknown term returned $code"; exit 1; }
+
+  comment:
+    needs: [validate-target, test, contract]
+    runs-on: ubuntu-latest
+    name: PR Status Comment
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const baseBranch = context.payload.pull_request.base.ref;
+            const headBranch = context.payload.pull_request.head.ref;
+
+            let deployInfo = '';
+            if (baseBranch === 'main') {
+              deployInfo = `
+            ### 🚀 Deployment
+            When merged, this deploys to **production**:
+            - **URL:** https://vocab.bundu.org
+            - **Fly app:** bundu-vocab (jnb)
+
+            ⚠️ Term URIs are a permanent contract. A term that has been published and embedded in someone's data must never change meaning or stop resolving.`;
+            }
+
+            const comment = `## ✅ CI Checks Passed
+
+            | Check | Status |
+            |-------|--------|
+            | Target Branch Validation | ✅ Pass |
+            | Format & Clippy | ✅ Pass |
+            | Tests | ✅ Pass |
+            | Vocabulary Contract | ✅ Pass |
+            ${deployInfo}
+
+            ---
+            <sub>Branch flow: \`${headBranch}\` → \`${baseBranch}\`</sub>`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+
+            const botComment = comments.find(c =>
+              c.user.type === 'Bot' && c.body.includes('CI Checks')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }

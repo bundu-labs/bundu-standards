@@ -1,199 +1,170 @@
-# Bundu Identity
+# Bundu vocabulary
 
-> The sovereign identity gateway for the Bundu Family ecosystem.
+> RDF terms for concepts schema.org has no word for.
 
-**Status:** Scaffold (v0.1.0) — pre-production, foundational structure in place.
-**License:** Apache 2.0
+**Repository:** `bundu-labs/vocab`
+**Live at:** https://vocab.bundu.org
+**Licence:** Apache 2.0 (code) · CC0 1.0 (the vocabulary itself)
 **Owner:** Bundu Foundation (Zimbabwe CLG)
-**Reference architecture:** [Mukoko Architecture v4.0.3](../mukoko-platform/docs/IDENTITY_MODEL_AUTH_AMENDMENT_v4_0_3.md)
 
 ---
 
 ## What this is
 
-Bundu Identity is the sole integration boundary between the Bundu ecosystem and the WorkOS authentication provider. It is a Rust HTTP service that:
+A vocabulary namespace. When something dereferences
+`https://vocab.bundu.org/Family`, it gets back a definition — JSON-LD for a
+machine, a readable page for a person, from the same URI by content
+negotiation.
 
-1. Translates WorkOS sessions into platform JWTs
-2. Resolves WorkOS users and organisations into Supabase `identity.person` and `identity.entity` rows
-3. Manages family-of-one bootstrap on signup (per v4.0.3 identity model)
-4. Publishes identity events to the service bus (Cloudflare Queues per v4.0.4)
-5. Mints platform JWTs that every other service across the ecosystem trusts
+That sounds trivial and mostly isn't. Plenty of published vocabularies serve
+404s at their own term URIs, and consumers quietly stop trusting them. This
+repository exists so ours resolves, forever, from a binary with no database
+and no runtime dependencies to rot.
 
-Every other service in the Bundu ecosystem — FastAPI services, Cloudflare Workers, Next.js applications, Capacitor mobile shells, native iOS/Android/HarmonyOS apps, Rust services like NTL and SiafuDB — **validates platform JWTs only**. They never talk to WorkOS directly. Bundu Identity is the choke point.
+## Scope
 
-## Why Rust
+This namespace serves terms for **every Bundu standard, across every domain**.
+Identity and trust happen to be first because that is what was built first; a
+standard about health records, agricultural supply or education delivery would
+publish its terms here too.
 
-- **Single binary, ~30MB image, ~50MB RAM at idle.** Deploys to Fly.io, K3s, or bare metal at Teraco identically.
-- **Memory safety and predictable latency** for an auth choke point that every authenticated request flows through.
-- **Joins the Foundation Rust trio**: NTL (transfer layer), SiafuDB (graph database), Bundu Identity (auth gateway). Frontier infrastructure built in a sovereign language stack.
-- **Apache 2.0 throughout** — owned, extensible, never licence-locked.
+Terms carry a subject area for grouping, and **URIs stay flat** —
+`vocab.bundu.org/Family`, never `vocab.bundu.org/identity/Family`. A term URI
+becomes a permanent contract the moment someone embeds it in their data, and a
+path segment encodes a taxonomy that will eventually be wrong. schema.org keeps
+800+ terms flat for the same reason.
 
-## Architecture
+## Why it exists
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                       WorkOS AuthKit                         │
-│              (id.mukoko.com — hosted UI)                     │
-└──────────────────────────┬───────────────────────────────────┘
-                           │
-                           ↓
-┌──────────────────────────────────────────────────────────────┐
-│                   Bundu Identity Gateway                     │
-│                       (this repo)                            │
-│                                                              │
-│   /auth/signin     → builds AuthKit URL                     │
-│   /auth/callback   → exchanges code for WorkOS session      │
-│   /auth/exchange   → upserts identity.person + identity.    │
-│                       entity, mints platform JWT             │
-│   /auth/refresh    → rotates platform JWT                   │
-│   /auth/logout     → revokes session                        │
-│   /entity/switch   → updates active_entity_id claim         │
-│                                                              │
-│   Health, metrics, OpenTelemetry traces                     │
-└────┬──────────────────┬───────────────────┬─────────────────┘
-     │                  │                   │
-     ↓                  ↓                   ↓
-┌─────────┐    ┌──────────────────┐   ┌────────────────┐
-│Supabase │    │  Cloudflare      │   │ Service Bus    │
-│PRIMARY  │    │  Queues          │   │ (events fired) │
-│identity │    │  (publish        │   │                │
-│ entity  │    │   identity.*)    │   │                │
-│ member  │    └──────────────────┘   └────────────────┘
-└─────────┘
-     │
-     ↑
-┌────────────────────────────────────────────────────────────┐
-│  All other services consume Bundu Identity's platform JWT  │
-│  via standard JWT validation libraries — no direct WorkOS  │
-│  dependency anywhere downstream.                           │
-└────────────────────────────────────────────────────────────┘
-```
+The Bundu identity model classifies entities as `family`, `organization`,
+`community` or `place_owner`. Only one of those has a schema.org type.
 
-## Crate layout
-
-```
-crates/
-├── bundu-identity-server/   The HTTP service (axum). Entry point.
-├── bundu-identity-core/     Domain types: Person, Entity, Membership, Session.
-├── bundu-workos/            WorkOS REST client. Sole integration with WorkOS.
-├── bundu-jwt/               Platform JWT minting, validation, claim contract.
-├── bundu-supabase/          Supabase REST client for identity.person / identity.
-│                            entity / entity.membership upserts. Service-role auth.
-└── bundu-service-bus/       Cloudflare Queues publisher. Event envelope, schema
-                             registry validation, publish/consume interfaces.
-```
-
-## Endpoint contract
-
-All endpoints return JSON. Errors follow RFC 7807 problem details.
-
-| Method | Path                  | Purpose |
-|--------|----------------------|---------|
-| GET    | `/health`             | Liveness probe |
-| GET    | `/health/ready`       | Readiness (Supabase + WorkOS reachable) |
-| GET    | `/auth/signin`        | Returns AuthKit redirect URL |
-| GET    | `/auth/callback`      | Handles WorkOS OAuth callback, returns code-exchange result |
-| POST   | `/auth/exchange`      | Exchanges WorkOS code/session for platform JWT |
-| POST   | `/auth/refresh`       | Refreshes platform JWT before expiry |
-| POST   | `/auth/logout`        | Revokes WorkOS session, blacklists JWT |
-| POST   | `/entity/switch`      | Switches `active_entity_id` claim |
-| GET    | `/entity/list`        | Lists all entities the authenticated person belongs to |
-| GET    | `/.well-known/jwks.json` | Public keys for JWT verification (when ML-DSA / ES256 used) |
-
-## Platform JWT claim contract
+Rather than mislabel families as businesses or invent a private type that
+breaks JSON-LD for everyone else, entities serialise as the nearest valid
+schema.org type plus an `additionalType` pointing here:
 
 ```json
 {
-  "iss": "https://id.mukoko.com",
-  "sub": "<identity.person.id>",
-  "aud": ["mukoko", "nyuchi"],
-  "iat": 1714501834,
-  "exp": 1714588234,
-  "jti": "<UUIDv7>",
-
-  "email": "person@example.com",
-  "email_verified": true,
-  "name": "Bryan Fawcett",
-  "workos_user_id": "user_01HXYZ...",
-
-  "entities": [
-    {
-      "id": "<identity.entity.id>",
-      "type": "family",
-      "name": "Bryan's family",
-      "role": "head",
-      "permissions": []
-    },
-    {
-      "id": "<identity.entity.id>",
-      "type": "organization",
-      "name": "Nyuchi Africa",
-      "role": "owner",
-      "permissions": ["*"]
-    }
-  ],
-
-  "active_entity_id": "<identity.entity.id>",
-  "active_entity_type": "family",
-  "active_role": "head"
+  "@type": "Organization",
+  "additionalType": "https://vocab.bundu.org/Family",
+  "name": "Fawcett Family"
 }
 ```
 
-The contract is **transport-agnostic** — every service across the ecosystem uses a standard JWT library to validate it, regardless of which language they're written in.
+Consumers that have never heard of Bundu read a valid `Organization`.
+Consumers that have read a family. Nothing is lied to.
 
-## Configuration
+## The bar for adding a term
 
-All configuration via environment variables. See `.env.example` for the full list.
+**If schema.org can express it, use schema.org and add nothing.**
 
-Required:
-- `WORKOS_CLIENT_ID`
-- `WORKOS_API_KEY`
-- `WORKOS_REDIRECT_URI`
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `JWT_SIGNING_SECRET` (HS256 for now; ML-DSA migration tracked per v4.0.3 amendment post-quantum section)
-- `CF_ACCOUNT_ID`
-- `CF_QUEUES_API_TOKEN`
+A vocabulary earns trust by being small. Every term here carries a
+`rationale` field recording what was tried first and why it did not fit, so
+that anyone auditing the model later can judge whether the term is still
+needed instead of guessing at intent. A term without a defensible rationale
+does not belong.
 
-Optional:
-- `LISTEN_ADDR` (default `0.0.0.0:8080`)
-- `LOG_LEVEL` (default `info`)
-- `OTEL_EXPORTER_OTLP_ENDPOINT`
+## Terms
+
+**Identity and kinship**
+
+| Term | Kind | Extends |
+|---|---|---|
+| `Family` | class | `schema:Organization` |
+| `Community` | class | `schema:Organization` |
+| `PlaceOwner` | class | `schema:Organization` |
+
+**Trust and recognition**
+
+| Term | Kind | Value |
+|---|---|---|
+| `recognitionBasis` | property | `customary` · `statutory` · `registry` · `member_consent` · `contested` · `none` |
+| `verificationTier` | property | integer, 0–3 |
+| `ubuntuScore` | property | number |
+| `communityVouches` | property | integer |
+
+**Informal economy**
+
+| Term | Kind | Value |
+|---|---|---|
+| `isInformal` | property | boolean |
+
+## Using it
+
+Fetch any term for its machine-readable definition:
+
+```sh
+curl -H 'Accept: application/ld+json' https://vocab.bundu.org/Family
+```
+
+Or embed the context to refer to terms by short name:
+
+```json
+{
+  "@context": [
+    "https://schema.org/",
+    "https://vocab.bundu.org/context.jsonld"
+  ],
+  "@type": "Organization",
+  "additionalType": "Family",
+  "verificationTier": 2
+}
+```
+
+## Endpoints
+
+| Path | Purpose |
+|---|---|
+| `/` | Index of every term |
+| `/{Term}` | A single term |
+| `/context.jsonld` | JSON-LD context mapping short names to URIs |
+| `/health` | Liveness probe |
+
+Everything except `/health` negotiates on `Accept`. HTML when the caller asks
+for it, JSON-LD otherwise — so `curl` gets data rather than markup.
 
 ## Development
 
-```bash
-# Run locally (requires .env populated)
-cargo run -p bundu-identity-server
-
-# Run tests
-cargo test --workspace
-
-# Lint
-cargo clippy --workspace --all-targets -- -D warnings
-
-# Format
-cargo fmt --all
+```sh
+cargo run                                   # http://0.0.0.0:8080
+LISTEN_ADDR=127.0.0.1:8099 cargo run        # somewhere else
+cargo clippy --all-targets -- -D warnings
+cargo fmt
 ```
+
+Terms live in [`src/terms.rs`](src/terms.rs) as a compiled-in constant. There
+is no database — the deployed binary cannot serve a term the source does not
+define, which is the property that makes the namespace trustworthy.
 
 ## Deployment
 
-Phase 1 (now): Fly.io — `fly deploy` from `crates/bundu-identity-server`.
-Phase 3 (future): Self-hosted on K3s at Teraco bare metal. Same binary, different orchestrator.
+```sh
+fly deploy
+```
 
-See `docs/DEPLOYMENT.md` (TODO) for the full deployment runbook.
+Fly.io, Johannesburg, one always-warm machine. The DNS record for
+`vocab.bundu.org` must point at this app before any published `additionalType`
+URI will resolve.
 
-## Related projects
+## History
 
-- [mukoko-platform](https://github.com/nyuchi/mukoko-platform) — backend platform (FastAPI, Supabase, ScyllaDB)
-- [NTL](https://github.com/openNTL/ntl) — Nyuchi Transfer Layer
-- [SiafuDB](https://github.com/siafuDB/siafudb) — embedded property graph database
-- [SiafuDB-Kuzu](https://github.com/siafuDB/siafudb-kuzu) — Kuzu fork
+This repository previously held a scaffold for a Bundu identity gateway. That
+work was superseded by Mukoko Account, and the repository was repurposed
+rather than archived — the vocabulary is the durable artefact that outlives
+whichever service happens to be issuing tokens.
 
 ## Licence
 
-Apache 2.0. See [LICENSE](LICENSE).
+**Code: Apache 2.0** — see [LICENSE](LICENSE). The server is software, and
+Apache's patent grant is the right instrument for it.
 
----
+**The vocabulary: CC0 1.0** — see [LICENSE-VOCAB](LICENSE-VOCAB). The terms and
+their definitions are content, not code, and a vocabulary's entire value is
+adoption. Attribution obligations inside machine-readable JSON-LD are
+impractical to discharge — there is nowhere in an embedded `additionalType` URI
+to put credit — and share-alike clauses make lawyers nervous about any metadata
+that touches them. schema.org's CC-BY-SA is a live example of that friction.
 
-*Bundu Identity. One identity. Many entity memberships. Built sovereign.*
+CC0 says: take these terms, use them anywhere, no legal review needed. For
+terms describing African family and informal-economy structures that we want
+other systems to adopt, that is the point.

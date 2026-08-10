@@ -37,3 +37,9 @@ target
 
 # Logs
 *.log
+
+# Claude Code local development context.
+# Deliberately not tracked: per-developer working notes and agent definitions,
+# not part of the product. Keep them locally, out of the repo.
+CLAUDE.md
+.claude/

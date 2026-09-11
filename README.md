@@ -2,10 +2,12 @@
 
 > RDF terms for concepts schema.org has no word for.
 
-**Repository:** `bundu-labs/vocab`
-**Live at:** <https://vocab.bundu.org>
-**Licence:** Apache 2.0 (code) · CC0 1.0 (the vocabulary itself)
-**Owner:** Bundu Foundation (Zimbabwe CLG)
+[![CI](https://github.com/bundu-labs/vocab/actions/workflows/ci.yml/badge.svg)](https://github.com/bundu-labs/vocab/actions/workflows/ci.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/code-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Vocabulary: CC0 1.0](https://img.shields.io/badge/vocabulary-CC0_1.0-lightgrey.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
+![Rust](https://img.shields.io/badge/Rust-2021_edition-000000?logo=rust&logoColor=white)
+
+**Version:** 0.1.0 | **Live:** [vocab.bundu.org](https://vocab.bundu.org) | **Deploys to:** Fly.io (`bundu-vocab`, Johannesburg) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
 
 ---
 
@@ -168,3 +170,13 @@ that touches them. schema.org's CC-BY-SA is a live example of that friction.
 CC0 says: take these terms, use them anywhere, no legal review needed. For
 terms describing African family and informal-economy structures that we want
 other systems to adopt, that is the point.
+
+## Governance
+
+The Bundu Foundation (Zimbabwean Company Limited by Guarantee) is the
+governance body for this namespace; [Nyuchi Africa](https://nyuchi.com) is the
+operator that runs the deployment. The URIs are a permanent contract, and the
+Foundation exists so that the contract outlives whoever happens to be paying
+the hosting bill.
+
+© Bundu Foundation, operated by Nyuchi Africa (Pvt) Ltd.

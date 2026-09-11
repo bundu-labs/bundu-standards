@@ -3,7 +3,7 @@
 > RDF terms for concepts schema.org has no word for.
 
 **Repository:** `bundu-labs/vocab`
-**Live at:** https://vocab.bundu.org
+**Live at:** <https://vocab.bundu.org>
 **Licence:** Apache 2.0 (code) · CC0 1.0 (the vocabulary itself)
 **Owner:** Bundu Foundation (Zimbabwe CLG)
 
@@ -66,27 +66,27 @@ does not belong.
 
 ## Terms
 
-**Identity and kinship**
+### Identity and kinship
 
-| Term | Kind | Extends |
-|---|---|---|
-| `Family` | class | `schema:Organization` |
-| `Community` | class | `schema:Organization` |
+| Term         | Kind  | Extends               |
+| ------------ | ----- | --------------------- |
+| `Family`     | class | `schema:Organization` |
+| `Community`  | class | `schema:Organization` |
 | `PlaceOwner` | class | `schema:Organization` |
 
-**Trust and recognition**
+### Trust and recognition
 
-| Term | Kind | Value |
-|---|---|---|
+| Term               | Kind     | Value                                                                            |
+| ------------------ | -------- | -------------------------------------------------------------------------------- |
 | `recognitionBasis` | property | `customary` · `statutory` · `registry` · `member_consent` · `contested` · `none` |
-| `verificationTier` | property | integer, 0–3 |
-| `ubuntuScore` | property | number |
-| `communityVouches` | property | integer |
+| `verificationTier` | property | integer, 0–3                                                                     |
+| `ubuntuScore`      | property | number                                                                           |
+| `communityVouches` | property | integer                                                                          |
 
-**Informal economy**
+### Informal economy
 
-| Term | Kind | Value |
-|---|---|---|
+| Term         | Kind     | Value   |
+| ------------ | -------- | ------- |
 | `isInformal` | property | boolean |
 
 ## Using it
@@ -113,12 +113,12 @@ Or embed the context to refer to terms by short name:
 
 ## Endpoints
 
-| Path | Purpose |
-|---|---|
-| `/` | Index of every term |
-| `/{Term}` | A single term |
+| Path              | Purpose                                     |
+| ----------------- | ------------------------------------------- |
+| `/`               | Index of every term                         |
+| `/{Term}`         | A single term                               |
 | `/context.jsonld` | JSON-LD context mapping short names to URIs |
-| `/health` | Liveness probe |
+| `/health`         | Liveness probe                              |
 
 Everything except `/health` negotiates on `Accept`. HTML when the caller asks
 for it, JSON-LD otherwise — so `curl` gets data rather than markup.

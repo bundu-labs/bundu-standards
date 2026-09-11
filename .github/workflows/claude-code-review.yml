@@ -62,4 +62,9 @@ jobs:
 
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
-          claude_args: '--allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
+          # A double-quoted YAML scalar treats backslash-newline as an
+          # escaped line break that folds to nothing, so this is byte-for-byte
+          # the same single-line string, just under the 140-char limit.
+          claude_args: "--allowed-tools \"Bash(gh issue view:*),\
+            Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),\
+            Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)\""

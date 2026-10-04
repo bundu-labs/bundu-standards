@@ -5,6 +5,16 @@ are a permanent contract: a release may add terms, refine a pending term's
 definition or promote it to stable, and never removes a term or changes a
 stable term's meaning.
 
+## Unreleased
+
+### Added
+
+- **Deploy on merge.** `.github/workflows/deploy.yml` deploys `main` to the
+  Fly app `bundu-vocab` after format, clippy and the tests pass, then
+  smoke-tests vocab.bundu.org. It uses the repository secret `FLY_API_TOKEN`
+  (a deploy token scoped to the app), and skips with a notice if it is not
+  set.
+
 ## 0.1.2 (2026-10-04)
 
 ### Added

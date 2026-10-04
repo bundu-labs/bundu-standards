@@ -196,9 +196,19 @@ define, which is the property that makes the namespace trustworthy.
 
 ## Deployment
 
+Every merge to `main` deploys: [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+runs format, clippy and the tests, then `flyctl deploy --remote-only` to the
+Fly app `bundu-vocab`, then checks that vocab.bundu.org still answers. It needs
+the repository secret `FLY_API_TOKEN`; without it the deploy is skipped with a
+notice. To set it up (owner, once):
+
 ```sh
-fly deploy
+fly tokens create deploy -a bundu-vocab   # a deploy token for this app only
+gh secret set FLY_API_TOKEN -R bundu-labs/bundu-standards   # paste it at the prompt
 ```
+
+A manual deploy is still `fly deploy`, and the workflow can be re-run from the
+Actions tab (`workflow_dispatch`).
 
 Fly.io, Johannesburg, one always-warm machine. The DNS record for
 `vocab.bundu.org` must point at this app before any published `additionalType`

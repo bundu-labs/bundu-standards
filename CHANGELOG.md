@@ -44,6 +44,9 @@ under `https://vocab.bundu.org/` are unchanged.
 
 - README, Cargo metadata and the CI badge point at
   `bundu-labs/bundu-standards`.
+- The image build copies `Cargo.lock` and builds `--locked` on a Rust 1.90
+  bookworm builder. Without the lockfile, each deploy resolved the newest
+  crates, and one that needs edition 2024 broke the build on Rust 1.83.
 
 ## 0.1.0
 

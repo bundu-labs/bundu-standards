@@ -3,7 +3,7 @@
 **Question:** the Bundu entity model classifies entities as `family`,
 `organization`, `community` or `place_owner`. Do the collective and customary
 structures that dominate African, Latin American and South-East Asian economic
-life need additional entity *types*, or is something else missing?
+life need additional entity _types_, or is something else missing?
 
 **Answer:** almost none of them need a new type. What is missing is a way to
 record **why an entity is legitimate**, because that varies enormously for
@@ -24,22 +24,22 @@ state-managed land tenure transformation in modern Latin American
 history.[^ejido-scale]
 
 These are not edge cases to be handled after the main model works. In their
-own markets they *are* the main model.
+own markets they _are_ the main model.
 
 The same structure recurs under different names: stokvel in South Africa,
-*chama* in Kenya, *esusu* in Nigeria, *susu* in Ghana — different words,
+_chama_ in Kenya, _esusu_ in Nigeria, _susu_ in Ghana — different words,
 materially the same practice.[^rosca-names]
 
 ### Legal recognition varies wildly for structurally identical things
 
 This is the finding that matters.
 
-| Structure | Jurisdiction | Legal standing |
-|---|---|---|
-| Stokvel | South Africa | Defined in statute (National Credit Act 2005) but **not a juristic person** under it. Some fund managers require registration as a club or association before they can invest.[^stokvel-legal] |
-| *Desa adat* | Indonesia | **Public legal entity**, equal standing with administrative villages under the 2014 Village Law, conditional on the customary community continuing to exist.[^desa-adat] |
-| Ejido | Mexico | **Registered** — the National Agrarian Registry documents land tenure and community rights.[^ejido-registry] |
-| Communal land under a village head | Zimbabwe | Traditional leaders hold **constitutionally recognised** land administration powers, but the Communal Land Act and Traditional Leaders Act overlap, producing genuine ambiguity about who holds authority.[^zim-leaders] |
+| Structure                          | Jurisdiction | Legal standing                                                                                                                                                                                                           |
+| ---------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Stokvel                            | South Africa | Defined in statute (National Credit Act 2005) but **not a juristic person** under it. Some fund managers require registration as a club or association before they can invest.[^stokvel-legal]                           |
+| _Desa adat_                        | Indonesia    | **Public legal entity**, equal standing with administrative villages under the 2014 Village Law, conditional on the customary community continuing to exist.[^desa-adat]                                                 |
+| Ejido                              | Mexico       | **Registered** — the National Agrarian Registry documents land tenure and community rights.[^ejido-registry]                                                                                                             |
+| Communal land under a village head | Zimbabwe     | Traditional leaders hold **constitutionally recognised** land administration powers, but the Communal Land Act and Traditional Leaders Act overlap, producing genuine ambiguity about who holds authority.[^zim-leaders] |
 
 Four collective land- or money-holding bodies. One has no legal personhood,
 one has full statutory personhood, one has a registry entry, one has
@@ -83,7 +83,7 @@ Local names belong in `legalName` or `alternateName`, not in the type system.
 Checked against the researched structures:
 
 - stokvel / chama / susu → `community`, with `bundu.informalEconomy.operatingModel: "rotating"` — **already in the schema**
-- *desa adat* → `community`, or `place_owner` where territorial custody is the point
+- _desa adat_ → `community`, or `place_owner` where territorial custody is the point
 - ejido → `community` + `place_owner`
 - Zimbabwean village under a headman → `community` + `place_owner`
 
@@ -106,7 +106,7 @@ that determines which verification evidence is meaningful:
 
 `verificationMethod` already has `community_attestation`,
 `government_registry`, `honeycomb_attestation` and `in_person`, so the
-*methods* are largely there. What is missing is the property that says which
+_methods_ are largely there. What is missing is the property that says which
 method is appropriate, rather than leaving every unregistered entity looking
 like a registered one with missing paperwork.
 
@@ -130,7 +130,7 @@ types because Western identity schemas have no word for them. The first half
 is right — ISO 20275 concedes the gap, and schema.org has nothing for any of
 them. The second half does not follow.
 
-The structures are not exotic *shapes*. A rotating savings group is
+The structures are not exotic _shapes_. A rotating savings group is
 recognisably a group with members and a purpose; the model already handles
 that. What is exotic, from the perspective of a registry-based identity
 system, is that **they can be entirely real and entirely unregistered at the
@@ -159,11 +159,18 @@ than fifty classes.
 
 ---
 
-[^stokvel-scale]: National Stokvel Association of South Africa figures, via [Barter McKellar, *Understanding Stokvels in South Africa: A Legal Perspective*](https://www.bartermckellar.law/banking-financial-law-explained/understanding-stokvels-in-south-africa-a-legal-perspective) and [Stokvel — Wikipedia](https://en.wikipedia.org/wiki/Stokvel).
-[^ejido-scale]: [*The evolution and resilience of community-based land tenure in rural Mexico*, ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0264837708000641).
-[^rosca-names]: [Africa Social Work & Development Network, *Stokvels*](https://africasocialwork.net/stokvels-an-opportunity-for-development-at-family-community-and-national-level-or-not/).
+[^stokvel-scale]: National Stokvel Association of South Africa figures, via [Barter McKellar, _Understanding Stokvels in South Africa: A Legal Perspective_](https://www.bartermckellar.law/banking-financial-law-explained/understanding-stokvels-in-south-africa-a-legal-perspective) and [Stokvel — Wikipedia](https://en.wikipedia.org/wiki/Stokvel).
+
+[^ejido-scale]: [_The evolution and resilience of community-based land tenure in rural Mexico_, ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0264837708000641).
+
+[^rosca-names]: [Africa Social Work & Development Network, _Stokvels_](https://africasocialwork.net/stokvels-an-opportunity-for-development-at-family-community-and-national-level-or-not/).
+
 [^stokvel-legal]: National Credit Act 34 of 2005 definition; juristic-person status discussed in [Barter McKellar](https://www.bartermckellar.law/banking-financial-law-explained/understanding-stokvels-in-south-africa-a-legal-perspective) and [Stokvel insurance — Mondaq](https://www.mondaq.com/southafrica/insurance-laws-and-products/670766/stokvel-insurance-a-potential-south-african-phenomenon).
-[^desa-adat]: Indonesian Village Law No. 6/2014. See [Village Act — Wikipedia](https://en.wikipedia.org/wiki/Indonesian_Village_Law) and [*Traditional village institutions and the Village Law*, Inside Indonesia](https://www.insideindonesia.org/editions/edition-128-apr-jun-2017/traditional-village-institutions-and-the-village-law).
-[^ejido-registry]: [FAO, *Indigenous peoples, land tenure and land policy in Latin America*](https://www.fao.org/4/y5407t/y5407t0a.htm).
-[^zim-leaders]: [Traditional Leaders Act (Chapter 29:17), ZimLII](https://zimlii.org/akn/zw/act/1998/25/eng@2016-12-31); [Communal Land Act, ZimLII](https://zimlii.org/akn/zw/act/1982/20/eng@2016-12-31); [*The role of traditional leaders in Zimbabwe: are they still relevant?*, SciELO SA](https://scielo.org.za/scielo.php?script=sci_arttext&pid=S2077-49072016000100003).
-[^elf]: [GLEIF, *ISO 20275: Entity Legal Forms Code List*](https://www.gleif.org/en/about-lei/iso-20275-entity-legal-forms-code-list).
+
+[^desa-adat]: Indonesian Village Law No. 6/2014. See [Village Act — Wikipedia](https://en.wikipedia.org/wiki/Indonesian_Village_Law) and [_Traditional village institutions and the Village Law_, Inside Indonesia](https://www.insideindonesia.org/editions/edition-128-apr-jun-2017/traditional-village-institutions-and-the-village-law).
+
+[^ejido-registry]: [FAO, _Indigenous peoples, land tenure and land policy in Latin America_](https://www.fao.org/4/y5407t/y5407t0a.htm).
+
+[^zim-leaders]: [Traditional Leaders Act (Chapter 29:17), ZimLII](https://zimlii.org/akn/zw/act/1998/25/eng@2016-12-31); [Communal Land Act, ZimLII](https://zimlii.org/akn/zw/act/1982/20/eng@2016-12-31); [_The role of traditional leaders in Zimbabwe: are they still relevant?_, SciELO SA](https://scielo.org.za/scielo.php?script=sci_arttext&pid=S2077-49072016000100003).
+
+[^elf]: [GLEIF, _ISO 20275: Entity Legal Forms Code List_](https://www.gleif.org/en/about-lei/iso-20275-entity-legal-forms-code-list).

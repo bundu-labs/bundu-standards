@@ -1,0 +1,42 @@
+# vocab.bundu.org — the live BETA on Fly.io, built from `staging`.
+#
+# A copy of fly.toml for a separate app, so nothing here can touch
+# production (`bundu-vocab`, vocab.bundu.org). Deployed by beta-deploy.yml
+# on every push to `staging`, and served at https://bundu-vocab-beta.fly.dev
+# only: no custom domain is attached to this app. Term URIs still name
+# https://vocab.bundu.org/ (the namespace is a constant, not the host).
+
+app = "bundu-vocab-beta"
+primary_region = "jnb"  # Johannesburg
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  LISTEN_ADDR = "0.0.0.0:8080"
+  RUST_LOG = "info"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Unlike production, a beta may stop when idle and cold-start on demand.
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 500
+    hard_limit = 600
+
+[[http_service.checks]]
+  interval = "15s"
+  timeout = "2s"
+  grace_period = "5s"
+  method = "get"
+  path = "/health"
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1

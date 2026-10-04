@@ -3,6 +3,8 @@ name: CI
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  push:
+    branches: [main, staging]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -15,6 +17,7 @@ jobs:
   # Org convention: feature → staging → main. Enforced here rather than by
   # branch protection alone so the failure explains itself.
   validate-target:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     name: Validate PR Target
     steps:
@@ -26,7 +29,13 @@ jobs:
             const headBranch = context.payload.pull_request.head.ref;
 
             if (baseBranch === 'main' && headBranch !== 'staging') {
-              core.setFailed(`❌ Direct PRs to 'main' are not allowed!\n\nOnly the 'staging' branch can be merged into 'main'.\n\nPlease:\n1. Create a PR to 'staging' first\n2. After testing on staging, create a PR from 'staging' to 'main'`);
+              core.setFailed(
+                `❌ Direct PRs to 'main' are not allowed!\n\n` +
+                  `Only the 'staging' branch can be merged into 'main'.\n\n` +
+                  `Please:\n` +
+                  `1. Create a PR to 'staging' first\n` +
+                  `2. After testing on staging, create a PR from 'staging' to 'main'`,
+              );
               return;
             }
 
@@ -87,7 +96,7 @@ jobs:
       - name: Start server
         run: |
           LISTEN_ADDR=127.0.0.1:8080 ./target/release/bundu-vocab &
-          for i in $(seq 1 30); do
+          for _ in $(seq 1 30); do
             curl -sf http://127.0.0.1:8080/health && break
             sleep 1
           done
@@ -120,6 +129,7 @@ jobs:
 
   comment:
     needs: [validate-target, test, contract]
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     name: PR Status Comment
     permissions:
@@ -140,7 +150,8 @@ jobs:
             - **URL:** https://vocab.bundu.org
             - **Fly app:** bundu-vocab (jnb)
 
-            ⚠️ Term URIs are a permanent contract. A term that has been published and embedded in someone's data must never change meaning or stop resolving.`;
+            ⚠️ Term URIs are a permanent contract. A term that has been published and
+            embedded in someone's data must never change meaning or stop resolving.`;
             }
 
             const comment = `## ✅ CI Checks Passed

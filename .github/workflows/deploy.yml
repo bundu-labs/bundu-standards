@@ -58,7 +58,9 @@ jobs:
         id: token
         run: |
           if [ -z "$FLY_API_TOKEN" ]; then
-            echo "::notice title=Deploy skipped::FLY_API_TOKEN is not set. Create one with 'fly tokens create deploy -a bundu-vocab' and add it as a repository secret."
+            msg="FLY_API_TOKEN is not set. Create one with"
+            msg="$msg 'fly tokens create deploy -a bundu-vocab' and add it as a repository secret."
+            echo "::notice title=Deploy skipped::$msg"
             echo "present=false" >> "$GITHUB_OUTPUT"
           else
             echo "present=true" >> "$GITHUB_OUTPUT"

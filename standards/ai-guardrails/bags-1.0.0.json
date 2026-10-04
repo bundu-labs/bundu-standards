@@ -26,13 +26,15 @@
     "appliesTo": "bundu:appliesToSurface",
     "intent": "schema:abstract",
     "explanation": "schema:description",
-    "promptGuidance": "schema:text"
+    "promptGuidance": "schema:text",
+    "maintainer": "schema:maintainer"
   },
   "standard": "Bundu AI Guardrails Standard",
   "code": "BAGS",
   "version": "1.0.0",
   "publishedAt": "2026-10-04T00:00:00Z",
-  "publisher": "Nyuchi Africa",
+  "publisher": "Bundu Foundation",
+  "maintainer": "Nyuchi Africa",
   "licence": {
     "name": "CC BY 4.0",
     "url": "https://creativecommons.org/licenses/by/4.0/"

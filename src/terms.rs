@@ -225,8 +225,13 @@ pub const TERMS: &[Term] = &[
         kind: Kind::Property,
         domain: Domain::TrustAndRecognition,
         label: "verification tier",
-        comment: "How far an entity has progressed through verification. \
-                  0 = unclaimed, 1 = claimed, 2 = verified, 3 = fully verified.",
+        comment: "How far an entity has progressed through verification, \
+                  as an integer from 0 to 4: 0 = unverified, 1 = community \
+                  (vouched for by people who know it), 2 = contact verified \
+                  (a one-time passcode), 3 = government (registration \
+                  documents reviewed), 4 = licensed (a sector licence \
+                  confirmed). Published on Mukoko Kweli profiles and on their \
+                  ActivityPub actors.",
         sub_class_of: None,
         domain_includes: Some("schema:Thing"),
         range: Some("schema:Integer"),

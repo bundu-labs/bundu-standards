@@ -79,7 +79,7 @@ does not belong.
 | Term               | Kind     | Value                                                                            |
 | ------------------ | -------- | -------------------------------------------------------------------------------- |
 | `recognitionBasis` | property | `customary` · `statutory` · `registry` · `member_consent` · `contested` · `none` |
-| `verificationTier` | property | integer, 0–3                                                                     |
+| `verificationTier` | property | integer, 0–4                                                                     |
 | `ubuntuScore`      | property | number                                                                           |
 | `communityVouches` | property | integer                                                                          |
 

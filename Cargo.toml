@@ -1,11 +1,11 @@
 [package]
 name = "bundu-vocab"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 rust-version = "1.83"
 license = "Apache-2.0"
 authors = ["Bundu Foundation <foundation@bundu.org>"]
-repository = "https://github.com/bundu-labs/vocab"
+repository = "https://github.com/bundu-labs/bundu-standards"
 homepage = "https://vocab.bundu.org"
 description = "The Bundu vocabulary — RDF terms for concepts schema.org has no word for"
 

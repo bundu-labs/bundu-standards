@@ -4,6 +4,14 @@ name: Deploy
 # same checks CI runs on pull requests. Needs the repo secret FLY_API_TOKEN, a
 # deploy token scoped to the app (README, "Deployment"). Without it the deploy
 # is skipped with a notice, not failed.
+#
+# A merge that bumps the version in Cargo.toml is also released: once the
+# checks pass, the `release` job tags vX.Y.Z and creates a GitHub release
+# whose notes are that version's CHANGELOG.md section. A merge that leaves the
+# version alone finds its tag already there and does nothing. The release does
+# not wait for the deploy, so a missing FLY_API_TOKEN never holds it back.
+# It uses GITHUB_TOKEN (bundu-labs has no RELEASE_BUMP_TOKEN); nothing else
+# here runs on a tag, so no other workflow needs to start from it.
 
 on:
   push:
@@ -90,3 +98,38 @@ jobs:
             | python3 -c "import json,sys; d=json.load(sys.stdin); assert d['@id']=='bundu:Family', d['@id']"
           code=$(curl -s -o /dev/null -w '%{http_code}' https://vocab.bundu.org/NotATerm)
           [ "$code" = "404" ] || { echo "::error::unknown term returned $code"; exit 1; }
+
+  release:
+    runs-on: ubuntu-latest
+    name: Tag and release the version
+    needs: test
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tag and release a new version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version=$(grep -m1 '^version = ' Cargo.toml | cut -d'"' -f2)
+          tag="v$version"
+          if git ls-remote --tags --refs origin "refs/tags/$tag" | grep -q .; then
+            echo "$tag already exists; nothing to release."
+            exit 0
+          fi
+          # The CHANGELOG section headed "## <version> (date)", up to the next one.
+          awk -v v="$version" '
+            /^## / { if (found) exit; if ($2 == v) { found = 1; next } }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "::error::CHANGELOG.md has no '## $version' section. Add one before releasing."
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$tag" -m "bundu-vocab $version"
+          git push origin "refs/tags/$tag"
+          gh release create "$tag" --verify-tag --title "bundu-vocab $version" --notes-file notes.md

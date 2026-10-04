@@ -212,6 +212,12 @@ gh secret set FLY_API_TOKEN -R bundu-labs/bundu-standards   # paste it at the pr
 A manual deploy is still `fly deploy`, and the workflow can be re-run from the
 Actions tab (`workflow_dispatch`).
 
+Releases are automatic too. Bump `version` in `Cargo.toml`, add a
+`## <version> (date)` section to `CHANGELOG.md`, and merge: once the checks
+pass, the same workflow tags `v<version>` and creates a GitHub release from
+that section. It doesn't wait for the deploy. A merge that leaves the version
+alone releases nothing. No one pushes tags by hand.
+
 Fly.io, Johannesburg, one always-warm machine. The DNS record for
 `vocab.bundu.org` must point at this app before any published `additionalType`
 URI will resolve.

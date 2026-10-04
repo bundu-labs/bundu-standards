@@ -11,7 +11,7 @@ stable term's meaning.
 
 - **The AI guardrail terms are stable.** The Bundu AI Guardrails Standard
   (BAGS) 1.0.0 was published on bundu.org on 2026-10-04
-  (https://www.bundu.org/research/standards/ai-guardrails), with its versioned
+  ([bundu.org/research/standards/ai-guardrails](https://www.bundu.org/research/standards/ai-guardrails)), with its versioned
   snapshot in `standards/ai-guardrails/bags-1.0.0.json`. Every term in the AI
   guardrails group (`AIGuardrail`, `PlatformGuardrail`, `EntityGuardrail`,
   `GuardrailCategory`, `guardrailCategory`, `guardrailSeverity`,

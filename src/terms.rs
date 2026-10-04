@@ -65,6 +65,8 @@ pub enum Status {
     Stable,
     /// Its standard is still being written. The URI is permanent, but the
     /// definition may still be refined before the term becomes stable.
+    /// No term is pending today; the next standard's new terms start here.
+    #[allow(dead_code)]
     Pending,
 }
 
@@ -659,12 +661,12 @@ pub const TERMS: &[Term] = &[
                     DPV have no property for a measured re-identification \
                     risk.",
     },
-    // ── AI guardrails (Bundu AI Guardrails Standard, pending) ──────────
+    // ── AI guardrails (Bundu AI Guardrails Standard, stable) ──────────
     Term {
         id: "AIGuardrail",
         kind: Kind::Class,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "AI Guardrail",
         comment: "A rule that constrains what an AI system may say or do, \
                   with the guidance the system is given to follow it. A \
@@ -693,7 +695,7 @@ pub const TERMS: &[Term] = &[
         id: "PlatformGuardrail",
         kind: Kind::Class,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "Platform Guardrail",
         comment: "A guardrail set by the platform operator that applies to \
                   every AI surface it names. Only the operator can change \
@@ -716,7 +718,7 @@ pub const TERMS: &[Term] = &[
         id: "EntityGuardrail",
         kind: Kind::Class,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "Entity Guardrail",
         comment: "A guardrail an organisation, business or app tenant adds \
                   for its own AI surfaces. Entity guardrails stack on \
@@ -739,7 +741,7 @@ pub const TERMS: &[Term] = &[
         id: "GuardrailCategory",
         kind: Kind::Class,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "Guardrail Category",
         comment: "The kind of harm or conduct a guardrail addresses, such \
                   as child safety or prompt injection, when it is published \
@@ -762,7 +764,7 @@ pub const TERMS: &[Term] = &[
         id: "guardrailSeverity",
         kind: Kind::Property,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "guardrail severity",
         comment: "How serious a breach of a guardrail is, and therefore how \
                   firmly the system must hold to it.",
@@ -781,7 +783,7 @@ pub const TERMS: &[Term] = &[
         id: "guardrailCategory",
         kind: Kind::Property,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "guardrail category",
         comment: "The kind of harm or conduct a guardrail addresses, as a \
                   key from the Bundu AI Guardrails Standard. An entity \
@@ -802,7 +804,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "Bundu AI Guardrails Standard (BAGS)",
         comment: "The set of platform rules every AI surface in the Bundu \
                   ecosystem applies, each with a stable code from BAGS-01. \
@@ -828,7 +830,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-01",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-01: Child safety and minors",
         comment: "Rule BAGS-01 of the Bundu AI Guardrails Standard 1.0.0: \
                   child safety and minors. A core platform guardrail: \
@@ -855,7 +857,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-02",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-02: Self-harm and suicide",
         comment: "Rule BAGS-02 of the Bundu AI Guardrails Standard 1.0.0: \
                   self-harm and suicide. A core platform guardrail: \
@@ -882,7 +884,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-03",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-03: Violent extremism and terrorism",
         comment: "Rule BAGS-03 of the Bundu AI Guardrails Standard 1.0.0: \
                   violent extremism and terrorism. A core platform guardrail: \
@@ -909,7 +911,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-04",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-04: Hate and harassment",
         comment: "Rule BAGS-04 of the Bundu AI Guardrails Standard 1.0.0: \
                   hate and harassment. A core platform guardrail: \
@@ -936,7 +938,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-05",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-05: Sexual content",
         comment: "Rule BAGS-05 of the Bundu AI Guardrails Standard 1.0.0: \
                   sexual content. A core platform guardrail: \
@@ -963,7 +965,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-06",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-06: Weapons and illegal activity",
         comment: "Rule BAGS-06 of the Bundu AI Guardrails Standard 1.0.0: \
                   weapons and illegal activity. A core platform guardrail: \
@@ -990,7 +992,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-07",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-07: Privacy and personal data",
         comment: "Rule BAGS-07 of the Bundu AI Guardrails Standard 1.0.0: \
                   privacy and personal data. A core platform guardrail: \
@@ -1017,7 +1019,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-08",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-08: Prompt injection and jailbreak resistance",
         comment: "Rule BAGS-08 of the Bundu AI Guardrails Standard 1.0.0: \
                   prompt injection and jailbreak resistance. A core platform guardrail: \
@@ -1044,7 +1046,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-09",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-09: Impersonation and misinformation",
         comment: "Rule BAGS-09 of the Bundu AI Guardrails Standard 1.0.0: \
                   impersonation and misinformation. A core platform guardrail: \
@@ -1071,7 +1073,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-10",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-10: Medical, legal and financial advice",
         comment: "Rule BAGS-10 of the Bundu AI Guardrails Standard 1.0.0: \
                   medical, legal and financial advice. A core platform guardrail: \
@@ -1098,7 +1100,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-11",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-11: Ubuntu, cultural respect and African-language dignity",
         comment: "Rule BAGS-11 of the Bundu AI Guardrails Standard 1.0.0: \
                   Ubuntu, cultural respect and African-language dignity. A core platform guardrail: \
@@ -1125,7 +1127,7 @@ pub const TERMS: &[Term] = &[
         id: "BAGS-12",
         kind: Kind::Individual,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "BAGS-12: Honest refusal",
         comment: "Rule BAGS-12 of the Bundu AI Guardrails Standard 1.0.0: \
                   honest refusal. A core platform guardrail: \
@@ -1152,7 +1154,7 @@ pub const TERMS: &[Term] = &[
         id: "appliesToSurface",
         kind: Kind::Property,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "applies to surface",
         comment: "An AI surface a guardrail applies to: a named product or \
                   assistant, such as nyuchi-ai. Repeatable. A guardrail \
@@ -1175,7 +1177,7 @@ pub const TERMS: &[Term] = &[
         id: "enforcementLayer",
         kind: Kind::Property,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "enforcement layer",
         comment: "Where in an AI system a guardrail is enforced: for \
                   example in the system prompt, on the input before the \
@@ -1198,7 +1200,7 @@ pub const TERMS: &[Term] = &[
         id: "isCoreGuardrail",
         kind: Kind::Property,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "is core guardrail",
         comment: "Whether a platform guardrail is core. A core guardrail \
                   applies to every AI surface whatever its surfaces say, \
@@ -1218,7 +1220,7 @@ pub const TERMS: &[Term] = &[
         id: "standardVersion",
         kind: Kind::Property,
         domain: Domain::AiGuardrails,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "standard version",
         comment: "The version of a Bundu standard that a rule, policy or \
                   implementation was written against, such as the version \
@@ -1461,13 +1463,14 @@ mod tests {
         }
     }
 
-    /// Owner decision 2026-10-04: the guardrail terms publish while the
-    /// Bundu AI Guardrails Standard is still being written, so they must say
-    /// so. Promote them to stable when the standard is published.
+    /// The guardrail terms were pending while the Bundu AI Guardrails
+    /// Standard was being written. BAGS 1.0.0 was published on bundu.org on
+    /// 2026-10-04 (bundu-labs/marketing#123), so they are stable: their
+    /// meaning is now fixed.
     #[test]
-    fn guardrail_terms_are_pending_until_the_standard_publishes() {
+    fn guardrail_terms_are_stable_now_the_standard_is_published() {
         for t in in_domain(Domain::AiGuardrails) {
-            assert_eq!(t.status, Status::Pending, "{}", t.id);
+            assert_eq!(t.status, Status::Stable, "{}", t.id);
         }
         assert_eq!(Status::Pending.vs_term_status(), "testing");
         assert_eq!(Status::Stable.vs_term_status(), "stable");

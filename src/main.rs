@@ -724,7 +724,7 @@ mod tests {
     fn subclass_of_a_local_class_publishes_its_bundu_parent() {
         let v = term_jsonld(terms::find("PlatformGuardrail").unwrap());
         assert_eq!(v["rdfs:subClassOf"]["@id"], "bundu:AIGuardrail");
-        assert_eq!(v["vs:term_status"], "testing");
+        assert_eq!(v["vs:term_status"], "stable");
     }
 
     /// A BAGS rule is published as a DefinedTerm in the BAGS set, keeping

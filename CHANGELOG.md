@@ -5,6 +5,17 @@ are a permanent contract: a release may add terms, refine a pending term's
 definition or promote it to stable, and never removes a term or changes a
 stable term's meaning.
 
+## 0.1.4 (2026-10-04)
+
+### Added
+
+- **`notificationPreference`** (pending, published as `testing`). A person's
+  choice about optional notifications, one boolean per channel (today
+  `email`), off until the person turns it on. Security and account notices
+  are always sent and no preference covers them. schema.org has no consent
+  or notification-preference property. Asked for by the canonical schema
+  (nyuchi/data-infra) and the Nyuchi API (nyuchi/api-gateway#186).
+
 ## 0.1.3 (2026-10-04)
 
 ### Changed

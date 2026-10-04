@@ -8,7 +8,7 @@
 [![Vocabulary: CC0 1.0](https://img.shields.io/badge/vocabulary-CC0_1.0-lightgrey.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
 ![Rust](https://img.shields.io/badge/Rust-2021_edition-000000?logo=rust&logoColor=white)
 
-**Version:** 0.1.3 | **Live:** [vocab.bundu.org](https://vocab.bundu.org) | **Deploys to:** Fly.io (`bundu-vocab`, Johannesburg) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
+**Version:** 0.1.4 | **Live:** [vocab.bundu.org](https://vocab.bundu.org) | **Deploys to:** Fly.io (`bundu-vocab`, Johannesburg) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
 
 ---
 
@@ -82,12 +82,13 @@ published as `testing`, the W3C value for that state.
 
 ### Identity and kinship
 
-| Term            | Kind     | Extends or value         | Status |
-| --------------- | -------- | ------------------------ | ------ |
-| `Family`        | class    | `schema:Organization`    | stable |
-| `Community`     | class    | `schema:Organization`    | stable |
-| `PlaceOwner`    | class    | `schema:Organization`    | stable |
-| `defaultFamily` | property | `Family` (on a `Person`) | stable |
+| Term                     | Kind     | Extends or value                                | Status  |
+| ------------------------ | -------- | ----------------------------------------------- | ------- |
+| `Family`                 | class    | `schema:Organization`                           | stable  |
+| `Community`              | class    | `schema:Organization`                           | stable  |
+| `PlaceOwner`             | class    | `schema:Organization`                           | stable  |
+| `defaultFamily`          | property | `Family` (on a `Person`)                        | stable  |
+| `notificationPreference` | property | `schema:StructuredValue`, a boolean per channel | pending |
 
 ### Trust and recognition
 

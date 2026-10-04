@@ -65,8 +65,7 @@ pub enum Status {
     Stable,
     /// Its standard is still being written. The URI is permanent, but the
     /// definition may still be refined before the term becomes stable.
-    /// No term is pending today; the next standard's new terms start here.
-    #[allow(dead_code)]
+    /// New terms start here (today: `notificationPreference`).
     Pending,
 }
 
@@ -566,6 +565,35 @@ pub const TERMS: &[Term] = &[
                     person can be a member of several families. Without this \
                     property a consumer cannot tell the family a person \
                     stands in from one they married into or were added to.",
+    },
+    Term {
+        id: "notificationPreference",
+        kind: Kind::Property,
+        domain: Domain::IdentityAndKinship,
+        status: Status::Pending,
+        label: "notification preference",
+        comment: "A person's choice about optional notifications, per \
+                  channel. The value is a schema:StructuredValue with one \
+                  boolean per channel (today `email`): true to receive \
+                  optional notifications on that channel, such as product \
+                  news and digests, false not to. Optional notifications are \
+                  off until the person turns them on. Security and account \
+                  notices (a new sign-in, a changed email address, a \
+                  deletion request) are not optional: they are always sent, \
+                  and no preference covers them.",
+        sub_class_of: None,
+        domain_includes: Some("schema:Person"),
+        range: Some("schema:StructuredValue"),
+        values: None,
+        individual: None,
+        rationale: "schema.org has no consent or notification-preference \
+                    property. schema:contactPoint and schema:ContactPoint say \
+                    how to reach someone, not what they agreed to be sent, \
+                    and schema:ConsumeAction describes an act, not a standing \
+                    choice. Recording the choice on the person, with the \
+                    rule that security notices are outside it, lets every \
+                    app honour one answer instead of each keeping its own \
+                    switch.",
     },
     // ── News and media ─────────────────────────────────────────────────
     Term {
@@ -1483,6 +1511,7 @@ mod tests {
             "PublishingHouse",
             "NewsDesk",
             "defaultFamily",
+            "notificationPreference",
             "assuranceLevel",
             "attestation",
             "kAnonymity",
@@ -1502,6 +1531,20 @@ mod tests {
         ] {
             assert!(find(id).is_some(), "missing term: {id}");
         }
+    }
+
+    /// Asked for by nyuchi/api-gateway#186. The value is per channel, and
+    /// the definition must keep security notices outside the preference,
+    /// or an app could read "off" as permission to stop sending them.
+    #[test]
+    fn notification_preference_is_a_person_choice_that_excludes_security_notices() {
+        let t = find("notificationPreference").expect("term");
+        assert_eq!(t.kind, Kind::Property);
+        assert_eq!(t.status, Status::Pending);
+        assert_eq!(t.domain_includes, Some("schema:Person"));
+        assert_eq!(t.range, Some("schema:StructuredValue"));
+        assert!(t.comment.contains("`email`"));
+        assert!(t.comment.contains("always sent"));
     }
 
     /// BAGS 1.0.0 codes are final (owner-approved 2026-10-04). Every rule

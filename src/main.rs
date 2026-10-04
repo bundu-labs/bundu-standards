@@ -23,7 +23,7 @@ use axum::{
     Router,
 };
 use serde_json::{json, Value};
-use terms::{Domain, Status, Term};
+use terms::{Domain, Kind, Literal, Status, Term};
 use tower_http::{compression::CompressionLayer, trace::TraceLayer};
 
 /// The namespace root. Every term URI is this plus the term id.
@@ -130,6 +130,20 @@ fn term_jsonld(t: &Term) -> Value {
     if let Some(range) = t.range {
         obj.insert("schema:rangeIncludes".into(), json!({ "@id": range }));
     }
+    if let Some(i) = t.individual {
+        // An individual's @type is what it is an instance of, not
+        // rdfs:Resource, so consumers read it as a DefinedTerm.
+        obj.insert("@type".into(), json!(i.types));
+        if let Some(code) = i.term_code {
+            obj.insert("schema:termCode".into(), json!(code));
+        }
+        if let Some(set) = i.in_set {
+            obj.insert("schema:inDefinedTermSet".into(), json!({ "@id": set }));
+        }
+        for (prop, value) in i.facts {
+            obj.insert((*prop).into(), literal(*value));
+        }
+    }
     if let Some(values) = t.values {
         // Enumerated properties publish their permitted values, so an
         // implementer never has to guess the spelling of one.
@@ -144,6 +158,22 @@ fn term_jsonld(t: &Term) -> Value {
         );
     }
     v
+}
+
+fn literal(value: Literal) -> Value {
+    match value {
+        Literal::Text(s) => json!(s),
+        Literal::Boolean(b) => json!(b),
+    }
+}
+
+/// The JSON-LD `@type` of a term: the RDF kind, or for an individual, what
+/// it is an instance of.
+fn jsonld_type(t: &Term) -> Value {
+    match (t.kind, t.individual) {
+        (Kind::Individual, Some(i)) => json!(i.types),
+        _ => json!(t.kind.rdf_type()),
+    }
 }
 
 async fn context() -> Response {
@@ -174,7 +204,7 @@ async fn index(headers: HeaderMap) -> Response {
             "terms": terms::TERMS.iter()
                 .map(|t| json!({
                     "@id": format!("bundu:{}", t.id),
-                    "@type": t.kind.rdf_type(),
+                    "@type": jsonld_type(t),
                     "rdfs:label": t.label,
                     "vs:term_status": t.status.vs_term_status(),
                 }))
@@ -266,6 +296,29 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
     if let Some(r) = t.range {
         rows.push(("Value".into(), format!("<code>{r}</code>")));
     }
+    if let Some(i) = t.individual {
+        rows.push((
+            "Instance of".into(),
+            i.types
+                .iter()
+                .map(|ty| format!("<code>{ty}</code>"))
+                .collect::<Vec<_>>()
+                .join(" "),
+        ));
+        if let Some(code) = i.term_code {
+            rows.push(("Code".into(), format!("<code>{}</code>", esc(code))));
+        }
+        if let Some(set) = i.in_set {
+            rows.push(("In set".into(), link(set)));
+        }
+        for (prop, value) in i.facts {
+            let shown = match value {
+                Literal::Text(s) => format!("<code>{}</code>", esc(s)),
+                Literal::Boolean(b) => format!("<code>{b}</code>"),
+            };
+            rows.push((link(prop), shown));
+        }
+    }
     let table = rows
         .iter()
         .map(|(k, v)| format!("<tr><th>{k}</th><td>{v}</td></tr>"))
@@ -309,6 +362,14 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
             ns = NAMESPACE,
         ),
     ))
+}
+
+/// A prefixed name as HTML: a link when it is one of ours.
+fn link(name: &str) -> String {
+    match name.strip_prefix("bundu:") {
+        Some(local) => format!(r#"<a href="/{local}"><code>{name}</code></a>"#),
+        None => format!("<code>{}</code>", esc(name)),
+    }
 }
 
 /// The status row on a term page. Pending is spelled out, because someone
@@ -453,7 +514,7 @@ mod tests {
         for t in terms::TERMS {
             let v = term_jsonld(t);
             assert_eq!(v["@id"], format!("bundu:{}", t.id));
-            assert_eq!(v["@type"], t.kind.rdf_type());
+            assert_eq!(v["@type"], jsonld_type(t));
             assert_eq!(v["rdfs:isDefinedBy"], NAMESPACE);
             assert!(
                 !v["bundu:rationale"].as_str().unwrap_or_default().is_empty(),
@@ -595,10 +656,14 @@ mod tests {
                 "rdfs:subClassOf",
                 "schema:domainIncludes",
                 "schema:rangeIncludes",
+                "schema:inDefinedTermSet",
             ] {
                 match &v[key] {
                     Value::String(s) => names.push(s.clone()),
                     Value::Object(o) => names.push(o["@id"].as_str().unwrap().to_string()),
+                    Value::Array(a) => {
+                        names.extend(a.iter().map(|x| x.as_str().unwrap().to_string()))
+                    }
                     _ => {}
                 }
             }
@@ -660,6 +725,31 @@ mod tests {
         let v = term_jsonld(terms::find("PlatformGuardrail").unwrap());
         assert_eq!(v["rdfs:subClassOf"]["@id"], "bundu:AIGuardrail");
         assert_eq!(v["vs:term_status"], "testing");
+    }
+
+    /// A BAGS rule is published as a DefinedTerm in the BAGS set, keeping
+    /// its code, so `vocab.bundu.org/BAGS-01` is citable as that rule.
+    #[tokio::test]
+    async fn bags_rules_publish_as_coded_terms_in_their_set() {
+        let v = term_jsonld(terms::find("BAGS-08").unwrap());
+        assert_eq!(
+            v["@type"],
+            json!(["schema:DefinedTerm", "bundu:PlatformGuardrail"])
+        );
+        assert_eq!(v["schema:termCode"], "BAGS-08");
+        assert_eq!(v["schema:inDefinedTermSet"]["@id"], "bundu:BAGS");
+        assert_eq!(v["bundu:guardrailCategory"], "prompt_injection");
+        assert_eq!(v["bundu:guardrailSeverity"], "critical");
+        assert_eq!(v["bundu:isCoreGuardrail"], true);
+        assert_eq!(v["bundu:standardVersion"], "1.0.0");
+
+        let set = term_jsonld(terms::find("BAGS").unwrap());
+        assert_eq!(set["@type"], json!(["schema:DefinedTermSet"]));
+
+        let page = body(term(Path("BAGS-08".into()), accept("text/html")).await).await;
+        assert!(page.contains("<th>Code</th><td><code>BAGS-08</code></td>"));
+        assert!(page.contains(r#"<a href="/BAGS"><code>bundu:BAGS</code></a>"#));
+        assert!(page.contains("<code>prompt_injection</code>"));
     }
 
     #[test]

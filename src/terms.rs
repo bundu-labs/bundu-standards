@@ -28,6 +28,9 @@
 pub enum Kind {
     Class,
     Property,
+    /// A named instance of a class: one rule of a standard, or the standard's
+    /// own set of rules. Its RDF types come from [`Individual::types`].
+    Individual,
 }
 
 impl Kind {
@@ -36,6 +39,7 @@ impl Kind {
         match self {
             Kind::Class => "rdfs:Class",
             Kind::Property => "rdf:Property",
+            Kind::Individual => "rdfs:Resource",
         }
     }
 
@@ -43,6 +47,7 @@ impl Kind {
         match self {
             Kind::Class => "Class",
             Kind::Property => "Property",
+            Kind::Individual => "Individual",
         }
     }
 }
@@ -127,6 +132,28 @@ impl Domain {
     ];
 }
 
+/// A literal value an individual states about itself.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Literal {
+    Text(&'static str),
+    Boolean(bool),
+}
+
+/// The facts that make an individual identifiable: what it is, its code in
+/// the set it belongs to, and the values it holds.
+#[derive(Debug, Clone, Copy)]
+pub struct Individual {
+    /// Its RDF types. At least one is a schema.org class, so a consumer that
+    /// does not know this vocabulary still reads something.
+    pub types: &'static [&'static str],
+    /// `schema:termCode`, where the individual is a DefinedTerm.
+    pub term_code: Option<&'static str>,
+    /// `schema:inDefinedTermSet`, where it belongs to one.
+    pub in_set: Option<&'static str>,
+    /// Further (property, value) facts, such as a rule's category.
+    pub facts: &'static [(&'static str, Literal)],
+}
+
 /// A single vocabulary term.
 pub struct Term {
     /// The term name, and the last path segment of its URI.
@@ -146,6 +173,8 @@ pub struct Term {
     pub range: Option<&'static str>,
     /// Permitted values, where the property is an enumeration.
     pub values: Option<&'static [(&'static str, &'static str)]>,
+    /// What an individual is, for individuals only.
+    pub individual: Option<Individual>,
     /// Why schema.org was insufficient. The justification for the term
     /// existing at all.
     pub rationale: &'static str,
@@ -223,6 +252,65 @@ const GUARDRAIL_SEVERITY_VALUES: &[(&str, &str)] = &[
     ),
 ];
 
+/// Permitted values for [`guardrailCategory`](TERMS): the categories of the
+/// Bundu AI Guardrails Standard 1.0.0. Owner-approved 2026-10-04. The
+/// descriptions here are the vocabulary's own; the standard's wording is
+/// published with the standard under CC BY 4.0.
+const GUARDRAIL_CATEGORY_VALUES: &[(&str, &str)] = &[
+    ("child_safety", "The safety of children and minors."),
+    ("self_harm", "Self-harm, suicide and eating disorders."),
+    ("violent_extremism", "Terrorism and violent extremism."),
+    (
+        "hate_harassment",
+        "Hatred, harassment, bullying and threats against people.",
+    ),
+    ("sexual_content", "Sexually explicit content, and consent."),
+    (
+        "weapons_illegal",
+        "Weapons, serious harm and serious crime.",
+    ),
+    (
+        "privacy",
+        "Personal data: extracting, revealing, inferring or collecting it.",
+    ),
+    (
+        "prompt_injection",
+        "Attempts to override the system's instructions, or to extract its \
+         prompt, keys or secrets.",
+    ),
+    (
+        "impersonation_misinformation",
+        "Honesty about being an AI, impersonation, and falsehoods.",
+    ),
+    (
+        "professional_advice",
+        "Medical, legal and financial advice.",
+    ),
+    (
+        "cultural_respect",
+        "Respect for cultures, traditions and languages, African ones in \
+         particular, and Ubuntu.",
+    ),
+    (
+        "refusal_style",
+        "How the system says no when a rule stops it.",
+    ),
+];
+
+/// Why each published rule gets a URI. Shared by every rule: the reason is
+/// the same for all of them, and the rule's own wording lives in the
+/// standard, not here.
+const BAGS_RULE_RATIONALE: &str = "A published rule needs a URI that never \
+    changes, so that a policy, an audit, an AI system card or a guardrail \
+    store can cite exactly this rule rather than a paraphrase of it. The \
+    code is final for BAGS 1.0.0 (owner-approved 2026-10-04), and a later \
+    edition adds codes rather than reusing one. The rule's full wording is \
+    published with the standard under CC BY 4.0 and is not copied into this \
+    CC0 vocabulary.";
+
+/// Types every BAGS 1.0.0 rule carries.
+const BAGS_RULE_TYPES: &[&str] = &["schema:DefinedTerm", "bundu:PlatformGuardrail"];
+
 /// The full vocabulary.
 pub const TERMS: &[Term] = &[
     Term {
@@ -239,6 +327,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: None,
         range: None,
         values: None,
+        individual: None,
         rationale: "schema.org has no Family class. schema:Organization is \
                     structurally correct — a family has members, a name and an \
                     identity — but it carries commercial connotations that \
@@ -262,6 +351,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: None,
         range: None,
         values: None,
+        individual: None,
         rationale: "Communities in this ecosystem are frequently unregistered \
                     and derive standing from collective attestation rather than \
                     from a registry. schema:Organization implies a formality \
@@ -284,6 +374,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: None,
         range: None,
         values: None,
+        individual: None,
         rationale: "schema.org models places and organizations, but not the \
                     custodial relationship between them as a kind of entity. \
                     Custody matters here because it is what a verification \
@@ -301,6 +392,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("schema:Organization"),
         range: Some("schema:Text"),
         values: Some(RECOGNITION_BASIS_VALUES),
+        individual: None,
         rationale: "Structurally identical collectives have wildly different \
                     legal standing. A South African stokvel is defined in \
                     statute but is not a juristic person; an Indonesian desa \
@@ -329,6 +421,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("schema:Thing"),
         range: Some("schema:Integer"),
         values: None,
+        individual: None,
         rationale: "An ordered ladder, not a boolean. schema.org offers no \
                     graduated trust signal, and a plain verified/unverified flag \
                     cannot express the difference between an entity someone has \
@@ -348,6 +441,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("schema:Organization"),
         range: Some("schema:Number"),
         values: None,
+        individual: None,
         rationale: "schema:aggregateRating measures how well something served \
                     the person rating it. This measures something different — \
                     reciprocity and contribution — and conflating the two would \
@@ -365,6 +459,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("schema:Organization"),
         range: Some("schema:Integer"),
         values: None,
+        individual: None,
         rationale: "Distinct from schema:reviewCount because a vouch is not a \
                     review: the voucher stakes their own standing on the claim. \
                     In economies without reliable registries this is often the \
@@ -383,6 +478,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("schema:Organization"),
         range: Some("schema:Boolean"),
         values: None,
+        individual: None,
         rationale: "Most economic activity in the ecosystem's markets is \
                     informal. Recording this plainly, as a neutral fact rather \
                     than an absence of data, is what lets informal traders be \
@@ -410,6 +506,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("schema:Person"),
         range: Some("schema:Integer"),
         values: None,
+        individual: None,
         rationale: "schema.org has no identity-assurance property. NIST IAL \
                     alone is too coarse for the ecosystem: it has nothing \
                     below IAL1, and a verified phone number is a real, \
@@ -433,6 +530,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("schema:Thing"),
         range: Some("schema:Text"),
         values: Some(ATTESTATION_VALUES),
+        individual: None,
         rationale: "Assurance and attestation are deliberately not one \
                     number. An earlier single 0-4 ladder put community \
                     vouching below a verified email address, ranking a \
@@ -458,6 +556,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("schema:Person"),
         range: Some("bundu:Family"),
         values: None,
+        individual: None,
         rationale: "In the Bundu model a person cannot exist without \
                     belonging to a family (the family-first invariant). \
                     schema:memberOf says that a person belongs to a family \
@@ -481,6 +580,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: None,
         range: None,
         values: None,
+        individual: None,
         rationale: "schema.org types the masthead (NewsMediaOrganization) \
                     but not the group above it. Without a term, a house and \
                     its mastheads serialise identically, and a news \
@@ -504,6 +604,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: None,
         range: None,
         values: None,
+        individual: None,
         rationale: "schema:department links an organisation to a part of \
                     itself, but schema.org has no type for that part in a \
                     newsroom. A desk is where bylines, beats and corrections \
@@ -526,6 +627,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("schema:Dataset"),
         range: Some("schema:Integer"),
         values: None,
+        individual: None,
         rationale: "Open data given back by people who deleted their \
                     accounts is only safe to use if a re-user can see how \
                     anonymous it is. Neither schema.org nor DCAT has a \
@@ -549,6 +651,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("schema:Dataset"),
         range: Some("schema:Number"),
         values: None,
+        individual: None,
         rationale: "A k value says how a release was built; the measured \
                     risk says what the check found when it was built. \
                     Publishing both lets anyone audit a release without \
@@ -556,7 +659,7 @@ pub const TERMS: &[Term] = &[
                     DPV have no property for a measured re-identification \
                     risk.",
     },
-    // ── AI guardrails (Bundu AI Guardrail Standard, pending) ──────────
+    // ── AI guardrails (Bundu AI Guardrails Standard, pending) ──────────
     Term {
         id: "AIGuardrail",
         kind: Kind::Class,
@@ -566,18 +669,25 @@ pub const TERMS: &[Term] = &[
         comment: "A rule that constrains what an AI system may say or do, \
                   with the guidance the system is given to follow it. A \
                   guardrail is either a platform guardrail or an entity \
-                  guardrail. Defined by the Bundu AI Guardrail Standard.",
-        sub_class_of: Some("schema:CreativeWork"),
+                  guardrail. A published rule carries a code (its \
+                  schema:termCode, such as BAGS-01) in the set of rules it \
+                  belongs to. Defined by the Bundu AI Guardrails Standard \
+                  (BAGS).",
+        sub_class_of: Some("schema:DefinedTerm"),
         domain_includes: None,
         range: None,
         values: None,
+        individual: None,
         rationale: "schema.org has no type for a rule an AI system must \
-                    follow. schema:CreativeWork is the nearest honest \
-                    parent: a guardrail is authored text with a name, a \
-                    version and a maintainer. schema:DefinedTerm was \
-                    considered and rejected, because a guardrail is not a \
-                    term in a glossary but a normative instruction with a \
-                    severity and a scope.",
+                    follow. schema:DefinedTerm is the nearest parent: a \
+                    published rule is a coded entry (termCode BAGS-01) in a \
+                    published set (inDefinedTermSet), which is how the \
+                    canonical schema (nyuchi/data-infra) models it. \
+                    schema:CreativeWork was the first choice and was \
+                    dropped to match that model; the standard document \
+                    itself is the CreativeWork. The subclass adds what a \
+                    DefinedTerm lacks: that the term binds an AI system, \
+                    with a severity and a scope.",
     },
     Term {
         id: "PlatformGuardrail",
@@ -593,6 +703,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: None,
         range: None,
         values: None,
+        individual: None,
         rationale: "The standard has two tiers of rule with different \
                     authority, and a consumer composing a system prompt must \
                     know which tier a rule belongs to: a platform rule is \
@@ -617,6 +728,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: None,
         range: None,
         values: None,
+        individual: None,
         rationale: "The counterpart of PlatformGuardrail. Typing it \
                     separately is what lets a consumer enforce the \
                     standard's stacking rule mechanically: a rule typed \
@@ -630,19 +742,21 @@ pub const TERMS: &[Term] = &[
         status: Status::Pending,
         label: "Guardrail Category",
         comment: "The kind of harm or conduct a guardrail addresses, such \
-                  as hate, violence or sexual content. Attached to a \
-                  guardrail with schema:category.",
+                  as child safety or prompt injection, when it is published \
+                  as a term of its own with a name and description. Its \
+                  schema:termCode is the key that guardrailCategory \
+                  carries.",
         sub_class_of: Some("schema:DefinedTerm"),
         domain_includes: None,
         range: None,
         values: None,
+        individual: None,
         rationale: "Categories are a controlled set, so each one is a \
                     schema:DefinedTerm in a DefinedTermSet that the \
                     standard publishes. This class marks a DefinedTerm as a \
                     guardrail category, so a consumer can tell it from any \
-                    other term. The categories themselves are not \
-                    enumerated here until the standard fixes stable \
-                    identifiers for them.",
+                    other term. The category keys themselves are the \
+                    published values of guardrailCategory.",
     },
     Term {
         id: "guardrailSeverity",
@@ -656,11 +770,383 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("bundu:AIGuardrail"),
         range: Some("schema:Text"),
         values: Some(GUARDRAIL_SEVERITY_VALUES),
+        individual: None,
         rationale: "schema.org has no severity property for a rule. The \
                     values are the ones the live guardrail store already \
                     validates, so the vocabulary matches the data rather \
                     than inventing a scale. Published as plain values, like \
                     recognitionBasis, so the spelling is never guessed.",
+    },
+    Term {
+        id: "guardrailCategory",
+        kind: Kind::Property,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "guardrail category",
+        comment: "The kind of harm or conduct a guardrail addresses, as a \
+                  key from the Bundu AI Guardrails Standard. An entity \
+                  guardrail uses the same keys.",
+        sub_class_of: None,
+        domain_includes: Some("bundu:AIGuardrail"),
+        range: Some("schema:Text"),
+        values: Some(GUARDRAIL_CATEGORY_VALUES),
+        individual: None,
+        rationale: "schema:category takes free text or a Thing, so two \
+                    systems would spell the same category differently and \
+                    could not compare their rules. Publishing the keys as \
+                    the values of one property, as recognitionBasis does, \
+                    fixes the spelling. The keys are the ones in BAGS \
+                    1.0.0, owner-approved on 2026-10-04.",
+    },
+    Term {
+        id: "BAGS",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "Bundu AI Guardrails Standard (BAGS)",
+        comment: "The set of platform rules every AI surface in the Bundu \
+                  ecosystem applies, each with a stable code from BAGS-01. \
+                  Edition 1.0.0 has twelve core rules. The standard is \
+                  published under CC BY 4.0.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: &["schema:DefinedTermSet"],
+            term_code: None,
+            in_set: None,
+            facts: &[("bundu:standardVersion", Literal::Text("1.0.0"))],
+        }),
+        rationale: "Each rule names the set it belongs to with \
+                    schema:inDefinedTermSet, which needs a URI for the set. \
+                    The standard's web page will move and be redesigned; \
+                    this URI will not, so rules, audits and guardrail \
+                    stores can point at it permanently.",
+    },
+    Term {
+        id: "BAGS-01",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-01: Child safety and minors",
+        comment: "Rule BAGS-01 of the Bundu AI Guardrails Standard 1.0.0: \
+                  child safety and minors. A core platform guardrail: \
+                  category child_safety, severity critical. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-01"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("child_safety")),
+                ("bundu:guardrailSeverity", Literal::Text("critical")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
+    },
+    Term {
+        id: "BAGS-02",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-02: Self-harm and suicide",
+        comment: "Rule BAGS-02 of the Bundu AI Guardrails Standard 1.0.0: \
+                  self-harm and suicide. A core platform guardrail: \
+                  category self_harm, severity critical. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-02"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("self_harm")),
+                ("bundu:guardrailSeverity", Literal::Text("critical")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
+    },
+    Term {
+        id: "BAGS-03",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-03: Violent extremism and terrorism",
+        comment: "Rule BAGS-03 of the Bundu AI Guardrails Standard 1.0.0: \
+                  violent extremism and terrorism. A core platform guardrail: \
+                  category violent_extremism, severity critical. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-03"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("violent_extremism")),
+                ("bundu:guardrailSeverity", Literal::Text("critical")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
+    },
+    Term {
+        id: "BAGS-04",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-04: Hate and harassment",
+        comment: "Rule BAGS-04 of the Bundu AI Guardrails Standard 1.0.0: \
+                  hate and harassment. A core platform guardrail: \
+                  category hate_harassment, severity high. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-04"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("hate_harassment")),
+                ("bundu:guardrailSeverity", Literal::Text("high")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
+    },
+    Term {
+        id: "BAGS-05",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-05: Sexual content",
+        comment: "Rule BAGS-05 of the Bundu AI Guardrails Standard 1.0.0: \
+                  sexual content. A core platform guardrail: \
+                  category sexual_content, severity high. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-05"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("sexual_content")),
+                ("bundu:guardrailSeverity", Literal::Text("high")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
+    },
+    Term {
+        id: "BAGS-06",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-06: Weapons and illegal activity",
+        comment: "Rule BAGS-06 of the Bundu AI Guardrails Standard 1.0.0: \
+                  weapons and illegal activity. A core platform guardrail: \
+                  category weapons_illegal, severity critical. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-06"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("weapons_illegal")),
+                ("bundu:guardrailSeverity", Literal::Text("critical")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
+    },
+    Term {
+        id: "BAGS-07",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-07: Privacy and personal data",
+        comment: "Rule BAGS-07 of the Bundu AI Guardrails Standard 1.0.0: \
+                  privacy and personal data. A core platform guardrail: \
+                  category privacy, severity critical. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-07"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("privacy")),
+                ("bundu:guardrailSeverity", Literal::Text("critical")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
+    },
+    Term {
+        id: "BAGS-08",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-08: Prompt injection and jailbreak resistance",
+        comment: "Rule BAGS-08 of the Bundu AI Guardrails Standard 1.0.0: \
+                  prompt injection and jailbreak resistance. A core platform guardrail: \
+                  category prompt_injection, severity critical. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-08"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("prompt_injection")),
+                ("bundu:guardrailSeverity", Literal::Text("critical")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
+    },
+    Term {
+        id: "BAGS-09",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-09: Impersonation and misinformation",
+        comment: "Rule BAGS-09 of the Bundu AI Guardrails Standard 1.0.0: \
+                  impersonation and misinformation. A core platform guardrail: \
+                  category impersonation_misinformation, severity high. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-09"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("impersonation_misinformation")),
+                ("bundu:guardrailSeverity", Literal::Text("high")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
+    },
+    Term {
+        id: "BAGS-10",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-10: Medical, legal and financial advice",
+        comment: "Rule BAGS-10 of the Bundu AI Guardrails Standard 1.0.0: \
+                  medical, legal and financial advice. A core platform guardrail: \
+                  category professional_advice, severity high. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-10"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("professional_advice")),
+                ("bundu:guardrailSeverity", Literal::Text("high")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
+    },
+    Term {
+        id: "BAGS-11",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-11: Ubuntu, cultural respect and African-language dignity",
+        comment: "Rule BAGS-11 of the Bundu AI Guardrails Standard 1.0.0: \
+                  Ubuntu, cultural respect and African-language dignity. A core platform guardrail: \
+                  category cultural_respect, severity high. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-11"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("cultural_respect")),
+                ("bundu:guardrailSeverity", Literal::Text("high")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
+    },
+    Term {
+        id: "BAGS-12",
+        kind: Kind::Individual,
+        domain: Domain::AiGuardrails,
+        status: Status::Pending,
+        label: "BAGS-12: Honest refusal",
+        comment: "Rule BAGS-12 of the Bundu AI Guardrails Standard 1.0.0: \
+                  honest refusal. A core platform guardrail: \
+                  category refusal_style, severity medium. The rule's wording is \
+                  published in the standard.",
+        sub_class_of: None,
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: Some(Individual {
+            types: BAGS_RULE_TYPES,
+            term_code: Some("BAGS-12"),
+            in_set: Some("bundu:BAGS"),
+            facts: &[
+                ("bundu:guardrailCategory", Literal::Text("refusal_style")),
+                ("bundu:guardrailSeverity", Literal::Text("medium")),
+                ("bundu:isCoreGuardrail", Literal::Boolean(true)),
+                ("bundu:standardVersion", Literal::Text("1.0.0")),
+            ],
+        }),
+        rationale: BAGS_RULE_RATIONALE,
     },
     Term {
         id: "appliesToSurface",
@@ -677,6 +1163,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("bundu:AIGuardrail"),
         range: Some("schema:Text"),
         values: None,
+        individual: None,
         rationale: "schema:audience says who a work is for, and \
                     schema:applicationCategory classifies software; neither \
                     names the deployed AI surface a rule binds. Surfaces \
@@ -699,6 +1186,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("bundu:AIGuardrail"),
         range: Some("schema:Text"),
         values: None,
+        individual: None,
         rationale: "A rule enforced only by prompt guidance is weaker than \
                     one also checked on the output, and an auditor needs to \
                     see which a system claims. schema.org has nothing for \
@@ -720,6 +1208,7 @@ pub const TERMS: &[Term] = &[
         domain_includes: Some("bundu:PlatformGuardrail"),
         range: Some("schema:Boolean"),
         values: None,
+        individual: None,
         rationale: "Core status changes how every other field of the rule is \
                     read: a core rule ignores appliesToSurface. A consumer \
                     that missed it would let a surface opt out of a rule \
@@ -733,12 +1222,13 @@ pub const TERMS: &[Term] = &[
         label: "standard version",
         comment: "The version of a Bundu standard that a rule, policy or \
                   implementation was written against, such as the version \
-                  of the Bundu AI Guardrail Standard a guardrail conforms \
+                  of the Bundu AI Guardrails Standard a guardrail conforms \
                   to.",
         sub_class_of: None,
         domain_includes: Some("schema:CreativeWork"),
         range: Some("schema:Text"),
         values: None,
+        individual: None,
         rationale: "schema:version is the version of the thing itself, so a \
                     guardrail at its own version 3 cannot also say it was \
                     written against version 1.2 of the standard. \
@@ -776,9 +1266,16 @@ mod tests {
                 "{}: ids must be flat — subject areas group the index, never the URI",
                 t.id
             );
+            // Hyphens are allowed between alphanumerics, so a rule keeps its
+            // published code (BAGS-01) as its id. A hyphen is unreserved in a
+            // URI and never needs escaping.
             assert!(
-                t.id.chars().all(|c| c.is_ascii_alphanumeric()),
-                "{}: ids must be plain ASCII alphanumerics so the URI never needs escaping",
+                t.id.chars().all(|c| c.is_ascii_alphanumeric() || c == '-')
+                    && !t.id.starts_with('-')
+                    && !t.id.ends_with('-')
+                    && !t.id.contains("--"),
+                "{}: ids must be ASCII alphanumerics, with single inner hyphens at \
+                 most, so the URI never needs escaping",
                 t.id
             );
         }
@@ -814,6 +1311,7 @@ mod tests {
         for t in TERMS {
             match t.kind {
                 Kind::Class => {
+                    assert!(t.individual.is_none(), "{}: only individuals", t.id);
                     assert!(
                         t.sub_class_of.is_some(),
                         "{}: a class must name its schema.org parent, or consumers \
@@ -832,6 +1330,24 @@ mod tests {
                     assert!(
                         t.sub_class_of.is_none(),
                         "{}: properties are not subclasses",
+                        t.id
+                    );
+                }
+                Kind::Individual => {
+                    let i = t
+                        .individual
+                        .unwrap_or_else(|| panic!("{}: an individual must say what it is", t.id));
+                    assert!(
+                        i.types.iter().any(|ty| ty.starts_with("schema:")),
+                        "{}: an individual needs a schema.org type, or consumers \
+                         that do not know this vocabulary read nothing at all",
+                        t.id
+                    );
+                    assert!(
+                        t.sub_class_of.is_none()
+                            && t.domain_includes.is_none()
+                            && t.range.is_none(),
+                        "{}: individuals are neither classes nor properties",
                         t.id
                     );
                 }
@@ -919,10 +1435,16 @@ mod tests {
     #[test]
     fn no_dangling_bundu_references() {
         for t in TERMS {
-            for r in [t.sub_class_of, t.domain_includes, t.range]
+            let mut refs: Vec<&str> = [t.sub_class_of, t.domain_includes, t.range]
                 .into_iter()
                 .flatten()
-            {
+                .collect();
+            if let Some(i) = t.individual {
+                refs.extend(i.types);
+                refs.extend(i.in_set);
+                refs.extend(i.facts.iter().map(|(p, _)| *p));
+            }
+            for r in refs {
                 if let Some(local) = r.strip_prefix("bundu:") {
                     assert!(
                         find(local).is_some(),
@@ -940,7 +1462,7 @@ mod tests {
     }
 
     /// Owner decision 2026-10-04: the guardrail terms publish while the
-    /// Bundu AI Guardrail Standard is still being written, so they must say
+    /// Bundu AI Guardrails Standard is still being written, so they must say
     /// so. Promote them to stable when the standard is published.
     #[test]
     fn guardrail_terms_are_pending_until_the_standard_publishes() {
@@ -962,7 +1484,7 @@ mod tests {
             "attestation",
             "kAnonymity",
             "maxReidentificationRisk",
-            // Bundu AI Guardrail Standard.
+            // Bundu AI Guardrails Standard.
             "AIGuardrail",
             "PlatformGuardrail",
             "EntityGuardrail",
@@ -972,9 +1494,60 @@ mod tests {
             "enforcementLayer",
             "isCoreGuardrail",
             "standardVersion",
+            "guardrailCategory",
+            "BAGS",
         ] {
             assert!(find(id).is_some(), "missing term: {id}");
         }
+    }
+
+    /// BAGS 1.0.0 codes are final (owner-approved 2026-10-04). Every rule
+    /// keeps its code as its id, sits in the BAGS set, and states only
+    /// values the vocabulary publishes.
+    #[test]
+    fn bags_rules_are_complete_and_consistent() {
+        let allowed = |prop: &str| -> Vec<&'static str> {
+            find(prop)
+                .and_then(|t| t.values)
+                .expect("enumerated")
+                .iter()
+                .map(|(v, _)| *v)
+                .collect()
+        };
+        let categories = allowed("guardrailCategory");
+        let severities = allowed("guardrailSeverity");
+        let mut seen_categories = Vec::new();
+        for n in 1..=12 {
+            let code = format!("BAGS-{n:02}");
+            let t = find(&code).unwrap_or_else(|| panic!("missing rule {code}"));
+            assert_eq!(t.kind, Kind::Individual);
+            let i = t.individual.expect("individual");
+            assert_eq!(i.term_code, Some(t.id), "{code}: id and termCode differ");
+            assert_eq!(i.in_set, Some("bundu:BAGS"));
+            assert!(i.types.contains(&"bundu:PlatformGuardrail"));
+            for (prop, value) in i.facts {
+                if let Literal::Text(v) = value {
+                    match *prop {
+                        "bundu:guardrailCategory" => {
+                            assert!(categories.contains(v), "{code}: unknown category {v}");
+                            seen_categories.push(*v);
+                        }
+                        "bundu:guardrailSeverity" => {
+                            assert!(severities.contains(v), "{code}: unknown severity {v}")
+                        }
+                        _ => {}
+                    }
+                }
+            }
+        }
+        assert!(find("BAGS-13").is_none(), "BAGS 1.0.0 has twelve rules");
+        seen_categories.sort_unstable();
+        let mut all = categories.clone();
+        all.sort_unstable();
+        assert_eq!(
+            seen_categories, all,
+            "each category has exactly one 1.0.0 rule"
+        );
     }
 
     #[test]

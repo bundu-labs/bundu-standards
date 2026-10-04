@@ -12,11 +12,23 @@ name: Deploy
 # not wait for the deploy, so a missing FLY_API_TOKEN never holds it back.
 # It uses GITHUB_TOKEN (bundu-labs has no RELEASE_BUMP_TOKEN); nothing else
 # here runs on a tag, so no other workflow needs to start from it.
+#
+# The version follows the org policy (nyuchi/.github#80): a release to main is
+# the next MINOR above the highest tag (x.y.z -> x.y+1.0); merges into staging
+# are tagged as patches by staging-version.yml; a MAJOR is only ever released
+# by hand (run this workflow with bump: major). The shared next-version action
+# refuses any other version before anything is tagged.
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      bump:
+        description: Override the release bump (major is manual only).
+        type: choice
+        options: [minor, patch, major]
+        default: minor
 
 # One deploy at a time, in order; never cancel one half-way.
 concurrency:
@@ -112,6 +124,18 @@ jobs:
     steps:
       # This job pushes the tag, so its checkout keeps GITHUB_TOKEN.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Read the version
+        id: read
+        run: echo "version=$(grep -m1 '^version = ' Cargo.toml | cut -d'"' -f2)" >> "$GITHUB_OUTPUT"
+
+      - name: Check it against the versioning policy
+        uses: nyuchi/.github/.github/actions/next-version@de909ab7468d998ba2cf87416ac2042616eba75d  # main, 2026-10-04
+        with:
+          channel: main
+          bump: ${{ inputs.bump || '' }}
+          manual: ${{ github.event_name == 'workflow_dispatch' }}
+          proposed: ${{ steps.read.outputs.version }}
 
       - name: Tag and release a new version
         env:

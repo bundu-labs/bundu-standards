@@ -5,6 +5,12 @@ are a permanent contract: a release may add terms, refine a pending term's
 definition or promote it to stable, and never removes a term or changes a
 stable term's meaning.
 
+From 2026-10-04 releases follow the org versioning policy
+([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): a release
+to `main` is the next minor above the highest tag (so the next is 0.2.0),
+merges into `staging` are patches, and a major is only released by hand.
+Versions released before then are not renumbered.
+
 ## 0.1.4 (2026-10-04)
 
 ### Added

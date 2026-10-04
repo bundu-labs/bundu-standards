@@ -73,11 +73,25 @@ jobs:
           TERMS=$(curl -sf http://127.0.0.1:8080/context.jsonld \
             | python3 -c "import json,sys; print(' '.join(k for k in json.load(sys.stdin)['@context'] if k not in ('schema','bundu')))")
           echo "checking: $TERMS"
+          # Valid JSON-LD that names the term, with a definition, a
+          # rationale and a W3C vocabulary status.
+          CHECK_JSONLD='
+          import json, os, sys
+          d = json.load(sys.stdin)
+          t = os.environ["T"]
+          assert d["@id"] == "bundu:" + t, d["@id"]
+          assert d["vs:term_status"] in ("stable", "testing")
+          assert d["rdfs:comment"] and d["bundu:rationale"]
+          '
+          CHECK_JSONLD=$(printf '%s' "$CHECK_JSONLD" | sed 's/^ *//')
           for t in $TERMS; do
-            curl -sf -o /dev/null -H 'Accept: application/ld+json' "http://127.0.0.1:8080/$t" \
-              || { echo "::error::$t does not resolve as JSON-LD"; exit 1; }
-            curl -sf -o /dev/null -H 'Accept: text/html' "http://127.0.0.1:8080/$t" \
+            curl -sf -H 'Accept: application/ld+json' "http://127.0.0.1:8080/$t" \
+              | T="$t" python3 -c "$CHECK_JSONLD" \
+              || { echo "::error::$t does not resolve as valid JSON-LD"; exit 1; }
+            page=$(curl -sf -H 'Accept: text/html' "http://127.0.0.1:8080/$t") \
               || { echo "::error::$t does not resolve as HTML"; exit 1; }
+            case "$page" in *"<code class=\"term\">$t</code>"*) ;; \
+              *) echo "::error::$t HTML page does not render the term"; exit 1;; esac
           done
 
       - name: Content negotiation and 404 behaviour

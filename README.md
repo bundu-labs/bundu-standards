@@ -1,19 +1,25 @@
-# Bundu vocabulary
+# Bundu standards
 
-> RDF terms for concepts schema.org has no word for.
+> The home of every Bundu standard. First: the Bundu vocabulary, RDF terms for
+> concepts schema.org has no word for.
 
-[![CI](https://github.com/bundu-labs/vocab/actions/workflows/ci.yml/badge.svg)](https://github.com/bundu-labs/vocab/actions/workflows/ci.yml)
+[![CI](https://github.com/bundu-labs/bundu-standards/actions/workflows/ci.yml/badge.svg)](https://github.com/bundu-labs/bundu-standards/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/code-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Vocabulary: CC0 1.0](https://img.shields.io/badge/vocabulary-CC0_1.0-lightgrey.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
 ![Rust](https://img.shields.io/badge/Rust-2021_edition-000000?logo=rust&logoColor=white)
 
-**Version:** 0.1.0 | **Live:** [vocab.bundu.org](https://vocab.bundu.org) | **Deploys to:** Fly.io (`bundu-vocab`, Johannesburg) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
+**Version:** 0.1.1 | **Live:** [vocab.bundu.org](https://vocab.bundu.org) | **Deploys to:** Fly.io (`bundu-vocab`, Johannesburg) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
 
 ---
 
 ## What this is
 
-A vocabulary namespace. When something dereferences
+This repository was `bundu-labs/vocab` until 2026-10-04. It was renamed
+because it is now the home for every Bundu standard, and the vocabulary is the
+first of them. The rename changed the repository, not the namespace: every
+term URI under `https://vocab.bundu.org/` is unchanged and permanent.
+
+The vocabulary is a namespace. When something dereferences
 `https://vocab.bundu.org/Family`, it gets back a definition — JSON-LD for a
 machine, a readable page for a person, from the same URI by content
 negotiation.
@@ -68,28 +74,72 @@ does not belong.
 
 ## Terms
 
+Every term publishes a status as W3C `vs:term_status`. **Stable** terms are in
+live data or a published standard, and their meaning is fixed. **Pending**
+terms belong to a standard that is still being written: the URI is permanent,
+but the definition may be refined before the term becomes stable. Pending is
+published as `testing`, the W3C value for that state.
+
 ### Identity and kinship
 
-| Term         | Kind  | Extends               |
-| ------------ | ----- | --------------------- |
-| `Family`     | class | `schema:Organization` |
-| `Community`  | class | `schema:Organization` |
-| `PlaceOwner` | class | `schema:Organization` |
+| Term            | Kind     | Extends or value         | Status |
+| --------------- | -------- | ------------------------ | ------ |
+| `Family`        | class    | `schema:Organization`    | stable |
+| `Community`     | class    | `schema:Organization`    | stable |
+| `PlaceOwner`    | class    | `schema:Organization`    | stable |
+| `defaultFamily` | property | `Family` (on a `Person`) | stable |
 
 ### Trust and recognition
 
-| Term               | Kind     | Value                                                                            |
-| ------------------ | -------- | -------------------------------------------------------------------------------- |
-| `recognitionBasis` | property | `customary` · `statutory` · `registry` · `member_consent` · `contested` · `none` |
-| `verificationTier` | property | integer, 0–3                                                                     |
-| `ubuntuScore`      | property | number                                                                           |
-| `communityVouches` | property | integer                                                                          |
+| Term               | Kind     | Value                                                                            | Status |
+| ------------------ | -------- | -------------------------------------------------------------------------------- | ------ |
+| `recognitionBasis` | property | `customary` · `statutory` · `registry` · `member_consent` · `contested` · `none` | stable |
+| `verificationTier` | property | integer, 0–3                                                                     | stable |
+| `ubuntuScore`      | property | number                                                                           | stable |
+| `communityVouches` | property | integer                                                                          | stable |
+| `assuranceLevel`   | property | integer, 0–4 (NIST SP 800-63-4 IAL as a reference mapping)                       | stable |
+| `attestation`      | property | `community` · `business` · `domain`                                              | stable |
 
 ### Informal economy
 
-| Term         | Kind     | Value   |
-| ------------ | -------- | ------- |
-| `isInformal` | property | boolean |
+| Term         | Kind     | Value   | Status |
+| ------------ | -------- | ------- | ------ |
+| `isInformal` | property | boolean | stable |
+
+### News and media
+
+| Term              | Kind  | Extends                        | Status |
+| ----------------- | ----- | ------------------------------ | ------ |
+| `PublishingHouse` | class | `schema:NewsMediaOrganization` | stable |
+| `NewsDesk`        | class | `schema:NewsMediaOrganization` | stable |
+
+### Open data
+
+| Term                      | Kind     | Value                  | Status |
+| ------------------------- | -------- | ---------------------- | ------ |
+| `kAnonymity`              | property | integer (on a Dataset) | stable |
+| `maxReidentificationRisk` | property | number, 0–1            | stable |
+
+### AI guardrails
+
+Terms for the Bundu AI Guardrail Standard, which is still being written.
+These are the structural terms only. Terms for individual rules wait until
+the standard gives its rules stable identifiers.
+
+| Term                | Kind     | Extends or value                       | Status  |
+| ------------------- | -------- | -------------------------------------- | ------- |
+| `AIGuardrail`       | class    | `schema:CreativeWork`                  | pending |
+| `PlatformGuardrail` | class    | `AIGuardrail`                          | pending |
+| `EntityGuardrail`   | class    | `AIGuardrail`                          | pending |
+| `GuardrailCategory` | class    | `schema:DefinedTerm`                   | pending |
+| `guardrailSeverity` | property | `critical` · `high` · `medium` · `low` | pending |
+| `appliesToSurface`  | property | text, a surface identifier             | pending |
+| `enforcementLayer`  | property | text; values set by the standard       | pending |
+| `isCoreGuardrail`   | property | boolean                                | pending |
+| `standardVersion`   | property | text, the version of a Bundu standard  | pending |
+
+A guardrail's category is attached with `schema:category`, not a new
+property.
 
 ## Using it
 

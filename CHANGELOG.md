@@ -5,6 +5,32 @@ are a permanent contract: a release may add terms, refine a pending term's
 definition or promote it to stable, and never removes a term or changes a
 stable term's meaning.
 
+## 0.1.2 (2026-10-04)
+
+### Added
+
+- **BAGS 1.0.0 rule terms.** The rule codes are final (owner-approved
+  2026-10-04). `BAGS` is the standard's set of rules (`schema:DefinedTermSet`).
+  `BAGS-01` to `BAGS-12` are its twelve core rules, each a
+  `schema:DefinedTerm` and a `PlatformGuardrail` with its `schema:termCode`,
+  set, category, severity and standard version. A rule's wording stays in the
+  standard (CC BY 4.0) and is not copied into this CC0 vocabulary.
+- `guardrailCategory`, whose values are the twelve BAGS 1.0.0 category keys.
+- A new kind of term, the **individual**: a named instance such as a rule,
+  published with its own types.
+
+### Changed
+
+- `AIGuardrail` (pending) is now a subclass of `schema:DefinedTerm`, not
+  `schema:CreativeWork`. That is how the canonical schema (nyuchi/data-infra
+  `shamwari.yaml`) models a guardrail: a coded term in a published set. The
+  standard document itself is the CreativeWork.
+- `GuardrailCategory` now says that its `termCode` is a `guardrailCategory`
+  key.
+- The standard is called the Bundu AI Guardrails Standard (BAGS) throughout.
+- A term id may contain single hyphens between alphanumerics, so that a rule
+  keeps its published code as its URI.
+
 ## 0.1.1 (2026-10-04)
 
 The repository is renamed from `bundu-labs/vocab` to
@@ -28,7 +54,7 @@ under `https://vocab.bundu.org/` are unchanged.
   - `kAnonymity` and `maxReidentificationRisk`, for the open research data
     given back when a person deletes their account. `kAnonymity` was already
     emitted by the Nyuchi API's open-data catalogue and did not resolve.
-- **AI guardrail terms** for the Bundu AI Guardrail Standard, all pending:
+- **AI guardrail terms** for the Bundu AI Guardrails Standard, all pending:
   `AIGuardrail`, `PlatformGuardrail`, `EntityGuardrail`, `GuardrailCategory`,
   `guardrailSeverity`, `appliesToSurface`, `enforcementLayer`,
   `isCoreGuardrail` and `standardVersion`. Per-rule terms wait until the

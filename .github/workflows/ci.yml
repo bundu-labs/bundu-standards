@@ -3,6 +3,8 @@ name: CI
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  push:
+    branches: [main, staging]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -15,6 +17,7 @@ jobs:
   # Org convention: feature → staging → main. Enforced here rather than by
   # branch protection alone so the failure explains itself.
   validate-target:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     name: Validate PR Target
     steps:
@@ -87,7 +90,7 @@ jobs:
       - name: Start server
         run: |
           LISTEN_ADDR=127.0.0.1:8080 ./target/release/bundu-vocab &
-          for i in $(seq 1 30); do
+          for _ in $(seq 1 30); do
             curl -sf http://127.0.0.1:8080/health && break
             sleep 1
           done
@@ -120,6 +123,7 @@ jobs:
 
   comment:
     needs: [validate-target, test, contract]
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     name: PR Status Comment
     permissions:

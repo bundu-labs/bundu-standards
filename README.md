@@ -8,7 +8,7 @@
 [![Vocabulary: CC0 1.0](https://img.shields.io/badge/vocabulary-CC0_1.0-lightgrey.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
 ![Rust](https://img.shields.io/badge/Rust-2021_edition-000000?logo=rust&logoColor=white)
 
-**Version:** 0.1.2 | **Live:** [vocab.bundu.org](https://vocab.bundu.org) | **Deploys to:** Fly.io (`bundu-vocab`, Johannesburg) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
+**Version:** 0.1.3 | **Live:** [vocab.bundu.org](https://vocab.bundu.org) | **Deploys to:** Fly.io (`bundu-vocab`, Johannesburg) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
 
 ---
 
@@ -122,21 +122,22 @@ published as `testing`, the W3C value for that state.
 
 ### AI guardrails
 
-Terms for the Bundu AI Guardrails Standard (BAGS). They are pending until the
-standard is published on bundu.org.
+Terms for the Bundu AI Guardrails Standard (BAGS). The standard was published
+on [bundu.org](https://www.bundu.org/research/standards/ai-guardrails) on
+2026-10-04, so they are stable.
 
-| Term                | Kind     | Extends or value                                         | Status  |
-| ------------------- | -------- | -------------------------------------------------------- | ------- |
-| `AIGuardrail`       | class    | `schema:DefinedTerm`                                     | pending |
-| `PlatformGuardrail` | class    | `AIGuardrail`                                            | pending |
-| `EntityGuardrail`   | class    | `AIGuardrail`                                            | pending |
-| `GuardrailCategory` | class    | `schema:DefinedTerm`                                     | pending |
-| `guardrailCategory` | property | the twelve BAGS 1.0.0 category keys, e.g. `child_safety` | pending |
-| `guardrailSeverity` | property | `critical` · `high` · `medium` · `low`                   | pending |
-| `appliesToSurface`  | property | text, a surface identifier                               | pending |
-| `enforcementLayer`  | property | text; values set by the standard                         | pending |
-| `isCoreGuardrail`   | property | boolean                                                  | pending |
-| `standardVersion`   | property | text, the version of a Bundu standard                    | pending |
+| Term                | Kind     | Extends or value                                         | Status |
+| ------------------- | -------- | -------------------------------------------------------- | ------ |
+| `AIGuardrail`       | class    | `schema:DefinedTerm`                                     | stable |
+| `PlatformGuardrail` | class    | `AIGuardrail`                                            | stable |
+| `EntityGuardrail`   | class    | `AIGuardrail`                                            | stable |
+| `GuardrailCategory` | class    | `schema:DefinedTerm`                                     | stable |
+| `guardrailCategory` | property | the twelve BAGS 1.0.0 category keys, e.g. `child_safety` | stable |
+| `guardrailSeverity` | property | `critical` · `high` · `medium` · `low`                   | stable |
+| `appliesToSurface`  | property | text, a surface identifier                               | stable |
+| `enforcementLayer`  | property | text; values set by the standard                         | stable |
+| `isCoreGuardrail`   | property | boolean                                                  | stable |
+| `standardVersion`   | property | text, the version of a Bundu standard                    | stable |
 
 The rules have terms of their own. `BAGS` is the set (a
 `schema:DefinedTermSet`), and `BAGS-01` to `BAGS-12` are the twelve core

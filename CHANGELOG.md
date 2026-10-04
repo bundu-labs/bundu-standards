@@ -5,7 +5,19 @@ are a permanent contract: a release may add terms, refine a pending term's
 definition or promote it to stable, and never removes a term or changes a
 stable term's meaning.
 
-## Unreleased
+## 0.1.3 (2026-10-04)
+
+### Changed
+
+- **The AI guardrail terms are stable.** The Bundu AI Guardrails Standard
+  (BAGS) 1.0.0 was published on bundu.org on 2026-10-04
+  ([bundu.org/research/standards/ai-guardrails](https://www.bundu.org/research/standards/ai-guardrails)), with its versioned
+  snapshot in `standards/ai-guardrails/bags-1.0.0.json`. Every term in the AI
+  guardrails group (`AIGuardrail`, `PlatformGuardrail`, `EntityGuardrail`,
+  `GuardrailCategory`, `guardrailCategory`, `guardrailSeverity`,
+  `appliesToSurface`, `enforcementLayer`, `isCoreGuardrail`,
+  `standardVersion`, `BAGS` and `BAGS-01` to `BAGS-12`) now publishes
+  `vs:term_status` `stable`, and its meaning is fixed.
 
 ### Added
 

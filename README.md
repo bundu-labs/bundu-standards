@@ -222,6 +222,18 @@ Fly.io, Johannesburg, one always-warm machine. The DNS record for
 `vocab.bundu.org` must point at this app before any published `additionalType`
 URI will resolve.
 
+## Versioning
+
+Releases follow the org policy
+([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)):
+
+- A merge into `staging` is a patch (x.y.z → x.y.z+1), tagged automatically.
+- A release to `main` is a minor (x.y.z → x.y+1.0). The releasing PR sets
+  `version` in `Cargo.toml` to the next minor above the highest tag, with a
+  matching `CHANGELOG.md` section. CI refuses any other version.
+- A major is only released by hand: run the Deploy workflow with
+  `bump: major`. Each segment holds 0–999.
+
 ## History
 
 This repository previously held a scaffold for a Bundu identity gateway. That

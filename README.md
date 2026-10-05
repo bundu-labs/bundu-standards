@@ -198,23 +198,20 @@ define, which is the property that makes the namespace trustworthy.
 
 ## Deployment
 
-Every merge to `main` deploys: [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
-runs format, clippy and the tests, then `flyctl deploy --remote-only` to the
-Fly app `bundu-vocab`, then checks that vocab.bundu.org still answers. It needs
-the repository secret `FLY_API_TOKEN`; without it the deploy is skipped with a
-notice. To set it up (owner, once):
+Production deploys run from GitHub Actions after CI passes on `main`:
+[`.github/workflows/fly-deploy.yml`](.github/workflows/fly-deploy.yml) starts
+when the `CI` workflow succeeds on a push to `main`, checks out the commit CI
+tested, runs `flyctl deploy --remote-only` to the Fly app `bundu-vocab`, then
+checks that vocab.bundu.org still answers. It needs the repository secret
+`FLY_API_TOKEN`, a deploy token scoped to `bundu-vocab` (an owner step);
+without it the deploy is skipped with a notice. It can be re-run from the
+Actions tab (`workflow_dispatch`, `main` only).
 
-```sh
-fly tokens create deploy -a bundu-vocab   # a deploy token for this app only
-gh secret set FLY_API_TOKEN -R bundu-labs/bundu-standards   # paste it at the prompt
-```
-
-A manual deploy is still `fly deploy`, and the workflow can be re-run from the
-Actions tab (`workflow_dispatch`).
+The first deploy of an app is manual (`fly deploy`); every later one is CI.
 
 Releases are automatic too. Bump `version` in `Cargo.toml`, add a
 `## <version> (date)` section to `CHANGELOG.md`, and merge: once the checks
-pass, the same workflow tags `v<version>` and creates a GitHub release from
+pass, [`.github/workflows/release.yml`](.github/workflows/release.yml) tags `v<version>` and creates a GitHub release from
 that section. It doesn't wait for the deploy. A merge that leaves the version
 alone releases nothing. No one pushes tags by hand.
 
@@ -231,7 +228,7 @@ Releases follow the org policy
 - A release to `main` is a minor (x.y.z → x.y+1.0). The releasing PR sets
   `version` in `Cargo.toml` to the next minor above the highest tag, with a
   matching `CHANGELOG.md` section. CI refuses any other version.
-- A major is only released by hand: run the Deploy workflow with
+- A major is only released by hand: run the Release workflow with
   `bump: major`. Each segment holds 0–999.
 
 ## History

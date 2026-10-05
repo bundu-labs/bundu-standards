@@ -11,6 +11,17 @@ to `main` is the next minor above the highest tag (so the next is 0.2.0),
 merges into `staging` are patches, and a major is only released by hand.
 Versions released before then are not renumbered.
 
+## Unreleased
+
+### CI
+
+- Production deploys move to `.github/workflows/fly-deploy.yml`, which runs
+  when `CI` passes on a push to `main` and deploys the commit CI tested to the
+  Fly app `bundu-vocab`, then smoke-tests vocab.bundu.org. Without the
+  `FLY_API_TOKEN` secret it skips with a notice. The tag-and-release job stays
+  on its own as `.github/workflows/release.yml` (the Release workflow), which
+  no longer deploys.
+
 ## 0.2.0 (2026-10-05)
 
 The first release of `staging` to `main` under the org versioning policy.

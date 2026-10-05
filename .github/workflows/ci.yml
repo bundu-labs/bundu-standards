@@ -111,6 +111,8 @@ jobs:
 
   comment:
     needs: [test, contract]
+    # Push runs (main, staging) have no pull request to comment on.
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     name: PR Status Comment
     permissions:

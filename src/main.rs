@@ -23,13 +23,16 @@ use axum::{
     Router,
 };
 use serde_json::{json, Value};
-use terms::{Domain, Term};
+use terms::{Domain, Kind, Literal, Status, Term};
 use tower_http::{compression::CompressionLayer, trace::TraceLayer};
 
 /// The namespace root. Every term URI is this plus the term id.
 const NAMESPACE: &str = "https://vocab.bundu.org/";
 
 const JSON_LD: &str = "application/ld+json";
+
+/// W3C vocabulary status, for `vs:term_status`.
+const VS: &str = "http://www.w3.org/2003/06/sw-vocab-status/ns#";
 
 #[tokio::main]
 async fn main() {
@@ -105,6 +108,7 @@ fn term_jsonld(t: &Term) -> Value {
             "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "schema": "https://schema.org/",
             "bundu": NAMESPACE,
+            "vs": VS,
         },
         "@id": format!("bundu:{}", t.id),
         "@type": t.kind.rdf_type(),
@@ -112,6 +116,7 @@ fn term_jsonld(t: &Term) -> Value {
         "rdfs:comment": t.comment,
         "rdfs:isDefinedBy": NAMESPACE,
         "bundu:rationale": t.rationale,
+        "vs:term_status": t.status.vs_term_status(),
     });
 
     let obj = v.as_object_mut().expect("object");
@@ -124,6 +129,20 @@ fn term_jsonld(t: &Term) -> Value {
     }
     if let Some(range) = t.range {
         obj.insert("schema:rangeIncludes".into(), json!({ "@id": range }));
+    }
+    if let Some(i) = t.individual {
+        // An individual's @type is what it is an instance of, not
+        // rdfs:Resource, so consumers read it as a DefinedTerm.
+        obj.insert("@type".into(), json!(i.types));
+        if let Some(code) = i.term_code {
+            obj.insert("schema:termCode".into(), json!(code));
+        }
+        if let Some(set) = i.in_set {
+            obj.insert("schema:inDefinedTermSet".into(), json!({ "@id": set }));
+        }
+        for (prop, value) in i.facts {
+            obj.insert((*prop).into(), literal(*value));
+        }
     }
     if let Some(values) = t.values {
         // Enumerated properties publish their permitted values, so an
@@ -139,6 +158,22 @@ fn term_jsonld(t: &Term) -> Value {
         );
     }
     v
+}
+
+fn literal(value: Literal) -> Value {
+    match value {
+        Literal::Text(s) => json!(s),
+        Literal::Boolean(b) => json!(b),
+    }
+}
+
+/// The JSON-LD `@type` of a term: the RDF kind, or for an individual, what
+/// it is an instance of.
+fn jsonld_type(t: &Term) -> Value {
+    match (t.kind, t.individual) {
+        (Kind::Individual, Some(i)) => json!(i.types),
+        _ => json!(t.kind.rdf_type()),
+    }
 }
 
 async fn context() -> Response {
@@ -157,7 +192,11 @@ async fn context() -> Response {
 async fn index(headers: HeaderMap) -> Response {
     if !wants_html(&headers) {
         return jsonld(json!({
-            "@context": { "bundu": NAMESPACE, "rdfs": "http://www.w3.org/2000/01/rdf-schema#" },
+            "@context": {
+                "bundu": NAMESPACE,
+                "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                "vs": VS,
+            },
             "@id": NAMESPACE,
             "rdfs:label": "The Bundu vocabulary",
             "rdfs:comment": "RDF terms for concepts schema.org has no word for.",
@@ -165,8 +204,9 @@ async fn index(headers: HeaderMap) -> Response {
             "terms": terms::TERMS.iter()
                 .map(|t| json!({
                     "@id": format!("bundu:{}", t.id),
-                    "@type": t.kind.rdf_type(),
+                    "@type": jsonld_type(t),
                     "rdfs:label": t.label,
+                    "vs:term_status": t.status.vs_term_status(),
                 }))
                 .collect::<Vec<_>>(),
         }));
@@ -181,9 +221,13 @@ async fn index(headers: HeaderMap) -> Response {
             let items = terms::in_domain(*d)
                 .map(|t| {
                     format!(
-                        r#"<li><a href="/{id}"><code>{id}</code></a><span>{kind}</span><p>{comment}</p></li>"#,
+                        r#"<li><a href="/{id}"><code>{id}</code></a><span>{kind}{pending}</span><p>{comment}</p></li>"#,
                         id = t.id,
                         kind = t.kind.label().to_lowercase(),
+                        pending = match t.status {
+                            Status::Pending => format!(" · {}", t.status.label()),
+                            Status::Stable => String::new(),
+                        },
                         comment = esc(t.comment),
                     )
                 })
@@ -237,6 +281,7 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
     let mut rows = vec![
         ("Type".to_string(), t.kind.label().to_string()),
         ("Subject area".to_string(), t.domain.label().to_string()),
+        ("Status".to_string(), status_cell(t.status)),
         (
             "URI".to_string(),
             format!("<code>{NAMESPACE}{}</code>", t.id),
@@ -250,6 +295,29 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
     }
     if let Some(r) = t.range {
         rows.push(("Value".into(), format!("<code>{r}</code>")));
+    }
+    if let Some(i) = t.individual {
+        rows.push((
+            "Instance of".into(),
+            i.types
+                .iter()
+                .map(|ty| format!("<code>{ty}</code>"))
+                .collect::<Vec<_>>()
+                .join(" "),
+        ));
+        if let Some(code) = i.term_code {
+            rows.push(("Code".into(), format!("<code>{}</code>", esc(code))));
+        }
+        if let Some(set) = i.in_set {
+            rows.push(("In set".into(), link(set)));
+        }
+        for (prop, value) in i.facts {
+            let shown = match value {
+                Literal::Text(s) => format!("<code>{}</code>", esc(s)),
+                Literal::Boolean(b) => format!("<code>{b}</code>"),
+            };
+            rows.push((link(prop), shown));
+        }
     }
     let table = rows
         .iter()
@@ -294,6 +362,25 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
             ns = NAMESPACE,
         ),
     ))
+}
+
+/// A prefixed name as HTML: a link when it is one of ours.
+fn link(name: &str) -> String {
+    match name.strip_prefix("bundu:") {
+        Some(local) => format!(r#"<a href="/{local}"><code>{name}</code></a>"#),
+        None => format!("<code>{}</code>", esc(name)),
+    }
+}
+
+/// The status row on a term page. Pending is spelled out, because someone
+/// about to embed the URI needs to know the definition may still move.
+fn status_cell(status: Status) -> String {
+    match status {
+        Status::Stable => "Stable".to_string(),
+        Status::Pending => "Pending: its standard is still being written, so the \
+                            definition may be refined. The URI is permanent."
+            .to_string(),
+    }
 }
 
 fn not_found(name: &str, as_html: bool) -> Response {
@@ -427,7 +514,7 @@ mod tests {
         for t in terms::TERMS {
             let v = term_jsonld(t);
             assert_eq!(v["@id"], format!("bundu:{}", t.id));
-            assert_eq!(v["@type"], t.kind.rdf_type());
+            assert_eq!(v["@type"], jsonld_type(t));
             assert_eq!(v["rdfs:isDefinedBy"], NAMESPACE);
             assert!(
                 !v["bundu:rationale"].as_str().unwrap_or_default().is_empty(),
@@ -475,6 +562,194 @@ mod tests {
         let out = esc("<script>alert(1)</script>");
         assert!(!out.contains('<') && !out.contains('>'));
         assert!(out.contains("&lt;script&gt;"));
+    }
+
+    async fn body(r: Response) -> String {
+        let bytes = axum::body::to_bytes(r.into_body(), usize::MAX)
+            .await
+            .expect("body");
+        String::from_utf8(bytes.to_vec()).expect("utf-8")
+    }
+
+    fn content_type(r: &Response) -> String {
+        r.headers()[header::CONTENT_TYPE]
+            .to_str()
+            .unwrap()
+            .to_string()
+    }
+
+    /// The contract every term URI makes, checked through the real handler
+    /// for every term: it resolves, defaults to JSON-LD, the JSON-LD is valid
+    /// and names the term, and a browser gets a page that renders it.
+    #[tokio::test]
+    async fn every_term_resolves_in_both_representations() {
+        for t in terms::TERMS {
+            // No Accept header: JSON-LD.
+            let r = term(Path(t.id.to_string()), HeaderMap::new()).await;
+            assert_eq!(r.status(), StatusCode::OK, "{}", t.id);
+            assert_eq!(content_type(&r), JSON_LD, "{}", t.id);
+            let v: Value = serde_json::from_str(&body(r).await)
+                .unwrap_or_else(|e| panic!("{}: JSON-LD does not parse: {e}", t.id));
+            assert_eq!(v["@id"], format!("bundu:{}", t.id));
+            assert_eq!(v["vs:term_status"], t.status.vs_term_status());
+
+            // Explicit JSON-LD.
+            let r = term(Path(t.id.to_string()), accept(JSON_LD)).await;
+            assert_eq!(r.status(), StatusCode::OK, "{}", t.id);
+            assert_eq!(content_type(&r), JSON_LD, "{}", t.id);
+
+            // A browser.
+            let r = term(
+                Path(t.id.to_string()),
+                accept("text/html,application/xhtml+xml"),
+            )
+            .await;
+            assert_eq!(r.status(), StatusCode::OK, "{}", t.id);
+            assert!(content_type(&r).starts_with("text/html"), "{}", t.id);
+            let page = body(r).await;
+            assert!(page.starts_with("<!doctype html>"), "{}", t.id);
+            assert!(
+                page.contains(&format!(r#"<code class="term">{}</code>"#, t.id)),
+                "{}: page does not name the term",
+                t.id
+            );
+            assert!(
+                page.contains(&esc(t.comment)),
+                "{}: definition missing",
+                t.id
+            );
+            assert!(
+                page.contains(&esc(t.rationale)),
+                "{}: rationale missing",
+                t.id
+            );
+            assert!(
+                page.contains(t.domain.label()),
+                "{}: subject area missing",
+                t.id
+            );
+            if t.status == Status::Pending {
+                assert!(
+                    page.contains("Pending"),
+                    "{}: pending status not shown",
+                    t.id
+                );
+            }
+        }
+    }
+
+    /// Every prefixed name in a published definition must use a prefix its
+    /// own @context declares, or a JSON-LD processor silently drops it.
+    #[test]
+    fn every_term_uses_only_declared_prefixes() {
+        for t in terms::TERMS {
+            let v = term_jsonld(t);
+            let ctx = v["@context"].as_object().expect("context");
+            let obj = v.as_object().unwrap();
+            let mut names: Vec<String> = obj
+                .keys()
+                .filter(|k| !k.starts_with('@'))
+                .cloned()
+                .collect();
+            for key in [
+                "@type",
+                "rdfs:subClassOf",
+                "schema:domainIncludes",
+                "schema:rangeIncludes",
+                "schema:inDefinedTermSet",
+            ] {
+                match &v[key] {
+                    Value::String(s) => names.push(s.clone()),
+                    Value::Object(o) => names.push(o["@id"].as_str().unwrap().to_string()),
+                    Value::Array(a) => {
+                        names.extend(a.iter().map(|x| x.as_str().unwrap().to_string()))
+                    }
+                    _ => {}
+                }
+            }
+            for n in names {
+                let (prefix, _) = n
+                    .split_once(':')
+                    .unwrap_or_else(|| panic!("{}: {n} is not a prefixed name", t.id));
+                assert!(
+                    ctx.contains_key(prefix),
+                    "{}: prefix {prefix} undeclared",
+                    t.id
+                );
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn context_and_index_list_every_term() {
+        let ctx: Value = serde_json::from_str(&body(context().await).await).unwrap();
+        let idx_json: Value =
+            serde_json::from_str(&body(index(HeaderMap::new()).await).await).unwrap();
+        let idx_html = body(index(accept("text/html")).await).await;
+        assert_eq!(idx_json["termCount"], terms::TERMS.len());
+        for t in terms::TERMS {
+            assert_eq!(ctx["@context"][t.id], format!("bundu:{}", t.id));
+            assert!(
+                idx_html.contains(&format!(r#"<a href="/{0}"><code>{0}</code></a>"#, t.id)),
+                "{} missing from the index page",
+                t.id
+            );
+        }
+        for d in Domain::ALL {
+            if terms::in_domain(*d).next().is_some() {
+                assert!(
+                    idx_html.contains(d.label()),
+                    "{} section missing",
+                    d.label()
+                );
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn unknown_terms_are_404_in_both_representations() {
+        let r = term(Path("NotATerm".into()), HeaderMap::new()).await;
+        assert_eq!(r.status(), StatusCode::NOT_FOUND);
+        assert_eq!(content_type(&r), JSON_LD);
+        let r = term(Path("aiguardrail".into()), accept("text/html")).await;
+        assert_eq!(
+            r.status(),
+            StatusCode::NOT_FOUND,
+            "lookup is case-sensitive"
+        );
+        assert!(content_type(&r).starts_with("text/html"));
+    }
+
+    #[test]
+    fn subclass_of_a_local_class_publishes_its_bundu_parent() {
+        let v = term_jsonld(terms::find("PlatformGuardrail").unwrap());
+        assert_eq!(v["rdfs:subClassOf"]["@id"], "bundu:AIGuardrail");
+        assert_eq!(v["vs:term_status"], "stable");
+    }
+
+    /// A BAGS rule is published as a DefinedTerm in the BAGS set, keeping
+    /// its code, so `vocab.bundu.org/BAGS-01` is citable as that rule.
+    #[tokio::test]
+    async fn bags_rules_publish_as_coded_terms_in_their_set() {
+        let v = term_jsonld(terms::find("BAGS-08").unwrap());
+        assert_eq!(
+            v["@type"],
+            json!(["schema:DefinedTerm", "bundu:PlatformGuardrail"])
+        );
+        assert_eq!(v["schema:termCode"], "BAGS-08");
+        assert_eq!(v["schema:inDefinedTermSet"]["@id"], "bundu:BAGS");
+        assert_eq!(v["bundu:guardrailCategory"], "prompt_injection");
+        assert_eq!(v["bundu:guardrailSeverity"], "critical");
+        assert_eq!(v["bundu:isCoreGuardrail"], true);
+        assert_eq!(v["bundu:standardVersion"], "1.0.0");
+
+        let set = term_jsonld(terms::find("BAGS").unwrap());
+        assert_eq!(set["@type"], json!(["schema:DefinedTermSet"]));
+
+        let page = body(term(Path("BAGS-08".into()), accept("text/html")).await).await;
+        assert!(page.contains("<th>Code</th><td><code>BAGS-08</code></td>"));
+        assert!(page.contains(r#"<a href="/BAGS"><code>bundu:BAGS</code></a>"#));
+        assert!(page.contains("<code>prompt_injection</code>"));
     }
 
     #[test]

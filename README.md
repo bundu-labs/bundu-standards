@@ -1,17 +1,25 @@
-# Bundu vocabulary
+# Bundu standards
 
-> RDF terms for concepts schema.org has no word for.
+> The home of every Bundu standard. First: the Bundu vocabulary, RDF terms for
+> concepts schema.org has no word for.
 
-**Repository:** `bundu-labs/vocab`
-**Live at:** <https://vocab.bundu.org>
-**Licence:** Apache 2.0 (code) · CC0 1.0 (the vocabulary itself)
-**Owner:** Bundu Foundation (Zimbabwe CLG)
+[![CI](https://github.com/bundu-labs/bundu-standards/actions/workflows/ci.yml/badge.svg)](https://github.com/bundu-labs/bundu-standards/actions/workflows/ci.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/code-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Vocabulary: CC0 1.0](https://img.shields.io/badge/vocabulary-CC0_1.0-lightgrey.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
+![Rust](https://img.shields.io/badge/Rust-2021_edition-000000?logo=rust&logoColor=white)
+
+**Version:** 0.2.0 | **Live:** [vocab.bundu.org](https://vocab.bundu.org) | **Deploys to:** Fly.io (`bundu-vocab`, Johannesburg) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
 
 ---
 
 ## What this is
 
-A vocabulary namespace. When something dereferences
+This repository was `bundu-labs/vocab` until 2026-10-04. It was renamed
+because it is now the home for every Bundu standard, and the vocabulary is the
+first of them. The rename changed the repository, not the namespace: every
+term URI under `https://vocab.bundu.org/` is unchanged and permanent.
+
+The vocabulary is a namespace. When something dereferences
 `https://vocab.bundu.org/Family`, it gets back a definition — JSON-LD for a
 machine, a readable page for a person, from the same URI by content
 negotiation.
@@ -66,28 +74,80 @@ does not belong.
 
 ## Terms
 
+Every term publishes a status as W3C `vs:term_status`. **Stable** terms are in
+live data or a published standard, and their meaning is fixed. **Pending**
+terms belong to a standard that is still being written: the URI is permanent,
+but the definition may be refined before the term becomes stable. Pending is
+published as `testing`, the W3C value for that state.
+
 ### Identity and kinship
 
-| Term         | Kind  | Extends               |
-| ------------ | ----- | --------------------- |
-| `Family`     | class | `schema:Organization` |
-| `Community`  | class | `schema:Organization` |
-| `PlaceOwner` | class | `schema:Organization` |
+| Term                     | Kind     | Extends or value                                | Status  |
+| ------------------------ | -------- | ----------------------------------------------- | ------- |
+| `Family`                 | class    | `schema:Organization`                           | stable  |
+| `Community`              | class    | `schema:Organization`                           | stable  |
+| `PlaceOwner`             | class    | `schema:Organization`                           | stable  |
+| `defaultFamily`          | property | `Family` (on a `Person`)                        | stable  |
+| `notificationPreference` | property | `schema:StructuredValue`, a boolean per channel | pending |
 
 ### Trust and recognition
 
-| Term               | Kind     | Value                                                                            |
-| ------------------ | -------- | -------------------------------------------------------------------------------- |
-| `recognitionBasis` | property | `customary` · `statutory` · `registry` · `member_consent` · `contested` · `none` |
-| `verificationTier` | property | integer, 0–4                                                                     |
-| `ubuntuScore`      | property | number                                                                           |
-| `communityVouches` | property | integer                                                                          |
+| Term               | Kind     | Value                                                                            | Status |
+| ------------------ | -------- | -------------------------------------------------------------------------------- | ------ |
+| `recognitionBasis` | property | `customary` · `statutory` · `registry` · `member_consent` · `contested` · `none` | stable |
+| `verificationTier` | property | integer, 0–4                                                                     | stable |
+| `ubuntuScore`      | property | number                                                                           | stable |
+| `communityVouches` | property | integer                                                                          | stable |
+| `assuranceLevel`   | property | integer, 0–4 (NIST SP 800-63-4 IAL as a reference mapping)                       | stable |
+| `attestation`      | property | `community` · `business` · `domain`                                              | stable |
 
 ### Informal economy
 
-| Term         | Kind     | Value   |
-| ------------ | -------- | ------- |
-| `isInformal` | property | boolean |
+| Term         | Kind     | Value   | Status |
+| ------------ | -------- | ------- | ------ |
+| `isInformal` | property | boolean | stable |
+
+### News and media
+
+| Term              | Kind  | Extends                        | Status |
+| ----------------- | ----- | ------------------------------ | ------ |
+| `PublishingHouse` | class | `schema:NewsMediaOrganization` | stable |
+| `NewsDesk`        | class | `schema:NewsMediaOrganization` | stable |
+
+### Open data
+
+| Term                      | Kind     | Value                  | Status |
+| ------------------------- | -------- | ---------------------- | ------ |
+| `kAnonymity`              | property | integer (on a Dataset) | stable |
+| `maxReidentificationRisk` | property | number, 0–1            | stable |
+
+### AI guardrails
+
+Terms for the Bundu AI Guardrails Standard (BAGS). The standard was published
+on [bundu.org](https://www.bundu.org/research/standards/ai-guardrails) on
+2026-10-04, so they are stable.
+
+| Term                | Kind     | Extends or value                                         | Status |
+| ------------------- | -------- | -------------------------------------------------------- | ------ |
+| `AIGuardrail`       | class    | `schema:DefinedTerm`                                     | stable |
+| `PlatformGuardrail` | class    | `AIGuardrail`                                            | stable |
+| `EntityGuardrail`   | class    | `AIGuardrail`                                            | stable |
+| `GuardrailCategory` | class    | `schema:DefinedTerm`                                     | stable |
+| `guardrailCategory` | property | the twelve BAGS 1.0.0 category keys, e.g. `child_safety` | stable |
+| `guardrailSeverity` | property | `critical` · `high` · `medium` · `low`                   | stable |
+| `appliesToSurface`  | property | text, a surface identifier                               | stable |
+| `enforcementLayer`  | property | text; values set by the standard                         | stable |
+| `isCoreGuardrail`   | property | boolean                                                  | stable |
+| `standardVersion`   | property | text, the version of a Bundu standard                    | stable |
+
+The rules have terms of their own. `BAGS` is the set (a
+`schema:DefinedTermSet`), and `BAGS-01` to `BAGS-12` are the twelve core
+rules of BAGS 1.0.0. Each rule is a `schema:DefinedTerm` and a
+`PlatformGuardrail`, and carries its code (`schema:termCode`), its set, its
+category and its severity. The URI is the code, so
+`https://vocab.bundu.org/BAGS-01` is the rule BAGS-01. The rules' wording is
+published with the standard under CC BY 4.0 and is not copied into this CC0
+vocabulary.
 
 ## Using it
 
@@ -138,13 +198,41 @@ define, which is the property that makes the namespace trustworthy.
 
 ## Deployment
 
+Every merge to `main` deploys: [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+runs format, clippy and the tests, then `flyctl deploy --remote-only` to the
+Fly app `bundu-vocab`, then checks that vocab.bundu.org still answers. It needs
+the repository secret `FLY_API_TOKEN`; without it the deploy is skipped with a
+notice. To set it up (owner, once):
+
 ```sh
-fly deploy
+fly tokens create deploy -a bundu-vocab   # a deploy token for this app only
+gh secret set FLY_API_TOKEN -R bundu-labs/bundu-standards   # paste it at the prompt
 ```
+
+A manual deploy is still `fly deploy`, and the workflow can be re-run from the
+Actions tab (`workflow_dispatch`).
+
+Releases are automatic too. Bump `version` in `Cargo.toml`, add a
+`## <version> (date)` section to `CHANGELOG.md`, and merge: once the checks
+pass, the same workflow tags `v<version>` and creates a GitHub release from
+that section. It doesn't wait for the deploy. A merge that leaves the version
+alone releases nothing. No one pushes tags by hand.
 
 Fly.io, Johannesburg, one always-warm machine. The DNS record for
 `vocab.bundu.org` must point at this app before any published `additionalType`
 URI will resolve.
+
+## Versioning
+
+Releases follow the org policy
+([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)):
+
+- A merge into `staging` is a patch (x.y.z → x.y.z+1), tagged automatically.
+- A release to `main` is a minor (x.y.z → x.y+1.0). The releasing PR sets
+  `version` in `Cargo.toml` to the next minor above the highest tag, with a
+  matching `CHANGELOG.md` section. CI refuses any other version.
+- A major is only released by hand: run the Deploy workflow with
+  `bump: major`. Each segment holds 0–999.
 
 ## History
 
@@ -168,3 +256,13 @@ that touches them. schema.org's CC-BY-SA is a live example of that friction.
 CC0 says: take these terms, use them anywhere, no legal review needed. For
 terms describing African family and informal-economy structures that we want
 other systems to adopt, that is the point.
+
+## Governance
+
+The Bundu Foundation (Zimbabwean Company Limited by Guarantee) is the
+governance body for this namespace; [Nyuchi Africa](https://nyuchi.com) is the
+operator that runs the deployment. The URIs are a permanent contract, and the
+Foundation exists so that the contract outlives whoever happens to be paying
+the hosting bill.
+
+© Bundu Foundation, operated by Nyuchi Africa (Pvt) Ltd.

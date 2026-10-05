@@ -11,6 +11,26 @@ to `main` is the next minor above the highest tag (so the next is 0.2.0),
 merges into `staging` are patches, and a major is only released by hand.
 Versions released before then are not renumbered.
 
+## 0.2.0 (2026-10-05)
+
+The first release of `staging` to `main` under the org versioning policy.
+
+### Changed
+
+- **`verificationTier` is the platform's 0-4 ladder** (#24). The term said
+  0-3 (unclaimed, claimed, verified, fully verified). Every system that
+  writes it uses 0-4: 0 = unverified, 1 = community, 2 = contact verified (a
+  one-time passcode), 3 = government, 4 = licensed (api-gateway
+  `gateway/lib/verification.py`, Kweli). Kweli's ActivityPub actors now
+  emit it (owner decision Q6, 2026-10-04, mukoko-dev/kweli#171), so the
+  published definition has to match.
+
+### CI
+
+- Merges into `staging` are tagged as patches and CI runs on `staging`
+  (#22). The Fly beta (`bundu-vocab-beta`) that #22 added was removed again
+  (#23).
+
 ## 0.1.4 (2026-10-04)
 
 ### Added

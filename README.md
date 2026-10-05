@@ -8,7 +8,7 @@
 [![Vocabulary: CC0 1.0](https://img.shields.io/badge/vocabulary-CC0_1.0-lightgrey.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
 ![Rust](https://img.shields.io/badge/Rust-2021_edition-000000?logo=rust&logoColor=white)
 
-**Version:** 0.1.4 | **Live:** [vocab.bundu.org](https://vocab.bundu.org) | **Deploys to:** Fly.io (`bundu-vocab`, Johannesburg) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
+**Version:** 0.2.0 | **Live:** [vocab.bundu.org](https://vocab.bundu.org) | **Deploys to:** Fly.io (`bundu-vocab`, Johannesburg) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
 
 ---
 
@@ -95,7 +95,7 @@ published as `testing`, the W3C value for that state.
 | Term               | Kind     | Value                                                                            | Status |
 | ------------------ | -------- | -------------------------------------------------------------------------------- | ------ |
 | `recognitionBasis` | property | `customary` · `statutory` · `registry` · `member_consent` · `contested` · `none` | stable |
-| `verificationTier` | property | integer, 0–3                                                                     | stable |
+| `verificationTier` | property | integer, 0–4                                                                     | stable |
 | `ubuntuScore`      | property | number                                                                           | stable |
 | `communityVouches` | property | integer                                                                          | stable |
 | `assuranceLevel`   | property | integer, 0–4 (NIST SP 800-63-4 IAL as a reference mapping)                       | stable |

@@ -1,15 +1,11 @@
-name: Deploy
+name: Release
 
-# Every merge to main ships to vocab.bundu.org (Fly app bundu-vocab), after the
-# same checks CI runs on pull requests. Needs the repo secret FLY_API_TOKEN, a
-# deploy token scoped to the app (README, "Deployment"). Without it the deploy
-# is skipped with a notice, not failed.
-#
-# A merge that bumps the version in Cargo.toml is also released: once the
+# A merge to main that bumps the version in Cargo.toml is released: once the
 # checks pass, the `release` job tags vX.Y.Z and creates a GitHub release
 # whose notes are that version's CHANGELOG.md section. A merge that leaves the
-# version alone finds its tag already there and does nothing. The release does
-# not wait for the deploy, so a missing FLY_API_TOKEN never holds it back.
+# version alone finds its tag already there and does nothing. Deploys are not
+# here: fly-deploy.yml ships to the Fly app bundu-vocab after CI passes on
+# main, and the release never waits for it.
 # It uses GITHUB_TOKEN (bundu-labs has no RELEASE_BUMP_TOKEN); nothing else
 # here runs on a tag, so no other workflow needs to start from it.
 #
@@ -30,9 +26,9 @@ on:
         options: [minor, patch, major]
         default: minor
 
-# One deploy at a time, in order; never cancel one half-way.
+# One release at a time, in order.
 concurrency:
-  group: deploy-production
+  group: release-main
   cancel-in-progress: false
 
 permissions:
@@ -68,52 +64,6 @@ jobs:
 
       - name: Build release
         run: cargo build --release --locked
-
-  deploy:
-    runs-on: ubuntu-latest
-    name: Deploy to Fly (bundu-vocab)
-    needs: test
-    env:
-      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-    steps:
-      - name: Check for the deploy token
-        id: token
-        run: |
-          if [ -z "$FLY_API_TOKEN" ]; then
-            msg="FLY_API_TOKEN is not set. Create one with"
-            msg="$msg 'fly tokens create deploy -a bundu-vocab' and add it as a repository secret."
-            echo "::notice title=Deploy skipped::$msg"
-            echo "present=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        if: steps.token.outputs.present == 'true'
-        with:
-          persist-credentials: false
-
-      - uses: superfly/flyctl-actions/setup-flyctl@fc53c09e1bc3be6f54706524e3b82c4f462f77be # 1.5
-        if: steps.token.outputs.present == 'true'
-
-      - name: Deploy
-        if: steps.token.outputs.present == 'true'
-        run: flyctl deploy --remote-only
-
-      # The URIs are a permanent contract: check the live namespace still
-      # answers after the rollout.
-      - name: Smoke test vocab.bundu.org
-        if: steps.token.outputs.present == 'true'
-        run: |
-          set -euo pipefail
-          for _ in $(seq 1 20); do
-            curl -sf https://vocab.bundu.org/health >/dev/null && break
-            sleep 3
-          done
-          curl -sf -H 'Accept: application/ld+json' https://vocab.bundu.org/Family \
-            | python3 -c "import json,sys; d=json.load(sys.stdin); assert d['@id']=='bundu:Family', d['@id']"
-          code=$(curl -s -o /dev/null -w '%{http_code}' https://vocab.bundu.org/NotATerm)
-          [ "$code" = "404" ] || { echo "::error::unknown term returned $code"; exit 1; }
 
   release:
     runs-on: ubuntu-latest

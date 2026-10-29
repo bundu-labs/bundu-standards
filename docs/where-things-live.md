@@ -46,8 +46,10 @@ drift recorded in the CHANGELOG; none of the earlier checks read the database.
    mapped to registered standards (CF names, UCUM units, ISO codes) before
    anything is stored. A provider's own schema is never adopted.
 6. **Standards the platform uses but the register lacks are proposed here
-   first.** Unit codes (UCUM), the WIS2 / OGC API Features profile and OCHA COD
-   P-codes are the open proposals from the weather work.
+   first.** UCUM, SOSA/SSN, OGC SensorThings, WMDR, WIS2, OGC API - Features,
+   SDMX and OCHA COD are listed as proposed; adoption is the owner's decision.
+7. **No standard exists? Build one and publish it here.** Never keep a private
+   shape because nothing was found (see `AGENTS.md`).
 
 ## Phases
 

@@ -22,6 +22,12 @@ Versions released before then are not renumbered.
   compares the MongoDB `integrations.standards` collection with it.
 - `docs/where-things-live.md`: what lives where, and the rules that keep copies
   from drifting.
+- `AGENTS.md`: the rule that standards are adopted or built and published, never
+  invented per provider, and how to apply it.
+- Eight proposed standards the weather and agriculture work needed and the
+  register lacked: UCUM, SOSA/SSN, OGC SensorThings, WMDR, WIS2, OGC API -
+  Features, SDMX and OCHA COD P-codes. Listed as proposed (seeded inactive) and
+  not yet checked at source.
 
 ### Found
 

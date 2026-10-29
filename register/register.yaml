@@ -1072,3 +1072,115 @@ standards:
     status: adopted
     decided: A§13
     url: https://openntl.org
+
+  # --- proposed 2026-10-29: the standards the weather and agriculture models
+  # --- should have been built on. Not yet checked at source; adopt on the owner's yes.
+  - id: ucum
+    name: Unified Code for Units of Measure (UCUM)
+    domain: core
+    category: specification
+    steward: Regenstrief Institute
+    commitment: Every stored quantity declares its unit as a UCUM code, once
+    current: Not yet checked at source (2026-10-29)
+    governs: >-
+      The unit of every measured value (Cel, hPa, m/s, mm, %), so a number never
+      travels without a machine-readable unit and a provider's own unit (knots,
+      km/h) never reaches storage.
+    status: proposed
+    decided: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed
+    url: https://ucum.org/ucum
+    notes: CF Conventions accepts UCUM-form units, which is how the two fit together.
+  - id: sosa_ssn
+    name: Semantic Sensor Network ontology (SOSA/SSN)
+    domain: weather
+    category: vocabulary
+    steward: W3C and OGC
+    commitment: Observations are modelled as SOSA observations
+    current: Not yet checked at source (2026-10-29)
+    governs: >-
+      The shape of an observation: what was observed (observed property), the
+      feature of interest, the sensor or station that made it, the result and its
+      phenomenon and result times.
+    status: proposed
+    decided: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed
+    url: https://www.w3.org/TR/vocab-ssn/
+  - id: ogc_sensorthings
+    name: OGC SensorThings API
+    domain: weather
+    category: protocol
+    steward: Open Geospatial Consortium
+    commitment: The standard API for stations, datastreams and observations
+    current: Not yet checked at source (2026-10-29)
+    governs: >-
+      How station and observation data is served to other systems: Things,
+      Datastreams, Observations, ObservedProperties, with the same model as SOSA.
+    status: proposed
+    decided: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed
+    url: https://www.ogc.org/standards/sensorthings/
+  - id: wmdr
+    name: WIGOS Metadata Standard (WMDR)
+    domain: weather
+    category: specification
+    steward: World Meteorological Organization
+    commitment: Station metadata follows WMDR, identified by WIGOS station identifier
+    current: Not yet checked at source (2026-10-29)
+    governs: >-
+      What is recorded about an observing station: its identifier, location,
+      elevation, sensor heights, instruments and the programme it reports under.
+    status: proposed
+    decided: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed
+    url: https://community.wmo.int/en/activity-areas/wigos/wigos-metadata-standard
+  - id: wis2
+    name: WMO Information System 2.0 (WIS2)
+    domain: weather
+    category: protocol
+    steward: World Meteorological Organization
+    commitment: National met-service observations are read and published through WIS2 and its OGC API
+    current: Not yet checked at source (2026-10-29)
+    governs: >-
+      The global exchange of weather observations and forecasts: topics, metadata
+      records and the OGC API Features endpoints (the Zimbabwe Meteorological
+      Services Department node is one).
+    status: proposed
+    decided: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed
+    url: https://community.wmo.int/en/activity-areas/wis/wis2-implementation
+  - id: ogc_api_features
+    name: OGC API - Features
+    domain: core
+    category: protocol
+    steward: Open Geospatial Consortium (ISO 19168-1)
+    commitment: Feature collections are served and read as OGC API Features
+    current: Not yet checked at source (2026-10-29)
+    governs: >-
+      The API shape of a collection of geographic features (items, paging,
+      filtering), which WIS2 nodes use.
+    status: proposed
+    decided: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed
+    url: https://ogcapi.ogc.org/features/
+  - id: sdmx
+    name: Statistical Data and Metadata eXchange (SDMX)
+    domain: open-data
+    category: data_format
+    steward: SDMX sponsors (BIS, ECB, Eurostat, IMF, OECD, UN, World Bank)
+    commitment: Statistical series (production, yield, prices, food security) are modelled and exchanged as SDMX
+    current: Not yet checked at source (2026-10-29)
+    governs: >-
+      Time series of statistics with dimensions, attributes and codelists, instead
+      of a provider's own table layout.
+    status: proposed
+    decided: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed
+    url: https://sdmx.org/
+    notes: ISO 17369. Agricultural statistics published by FAO and others are available as SDMX.
+  - id: ocha_cod
+    name: OCHA Common Operational Datasets (COD) and P-codes
+    domain: places
+    category: identifier_scheme
+    steward: UN OCHA
+    commitment: Administrative areas carry their COD P-code as a cross-reference
+    current: Not yet checked at source (2026-10-29)
+    governs: >-
+      The place codes for administrative boundaries used by humanitarian and
+      national agencies (for example ZW10 to ZW19 for Zimbabwe's provinces).
+    status: proposed
+    decided: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed
+    url: https://cod.unocha.org/

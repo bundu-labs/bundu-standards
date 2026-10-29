@@ -13,6 +13,13 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+### Fixed
+
+- The seed no longer calls a proposed standard "Adopted": its adoption rationale
+  starts "Proposed:" when the register says proposed.
+- Removed a note on GeoJSON that said it was the one document in
+  `integrations.standards`, which stopped being true when the register was loaded.
+
 ### Added
 
 - `register/`: the register of external standards the platform adopts

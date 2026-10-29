@@ -139,7 +139,7 @@ def seed_docs(reg: dict) -> list[dict]:
                 "isActive": e["status"] == "adopted",
                 "bundu": {
                     "isFoundational": bool(e.get("foundational", False)),
-                    "adoptionRationale": _cell(e.get("rationale") or f"Adopted: {e['decided']}"),
+                    "adoptionRationale": _cell(e.get("rationale") or f"{'Adopted' if e['status'] == 'adopted' else 'Proposed'}: {e['decided']}"),
                 },
                 "createdAt": {"$date": SEED_DATE},
                 "updatedAt": {"$date": SEED_DATE},

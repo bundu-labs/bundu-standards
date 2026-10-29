@@ -44,6 +44,18 @@ class RegisterTests(unittest.TestCase):
         live = [dict(d, updatedAt={"$date": "2030-01-01T00:00:00Z"}) for d in seed]
         self.assertEqual(register.compare(seed, live), [])
 
+    def test_a_proposed_standard_is_not_described_as_adopted(self):
+        docs = {d["_id"]: d for d in register.seed_docs(self.REG)}
+        for e in self.REG["standards"]:
+            if e.get("rationale"):
+                continue
+            text = docs[f"standard_{e['id']}"]["bundu"]["adoptionRationale"]
+            self.assertTrue(text.startswith("Adopted: " if e["status"] == "adopted" else "Proposed: "), e["id"])
+
+    def test_no_note_makes_a_claim_about_the_database(self):
+        for e in self.REG["standards"]:
+            self.assertNotIn("already in integrations.standards", str(e.get("notes", "")), e["id"])
+
 
 if __name__ == "__main__":
     unittest.main()

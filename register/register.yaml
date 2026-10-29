@@ -711,7 +711,6 @@ standards:
       - places.placesGeo.boundary
       - places.routes.geometry
     url: https://www.rfc-editor.org/rfc/rfc7946
-    notes: The one document already in integrations.standards (standard_geojson).
     foundational: true
   - id: wgs84
     name: WGS 84 (EPSG:4326)

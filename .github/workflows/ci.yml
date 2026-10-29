@@ -109,8 +109,31 @@ jobs:
           code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/NotATerm)
           [ "$code" = "404" ] || { echo "::error::unknown term returned $code"; exit 1; }
 
+  # The register of adopted standards: one source (register/register.yaml), the
+  # generated files must match it, and the tool's own tests must pass.
+  register:
+    runs-on: ubuntu-latest
+    name: Standards register
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: python3 -m pip install pyyaml
+
+      - name: Register is linted and its generated files are current
+        run: python3 register/tools/register.py check
+
+      - name: Register tool tests
+        run: python3 -m unittest discover register/tools
+
   comment:
-    needs: [test, contract]
+    needs: [test, contract, register]
     # Push runs (main, staging) have no pull request to comment on.
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest

@@ -1,0 +1,1612 @@
+[
+  {
+    "_id": "standard_schema_org",
+    "_schemaVersion": "v3.1",
+    "displayName": "Schema.org",
+    "category": "vocabulary",
+    "description": "The vocabulary of every record: every table and collection maps to a type (Person, Organization, NewsArticle, Event, Place, Product, Offer, JobPosting, Course, ClaimReview, Review, Action types).",
+    "versionCommitment": "Current release (30.1 on 2026-10-02); track releases",
+    "specificationUrl": "https://schema.org/docs/releases.html",
+    "documentationUrl": null,
+    "stewardOrganisation": "Schema.org Community Group (W3C)",
+    "usageNotes": "Cited by: commerce.products.offers, commerce.contentUnlocks.actionStatus, engagement.reviews.reviewHeadline, knowledge.documentReferences.schemaOrgType, entity.entities.schemaOrgType.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": true,
+      "adoptionRationale": "The shared meaning every store and every surface is built on."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_schema_org_claimreview",
+    "_schemaVersion": "v3.1",
+    "displayName": "Schema.org ClaimReview",
+    "category": "vocabulary",
+    "description": "Fact-checks in News, and public Kweli verification outcomes.",
+    "versionCommitment": "Schema.org core type",
+    "specificationUrl": "https://schema.org/ClaimReview",
+    "documentationUrl": null,
+    "stewardOrganisation": "Schema.org Community Group (W3C)",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "How search engines and agents read a fact-check."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_json_ld",
+    "_schemaVersion": "v3.1",
+    "displayName": "JSON-LD",
+    "category": "data_format",
+    "description": "The public serialisation of every record; the generated context maps slots to Schema.org.",
+    "versionCommitment": "1.1",
+    "specificationUrl": "https://www.w3.org/TR/json-ld11/",
+    "documentationUrl": null,
+    "stewardOrganisation": "W3C",
+    "usageNotes": "Cited by: knowledge.documentReferences.schemaOrgType.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": true,
+      "adoptionRationale": "Adopted: A§17 (\"Every public page emits JSON-LD\"); MZ N11"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_vocab_bundu",
+    "_schemaVersion": "v3.1",
+    "displayName": "Bundu vocabulary (vocab.bundu.org)",
+    "category": "vocabulary",
+    "description": "Terms Schema.org lacks. Stable: Family, Community, PlaceOwner, PublishingHouse, NewsDesk, recognitionBasis, verificationTier, ubuntuScore, communityVouches, isInformal, assuranceLevel, attestation, defaultFamily, kAnonymity, maxReidentificationRisk, and, since BAGS was published on bundu.org, the AI guardrail terms (AIGuardrail, PlatformGuardrail, EntityGuardrail, GuardrailCategory, guardrailSeverity, guardrailCategory, appliesToSurface, enforcementLayer, isCoreGuardrail, standardVersion) and the BAGS set with BAGS-01 to BAGS-12. Testing: notificationPreference (identity.persons.notificationPreferences). Proposed, not yet in the live index: trustScore (a cached schema.org Rating per trust context in `bundu`, nyuchi/api-gateway#272); added in bundu-labs/bundu-standards before any app emits it.",
+    "versionCommitment": "Live terms (CC0); additions by review in bundu-labs/bundu-standards; flat URIs (vocab.bundu.org/<term>); stable terms never change meaning",
+    "specificationUrl": "https://vocab.bundu.org",
+    "documentationUrl": "https://github.com/bundu-labs/bundu-standards",
+    "stewardOrganisation": "Bundu Foundation",
+    "usageNotes": "Served by the Fly app bundu-vocab (jnb) from bundu-labs/bundu-standards. Every term dereferences to JSON-LD, or HTML when asked for it. A term the platform emits under vocab.bundu.org must be in the live index. Cited by: entity.entities.additionalType, entity.entities.recognitionBasis, identity.persons.notificationPreferences.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": true,
+      "adoptionRationale": "Lets an entity keep a valid Schema.org @type while saying what it really is."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_uuid",
+    "_schemaVersion": "v3.1",
+    "displayName": "UUID",
+    "category": "identifier_scheme",
+    "description": "Every record id (`_id` / `id`).",
+    "versionCommitment": "RFC 9562; UUIDv7 for new ids, existing v4 ids stay valid",
+    "specificationUrl": "https://www.rfc-editor.org/rfc/rfc9562",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF",
+    "usageNotes": "integrations.standards ids are `standard_<slug>` and suggestions.places ids are `sug_` + UUIDv7: documented exceptions. Cited by: identity.persons._id, engagement.interestCategories._id, suggestions.places._id (already UUIDv7).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": true,
+      "adoptionRationale": "v7 ids are time-ordered, which helps Cassandra and Doris clustering."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_iso_8601",
+    "_schemaVersion": "v3.1",
+    "displayName": "ISO 8601 / RFC 3339",
+    "category": "encoding",
+    "description": "Date-times in JSON, events and APIs; durations (`PT2H`).",
+    "versionCommitment": "ISO 8601-1:2019, profiled by RFC 3339 for timestamps",
+    "specificationUrl": "https://www.rfc-editor.org/rfc/rfc3339",
+    "documentationUrl": null,
+    "stewardOrganisation": "ISO / IETF",
+    "usageNotes": "Cited by: hospitality.experiences.duration, planner.schedules.repeatFrequency.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": true,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_iso_3166",
+    "_schemaVersion": "v3.1",
+    "displayName": "ISO 3166-1 / ISO 3166-2",
+    "category": "identifier_scheme",
+    "description": "Country and subdivision codes.",
+    "versionCommitment": "alpha-2 country codes; 3166-2 subdivision codes",
+    "specificationUrl": "https://www.iso.org/iso-3166-country-codes.html",
+    "documentationUrl": null,
+    "stewardOrganisation": "ISO",
+    "usageNotes": "Cited by: places.placesGeo.isoCode, knowledge.contributors.countryCode, knowledge.contributors.contributionCountries, knowledge.documentReferences.countryCode.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_iso_4217",
+    "_schemaVersion": "v3.1",
+    "displayName": "ISO 4217",
+    "category": "identifier_scheme",
+    "description": "Currency codes on orders, offers and prices.",
+    "versionCommitment": "Alphabetic currency codes, current list",
+    "specificationUrl": "https://www.six-group.com/en/products-services/financial-information/data-standards.html",
+    "documentationUrl": null,
+    "stewardOrganisation": "ISO (list maintained by SIX)",
+    "usageNotes": "Cited by: commerce.orders.currency.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_iso_639",
+    "_schemaVersion": "v3.1",
+    "displayName": "ISO 639",
+    "category": "identifier_scheme",
+    "description": "Language identity in Lingo.",
+    "versionCommitment": "ISO 639:2023; 639-3 codes for languages without a 639-1 code",
+    "specificationUrl": "https://www.iso.org/standard/74575.html",
+    "documentationUrl": null,
+    "stewardOrganisation": "ISO (ISO 639 Maintenance Agency)",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_bcp_47",
+    "_schemaVersion": "v3.1",
+    "displayName": "BCP 47 language tags",
+    "category": "identifier_scheme",
+    "description": "Language tags on content and people (`inLanguage`, `locale`, translations keys).",
+    "versionCommitment": "RFC 5646 + RFC 4647",
+    "specificationUrl": "https://www.rfc-editor.org/info/bcp47",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF",
+    "usageNotes": "Cited by: identity.persons.locale, lingo.phrases.translations, knowledge.documentReferences.inLanguage, knowledge.contributors.primaryLanguages, knowledge.topics.translations.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": true,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_unicode_cldr",
+    "_schemaVersion": "v3.1",
+    "displayName": "Unicode CLDR",
+    "category": "data_format",
+    "description": "Locale data for Shona and Ndebele (plurals, dates, numbers, names).",
+    "versionCommitment": "Current release",
+    "specificationUrl": "https://cldr.unicode.org/index/downloads",
+    "documentationUrl": null,
+    "stewardOrganisation": "Unicode Consortium",
+    "usageNotes": "CLDR's `sn` coverage is basic and `nd` needs checking; contribute upstream.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-4)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_iana_tz",
+    "_schemaVersion": "v3.1",
+    "displayName": "IANA time zone database",
+    "category": "identifier_scheme",
+    "description": "Time-zone names (`zoneinfo`).",
+    "versionCommitment": "Current tzdata",
+    "specificationUrl": "https://www.iana.org/time-zones",
+    "documentationUrl": null,
+    "stewardOrganisation": "IANA",
+    "usageNotes": "Cited by: identity.persons.zoneinfo.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_e164",
+    "_schemaVersion": "v3.1",
+    "displayName": "E.164",
+    "category": "identifier_scheme",
+    "description": "Phone numbers.",
+    "versionCommitment": "E.164 international numbers",
+    "specificationUrl": "https://www.itu.int/rec/T-REC-E.164",
+    "documentationUrl": null,
+    "stewardOrganisation": "ITU-T",
+    "usageNotes": "Cited by: identity.persons.phoneNumber.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_mime",
+    "_schemaVersion": "v3.1",
+    "displayName": "Media types (MIME)",
+    "category": "identifier_scheme",
+    "description": "File and media formats (`encodingFormat`).",
+    "versionCommitment": "IANA media types registry (RFC 6838)",
+    "specificationUrl": "https://www.iana.org/assignments/media-types/media-types.xhtml",
+    "documentationUrl": null,
+    "stewardOrganisation": "IANA / IETF",
+    "usageNotes": "Cited by: novels.pages.encodingFormat.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_semver",
+    "_schemaVersion": "v3.1",
+    "displayName": "Semantic Versioning",
+    "category": "specification",
+    "description": "Versions of algorithms and packages.",
+    "versionCommitment": "2.0.0",
+    "specificationUrl": "https://semver.org/",
+    "documentationUrl": null,
+    "stewardOrganisation": "semver.org",
+    "usageNotes": "Cited by: ubuntu.scoreSnapshots.computeVersion.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_linkml",
+    "_schemaVersion": "v3.1",
+    "displayName": "LinkML",
+    "category": "specification",
+    "description": "The canonical model's own format (data-infra schemas/).",
+    "versionCommitment": "linkml-runtime 1.11.x",
+    "specificationUrl": "https://linkml.io/",
+    "documentationUrl": null,
+    "stewardOrganisation": "LinkML community",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Schema.org-native, store-neutral, machine-checkable."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_json_schema",
+    "_schemaVersion": "v3.1",
+    "displayName": "JSON Schema",
+    "category": "specification",
+    "description": "Event payloads and API contracts. MongoDB's $jsonSchema is its own dialect and stays separate.",
+    "versionCommitment": "2020-12",
+    "specificationUrl": "https://json-schema.org/specification",
+    "documentationUrl": null,
+    "stewardOrganisation": "JSON Schema organisation",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-5)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_oidc",
+    "_schemaVersion": "v3.1",
+    "displayName": "OpenID Connect Core 1.0",
+    "category": "protocol",
+    "description": "Sign-in; the person record's field names.",
+    "versionCommitment": "Core 1.0 with errata set 2; standard claims as person field names",
+    "specificationUrl": "https://openid.net/specs/openid-connect-core-1_0.html",
+    "documentationUrl": null,
+    "stewardOrganisation": "OpenID Foundation",
+    "usageNotes": "Cited by: identity.persons._id (the sub claim), identity.persons.email, identity.persons.givenName, identity.persons.birthdate.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": true,
+      "adoptionRationale": "Adopted: A§6; SP (\"Persons use the OpenID Connect standard claims\")"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_oauth_2_1",
+    "_schemaVersion": "v3.1",
+    "displayName": "OAuth 2.1",
+    "category": "protocol",
+    "description": "Authorisation, including MCP's inline OAuth and Dynamic Client Registration.",
+    "versionCommitment": "The current draft; the RFC when published",
+    "specificationUrl": "https://datatracker.ietf.org/doc/draft-ietf-oauth-v2-1/",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF",
+    "usageNotes": "Still a draft (IESG milestone Dec 2026); cite it as one until it is an RFC. Cited by: identity.credentials.credentialData (OAuth refresh tokens).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: A§6 (\"the OAuth 2.1 authorization server … DCR\"); AT bushtrade-mcp"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_jwt",
+    "_schemaVersion": "v3.1",
+    "displayName": "JWT and JWK",
+    "category": "data_format",
+    "description": "The platform JWT, VC JWTs and the published JWKS.",
+    "versionCommitment": "RFC 7519 (+ RFC 8725) and RFC 7517",
+    "specificationUrl": "https://www.rfc-editor.org/rfc/rfc7519",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF",
+    "usageNotes": "Cited by: identity.credentials.credentialData (VC JWT).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: A§6 (\"The platform JWT is minted…\", JWKS)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_rfc_9068",
+    "_schemaVersion": "v3.1",
+    "displayName": "JWT profile for OAuth 2.0 access tokens",
+    "category": "rfc",
+    "description": "The shape of the platform's JWT access tokens (`typ: at+jwt`, client_id, scope).",
+    "versionCommitment": "RFC 9068",
+    "specificationUrl": "https://www.rfc-editor.org/rfc/rfc9068",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF",
+    "usageNotes": "Apply as api-gateway PR #126 (ES256 JWTs and JWKS) lands.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-6)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_w3c_vc",
+    "_schemaVersion": "v3.1",
+    "displayName": "W3C Verifiable Credentials Data Model",
+    "category": "data_format",
+    "description": "Credentials issued at verification; agent payment mandates.",
+    "versionCommitment": "2.0",
+    "specificationUrl": "https://www.w3.org/TR/vc-data-model-2.0/",
+    "documentationUrl": null,
+    "stewardOrganisation": "W3C",
+    "usageNotes": "Cited by: entity.verifications.issuedVcId, identity.credentials.credentialData (VC JWT).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators; AT bushtrade-mcp/src/ap2.ts"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_w3c_did",
+    "_schemaVersion": "v3.1",
+    "displayName": "W3C Decentralized Identifiers (DID)",
+    "category": "identifier_scheme",
+    "description": "Credential subjects; the MIT when the token stage arrives (A§19, deferred).",
+    "versionCommitment": "DID Core 1.0; 1.1 when it is a Recommendation",
+    "specificationUrl": "https://www.w3.org/TR/did-1.1/",
+    "documentationUrl": null,
+    "stewardOrganisation": "W3C",
+    "usageNotes": "Cited by: identity.credentials.credentialData (DID document).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators; OD (register P-7)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_webauthn",
+    "_schemaVersion": "v3.1",
+    "displayName": "WebAuthn",
+    "category": "protocol",
+    "description": "Passkeys.",
+    "versionCommitment": "Level 3",
+    "specificationUrl": "https://www.w3.org/TR/webauthn-3/",
+    "documentationUrl": null,
+    "stewardOrganisation": "W3C / FIDO Alliance",
+    "usageNotes": "Cited by: identity.credentials.credentialData (WebAuthn credential).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_nist_sp_800_63_4",
+    "_schemaVersion": "v3.1",
+    "displayName": "NIST SP 800-63-4 Digital Identity Guidelines",
+    "category": "specification",
+    "description": "The reference mapping for verification assurance. The platform's own levels (0 none, 1 otp, 2 documented, 3 government, 4 licensed) map to IAL as follows: 2 documented to IAL1, 3 government and 4 licensed to IAL2. Levels 0 and 1 sit below IAL1. Attestations (community, business, representative, domain) are platform terms with no IAL. The mapping is a reference: the platform does not claim certified IAL conformance.",
+    "versionCommitment": "SP 800-63-4 (63A-4 identity proofing as the assurance mapping; 63B-4 AAL for authenticators)",
+    "specificationUrl": "https://csrc.nist.gov/pubs/sp/800/63/4/final",
+    "documentationUrl": null,
+    "stewardOrganisation": "NIST",
+    "usageNotes": "eIDAS levels of assurance and ISO/IEC 18013-5/-7 (mDL) are parked by the same decision; neither is listed.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_sd_jwt_vc",
+    "_schemaVersion": "v3.1",
+    "displayName": "SD-JWT-based Verifiable Credentials (SD-JWT VC)",
+    "category": "data_format",
+    "description": "Selective disclosure of verification outcomes, so a holder can prove \"government-verified\" or \"over 18\" without the document. Also the encoding AP2 v0.2 mandates use (gap G-2).",
+    "versionCommitment": "Track the draft; the RFC when published. Built on SD-JWT (RFC 9901).",
+    "specificationUrl": "https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF OAuth Working Group",
+    "usageNotes": null,
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3), listed as Proposed"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_mcp",
+    "_schemaVersion": "v3.1",
+    "displayName": "Model Context Protocol (MCP)",
+    "category": "protocol",
+    "description": "Every product's agent surface, a stateless server over the app's HTTP API.",
+    "versionCommitment": "Current revision; servers declare the revision they implement",
+    "specificationUrl": "https://modelcontextprotocol.io/specification/versioning",
+    "documentationUrl": null,
+    "stewardOrganisation": "Model Context Protocol project",
+    "usageNotes": "Cited by: shamwari.toolUsage.serverName, shamwari.toolUsage.toolName.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": true,
+      "adoptionRationale": "Adopted: A§8.1 (\"Agent surface\"); A§5 Layer 5; MZ N11"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_a2a",
+    "_schemaVersion": "v3.1",
+    "displayName": "Agent2Agent (A2A)",
+    "category": "protocol",
+    "description": "Agent-to-agent delegation of long-running tasks (mzizi-mcp to fundi).",
+    "versionCommitment": "1.0",
+    "specificationUrl": "https://a2a-protocol.org/latest/specification/",
+    "documentationUrl": null,
+    "stewardOrganisation": "Linux Foundation",
+    "usageNotes": "Fundi's agent card still declares 0.3.0 (gap G-1).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: AT docs/a2a-fundi.md"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_llms_txt",
+    "_schemaVersion": "v3.1",
+    "displayName": "llms.txt",
+    "category": "specification",
+    "description": "The machine index at each site root.",
+    "versionCommitment": "Current proposal",
+    "specificationUrl": "https://llmstxt.org/",
+    "documentationUrl": null,
+    "stewardOrganisation": "llmstxt.org (community proposal)",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: A§8.1 (\"Machine surface\"); MZ N11"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_mcp_server_card",
+    "_schemaVersion": "v3.1",
+    "displayName": "MCP server card and .well-known discovery",
+    "category": "specification",
+    "description": "How agents discover a product's MCP server.",
+    "versionCommitment": "As the current MCP revision defines it",
+    "specificationUrl": "https://modelcontextprotocol.io/specification/versioning",
+    "documentationUrl": null,
+    "stewardOrganisation": "Model Context Protocol project",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: A§8.1; MZ N11"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_bags",
+    "_schemaVersion": "v3.1",
+    "displayName": "Bundu AI Guardrails Standard (BAGS)",
+    "category": "specification",
+    "description": "The core, public platform guardrails every AI surface applies, BAGS-01 to BAGS-12, and the categories they belong to (shamwari.guardrails, shamwari.guardrailStandard).",
+    "versionCommitment": "1.0.0 (semver; a change to a published rule bumps the version)",
+    "specificationUrl": "https://www.bundu.org/research/standards/ai-guardrails",
+    "documentationUrl": null,
+    "stewardOrganisation": "Bundu Foundation",
+    "usageNotes": "Licence CC BY 4.0 (cc_by_4). Publisher of record: the Bundu Foundation; maintainer and operator: Nyuchi Africa (owner decision 2026-10-04). Source of truth is the api-gateway seed; the live API body is https://api.nyuchi.com/v1/ai/guardrails/standard and the canonical URL is bundu.org. The vocab.bundu.org guardrail terms are promoted from testing to stable with this publication. BAGS-08 (prompt injection) withholds its prompt guidance from publication. Cited by: bundu.org /research/standards/ai-guardrails (and .json).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "One published, versioned rule set means every app, and every entity that layers its own rules on top, starts from the same floor."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_mls",
+    "_schemaVersion": "v3.1",
+    "displayName": "Messaging Layer Security (MLS)",
+    "category": "rfc",
+    "description": "End-to-end group encryption in Campfire and encrypted comments.",
+    "versionCommitment": "RFC 9420",
+    "specificationUrl": "https://www.rfc-editor.org/rfc/rfc9420",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF",
+    "usageNotes": "Cited by: campfire.conversations.encryptionMode, campfire.conversations.mlsGroupId, campfire.messages.mlsEpoch, campfire.participants.mlsLeafIndex, engagement.comments.encryptionEnvelope.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_activitypub",
+    "_schemaVersion": "v3.1",
+    "displayName": "ActivityPub",
+    "category": "protocol",
+    "description": "Federation of circles, posts and public comments.",
+    "versionCommitment": "W3C Recommendation (2018)",
+    "specificationUrl": "https://www.w3.org/TR/activitypub/",
+    "documentationUrl": null,
+    "stewardOrganisation": "W3C",
+    "usageNotes": "Cited by: circles.circles.actorUri, circles.circles.federatedPeerUris, circles.posts.actorUri, circles.posts.federatedNoteUri, engagement.comments.actorUri, engagement.comments.federatedNoteUri, entity.entities.coverImage, identity.persons.coverImage.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_matrix",
+    "_schemaVersion": "v3.1",
+    "displayName": "Matrix",
+    "category": "protocol",
+    "description": "Federated Campfire rooms, and legacy megolm encryption.",
+    "versionCommitment": "Legacy interoperability only (megolm); MLS for new encryption",
+    "specificationUrl": "https://spec.matrix.org/latest/",
+    "documentationUrl": null,
+    "stewardOrganisation": "The Matrix.org Foundation",
+    "usageNotes": "Cited by: campfire.conversations.matrixRoomId, campfire.messages.matrixEventId, campfire.participants.membershipStatus.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_ucp",
+    "_schemaVersion": "v3.1",
+    "displayName": "Universal Commerce Protocol (UCP)",
+    "category": "protocol",
+    "description": "Agentic catalogue, checkout and order flows.",
+    "versionCommitment": "2026-08-25",
+    "specificationUrl": "https://ucp.dev/latest/specification/overview/",
+    "documentationUrl": null,
+    "stewardOrganisation": "UCP Governing Council (Google, Shopify, Stripe)",
+    "usageNotes": "Cited by: commerce.products.ucpProfileId, platform.ucpProfiles, platform.ucpCapabilities.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: AT bushtrade-mcp/README.md (\"following schema.org + the UCP protocol\")"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_ap2",
+    "_schemaVersion": "v3.1",
+    "displayName": "Agent Payments Protocol (AP2)",
+    "category": "protocol",
+    "description": "Signed payment authorisation by agents.",
+    "versionCommitment": "v0.2 (Checkout and Payment mandates, SD-JWT)",
+    "specificationUrl": "https://ap2-protocol.org/ap2/specification/",
+    "documentationUrl": null,
+    "stewardOrganisation": "FIDO Alliance (donated)",
+    "usageNotes": "bushtrade-mcp builds v0.1 Intent/Cart mandates (gap G-2). Cited by: platform.signingKeys, platform.paymentHandlers.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: AT bushtrade-mcp/src/ap2.ts"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_gs1",
+    "_schemaVersion": "v3.1",
+    "displayName": "GS1 identification keys (GTIN, GLN)",
+    "category": "identifier_scheme",
+    "description": "Product and location identifiers.",
+    "versionCommitment": "GS1 General Specifications",
+    "specificationUrl": "https://www.gs1.org/standards/barcodes-epcrfid-id-keys/gs1-general-specifications",
+    "documentationUrl": null,
+    "stewardOrganisation": "GS1",
+    "usageNotes": "Cited by: commerce.products.gtin, entity.entities.gln.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_iso_20022",
+    "_schemaVersion": "v3.1",
+    "displayName": "ISO 20022",
+    "category": "data_format",
+    "description": "Payment messages for Nyuchi Pay, once it settles through a licensed partner.",
+    "versionCommitment": "Message shapes for bank and switch integrations",
+    "specificationUrl": "https://www.iso20022.org/",
+    "documentationUrl": null,
+    "stewardOrganisation": "ISO",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-9)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_iptc_media_topics",
+    "_schemaVersion": "v3.1",
+    "displayName": "IPTC Media Topics (NewsCodes)",
+    "category": "vocabulary",
+    "description": "Article classification; `about` in JSON-LD.",
+    "versionCommitment": "Current release; every news category carries a code",
+    "specificationUrl": "https://iptc.org/standards/media-topics/",
+    "documentationUrl": null,
+    "stewardOrganisation": "IPTC",
+    "usageNotes": "Cited by: news.categories.iptcCode.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators; OD for making the code required (register P-10)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_c2pa",
+    "_schemaVersion": "v3.1",
+    "displayName": "C2PA content credentials",
+    "category": "specification",
+    "description": "Provenance manifests for articles and media.",
+    "versionCommitment": "2.4",
+    "specificationUrl": "https://spec.c2pa.org/specifications/",
+    "documentationUrl": null,
+    "stewardOrganisation": "Coalition for Content Provenance and Authenticity",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_epub",
+    "_schemaVersion": "v3.1",
+    "displayName": "EPUB 3 (and EPUB CFI)",
+    "category": "specification",
+    "description": "Novels' books and reading-position anchors.",
+    "versionCommitment": "EPUB 3.3; CFI for reading positions",
+    "specificationUrl": "https://www.w3.org/TR/epub-33/",
+    "documentationUrl": null,
+    "stewardOrganisation": "W3C",
+    "usageNotes": "Cited by: engagement.comments.ciphertextAnchor (EPUB CFI).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_geojson",
+    "_schemaVersion": "v3.1",
+    "displayName": "GeoJSON",
+    "category": "rfc",
+    "description": "All geometry, 2dsphere-indexed.",
+    "versionCommitment": "RFC 7946",
+    "specificationUrl": "https://www.rfc-editor.org/rfc/rfc7946",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF",
+    "usageNotes": "The one document already in integrations.standards (standard_geojson). Cited by: places.places.geo, places.placesGeo.geo, places.placesGeo.boundary, places.routes.geometry.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": true,
+      "adoptionRationale": "Adopted: A§5 Layer 3 (\"Geo data is GeoJSON with 2dsphere indexes\")"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_wgs84",
+    "_schemaVersion": "v3.1",
+    "displayName": "WGS 84 (EPSG:4326)",
+    "category": "specification",
+    "description": "The coordinate reference system.",
+    "versionCommitment": "EPSG:4326, longitude first as GeoJSON requires",
+    "specificationUrl": "https://epsg.io/4326",
+    "documentationUrl": null,
+    "stewardOrganisation": "NGA / EPSG",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Implied by GeoJSON (RFC 7946 §4)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_osm_tagging",
+    "_schemaVersion": "v3.1",
+    "displayName": "OpenStreetMap tagging",
+    "category": "vocabulary",
+    "description": "Place categories and tags; OSM ids as external identifiers.",
+    "versionCommitment": "Map Features wiki (informal; no versions)",
+    "specificationUrl": "https://wiki.openstreetmap.org/wiki/Map_features",
+    "documentationUrl": null,
+    "stewardOrganisation": "OpenStreetMap community",
+    "usageNotes": "Cited by: places.places.tags, places.categories.osmTags, places.places.sameAs.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_open_location_code",
+    "_schemaVersion": "v3.1",
+    "displayName": "Open Location Code (Plus Codes)",
+    "category": "identifier_scheme",
+    "description": "Addresses for places without streets.",
+    "versionCommitment": "Current specification",
+    "specificationUrl": "https://github.com/google/open-location-code",
+    "documentationUrl": null,
+    "stewardOrganisation": "Google (Apache-2.0 specification)",
+    "usageNotes": "Cited by: places.places.plusCode.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_what3words",
+    "_schemaVersion": "v3.1",
+    "displayName": "what3words",
+    "category": "identifier_scheme",
+    "description": "Addresses for informal-economy places.",
+    "versionCommitment": "An extra identifier only, never a place's only address",
+    "specificationUrl": "https://what3words.com/",
+    "documentationUrl": null,
+    "stewardOrganisation": "what3words Ltd (proprietary)",
+    "usageNotes": "Proprietary; always fill plusCode alongside it (gap G-5).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_gtfs",
+    "_schemaVersion": "v3.1",
+    "displayName": "GTFS Schedule",
+    "category": "data_format",
+    "description": "Harare Metro routes, stops and timetables; a stop is a Place with identifiers.gtfsStopId.",
+    "versionCommitment": "Current reference",
+    "specificationUrl": "https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md",
+    "documentationUrl": null,
+    "stewardOrganisation": "MobilityData",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-12)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_gtfs_realtime",
+    "_schemaVersion": "v3.1",
+    "displayName": "GTFS Realtime",
+    "category": "data_format",
+    "description": "Live vehicle positions and delays.",
+    "versionCommitment": "2.0",
+    "specificationUrl": "https://github.com/google/transit/blob/master/gtfs-realtime/spec/en/reference.md",
+    "documentationUrl": null,
+    "stewardOrganisation": "MobilityData",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-12)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_icalendar",
+    "_schemaVersion": "v3.1",
+    "displayName": "iCalendar",
+    "category": "rfc",
+    "description": "UID and RRULE on events; .ics import and export.",
+    "versionCommitment": "RFC 5545 (+ RFC 7986)",
+    "specificationUrl": "https://www.rfc-editor.org/rfc/rfc5545",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF",
+    "usageNotes": "Cited by: events.events.iCalUid, events.events.iCalRRule, events.calendars.iCalUid, hospitality.entertainmentSchedules.iCalRRule.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_jscalendar",
+    "_schemaVersion": "v3.1",
+    "displayName": "JSCalendar",
+    "category": "rfc",
+    "description": "JSON calendar bodies in APIs.",
+    "versionCommitment": "RFC 8984, where an API needs a JSON calendar body",
+    "specificationUrl": "https://www.rfc-editor.org/rfc/rfc8984",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-13)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_open_meteo",
+    "_schemaVersion": "v3.1",
+    "displayName": "Open-Meteo API",
+    "category": "specification",
+    "description": "The fallback forecast source, and where validated observations are published.",
+    "versionCommitment": "/v1 API shapes",
+    "specificationUrl": "https://open-meteo.com/en/docs",
+    "documentationUrl": null,
+    "stewardOrganisation": "Open-Meteo",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: A§3; A§5 Layer 7; A§16"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_wmo_station_ids",
+    "_schemaVersion": "v3.1",
+    "displayName": "WMO station identifiers (WIGOS)",
+    "category": "identifier_scheme",
+    "description": "Weather station identity.",
+    "versionCommitment": "WIGOS station identifiers",
+    "specificationUrl": "https://oscar.wmo.int/surface/",
+    "documentationUrl": null,
+    "stewardOrganisation": "WMO",
+    "usageNotes": "Cited by: weather.observations.wmoStationId.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_wmo_4677",
+    "_schemaVersion": "v3.1",
+    "displayName": "WMO weather interpretation codes (code table 4677)",
+    "category": "vocabulary",
+    "description": "Present-weather codes (`weather_code`).",
+    "versionCommitment": "WMO-No. 306 Vol I.1; the 0–99 subset Open-Meteo uses",
+    "specificationUrl": "https://community.wmo.int/en/activity-areas/wis/publications/306",
+    "documentationUrl": null,
+    "stewardOrganisation": "WMO",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-14)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_cf_conventions",
+    "_schemaVersion": "v3.1",
+    "displayName": "CF Conventions",
+    "category": "specification",
+    "description": "Variable names and units in the open weather commons in Doris.",
+    "versionCommitment": "1.13",
+    "specificationUrl": "https://cfconventions.org/",
+    "documentationUrl": null,
+    "stewardOrganisation": "CF community",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-14)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_hl7_fhir",
+    "_schemaVersion": "v3.1",
+    "displayName": "HL7 FHIR",
+    "category": "specification",
+    "description": "Clinical data, if Health or Medical ever hold any.",
+    "versionCommitment": "R4 (4.0.1); R5 or R6 when partners move",
+    "specificationUrl": "https://hl7.org/fhir/history.html",
+    "documentationUrl": null,
+    "stewardOrganisation": "HL7 International",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "R4 is what DHIS2 and OpenMRS deployments in the region speak."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_isco_08",
+    "_schemaVersion": "v3.1",
+    "displayName": "ISCO-08",
+    "category": "vocabulary",
+    "description": "Occupations and skills.",
+    "versionCommitment": "ISCO-08",
+    "specificationUrl": "https://www.ilo.org/public/english/bureau/stat/isco/isco08/",
+    "documentationUrl": null,
+    "stewardOrganisation": "International Labour Organization",
+    "usageNotes": "Cited by: identity.personSkills.iscoCode.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_cefr",
+    "_schemaVersion": "v3.1",
+    "displayName": "CEFR",
+    "category": "vocabulary",
+    "description": "Language-learning levels in Lingo.",
+    "versionCommitment": "CEFR with the 2020 Companion Volume",
+    "specificationUrl": "https://www.coe.int/en/web/common-european-framework-reference-languages",
+    "documentationUrl": null,
+    "stewardOrganisation": "Council of Europe",
+    "usageNotes": "Cited by: lingo.standards.canDoSummary, lingo.phrases.cefrLevel, lingo.scenarios.cefrRange, lingo.learningStandards.cefrMapping, lingo.frameworks.code.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_xapi",
+    "_schemaVersion": "v3.1",
+    "displayName": "xAPI",
+    "category": "specification",
+    "description": "Learning activity records.",
+    "versionCommitment": "IEEE 9274.1.1-2023 (xAPI 2.0)",
+    "specificationUrl": "https://standards.ieee.org/ieee/9274.1.1/7321/",
+    "documentationUrl": null,
+    "stewardOrganisation": "IEEE",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-16)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_lti",
+    "_schemaVersion": "v3.1",
+    "displayName": "LTI",
+    "category": "protocol",
+    "description": "Launching Learning tools inside an LMS such as Toddle.",
+    "versionCommitment": "LTI 1.3 + LTI Advantage",
+    "specificationUrl": "https://www.1edtech.org/standards/lti",
+    "documentationUrl": null,
+    "stewardOrganisation": "1EdTech",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-16)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_wcag",
+    "_schemaVersion": "v3.1",
+    "displayName": "WCAG",
+    "category": "specification",
+    "description": "Every surface.",
+    "versionCommitment": "WCAG 2.2, level AAA; 48px minimum touch targets (beyond 2.5.5's 44px)",
+    "specificationUrl": "https://www.w3.org/TR/WCAG22/",
+    "documentationUrl": null,
+    "stewardOrganisation": "W3C",
+    "usageNotes": "The architecture names no version and Mzizi computes WCAG 2.1 ratios; 2.2 is the pin (gap G-3).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": true,
+      "adoptionRationale": "Adopted: A§8.1 (\"WCAG AAA / APCA targets; 48px minimum touch targets\"); MZ N2"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_apca",
+    "_schemaVersion": "v3.1",
+    "displayName": "APCA",
+    "category": "specification",
+    "description": "Text contrast.",
+    "versionCommitment": "A design target alongside WCAG, not a conformance claim",
+    "specificationUrl": "https://github.com/Myndex/apca-w3",
+    "documentationUrl": null,
+    "stewardOrganisation": "Myndex (proposed for WCAG 3)",
+    "usageNotes": "No W3C standard requires APCA (gap G-4).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: A§8.1; MZ (mzizi-skills/discoverability)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_wai_aria",
+    "_schemaVersion": "v3.1",
+    "displayName": "WAI-ARIA",
+    "category": "specification",
+    "description": "Roles and states in components (what Radix implements for Mzizi N2).",
+    "versionCommitment": "1.2",
+    "specificationUrl": "https://www.w3.org/TR/wai-aria/",
+    "documentationUrl": null,
+    "stewardOrganisation": "W3C",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-17)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_cc_by_4",
+    "_schemaVersion": "v3.1",
+    "displayName": "Creative Commons Attribution 4.0",
+    "category": "specification",
+    "description": "The licence on open data and open content.",
+    "versionCommitment": "CC BY 4.0 International",
+    "specificationUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "documentationUrl": null,
+    "stewardOrganisation": "Creative Commons",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": true,
+      "adoptionRationale": "Adopted: A§3; A§5 Layer 7; A§15; MZ (architecture overview, Nhaka tier)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_dcat",
+    "_schemaVersion": "v3.1",
+    "displayName": "DCAT",
+    "category": "vocabulary",
+    "description": "Catalogue metadata for the Doris open commons.",
+    "versionCommitment": "v3",
+    "specificationUrl": "https://www.w3.org/TR/vocab-dcat-3/",
+    "documentationUrl": null,
+    "stewardOrganisation": "W3C",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-18)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_csvw",
+    "_schemaVersion": "v3.1",
+    "displayName": "CSV on the Web (CSVW)",
+    "category": "vocabulary",
+    "description": "The column schema of tabular open datasets (`csvw:tableSchema` in the DCAT catalogue).",
+    "versionCommitment": "Metadata vocabulary for tabular data (2015 Rec)",
+    "specificationUrl": "https://www.w3.org/TR/tabular-metadata/",
+    "documentationUrl": null,
+    "stewardOrganisation": "W3C",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (bundu-labs/bundu-standards#11, standard terms instead of vocab.bundu.org ones)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_cloudevents",
+    "_schemaVersion": "v3.1",
+    "displayName": "CloudEvents",
+    "category": "specification",
+    "description": "The envelope of every outbox and Redpanda event (schemas/generated/events/).",
+    "versionCommitment": "1.0.2",
+    "specificationUrl": "https://cloudevents.io/",
+    "documentationUrl": null,
+    "stewardOrganisation": "CNCF",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-19)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_asyncapi",
+    "_schemaVersion": "v3.1",
+    "displayName": "AsyncAPI",
+    "category": "specification",
+    "description": "The catalogue of topics and their schemas.",
+    "versionCommitment": "3.1",
+    "specificationUrl": "https://www.asyncapi.com/docs/reference/specification/latest",
+    "documentationUrl": null,
+    "stewardOrganisation": "AsyncAPI Initiative (Linux Foundation)",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-19)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_openapi",
+    "_schemaVersion": "v3.1",
+    "displayName": "OpenAPI",
+    "category": "specification",
+    "description": "The api.nyuchi.com contract.",
+    "versionCommitment": "3.1 (what FastAPI emits); 3.2 when the framework does",
+    "specificationUrl": "https://spec.openapis.org/oas/latest.html",
+    "documentationUrl": null,
+    "stewardOrganisation": "OpenAPI Initiative (Linux Foundation)",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: OD (register P-8); api-gateway serves its schema (gateway/main.py)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_siafudb_graph_sync",
+    "_schemaVersion": "v3.1",
+    "displayName": "SiafuDB Graph Sync Protocol",
+    "category": "protocol",
+    "description": "Device, edge and pod sync.",
+    "versionCommitment": "Track releases (0.1.0 pre-release)",
+    "specificationUrl": "https://siafudb.org",
+    "documentationUrl": null,
+    "stewardOrganisation": "Bundu Foundation",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: A§5 Layers 4 and 6"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_ntl",
+    "_schemaVersion": "v3.1",
+    "displayName": "NTL (Neural Transfer Layer)",
+    "category": "protocol",
+    "description": "Signal-based transfer replacing request-response.",
+    "versionCommitment": "Track releases (0.2.0-beta.1)",
+    "specificationUrl": "https://openntl.org",
+    "documentationUrl": null,
+    "stewardOrganisation": "Bundu Foundation",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: A§13"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  }
+]

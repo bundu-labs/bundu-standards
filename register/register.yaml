@@ -1,0 +1,1074 @@
+# The standards register, as data. The tables in REGISTER.md and the
+# integrations.standards seed documents are generated from this file
+# (python3 register/tools/register.py write); edit here, never in the tables.
+#
+# One entry per standard:
+#   id            slug; the MongoDB _id is `standard_<id>`
+#   name          displayName
+#   domain        the REGISTER.md section it is listed under
+#   category      integrations.standards category enum
+#   steward       stewardOrganisation
+#   commitment    versionCommitment: the version the platform holds itself to
+#   current       what the official source showed on 2026-10-02, or on the
+#                 date the entry gives (docs/standards-audit-2026-10.md)
+#   governs       description: what it governs on the platform
+#   status        adopted | proposed
+#   decided       why it is adopted: the owner's document or decision
+#   evidence      where the platform already cites it. `collection.field` is a
+#                 live MongoDB validator (api-gateway mongo_catalog.json).
+#   url           specificationUrl
+#   notes         usageNotes
+#   foundational  bundu.isFoundational: true when other standards build on it
+#   rationale     bundu.adoptionRationale
+#
+# Evidence keys: A§ The Nyuchi Architecture v5.0.0; MZ Mzizi doctrine; AT
+# mzizi-dev/agent-tools; SP api-gateway db/spine/README.md; ID nyuchi-identity
+# ADR 0001; OD owner decision 2026-10-02.
+
+domains:
+  core: "Core: the identity of data"
+  identity: Identity, trust and verification
+  agents: Agents and machine-readable surfaces
+  communication: Communication and federation
+  commerce: Commerce and payments
+  news: News, media and publishing
+  places: Places and geography
+  transport: Transport
+  events: Events
+  weather: Weather and environment
+  health: Health
+  jobs: Jobs and skills
+  learning: Education and learning
+  accessibility: Accessibility
+  open-data: Open data
+  streaming: Event streaming and APIs
+  first-party: First-party protocols
+
+standards:
+  # --- core ---------------------------------------------------------------
+  - id: schema_org
+    name: Schema.org
+    domain: core
+    category: vocabulary
+    steward: Schema.org Community Group (W3C)
+    commitment: Current release (30.1 on 2026-10-02); track releases
+    current: Release 30.1 (2026-09-16)
+    governs: >-
+      The vocabulary of every record: every table and collection maps to a
+      type (Person, Organization, NewsArticle, Event, Place, Product, Offer,
+      JobPosting, Course, ClaimReview, Review, Action types).
+    status: adopted
+    decided: A§17 ("Non-negotiable"); A§8.1; MZ N11
+    evidence:
+      - commerce.products.offers
+      - commerce.contentUnlocks.actionStatus
+      - engagement.reviews.reviewHeadline
+      - knowledge.documentReferences.schemaOrgType
+      - entity.entities.schemaOrgType
+      - "and 34 more validator descriptions"
+    url: https://schema.org/docs/releases.html
+    foundational: true
+    rationale: The shared meaning every store and every surface is built on.
+  - id: schema_org_claimreview
+    name: Schema.org ClaimReview
+    domain: news
+    category: vocabulary
+    steward: Schema.org Community Group (W3C)
+    commitment: Schema.org core type
+    current: Core type
+    governs: Fact-checks in News, and public Kweli verification outcomes.
+    status: adopted
+    decided: OD (register P-11)
+    url: https://schema.org/ClaimReview
+    rationale: How search engines and agents read a fact-check.
+  - id: json_ld
+    name: JSON-LD
+    domain: core
+    category: data_format
+    steward: W3C
+    commitment: "1.1"
+    current: 1.1, W3C Recommendation (2020-07-16); 1.2 in Working Group
+    governs: The public serialisation of every record; the generated context maps slots to Schema.org.
+    status: adopted
+    decided: A§17 ("Every public page emits JSON-LD"); MZ N11
+    evidence:
+      - knowledge.documentReferences.schemaOrgType
+      - api-gateway gateway/lib/jsonld.py
+    url: https://www.w3.org/TR/json-ld11/
+    foundational: true
+  - id: vocab_bundu
+    name: Bundu vocabulary (vocab.bundu.org)
+    domain: core
+    category: vocabulary
+    steward: Bundu Foundation
+    commitment: >-
+      Live terms (CC0); additions by review in bundu-labs/bundu-standards;
+      flat URIs (vocab.bundu.org/<term>); stable terms never change meaning
+    current: >-
+      0.1.4, 39 terms (38 stable, 1 testing); 0.1.3 made the AI guardrail
+      terms stable, and 0.1.4 adds notificationPreference (testing). Live
+      once the bundu-vocab deploy runs.
+    governs: >-
+      Terms Schema.org lacks. Stable: Family, Community, PlaceOwner,
+      PublishingHouse, NewsDesk, recognitionBasis, verificationTier,
+      ubuntuScore, communityVouches, isInformal, assuranceLevel, attestation,
+      defaultFamily, kAnonymity, maxReidentificationRisk, and, since BAGS
+      was published on bundu.org, the AI guardrail terms (AIGuardrail,
+      PlatformGuardrail, EntityGuardrail, GuardrailCategory,
+      guardrailSeverity, guardrailCategory, appliesToSurface,
+      enforcementLayer, isCoreGuardrail, standardVersion) and the BAGS set
+      with BAGS-01 to BAGS-12. Testing: notificationPreference
+      (identity.persons.notificationPreferences). Proposed, not yet in the
+      live index: trustScore (a cached schema.org Rating per trust context
+      in `bundu`, nyuchi/api-gateway#272); added in bundu-labs/bundu-standards
+      before any app emits it.
+    status: adopted
+    decided: ID (ADR 0001 §5); OD for the canonical-schema terms (bundu-labs/bundu-standards#11)
+    evidence:
+      - entity.entities.additionalType
+      - entity.entities.recognitionBasis
+      - identity.persons.notificationPreferences
+      - api-gateway gateway/routers/open_data.py (kAnonymity, maxReidentificationRisk)
+    url: https://vocab.bundu.org
+    docs: https://github.com/bundu-labs/bundu-standards
+    notes: >-
+      Served by the Fly app bundu-vocab (jnb) from bundu-labs/bundu-standards.
+      Every term dereferences to JSON-LD, or HTML when asked for it. A term
+      the platform emits under vocab.bundu.org must be in the live index.
+    foundational: true
+    rationale: Lets an entity keep a valid Schema.org @type while saying what it really is.
+  - id: uuid
+    name: UUID
+    domain: core
+    category: identifier_scheme
+    steward: IETF
+    commitment: RFC 9562; UUIDv7 for new ids, existing v4 ids stay valid
+    current: RFC 9562 (May 2024), obsoletes RFC 4122
+    governs: Every record id (`_id` / `id`).
+    status: adopted
+    decided: A§5 Layer 3 ("`_id` is a UUID string"); SP; OD for RFC 9562 and v7 (register P-3)
+    evidence:
+      - identity.persons._id
+      - engagement.interestCategories._id
+      - suggestions.places._id (already UUIDv7)
+    url: https://www.rfc-editor.org/rfc/rfc9562
+    notes: >-
+      integrations.standards ids are `standard_<slug>` and
+      suggestions.places ids are `sug_` + UUIDv7: documented exceptions.
+    foundational: true
+    rationale: v7 ids are time-ordered, which helps Cassandra and Doris clustering.
+  - id: iso_8601
+    name: ISO 8601 / RFC 3339
+    domain: core
+    category: encoding
+    steward: ISO / IETF
+    commitment: ISO 8601-1:2019, profiled by RFC 3339 for timestamps
+    current: ISO 8601-1:2019 + Amd 1:2022; RFC 3339 (updated by RFC 9557)
+    governs: Date-times in JSON, events and APIs; durations (`PT2H`).
+    status: adopted
+    decided: Live validators
+    evidence:
+      - hospitality.experiences.duration
+      - planner.schedules.repeatFrequency
+    url: https://www.rfc-editor.org/rfc/rfc3339
+    foundational: true
+  - id: iso_3166
+    name: ISO 3166-1 / ISO 3166-2
+    domain: core
+    category: identifier_scheme
+    steward: ISO
+    commitment: alpha-2 country codes; 3166-2 subdivision codes
+    current: Not verified (iso.org returned 403)
+    governs: Country and subdivision codes.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - places.placesGeo.isoCode
+      - knowledge.contributors.countryCode
+      - knowledge.contributors.contributionCountries
+      - knowledge.documentReferences.countryCode
+    url: https://www.iso.org/iso-3166-country-codes.html
+  - id: iso_4217
+    name: ISO 4217
+    domain: core
+    category: identifier_scheme
+    steward: ISO (list maintained by SIX)
+    commitment: Alphabetic currency codes, current list
+    current: 2015 edition; Amendment 180
+    governs: Currency codes on orders, offers and prices.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - commerce.orders.currency
+    url: https://www.six-group.com/en/products-services/financial-information/data-standards.html
+  - id: iso_639
+    name: ISO 639
+    domain: core
+    category: identifier_scheme
+    steward: ISO (ISO 639 Maintenance Agency)
+    commitment: ISO 639:2023; 639-3 codes for languages without a 639-1 code
+    current: ISO 639:2023 (consolidates parts 1–5)
+    governs: Language identity in Lingo.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - lingo.languages.iso6393
+    url: https://www.iso.org/standard/74575.html
+  - id: bcp_47
+    name: BCP 47 language tags
+    domain: core
+    category: identifier_scheme
+    steward: IETF
+    commitment: RFC 5646 + RFC 4647
+    current: RFC 5646 + RFC 4647
+    governs: Language tags on content and people (`inLanguage`, `locale`, translations keys).
+    status: adopted
+    decided: Live validators
+    evidence:
+      - identity.persons.locale
+      - lingo.languages.bcp47Tag
+      - lingo.phrases.translations
+      - knowledge.documentReferences.inLanguage
+      - knowledge.contributors.primaryLanguages
+      - knowledge.topics.translations
+    url: https://www.rfc-editor.org/info/bcp47
+    foundational: true
+  - id: unicode_cldr
+    name: Unicode CLDR
+    domain: core
+    category: data_format
+    steward: Unicode Consortium
+    commitment: Current release
+    current: 48.2 (2026-03-17)
+    governs: Locale data for Shona and Ndebele (plurals, dates, numbers, names).
+    status: adopted
+    decided: OD (register P-4)
+    url: https://cldr.unicode.org/index/downloads
+    notes: CLDR's `sn` coverage is basic and `nd` needs checking; contribute upstream.
+  - id: iana_tz
+    name: IANA time zone database
+    domain: core
+    category: identifier_scheme
+    steward: IANA
+    commitment: Current tzdata
+    current: 2026e (2026-09-29), checked 2026-10-07; rolling releases
+    governs: Time-zone names (`zoneinfo`).
+    status: adopted
+    decided: Live validators
+    evidence:
+      - identity.persons.zoneinfo
+    url: https://www.iana.org/time-zones
+  - id: e164
+    name: E.164
+    domain: core
+    category: identifier_scheme
+    steward: ITU-T
+    commitment: E.164 international numbers
+    current: E.164 (02/26), in force; checked 2026-10-07
+    governs: Phone numbers.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - identity.persons.phoneNumber
+    url: https://www.itu.int/rec/T-REC-E.164
+  - id: mime
+    name: Media types (MIME)
+    domain: core
+    category: identifier_scheme
+    steward: IANA / IETF
+    commitment: IANA media types registry (RFC 6838)
+    current: Rolling registry
+    governs: File and media formats (`encodingFormat`).
+    status: adopted
+    decided: Live validators
+    evidence:
+      - novels.pages.encodingFormat
+    url: https://www.iana.org/assignments/media-types/media-types.xhtml
+  - id: semver
+    name: Semantic Versioning
+    domain: core
+    category: specification
+    steward: semver.org
+    commitment: "2.0.0"
+    current: 2.0.0
+    governs: Versions of algorithms and packages.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - ubuntu.scoreSnapshots.computeVersion
+    url: https://semver.org/
+  - id: linkml
+    name: LinkML
+    domain: core
+    category: specification
+    steward: LinkML community
+    commitment: linkml-runtime 1.11.x
+    current: 1.11.1 (2026-05-20)
+    governs: The canonical model's own format (data-infra schemas/).
+    status: adopted
+    decided: OD
+    url: https://linkml.io/
+    rationale: Schema.org-native, store-neutral, machine-checkable.
+  - id: json_schema
+    name: JSON Schema
+    domain: core
+    category: specification
+    steward: JSON Schema organisation
+    commitment: 2020-12
+    current: 2020-12
+    governs: Event payloads and API contracts. MongoDB's $jsonSchema is its own dialect and stays separate.
+    status: adopted
+    decided: OD (register P-5)
+    url: https://json-schema.org/specification
+
+  # --- identity ---------------------------------------------------------------
+  - id: oidc
+    name: OpenID Connect Core 1.0
+    domain: identity
+    category: protocol
+    steward: OpenID Foundation
+    commitment: Core 1.0 with errata set 2; standard claims as person field names
+    current: Final, errata set 2 (2023-12-15)
+    governs: Sign-in; the person record's field names.
+    status: adopted
+    decided: A§6; SP ("Persons use the OpenID Connect standard claims")
+    evidence:
+      - identity.persons._id (the sub claim)
+      - identity.persons.email
+      - identity.persons.givenName
+      - identity.persons.birthdate
+      - "and 9 more identity.persons fields"
+    url: https://openid.net/specs/openid-connect-core-1_0.html
+    foundational: true
+  - id: oauth_2_1
+    name: OAuth 2.1
+    domain: identity
+    category: protocol
+    steward: IETF
+    commitment: The current draft; the RFC when published
+    current: draft-ietf-oauth-v2-1-16 (2026-09-03), an Internet-Draft
+    governs: Authorisation, including MCP's inline OAuth and Dynamic Client Registration.
+    status: adopted
+    decided: A§6 ("the OAuth 2.1 authorization server … DCR"); AT bushtrade-mcp
+    evidence:
+      - identity.credentials.credentialData (OAuth refresh tokens)
+    url: https://datatracker.ietf.org/doc/draft-ietf-oauth-v2-1/
+    notes: Still a draft (IESG milestone Dec 2026); cite it as one until it is an RFC.
+  - id: jwt
+    name: JWT and JWK
+    domain: identity
+    category: data_format
+    steward: IETF
+    commitment: RFC 7519 (+ RFC 8725) and RFC 7517
+    current: RFC 7519, RFC 8725 (BCP), RFC 7517
+    governs: The platform JWT, VC JWTs and the published JWKS.
+    status: adopted
+    decided: A§6 ("The platform JWT is minted…", JWKS)
+    evidence:
+      - identity.credentials.credentialData (VC JWT)
+    url: https://www.rfc-editor.org/rfc/rfc7519
+  - id: rfc_9068
+    name: JWT profile for OAuth 2.0 access tokens
+    domain: identity
+    category: rfc
+    steward: IETF
+    commitment: RFC 9068
+    current: RFC 9068 (Oct 2021)
+    governs: "The shape of the platform's JWT access tokens (`typ: at+jwt`, client_id, scope)."
+    status: adopted
+    decided: OD (register P-6)
+    url: https://www.rfc-editor.org/rfc/rfc9068
+    notes: "Apply as api-gateway PR #126 (ES256 JWTs and JWKS) lands."
+  - id: w3c_vc
+    name: W3C Verifiable Credentials Data Model
+    domain: identity
+    category: data_format
+    steward: W3C
+    commitment: "2.0"
+    current: 2.0, W3C Recommendation (2025-05-15)
+    governs: Credentials issued at verification; agent payment mandates.
+    status: adopted
+    decided: Live validators; AT bushtrade-mcp/src/ap2.ts
+    evidence:
+      - entity.verifications.issuedVcId
+      - identity.credentials.credentialData (VC JWT)
+    url: https://www.w3.org/TR/vc-data-model-2.0/
+  - id: w3c_did
+    name: W3C Decentralized Identifiers (DID)
+    domain: identity
+    category: identifier_scheme
+    steward: W3C
+    commitment: DID Core 1.0; 1.1 when it is a Recommendation
+    current: Core 1.0 Rec (2022); DID 1.1 Candidate Rec (2026-03-05)
+    governs: Credential subjects; the MIT when the token stage arrives (A§19, deferred).
+    status: adopted
+    decided: Live validators; OD (register P-7)
+    evidence:
+      - identity.credentials.credentialData (DID document)
+    url: https://www.w3.org/TR/did-1.1/
+  - id: webauthn
+    name: WebAuthn
+    domain: identity
+    category: protocol
+    steward: W3C / FIDO Alliance
+    commitment: Level 3
+    current: Level 3, W3C Recommendation (2026-08-25); checked 2026-10-07
+    governs: Passkeys.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - identity.credentials.credentialData (WebAuthn credential)
+    url: https://www.w3.org/TR/webauthn-3/
+  - id: nist_sp_800_63_4
+    name: NIST SP 800-63-4 Digital Identity Guidelines
+    domain: identity
+    category: specification
+    steward: NIST
+    commitment: SP 800-63-4 (63A-4 identity proofing as the assurance mapping; 63B-4 AAL for authenticators)
+    current: SP 800-63-4 Final (2025-07-31)
+    governs: >-
+      The reference mapping for verification assurance. The platform's own
+      levels (0 none, 1 otp, 2 documented, 3 government, 4 licensed) map to
+      IAL as follows: 2 documented to IAL1, 3 government and 4 licensed to
+      IAL2. Levels 0 and 1 sit below IAL1. Attestations (community,
+      business, representative, domain) are platform terms with no IAL. The
+      mapping is a reference: the platform does not claim certified IAL
+      conformance.
+    status: adopted
+    decided: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3)
+    evidence:
+      - api-gateway gateway/lib/assurance.py
+    url: https://csrc.nist.gov/pubs/sp/800/63/4/final
+    notes: >-
+      eIDAS levels of assurance and ISO/IEC 18013-5/-7 (mDL) are parked by
+      the same decision; neither is listed.
+  - id: sd_jwt_vc
+    name: SD-JWT-based Verifiable Credentials (SD-JWT VC)
+    domain: identity
+    category: data_format
+    steward: IETF OAuth Working Group
+    commitment: Track the draft; the RFC when published. Built on SD-JWT (RFC 9901).
+    current: draft-ietf-oauth-sd-jwt-vc-19 (2026-08-31), in IESG processing; SD-JWT is RFC 9901
+    governs: >-
+      Selective disclosure of verification outcomes, so a holder can prove
+      "government-verified" or "over 18" without the document. Also the
+      encoding AP2 v0.2 mandates use (gap G-2).
+    status: proposed
+    decided: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3), listed as Proposed
+    url: https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/
+
+  # --- agents -----------------------------------------------------------------
+  - id: mcp
+    name: Model Context Protocol (MCP)
+    domain: agents
+    category: protocol
+    steward: Model Context Protocol project
+    commitment: Current revision; servers declare the revision they implement
+    current: Revision 2026-07-28
+    governs: Every product's agent surface, a stateless server over the app's HTTP API.
+    status: adopted
+    decided: A§8.1 ("Agent surface"); A§5 Layer 5; MZ N11
+    evidence:
+      - shamwari.toolUsage.serverName
+      - shamwari.toolUsage.toolName
+    url: https://modelcontextprotocol.io/specification/versioning
+    foundational: true
+  - id: a2a
+    name: Agent2Agent (A2A)
+    domain: agents
+    category: protocol
+    steward: Linux Foundation
+    commitment: "1.0"
+    current: 1.0.0
+    governs: Agent-to-agent delegation of long-running tasks (mzizi-mcp to fundi).
+    status: adopted
+    decided: AT docs/a2a-fundi.md
+    url: https://a2a-protocol.org/latest/specification/
+    notes: Fundi's agent card still declares 0.3.0 (gap G-1).
+  - id: llms_txt
+    name: llms.txt
+    domain: agents
+    category: specification
+    steward: llmstxt.org (community proposal)
+    commitment: Current proposal
+    current: v2 (Aug 2026); not a formal standard
+    governs: The machine index at each site root.
+    status: adopted
+    decided: A§8.1 ("Machine surface"); MZ N11
+    url: https://llmstxt.org/
+  - id: mcp_server_card
+    name: MCP server card and .well-known discovery
+    domain: agents
+    category: specification
+    steward: Model Context Protocol project
+    commitment: As the current MCP revision defines it
+    current: Part of MCP
+    governs: How agents discover a product's MCP server.
+    status: adopted
+    decided: A§8.1; MZ N11
+    url: https://modelcontextprotocol.io/specification/versioning
+
+  - id: bags
+    name: Bundu AI Guardrails Standard (BAGS)
+    domain: agents
+    category: specification
+    steward: Bundu Foundation
+    commitment: 1.0.0 (semver; a change to a published rule bumps the version)
+    current: >-
+      1.0.0, owner-approved; published on bundu.org on 2026-10-04 by the
+      Bundu Foundation (publisher of record), maintained by Nyuchi Africa;
+      served by the Nyuchi API
+    governs: >-
+      The core, public platform guardrails every AI surface applies, BAGS-01
+      to BAGS-12, and the categories they belong to
+      (shamwari.guardrails, shamwari.guardrailStandard).
+    status: adopted
+    decided: OD (BAGS 1.0.0 rule ids approved; bundu-labs/bundu-standards#11)
+    evidence:
+      - api-gateway db/seeds/bags-1.0.0.json (the seed)
+      - api-gateway GET /v1/ai/guardrails/standard (public, CC BY 4.0)
+      - bundu.org /research/standards/ai-guardrails (and .json)
+      - bundu-standards standards/ai-guardrails/bags-1.0.0.json (snapshot)
+    url: https://www.bundu.org/research/standards/ai-guardrails
+    notes: >-
+      Licence CC BY 4.0 (cc_by_4). Publisher of record: the Bundu
+      Foundation; maintainer and operator: Nyuchi Africa (owner decision
+      2026-10-04). Source of truth is the api-gateway seed; the live API
+      body is https://api.nyuchi.com/v1/ai/guardrails/standard and the
+      canonical URL is bundu.org. The vocab.bundu.org guardrail terms are
+      promoted from testing to stable with this publication. BAGS-08 (prompt injection) withholds its
+      prompt guidance from publication.
+    rationale: >-
+      One published, versioned rule set means every app, and every entity
+      that layers its own rules on top, starts from the same floor.
+
+  # --- communication ----------------------------------------------------------
+  - id: mls
+    name: Messaging Layer Security (MLS)
+    domain: communication
+    category: rfc
+    steward: IETF
+    commitment: RFC 9420
+    current: RFC 9420
+    governs: End-to-end group encryption in Campfire and encrypted comments.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - campfire.conversations.encryptionMode
+      - campfire.conversations.mlsGroupId
+      - campfire.messages.mlsEpoch
+      - campfire.participants.mlsLeafIndex
+      - engagement.comments.encryptionEnvelope
+    url: https://www.rfc-editor.org/rfc/rfc9420
+  - id: activitypub
+    name: ActivityPub
+    domain: communication
+    category: protocol
+    steward: W3C
+    commitment: W3C Recommendation (2018)
+    current: W3C Recommendation (2018-01-23); checked 2026-10-07
+    governs: Federation of circles, posts and public comments.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - circles.circles.actorUri
+      - circles.circles.federatedPeerUris
+      - circles.posts.actorUri
+      - circles.posts.federatedNoteUri
+      - engagement.comments.actorUri
+      - engagement.comments.federatedNoteUri
+      - entity.entities.coverImage
+      - identity.persons.coverImage
+    url: https://www.w3.org/TR/activitypub/
+  - id: matrix
+    name: Matrix
+    domain: communication
+    category: protocol
+    steward: The Matrix.org Foundation
+    commitment: Legacy interoperability only (megolm); MLS for new encryption
+    current: Not re-checked
+    governs: Federated Campfire rooms, and legacy megolm encryption.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - campfire.conversations.matrixRoomId
+      - campfire.messages.matrixEventId
+      - campfire.participants.membershipStatus
+    url: https://spec.matrix.org/latest/
+
+  # --- commerce ---------------------------------------------------------------
+  - id: ucp
+    name: Universal Commerce Protocol (UCP)
+    domain: commerce
+    category: protocol
+    steward: UCP Governing Council (Google, Shopify, Stripe)
+    commitment: "2026-08-25"
+    current: 2026-08-25, Apache-2.0
+    governs: Agentic catalogue, checkout and order flows.
+    status: adopted
+    decided: AT bushtrade-mcp/README.md ("following schema.org + the UCP protocol")
+    evidence:
+      - commerce.products.ucpProfileId
+      - platform.ucpProfiles
+      - platform.ucpCapabilities
+    url: https://ucp.dev/latest/specification/overview/
+  - id: ap2
+    name: Agent Payments Protocol (AP2)
+    domain: commerce
+    category: protocol
+    steward: FIDO Alliance (donated)
+    commitment: v0.2 (Checkout and Payment mandates, SD-JWT)
+    current: v0.2, pre-1.0
+    governs: Signed payment authorisation by agents.
+    status: adopted
+    decided: AT bushtrade-mcp/src/ap2.ts
+    evidence:
+      - platform.signingKeys
+      - platform.paymentHandlers
+    url: https://ap2-protocol.org/ap2/specification/
+    notes: bushtrade-mcp builds v0.1 Intent/Cart mandates (gap G-2).
+  - id: gs1
+    name: GS1 identification keys (GTIN, GLN)
+    domain: commerce
+    category: identifier_scheme
+    steward: GS1
+    commitment: GS1 General Specifications
+    current: GS1 General Specifications (not re-checked)
+    governs: Product and location identifiers.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - commerce.products.gtin
+      - entity.entities.gln
+    url: https://www.gs1.org/standards/barcodes-epcrfid-id-keys/gs1-general-specifications
+  - id: iso_20022
+    name: ISO 20022
+    domain: commerce
+    category: data_format
+    steward: ISO
+    commitment: Message shapes for bank and switch integrations
+    current: Not verified (iso20022.org returned 403)
+    governs: Payment messages for Nyuchi Pay, once it settles through a licensed partner.
+    status: adopted
+    decided: OD (register P-9)
+    url: https://www.iso20022.org/
+
+  # --- news, media ------------------------------------------------------------
+  - id: iptc_media_topics
+    name: IPTC Media Topics (NewsCodes)
+    domain: news
+    category: vocabulary
+    steward: IPTC
+    commitment: Current release; every news category carries a code
+    current: Q2 2026 update
+    governs: Article classification; `about` in JSON-LD.
+    status: adopted
+    decided: Live validators; OD for making the code required (register P-10)
+    evidence:
+      - news.categories.iptcCode
+    url: https://iptc.org/standards/media-topics/
+  - id: c2pa
+    name: C2PA content credentials
+    domain: news
+    category: specification
+    steward: Coalition for Content Provenance and Authenticity
+    commitment: "2.4"
+    current: "2.4"
+    governs: Provenance manifests for articles and media.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - news.articles.c2paManifestUrl
+    url: https://spec.c2pa.org/specifications/
+  - id: epub
+    name: EPUB 3 (and EPUB CFI)
+    domain: news
+    category: specification
+    steward: W3C
+    commitment: EPUB 3.3; CFI for reading positions
+    current: EPUB 3.3, W3C Recommendation (2026-01-13 edition); checked 2026-10-07
+    governs: Novels' books and reading-position anchors.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - engagement.comments.ciphertextAnchor (EPUB CFI)
+    url: https://www.w3.org/TR/epub-33/
+
+  # --- places -----------------------------------------------------------------
+  - id: geojson
+    name: GeoJSON
+    domain: places
+    category: rfc
+    steward: IETF
+    commitment: RFC 7946
+    current: RFC 7946
+    governs: All geometry, 2dsphere-indexed.
+    status: adopted
+    decided: A§5 Layer 3 ("Geo data is GeoJSON with 2dsphere indexes")
+    evidence:
+      - places.places.geo
+      - places.placesGeo.geo
+      - places.placesGeo.boundary
+      - places.routes.geometry
+    url: https://www.rfc-editor.org/rfc/rfc7946
+    notes: The one document already in integrations.standards (standard_geojson).
+    foundational: true
+  - id: wgs84
+    name: WGS 84 (EPSG:4326)
+    domain: places
+    category: specification
+    steward: NGA / EPSG
+    commitment: EPSG:4326, longitude first as GeoJSON requires
+    current: Datum ensemble
+    governs: The coordinate reference system.
+    status: adopted
+    decided: Implied by GeoJSON (RFC 7946 §4)
+    url: https://epsg.io/4326
+  - id: osm_tagging
+    name: OpenStreetMap tagging
+    domain: places
+    category: vocabulary
+    steward: OpenStreetMap community
+    commitment: Map Features wiki (informal; no versions)
+    current: Map Features wiki
+    governs: Place categories and tags; OSM ids as external identifiers.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - places.places.tags
+      - places.categories.osmTags
+      - places.places.sameAs
+    url: https://wiki.openstreetmap.org/wiki/Map_features
+  - id: open_location_code
+    name: Open Location Code (Plus Codes)
+    domain: places
+    category: identifier_scheme
+    steward: Google (Apache-2.0 specification)
+    commitment: Current specification
+    current: Not re-checked
+    governs: Addresses for places without streets.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - places.places.plusCode
+    url: https://github.com/google/open-location-code
+  - id: what3words
+    name: what3words
+    domain: places
+    category: identifier_scheme
+    steward: what3words Ltd (proprietary)
+    commitment: An extra identifier only, never a place's only address
+    current: Proprietary
+    governs: Addresses for informal-economy places.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - places.places.what3words
+    url: https://what3words.com/
+    notes: Proprietary; always fill plusCode alongside it (gap G-5).
+
+  # --- transport --------------------------------------------------------------
+  - id: gtfs
+    name: GTFS Schedule
+    domain: transport
+    category: data_format
+    steward: MobilityData
+    commitment: Current reference
+    current: Revised 2026-04-27 (living spec)
+    governs: Harare Metro routes, stops and timetables; a stop is a Place with identifiers.gtfsStopId.
+    status: adopted
+    decided: OD (register P-12)
+    url: https://github.com/google/transit/blob/master/gtfs/spec/en/reference.md
+  - id: gtfs_realtime
+    name: GTFS Realtime
+    domain: transport
+    category: data_format
+    steward: MobilityData
+    commitment: "2.0"
+    current: "2.0"
+    governs: Live vehicle positions and delays.
+    status: adopted
+    decided: OD (register P-12)
+    url: https://github.com/google/transit/blob/master/gtfs-realtime/spec/en/reference.md
+
+  # --- events -----------------------------------------------------------------
+  - id: icalendar
+    name: iCalendar
+    domain: events
+    category: rfc
+    steward: IETF
+    commitment: RFC 5545 (+ RFC 7986)
+    current: RFC 5545 + RFC 7986
+    governs: UID and RRULE on events; .ics import and export.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - events.events.iCalUid
+      - events.events.iCalRRule
+      - events.calendars.iCalUid
+      - hospitality.entertainmentSchedules.iCalRRule
+    url: https://www.rfc-editor.org/rfc/rfc5545
+  - id: jscalendar
+    name: JSCalendar
+    domain: events
+    category: rfc
+    steward: IETF
+    commitment: RFC 8984, where an API needs a JSON calendar body
+    current: RFC 8984
+    governs: JSON calendar bodies in APIs.
+    status: adopted
+    decided: OD (register P-13)
+    url: https://www.rfc-editor.org/rfc/rfc8984
+
+  # --- weather ----------------------------------------------------------------
+  - id: open_meteo
+    name: Open-Meteo API
+    domain: weather
+    category: specification
+    steward: Open-Meteo
+    commitment: /v1 API shapes
+    current: /v1/forecast
+    governs: The fallback forecast source, and where validated observations are published.
+    status: adopted
+    decided: A§3; A§5 Layer 7; A§16
+    url: https://open-meteo.com/en/docs
+  - id: wmo_station_ids
+    name: WMO station identifiers (WIGOS)
+    domain: weather
+    category: identifier_scheme
+    steward: WMO
+    commitment: WIGOS station identifiers
+    current: Not re-checked
+    governs: Weather station identity.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - weather.observations.wmoStationId
+    url: https://oscar.wmo.int/surface/
+  - id: wmo_4677
+    name: WMO weather interpretation codes (code table 4677)
+    domain: weather
+    category: vocabulary
+    steward: WMO
+    commitment: WMO-No. 306 Vol I.1; the 0–99 subset Open-Meteo uses
+    current: WMO-No. 306 Vol I.1, 2019 edition
+    governs: Present-weather codes (`weather_code`).
+    status: adopted
+    decided: OD (register P-14)
+    url: https://community.wmo.int/en/activity-areas/wis/publications/306
+  - id: cf_conventions
+    name: CF Conventions
+    domain: weather
+    category: specification
+    steward: CF community
+    commitment: "1.13"
+    current: "1.13"
+    governs: Variable names and units in the open weather commons in Doris.
+    status: adopted
+    decided: OD (register P-14)
+    url: https://cfconventions.org/
+
+  # --- health -----------------------------------------------------------------
+  - id: hl7_fhir
+    name: HL7 FHIR
+    domain: health
+    category: specification
+    steward: HL7 International
+    commitment: R4 (4.0.1); R5 or R6 when partners move
+    current: R5 5.0.0 current; R4 4.0.1 most deployed; R6 in ballot
+    governs: Clinical data, if Health or Medical ever hold any.
+    status: adopted
+    decided: OD (register P-15)
+    url: https://hl7.org/fhir/history.html
+    rationale: R4 is what DHIS2 and OpenMRS deployments in the region speak.
+
+  # --- jobs -------------------------------------------------------------------
+  - id: isco_08
+    name: ISCO-08
+    domain: jobs
+    category: vocabulary
+    steward: International Labour Organization
+    commitment: ISCO-08
+    current: ISCO-08 (not re-checked)
+    governs: Occupations and skills.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - identity.personSkills.iscoCode
+    url: https://www.ilo.org/public/english/bureau/stat/isco/isco08/
+
+  # --- learning ---------------------------------------------------------------
+  - id: cefr
+    name: CEFR
+    domain: learning
+    category: vocabulary
+    steward: Council of Europe
+    commitment: CEFR with the 2020 Companion Volume
+    current: 2001; Companion Volume 2020 (not re-checked)
+    governs: Language-learning levels in Lingo.
+    status: adopted
+    decided: Live validators
+    evidence:
+      - lingo.standards.canDoSummary
+      - lingo.phrases.cefrLevel
+      - lingo.scenarios.cefrRange
+      - lingo.learningStandards.cefrMapping
+      - lingo.frameworks.code
+    url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  - id: xapi
+    name: xAPI
+    domain: learning
+    category: specification
+    steward: IEEE
+    commitment: IEEE 9274.1.1-2023 (xAPI 2.0)
+    current: IEEE 9274.1.1-2023
+    governs: Learning activity records.
+    status: adopted
+    decided: OD (register P-16)
+    url: https://standards.ieee.org/ieee/9274.1.1/7321/
+  - id: lti
+    name: LTI
+    domain: learning
+    category: protocol
+    steward: 1EdTech
+    commitment: LTI 1.3 + LTI Advantage
+    current: 1.3 + Advantage (AGS 2.0, NRPS 2.0, Deep Linking 2.0)
+    governs: Launching Learning tools inside an LMS such as Toddle.
+    status: adopted
+    decided: OD (register P-16)
+    url: https://www.1edtech.org/standards/lti
+
+  # --- accessibility ----------------------------------------------------------
+  - id: wcag
+    name: WCAG
+    domain: accessibility
+    category: specification
+    steward: W3C
+    commitment: WCAG 2.2, level AAA; 48px minimum touch targets (beyond 2.5.5's 44px)
+    current: 2.2, W3C Rec (current edition 2024-12-12); WCAG 3 Working Draft
+    governs: Every surface.
+    status: adopted
+    decided: A§8.1 ("WCAG AAA / APCA targets; 48px minimum touch targets"); MZ N2
+    url: https://www.w3.org/TR/WCAG22/
+    notes: The architecture names no version and Mzizi computes WCAG 2.1 ratios; 2.2 is the pin (gap G-3).
+    foundational: true
+  - id: apca
+    name: APCA
+    domain: accessibility
+    category: specification
+    steward: Myndex (proposed for WCAG 3)
+    commitment: A design target alongside WCAG, not a conformance claim
+    current: Algorithm 0.0.98G-4g; not normative
+    governs: Text contrast.
+    status: adopted
+    decided: A§8.1; MZ (mzizi-skills/discoverability)
+    url: https://github.com/Myndex/apca-w3
+    notes: No W3C standard requires APCA (gap G-4).
+  - id: wai_aria
+    name: WAI-ARIA
+    domain: accessibility
+    category: specification
+    steward: W3C
+    commitment: "1.2"
+    current: 1.2, W3C Rec (2023-06-06); 1.3 Editor's Draft
+    governs: Roles and states in components (what Radix implements for Mzizi N2).
+    status: adopted
+    decided: OD (register P-17)
+    url: https://www.w3.org/TR/wai-aria/
+
+  # --- open data --------------------------------------------------------------
+  - id: cc_by_4
+    name: Creative Commons Attribution 4.0
+    domain: open-data
+    category: specification
+    steward: Creative Commons
+    commitment: CC BY 4.0 International
+    current: 4.0 International
+    governs: The licence on open data and open content.
+    status: adopted
+    decided: A§3; A§5 Layer 7; A§15; MZ (architecture overview, Nhaka tier)
+    url: https://creativecommons.org/licenses/by/4.0/
+    foundational: true
+  - id: dcat
+    name: DCAT
+    domain: open-data
+    category: vocabulary
+    steward: W3C
+    commitment: v3
+    current: v3, W3C Rec (2024-08-22)
+    governs: Catalogue metadata for the Doris open commons.
+    status: adopted
+    decided: OD (register P-18)
+    url: https://www.w3.org/TR/vocab-dcat-3/
+  - id: csvw
+    name: CSV on the Web (CSVW)
+    domain: open-data
+    category: vocabulary
+    steward: W3C
+    commitment: Metadata vocabulary for tabular data (2015 Rec)
+    current: W3C Rec (2015-12-17)
+    governs: The column schema of tabular open datasets (`csvw:tableSchema` in the DCAT catalogue).
+    status: adopted
+    decided: OD (bundu-labs/bundu-standards#11, standard terms instead of vocab.bundu.org ones)
+    evidence:
+      - api-gateway gateway/routers/open_data.py
+    url: https://www.w3.org/TR/tabular-metadata/
+
+  # --- streaming, APIs --------------------------------------------------------
+  - id: cloudevents
+    name: CloudEvents
+    domain: streaming
+    category: specification
+    steward: CNCF
+    commitment: "1.0.2"
+    current: 1.0.2 (CNCF Graduated)
+    governs: The envelope of every outbox and Redpanda event (schemas/generated/events/).
+    status: adopted
+    decided: OD (register P-19)
+    url: https://cloudevents.io/
+  - id: asyncapi
+    name: AsyncAPI
+    domain: streaming
+    category: specification
+    steward: AsyncAPI Initiative (Linux Foundation)
+    commitment: "3.1"
+    current: 3.1.0
+    governs: The catalogue of topics and their schemas.
+    status: adopted
+    decided: OD (register P-19)
+    url: https://www.asyncapi.com/docs/reference/specification/latest
+  - id: openapi
+    name: OpenAPI
+    domain: streaming
+    category: specification
+    steward: OpenAPI Initiative (Linux Foundation)
+    commitment: 3.1 (what FastAPI emits); 3.2 when the framework does
+    current: 3.2.1 (2026-09-10)
+    governs: The api.nyuchi.com contract.
+    status: adopted
+    decided: OD (register P-8); api-gateway serves its schema (gateway/main.py)
+    url: https://spec.openapis.org/oas/latest.html
+
+  # --- first-party ------------------------------------------------------------
+  - id: siafudb_graph_sync
+    name: SiafuDB Graph Sync Protocol
+    domain: first-party
+    category: protocol
+    steward: Bundu Foundation
+    commitment: Track releases (0.1.0 pre-release)
+    current: 0.1.0 (pre-release)
+    governs: Device, edge and pod sync.
+    status: adopted
+    decided: A§5 Layers 4 and 6
+    url: https://siafudb.org
+  - id: ntl
+    name: NTL (Neural Transfer Layer)
+    domain: first-party
+    category: protocol
+    steward: Bundu Foundation
+    commitment: Track releases (0.2.0-beta.1)
+    current: 0.2.0-beta.1
+    governs: Signal-based transfer replacing request-response.
+    status: adopted
+    decided: A§13
+    url: https://openntl.org

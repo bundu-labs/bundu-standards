@@ -13,6 +13,26 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+### Added
+
+- `register/`: the register of external standards the platform adopts
+  (`register.yaml`), moved here from `nyuchi/data-infra` `standards/` so that
+  standards have one home. It generates `REGISTER.md` and
+  `seed/integrations.standards.json`, and `register/tools/register.py live`
+  compares the MongoDB `integrations.standards` collection with it.
+- `docs/where-things-live.md`: what lives where, and the rules that keep copies
+  from drifting.
+
+### Found
+
+- Drift measured on 2026-10-29, the first time the live collection was compared
+  with the register: the register had 70 standards, the database 66. Missing
+  from the database: `bags`, `csvw`, `nist_sp_800_63_4` and `sd_jwt_vc`
+  (proposed, so seeded inactive). The register's own page said the database held
+  one document. The database still named the old `bundu-labs/vocab` repository.
+  The old register page described vocab.bundu.org as version 0.1.2; this
+  repository is at 0.2.0.
+
 ### CI
 
 - Production deploys move to `.github/workflows/fly-deploy.yml`, which runs

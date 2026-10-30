@@ -1,0 +1,29 @@
+---
+import "../styles/site.css";
+const { title, description, jsonLd } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <header class="site">
+      <a class="brand" href="/">Bundu standards</a>
+      <a href="/register/">Register</a>
+      <a href="/register/index.json">JSON</a>
+      <a href="https://github.com/bundu-labs/bundu-standards">Source</a>
+    </header>
+    <main><slot /></main>
+    <footer class="site">
+      Published by the <a href="https://www.bundu.org">Bundu Foundation</a>. The register is CC0.
+    </footer>
+  </body>
+</html>

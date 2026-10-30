@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { handle, FILES, RAW, LATEST_URL } from "../src/index.js";
+import { route as handle, FILES, RAW, LATEST_URL } from "../src/lib/files.js";
 
 const SHA = "e15535a4fbaab894167cc87644baa4168b5f8150";
 const req = (path, method = "GET") =>
@@ -142,8 +142,6 @@ test("latest refuses an answer that is not a commit", async () => {
   );
 });
 
-test("health and index", async () => {
+test("health", async () => {
   assert.equal((await handle(req("/healthz"))).status, 200);
-  const idx = await (await handle(req("/"))).json();
-  assert.equal(idx.latest, "/register/latest");
 });

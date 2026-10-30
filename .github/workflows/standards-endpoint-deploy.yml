@@ -57,5 +57,6 @@ jobs:
         run: |
           set -euo pipefail
           curl -fsS https://standards.bundu.org/healthz
-          ref=$(curl -fsS https://standards.bundu.org/register/latest | python3 -c "import sys,json;print(json.load(sys.stdin)['ref'])")
+          curl -fsS https://standards.bundu.org/register/latest -o "$RUNNER_TEMP/latest.json"
+          ref=$(jq -r .ref "$RUNNER_TEMP/latest.json")
           curl -fsS "https://standards.bundu.org/${ref}/register/register.yaml" -o /dev/null

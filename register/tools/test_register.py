@@ -59,7 +59,7 @@ class RegisterTests(unittest.TestCase):
     def test_the_endpoint_serves_exactly_the_published_files(self):
         import re
 
-        worker = (register.ROOT / "workers" / "standards" / "src" / "index.js").read_text()
+        worker = (register.ROOT / "workers" / "standards" / "src" / "lib" / "files.js").read_text()
         block = re.search(r"export const FILES = \{(.*?)\n\};", worker, re.S).group(1)
         served = tuple(re.findall(r'^\s*"([^"]+)":', block, re.M))
         self.assertEqual(set(served), set(register.PUBLISHED))

@@ -13,6 +13,17 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+### Changed
+
+- Adopted eight standards (owner, 2026-10-30): UCUM (2.2), SOSA/SSN (W3C
+  Recommendation 2017), OGC SensorThings (Part 1 1.1, Part 2 1.0), WMDR
+  (WMO-No. 1192, 2019 edition), WIS2 (Manual on WIS, Volume II), OGC API -
+  Features (Part 1 corrigendum 1.0.1, ISO 19168-1:2020), SDMX (3.1, May 2025)
+  and OCHA COD-AB. Each version was read at its source on that day. `sd_jwt_vc`
+  stays proposed.
+- Corrected the links for WMDR and WIS2, which pointed at WMO pages that return
+  404, and for SDMX and OCHA COD, which now point at the standard itself.
+
 ### Fixed
 
 - The seed no longer calls a proposed standard "Adopted": its adoption rationale

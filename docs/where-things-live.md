@@ -46,8 +46,9 @@ drift recorded in the CHANGELOG; none of the earlier checks read the database.
    mapped to registered standards (CF names, UCUM units, ISO codes) before
    anything is stored. A provider's own schema is never adopted.
 6. **Standards the platform uses but the register lacks are proposed here
-   first.** UCUM, SOSA/SSN, OGC SensorThings, WMDR, WIS2, OGC API - Features,
-   SDMX and OCHA COD are listed as proposed; adoption is the owner's decision.
+   first.** The weather and agriculture work added UCUM, SOSA/SSN, OGC
+   SensorThings, WMDR, WIS2, OGC API - Features, SDMX and OCHA COD; the owner
+   adopted them on 2026-10-30, with versions checked at source that day.
 7. **No standard exists? Build one and publish it here.** Never keep a private
    shape because nothing was found (see `AGENTS.md`).
 

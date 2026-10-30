@@ -1620,10 +1620,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "Regenstrief Institute",
     "usageNotes": "CF Conventions accepts UCUM-form units, which is how the two fit together.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed"
+      "adoptionRationale": "Adopted: Owner decision 2026-10-30, adopt global standards and convert at the edge"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1643,10 +1643,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "W3C and OGC",
     "usageNotes": null,
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed"
+      "adoptionRationale": "Adopted: Owner decision 2026-10-30, adopt global standards and convert at the edge"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1666,10 +1666,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "Open Geospatial Consortium",
     "usageNotes": null,
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed"
+      "adoptionRationale": "Adopted: Owner decision 2026-10-30, adopt global standards and convert at the edge"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1685,14 +1685,14 @@
     "category": "specification",
     "description": "What is recorded about an observing station: its identifier, location, elevation, sensor heights, instruments and the programme it reports under.",
     "versionCommitment": "Station metadata follows WMDR, identified by WIGOS station identifier",
-    "specificationUrl": "https://community.wmo.int/en/activity-areas/wigos/wigos-metadata-standard",
-    "documentationUrl": null,
+    "specificationUrl": "https://library.wmo.int/records/item/55626-wigos-metadata-standard",
+    "documentationUrl": "https://github.com/wmo-im/wmds",
     "stewardOrganisation": "World Meteorological Organization",
     "usageNotes": null,
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed"
+      "adoptionRationale": "Adopted: Owner decision 2026-10-30, adopt global standards and convert at the edge"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1708,14 +1708,14 @@
     "category": "protocol",
     "description": "The global exchange of weather observations and forecasts: topics, metadata records and the OGC API Features endpoints (the Zimbabwe Meteorological Services Department node is one).",
     "versionCommitment": "National met-service observations are read and published through WIS2 and its OGC API",
-    "specificationUrl": "https://community.wmo.int/en/activity-areas/wis/wis2-implementation",
-    "documentationUrl": null,
+    "specificationUrl": "https://community.wmo.int/site/knowledge-hub/programmes-and-initiatives/wmo-information-system-wis",
+    "documentationUrl": "https://wmo-im.github.io/wis2-guide/",
     "stewardOrganisation": "World Meteorological Organization",
     "usageNotes": null,
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed"
+      "adoptionRationale": "Adopted: Owner decision 2026-10-30, adopt global standards and convert at the edge"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1735,10 +1735,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "Open Geospatial Consortium (ISO 19168-1)",
     "usageNotes": null,
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed"
+      "adoptionRationale": "Adopted: Owner decision 2026-10-30, adopt global standards and convert at the edge"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1754,14 +1754,14 @@
     "category": "data_format",
     "description": "Time series of statistics with dimensions, attributes and codelists, instead of a provider's own table layout.",
     "versionCommitment": "Statistical series (production, yield, prices, food security) are modelled and exchanged as SDMX",
-    "specificationUrl": "https://sdmx.org/",
+    "specificationUrl": "https://sdmx.org/standards/",
     "documentationUrl": null,
     "stewardOrganisation": "SDMX sponsors (BIS, ECB, Eurostat, IMF, OECD, UN, World Bank)",
     "usageNotes": "ISO 17369. Agricultural statistics published by FAO and others are available as SDMX.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed"
+      "adoptionRationale": "Adopted: Owner decision 2026-10-30, adopt global standards and convert at the edge"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1777,14 +1777,14 @@
     "category": "identifier_scheme",
     "description": "The place codes for administrative boundaries used by humanitarian and national agencies (for example ZW10 to ZW19 for Zimbabwe's provinces).",
     "versionCommitment": "Administrative areas carry their COD P-code as a cross-reference",
-    "specificationUrl": "https://cod.unocha.org/",
-    "documentationUrl": null,
+    "specificationUrl": "https://data.humdata.org/dataset/cod-ab-global",
+    "documentationUrl": "https://knowledge.base.unocha.org/wiki/spaces/imtoolbox/pages/2557378679",
     "stewardOrganisation": "UN OCHA",
     "usageNotes": null,
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Owner direction 2026-10-29, adopt global standards and convert at the edge; listing proposed"
+      "adoptionRationale": "Adopted: Owner decision 2026-10-30, adopt global standards and convert at the edge"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"

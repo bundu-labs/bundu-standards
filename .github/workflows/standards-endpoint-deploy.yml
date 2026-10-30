@@ -1,0 +1,47 @@
+name: Standards endpoint deploy
+
+# Deploys standards.bundu.org (workers/standards) to Cloudflare when it changes
+# on main. A missing secret fails the run loudly; it never skips the deploy.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "workers/standards/**"
+      - ".github/workflows/standards-endpoint-deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: standards-endpoint-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy standards.bundu.org
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Test
+        working-directory: workers/standards
+        run: node --test test/*.test.js
+
+      - name: Deploy
+        working-directory: workers/standards
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          : "${CLOUDFLARE_API_TOKEN:?CLOUDFLARE_API_TOKEN is not set}"
+          : "${CLOUDFLARE_ACCOUNT_ID:?CLOUDFLARE_ACCOUNT_ID is not set}"
+          npx --yes wrangler@4.156.0 deploy
+
+      - name: Smoke test
+        run: |
+          set -euo pipefail
+          curl -fsS https://standards.bundu.org/healthz
+          ref=$(curl -fsS https://standards.bundu.org/register/latest | python3 -c "import sys,json;print(json.load(sys.stdin)['ref'])")
+          curl -fsS "https://standards.bundu.org/${ref}/register/register.yaml" -o /dev/null

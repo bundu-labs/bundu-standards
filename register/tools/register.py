@@ -3,6 +3,7 @@
     python3 register/tools/register.py write        # regenerate REGISTER.md tables + the seed
     python3 register/tools/register.py check        # lint, and fail if a generated file is stale (CI)
     python3 register/tools/register.py live FILE    # compare a live export to the register
+    python3 register/tools/register.py lock         # print the sha256 of each published file (for a consumer's lock)
 
 `register/register.yaml` is the only place the list of adopted standards is
 edited. Everything else is generated from it:
@@ -37,6 +38,8 @@ END = "<!-- END GENERATED -->"
 SEED_DATE = "2026-10-02T00:00:00Z"  # the owner's adoption decision; fixed so the seed is reproducible
 FIELD = re.compile(r"^([a-z]+\.[A-Za-z]+(?:\.[A-Za-z_]+)?)(\s.*)?$")
 CATEGORIES = {"data_format", "protocol", "vocabulary", "identifier_scheme", "encoding", "specification", "rfc"}
+# The files a consumer fetches (standards.bundu.org serves exactly these; a test pins the two lists together).
+PUBLISHED = ("register.yaml", "REGISTER.md", "seed/integrations.standards.json", "tools/register.py")
 # Fields a live document is compared on. Dates are left out: a re-load changes them without changing meaning.
 COMPARED = (
     "displayName", "category", "description", "versionCommitment", "specificationUrl",
@@ -218,6 +221,13 @@ def main(argv: list[str]) -> int:
             errors.append("register/seed/integrations.standards.json is stale (run: python3 register/tools/register.py write)")
         print("\n".join(errors) if errors else f"standards register: {len(reg['standards'])} standards, in step")
         return 1 if errors else 0
+    if cmd == "lock":
+        import hashlib
+
+        for name in PUBLISHED:
+            digest = hashlib.sha256((ROOT / "register" / name).read_bytes()).hexdigest()
+            print(f"  {name}: {digest}")
+        return 0
     if cmd == "live":
         if len(argv) < 3:
             print("usage: register.py live FILE")

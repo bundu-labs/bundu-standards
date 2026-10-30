@@ -61,3 +61,29 @@ drift recorded in the CHANGELOG; none of the earlier checks read the database.
    the ledger, monitoring).
 3. **Then:** the live check runs on a schedule against a read-only connection and
    opens an issue when it finds drift.
+
+## Reading the register from another repository
+
+Consumers do not need a token, because the repository and the endpoint are
+public.
+
+| Address                                                                                 | What it is                                                                                                                  |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `https://standards.bundu.org/<commit>/register/<file>`                                  | The four published files at a commit. Immutable: cached for a year.                                                         |
+| `https://standards.bundu.org/register/latest`                                           | The head of `main` and the URL of each file, as JSON. Cached for five minutes.                                              |
+| `https://raw.githubusercontent.com/bundu-labs/bundu-standards/<commit>/register/<file>` | The same files without the endpoint. The path after the host is identical, so a consumer switches by changing its base URL. |
+
+The files are `register.yaml`, `REGISTER.md`, `seed/integrations.standards.json`
+and `tools/register.py`. Nothing else is served.
+
+**Pin by content, not by address.** A consumer records the commit and the
+sha256 of each file (`python3 register/tools/register.py lock` prints them) and
+refuses a download that does not match. The endpoint is a convenience and an
+address that survives a repository move; it is never what a consumer has to
+trust. This matters most for `tools/register.py`, which a consumer runs.
+
+The endpoint is `workers/standards/`, a Cloudflare Worker with no data, no
+bindings and no secrets. It is deployed by
+`.github/workflows/standards-endpoint-deploy.yml`, which needs two repository
+secrets (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`) and fails loudly
+without them.

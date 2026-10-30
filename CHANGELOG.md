@@ -35,6 +35,14 @@ Versions released before then are not renumbered.
   register lacked: UCUM, SOSA/SSN, OGC SensorThings, WMDR, WIS2, OGC API -
   Features, SDMX and OCHA COD P-codes. Listed as proposed (seeded inactive) and
   not yet checked at source.
+- `workers/standards/`: the Worker behind `standards.bundu.org`, a public,
+  read-only address for the register at a commit. It serves four files of
+  `register/`, nothing else, with RFC 9457 errors and immutable caching for a
+  commit. Tested with the runner's own Node, no dependencies.
+- `register.py lock`: prints the sha256 of each published file, for a consumer's
+  lock. A test pins the Worker's file list to the tool's.
+- A `Standards endpoint` CI job, and a deploy workflow that fails loudly when
+  its Cloudflare secrets are missing.
 
 ### Found
 

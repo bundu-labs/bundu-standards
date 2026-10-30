@@ -132,8 +132,21 @@ jobs:
       - name: Register tool tests
         run: python3 -m unittest discover register/tools
 
+  # standards.bundu.org: the Worker that serves the register at a commit.
+  endpoint:
+    runs-on: ubuntu-latest
+    name: Standards endpoint
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Worker tests (the runner's own Node, no dependencies)
+        working-directory: workers/standards
+        run: node --test test/*.test.js
+
   comment:
-    needs: [test, contract, register]
+    needs: [test, contract, register, endpoint]
     # Push runs (main, staging) have no pull request to comment on.
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest

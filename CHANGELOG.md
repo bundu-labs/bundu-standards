@@ -43,7 +43,7 @@ Versions released before then are not renumbered.
   `register/register.yaml`, so the pages cannot drift from it.
 - `register.py lock`: prints the sha256 of each published file, for a consumer's
   lock. A test pins the Worker's file list to the tool's.
-- A `Standards endpoint` CI job, and a deploy workflow that fails loudly when
+- A `Standards endpoint` CI job, and a deploy workflow (on `main` and `staging`, when the site or register changes) that fails loudly when
   its Cloudflare secrets are missing.
 
 ### Found

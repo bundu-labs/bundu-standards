@@ -86,6 +86,7 @@ The site is `workers/standards/`, an Astro project on Cloudflare Workers with
 no database, no bindings and no secrets. Its pages (`/register/`, one per
 standard, `/register/index.json`) are built from `register/register.yaml`, so
 they cannot drift from it. It is deployed by
-`.github/workflows/standards-endpoint-deploy.yml`, which needs two repository
+`.github/workflows/standards-endpoint-deploy.yml` on every push to `main` or
+`staging` that changes the site or the register. It needs two repository
 secrets (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`) and fails loudly
 without them.

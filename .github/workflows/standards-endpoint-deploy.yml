@@ -1,13 +1,15 @@
 name: Standards endpoint deploy
 
-# Deploys standards.bundu.org (workers/standards) to Cloudflare when it changes
-# on main. A missing secret fails the run loudly; it never skips the deploy.
+# Deploys standards.bundu.org (workers/standards) to Cloudflare when it, or the
+# register its pages are built from, changes on main or staging. A missing secret
+# fails the run loudly; it never skips the deploy.
 
 on:
   push:
-    branches: [main]
+    branches: [main, staging]
     paths:
       - "workers/standards/**"
+      - "register/**"
       - ".github/workflows/standards-endpoint-deploy.yml"
   workflow_dispatch:
 

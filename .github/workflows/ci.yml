@@ -132,8 +132,35 @@ jobs:
       - name: Register tool tests
         run: python3 -m unittest discover register/tools
 
+  # standards.bundu.org: the Worker that serves the register at a commit.
+  endpoint:
+    runs-on: ubuntu-latest
+    name: Standards endpoint
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: workers/standards/package-lock.json
+
+      - name: Install
+        working-directory: workers/standards
+        run: npm ci
+
+      - name: Tests
+        working-directory: workers/standards
+        run: npm test
+
+      - name: Build
+        working-directory: workers/standards
+        run: npm run build
+
   comment:
-    needs: [test, contract, register]
+    needs: [test, contract, register, endpoint]
     # Push runs (main, staging) have no pull request to comment on.
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest

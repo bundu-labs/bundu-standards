@@ -56,6 +56,28 @@ class RegisterTests(unittest.TestCase):
         for e in self.REG["standards"]:
             self.assertNotIn("already in integrations.standards", str(e.get("notes", "")), e["id"])
 
+    def test_the_endpoint_serves_exactly_the_published_files(self):
+        import re
+
+        worker = (register.ROOT / "workers" / "standards" / "src" / "lib" / "files.js").read_text()
+        block = re.search(r"export const FILES = \{(.*?)\n\};", worker, re.S).group(1)
+        served = tuple(re.findall(r'^\s*"([^"]+)":', block, re.M))
+        self.assertEqual(set(served), set(register.PUBLISHED))
+
+    def test_lock_prints_a_sha256_for_every_published_file(self):
+        import contextlib
+        import io
+
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(register.main(["register.py", "lock"]), 0)
+        lines = [ln.strip() for ln in out.getvalue().splitlines()]
+        self.assertEqual(len(lines), len(register.PUBLISHED))
+        for ln, name in zip(lines, register.PUBLISHED):
+            key, _, digest = ln.partition(": ")
+            self.assertEqual(key, name)
+            self.assertRegex(digest, r"^[0-9a-f]{64}$")
+
 
 if __name__ == "__main__":
     unittest.main()

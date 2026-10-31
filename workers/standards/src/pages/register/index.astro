@@ -1,0 +1,24 @@
+---
+import Base from "../../layouts/Base.astro";
+import { REGISTER } from "../../lib/data.js";
+import { definedTermSet } from "../../lib/register.js";
+const jsonLd = definedTermSet(REGISTER);
+---
+<Base title="Register · Bundu standards" description="Every external standard the platform adopts, and its status." jsonLd={jsonLd}>
+  <h1>Register</h1>
+  <p>{REGISTER.counts.adopted} adopted, {REGISTER.counts.proposed} proposed.</p>
+  {REGISTER.domains.map((d) => (
+    <section>
+      <h2>{d.title}</h2>
+      <ul class="list">
+        {d.standards.map((s) => (
+          <li>
+            <a href={`/register/${s.id}/`}>{s.name}</a>
+            <span class={`chip ${s.status}`}>{s.status}</span>
+            <div class="muted">{s.current}</div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</Base>

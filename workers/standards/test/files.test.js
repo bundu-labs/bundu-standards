@@ -145,3 +145,19 @@ test("latest refuses an answer that is not a commit", async () => {
 test("health", async () => {
   assert.equal((await handle(req("/healthz"))).status, 200);
 });
+
+test("the edge cache ignores the query string, so cache-busting cannot reach the upstream", async () => {
+  const store = new Map();
+  const cache = {
+    match: async (r) => store.get(r.url)?.clone(),
+    put: async (r, res) => void store.set(r.url, res),
+  };
+  let calls = 0;
+  const f = async () => (calls++, ok(JSON.stringify({ sha: SHA })));
+  const { routeCached } = await import("../src/lib/files.js");
+  for (const q of ["", "?a=1", "?a=2", "?a=3"]) {
+    const res = await routeCached(req(`/register/latest${q}`), f, cache);
+    assert.equal(res.status, 200);
+  }
+  assert.equal(calls, 1);
+});

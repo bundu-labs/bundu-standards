@@ -131,15 +131,22 @@ async function latest(url, fetchImpl, path) {
   );
 }
 
+/** The cache key ignores the query string: `?x=1`, `?x=2` must not each reach the upstream. */
+function cacheKey(request) {
+  const url = new URL(request.url);
+  return new Request(`${url.origin}${url.pathname}`, { method: "GET" });
+}
+
 /** `route`, with successful GETs kept in the edge cache when there is one. */
 export async function routeCached(request, fetchImpl = fetch, cache = globalThis.caches?.default) {
-  if (cache && request.method === "GET") {
-    const hit = await cache.match(request);
+  const key = cache && request.method === "GET" ? cacheKey(request) : null;
+  if (key) {
+    const hit = await cache.match(key);
     if (hit) return hit;
   }
   const res = await route(request, fetchImpl);
-  if (cache && request.method === "GET" && res.status === 200) {
-    await cache.put(request, res.clone());
+  if (key && res.status === 200) {
+    await cache.put(key, res.clone());
   }
   return res;
 }

@@ -43,3 +43,5 @@ target
 # not part of the product. Keep them locally, out of the repo.
 CLAUDE.md
 .claude/
+__pycache__/
+.pytest_cache/

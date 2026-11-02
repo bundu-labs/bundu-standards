@@ -1,0 +1,25 @@
+---
+import Base from "../../layouts/Base.astro";
+import { REGISTER } from "../../lib/data.js";
+import { definedTerm } from "../../lib/register.js";
+
+export function getStaticPaths() {
+  return REGISTER.standards.map((s) => ({ params: { id: s.id }, props: { s } }));
+}
+const { s } = Astro.props;
+const jsonLd = { "@context": "https://schema.org", ...definedTerm(s) };
+---
+<Base title={`${s.name} · Bundu standards`} description={s.governs.replace(/\s+/g, " ").trim()} jsonLd={jsonLd}>
+  <p><a href="/register/">← Register</a></p>
+  <h1>{s.name} <span class={`chip ${s.status}`}>{s.status}</span></h1>
+  <dl>
+    <dt>Governs</dt><dd>{s.governs}</dd>
+    <dt>Current</dt><dd>{s.current}</dd>
+    <dt>Commitment</dt><dd>{s.commitment}</dd>
+    {s.steward && (<><dt>Steward</dt><dd>{s.steward}</dd></>)}
+    <dt>Decided</dt><dd>{s.decided}</dd>
+    <dt>Specification</dt><dd><a href={s.url}>{s.url}</a></dd>
+    {s.docs && (<><dt>Documentation</dt><dd><a href={s.docs}>{s.docs}</a></dd></>)}
+    {s.notes && (<><dt>Notes</dt><dd>{s.notes}</dd></>)}
+  </dl>
+</Base>

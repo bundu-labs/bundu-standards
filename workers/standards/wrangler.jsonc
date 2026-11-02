@@ -1,0 +1,9 @@
+{
+  // standards.bundu.org. Astro generates the rest of the Worker configuration.
+  // No bindings and no secrets: the pages are built from the register in this
+  // repository, and the file endpoint reads a public repository.
+  "name": "bundu-standards",
+  "compatibility_date": "2026-10-01",
+  "routes": [{ "pattern": "standards.bundu.org", "custom_domain": true }],
+  "observability": { "enabled": true },
+}

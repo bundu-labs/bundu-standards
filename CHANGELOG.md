@@ -13,6 +13,62 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+## 0.3.0 - 2026-11-02
+
+### Changed
+
+- Adopted eight standards (owner, 2026-10-30): UCUM (2.2), SOSA/SSN (W3C
+  Recommendation 2017), OGC SensorThings (Part 1 1.1, Part 2 1.0), WMDR
+  (WMO-No. 1192, 2019 edition), WIS2 (Manual on WIS, Volume II), OGC API -
+  Features (Part 1 corrigendum 1.0.1, ISO 19168-1:2020), SDMX (3.1, May 2025)
+  and OCHA COD-AB. Each version was read at its source on that day. `sd_jwt_vc`
+  stays proposed.
+- Corrected the links for WMDR and WIS2, which pointed at WMO pages that return
+  404, and for SDMX and OCHA COD, which now point at the standard itself.
+
+### Fixed
+
+- The seed no longer calls a proposed standard "Adopted": its adoption rationale
+  starts "Proposed:" when the register says proposed.
+- Removed a note on GeoJSON that said it was the one document in
+  `integrations.standards`, which stopped being true when the register was loaded.
+
+### Added
+
+- `register/`: the register of external standards the platform adopts
+  (`register.yaml`), moved here from `nyuchi/data-infra` `standards/` so that
+  standards have one home. It generates `REGISTER.md` and
+  `seed/integrations.standards.json`, and `register/tools/register.py live`
+  compares the MongoDB `integrations.standards` collection with it.
+- `docs/where-things-live.md`: what lives where, and the rules that keep copies
+  from drifting.
+- `AGENTS.md`: the rule that standards are adopted or built and published, never
+  invented per provider, and how to apply it.
+- Eight proposed standards the weather and agriculture work needed and the
+  register lacked: UCUM, SOSA/SSN, OGC SensorThings, WMDR, WIS2, OGC API -
+  Features, SDMX and OCHA COD P-codes. Listed as proposed (seeded inactive) and
+  not yet checked at source.
+- `workers/standards/`: `standards.bundu.org`, built on Astro for Cloudflare
+  Workers. It publishes the register as pages (one per standard, with
+  schema.org `DefinedTerm` JSON-LD) and `/register/index.json`, and serves
+  four files of `register/` at a commit (nothing else), with RFC 9457 errors
+  and immutable caching for a commit. The register is read at build time from
+  `register/register.yaml`, so the pages cannot drift from it.
+- `register.py lock`: prints the sha256 of each published file, for a consumer's
+  lock. A test pins the Worker's file list to the tool's.
+- A `Standards endpoint` CI job, and a deploy workflow (on `main` and `staging`, when the site or register changes) that fails loudly when
+  its Cloudflare secrets are missing.
+
+### Found
+
+- Drift measured on 2026-10-29, the first time the live collection was compared
+  with the register: the register had 70 standards, the database 66. Missing
+  from the database: `bags`, `csvw`, `nist_sp_800_63_4` and `sd_jwt_vc`
+  (proposed, so seeded inactive). The register's own page said the database held
+  one document. The database still named the old `bundu-labs/vocab` repository.
+  The old register page described vocab.bundu.org as version 0.1.2; this
+  repository is at 0.2.0.
+
 ### CI
 
 - Production deploys move to `.github/workflows/fly-deploy.yml`, which runs

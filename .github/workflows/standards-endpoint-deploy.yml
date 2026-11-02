@@ -1,0 +1,64 @@
+name: Standards endpoint deploy
+
+# Deploys standards.bundu.org (workers/standards) to Cloudflare when it, or the
+# register its pages are built from, changes on main or staging. A missing secret
+# fails the run loudly; it never skips the deploy.
+
+on:
+  push:
+    branches: [main, staging]
+    paths:
+      - "workers/standards/**"
+      - "register/**"
+      - ".github/workflows/standards-endpoint-deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: standards-endpoint-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy standards.bundu.org
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: workers/standards/package-lock.json
+
+      - name: Install
+        working-directory: workers/standards
+        run: npm ci
+
+      - name: Test
+        working-directory: workers/standards
+        run: npm test
+
+      - name: Build
+        working-directory: workers/standards
+        run: npm run build
+
+      - name: Deploy
+        working-directory: workers/standards
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          : "${CLOUDFLARE_API_TOKEN:?CLOUDFLARE_API_TOKEN is not set}"
+          : "${CLOUDFLARE_ACCOUNT_ID:?CLOUDFLARE_ACCOUNT_ID is not set}"
+          npx wrangler deploy
+
+      - name: Smoke test
+        run: |
+          set -euo pipefail
+          curl -fsS https://standards.bundu.org/healthz
+          curl -fsS https://standards.bundu.org/register/latest -o "$RUNNER_TEMP/latest.json"
+          ref=$(jq -r .ref "$RUNNER_TEMP/latest.json")
+          curl -fsS "https://standards.bundu.org/${ref}/register/register.yaml" -o /dev/null

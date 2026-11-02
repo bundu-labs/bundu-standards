@@ -1,0 +1,20 @@
+---
+import Base from "../layouts/Base.astro";
+import { REGISTER } from "../lib/data.js";
+const { counts } = REGISTER;
+---
+<Base title="Bundu standards" description="The open standards the Bundu, Mukoko and Nyuchi platform builds on.">
+  <h1>Bundu standards</h1>
+  <p>
+    If a standard exists we adopt it. If none exists we build one and publish it. Data from a source that does not
+    match is converted at the edge, and only the standard form is stored or served.
+  </p>
+  <p>
+    The <a href="/register/">register</a> lists {counts.total} standards: {counts.adopted} adopted,
+    {counts.proposed} proposed.
+  </p>
+  <h2>For other repositories</h2>
+  <p>Read the register at a commit, with no credential. Pin the sha256 of each file.</p>
+  <pre>GET /register/latest
+GET /&lt;commit&gt;/register/register.yaml</pre>
+</Base>

@@ -33,6 +33,13 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Proposed five map-tile standards for Nyuchi Maps (nyuchi/maps#4): OGC API -
+  Tiles (Part 1 Core 1.0, OGC 20-057), the OGC Two Dimensional Tile Matrix Set
+  and Tile Set Metadata (2.0, OGC 17-083r4), the Mapbox Vector Tile
+  specification (2.1), TileJSON (3.0.0) and PMTiles (version 3). Each was read
+  at its source on 2026-11-03. All are `proposed` until the owner adopts them.
+  The base-map schema (OpenMapTiles or another) is not listed: it is not
+  decided.
 - `register/`: the register of external standards the platform adopts
   (`register.yaml`), moved here from `nyuchi/data-infra` `standards/` so that
   standards have one home. It generates `REGISTER.md` and

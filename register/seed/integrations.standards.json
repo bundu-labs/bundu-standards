@@ -1748,6 +1748,121 @@
     }
   },
   {
+    "_id": "standard_ogc_api_tiles",
+    "_schemaVersion": "v3.1",
+    "displayName": "OGC API - Tiles",
+    "category": "protocol",
+    "description": "The API shape of tiled map data: the landing page, the list of tilesets, a tile by tile matrix, and the conformance classes a server declares. The successor to WMTS.",
+    "versionCommitment": "Tile sets (the base map, weather and places layers) are served and read as OGC API Tiles",
+    "specificationUrl": "https://www.ogc.org/standards/ogcapi-tiles/",
+    "documentationUrl": "https://docs.ogc.org/is/20-057/20-057.html",
+    "stewardOrganisation": "Open Geospatial Consortium",
+    "usageNotes": "Names tile matrix sets by reference to ogc_tms. The format of a tile is separate (mvt for vector tiles).",
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Proposed: Owner direction 2026-11-03 (Nyuchi Maps is a self-hosted map platform; the OGC API - Tiles guide was supplied as important), nyuchi/maps#4; listing proposed, adoption awaits the owner"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_ogc_tms",
+    "_schemaVersion": "v3.1",
+    "displayName": "OGC Two Dimensional Tile Matrix Set and Tile Set Metadata",
+    "category": "specification",
+    "description": "The tile matrix sets (WebMercatorQuad and WorldCRS84Quad among them) that say what zoom, row and column mean, and the metadata that describes a tile set.",
+    "versionCommitment": "How a tiled map divides the world, and how a tile set is described, follow the OGC Tile Matrix Set standard",
+    "specificationUrl": "https://docs.ogc.org/is/17-083r4/17-083r4.html",
+    "documentationUrl": null,
+    "stewardOrganisation": "Open Geospatial Consortium",
+    "usageNotes": null,
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Proposed: Owner direction 2026-11-03 (Nyuchi Maps is a self-hosted map platform; the OGC API - Tiles guide was supplied as important), nyuchi/maps#4; listing proposed, adoption awaits the owner"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_mvt",
+    "_schemaVersion": "v3.1",
+    "displayName": "Mapbox Vector Tile specification",
+    "category": "data_format",
+    "description": "The encoding of one vector tile: its layers, features, attributes and geometry commands.",
+    "versionCommitment": "Vector tiles are encoded as Mapbox Vector Tiles",
+    "specificationUrl": "https://github.com/mapbox/vector-tile-spec",
+    "documentationUrl": null,
+    "stewardOrganisation": "Mapbox (published openly, no standards body)",
+    "usageNotes": "Not a standards-body specification. It is the format MapLibre, Planetiler and OGC API Tiles clients use for vector tiles.",
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Proposed: Owner direction 2026-11-03 (Nyuchi Maps is a self-hosted map platform; the OGC API - Tiles guide was supplied as important), nyuchi/maps#4; listing proposed, adoption awaits the owner"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_tilejson",
+    "_schemaVersion": "v3.1",
+    "displayName": "TileJSON",
+    "category": "data_format",
+    "description": "A small JSON document that describes a tile set: where its tiles are, its zoom range and its bounds.",
+    "versionCommitment": "A tile set a style refers to is described by a TileJSON document",
+    "specificationUrl": "https://github.com/mapbox/tilejson-spec",
+    "documentationUrl": null,
+    "stewardOrganisation": "Mapbox (published openly, no standards body)",
+    "usageNotes": "Not a standards-body specification. It sits beside OGC API Tiles for clients (MapLibre) that read a style and not an OGC landing page.",
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Proposed: Owner direction 2026-11-03 (Nyuchi Maps is a self-hosted map platform; the OGC API - Tiles guide was supplied as important), nyuchi/maps#4; listing proposed, adoption awaits the owner"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_pmtiles",
+    "_schemaVersion": "v3.1",
+    "displayName": "PMTiles",
+    "category": "data_format",
+    "description": "A single-file archive of map tiles (a 127-byte header, directories, JSON metadata and the tile data) that is read by byte offsets and lengths, so a tile set can be served from plain storage.",
+    "versionCommitment": "Map tiles are stored as PMTiles archives",
+    "specificationUrl": "https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md",
+    "documentationUrl": null,
+    "stewardOrganisation": "Protomaps LLC (published openly, no standards body)",
+    "usageNotes": "Not a standards-body specification. A storage format, not an API; the API a client sees is ogc_api_tiles or tilejson.",
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Proposed: Owner direction 2026-11-03 (Nyuchi Maps is a self-hosted map platform; the OGC API - Tiles guide was supplied as important), nyuchi/maps#4; listing proposed, adoption awaits the owner"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_sdmx",
     "_schemaVersion": "v3.1",
     "displayName": "Statistical Data and Metadata eXchange (SDMX)",

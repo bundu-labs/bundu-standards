@@ -1158,6 +1158,78 @@ standards:
     status: adopted
     decided: "Owner decision 2026-10-30, adopt global standards and convert at the edge"
     url: https://ogcapi.ogc.org/features/
+  - id: ogc_api_tiles
+    name: OGC API - Tiles
+    domain: places
+    category: protocol
+    steward: Open Geospatial Consortium
+    commitment: Tile sets (the base map, weather and places layers) are served and read as OGC API Tiles
+    current: Part 1 Core, version 1.0, OGC 20-057, OGC Implementation Standard (read at source 2026-11-03)
+    governs: >-
+      The API shape of tiled map data: the landing page, the list of tilesets, a
+      tile by tile matrix, and the conformance classes a server declares. The
+      successor to WMTS.
+    status: proposed
+    decided: Owner direction 2026-11-03 (Nyuchi Maps is a self-hosted map platform; the OGC API - Tiles guide was supplied as important), nyuchi/maps#4; listing proposed, adoption awaits the owner
+    url: https://www.ogc.org/standards/ogcapi-tiles/
+    docs: https://docs.ogc.org/is/20-057/20-057.html
+    notes: Names tile matrix sets by reference to ogc_tms. The format of a tile is separate (mvt for vector tiles).
+  - id: ogc_tms
+    name: OGC Two Dimensional Tile Matrix Set and Tile Set Metadata
+    domain: places
+    category: specification
+    steward: Open Geospatial Consortium
+    commitment: How a tiled map divides the world, and how a tile set is described, follow the OGC Tile Matrix Set standard
+    current: Version 2.0, OGC 17-083r4, OGC Standard, approved 2022-03-24 (read at source 2026-11-03)
+    governs: >-
+      The tile matrix sets (WebMercatorQuad and WorldCRS84Quad among them) that
+      say what zoom, row and column mean, and the metadata that describes a tile set.
+    status: proposed
+    decided: Owner direction 2026-11-03 (Nyuchi Maps is a self-hosted map platform; the OGC API - Tiles guide was supplied as important), nyuchi/maps#4; listing proposed, adoption awaits the owner
+    url: https://docs.ogc.org/is/17-083r4/17-083r4.html
+  - id: mvt
+    name: Mapbox Vector Tile specification
+    domain: places
+    category: data_format
+    steward: Mapbox (published openly, no standards body)
+    commitment: Vector tiles are encoded as Mapbox Vector Tiles
+    current: Version 2.1; the specification text is CC BY 3.0 US (read at source 2026-11-03)
+    governs: >-
+      The encoding of one vector tile: its layers, features, attributes and
+      geometry commands.
+    status: proposed
+    decided: Owner direction 2026-11-03 (Nyuchi Maps is a self-hosted map platform; the OGC API - Tiles guide was supplied as important), nyuchi/maps#4; listing proposed, adoption awaits the owner
+    url: https://github.com/mapbox/vector-tile-spec
+    notes: Not a standards-body specification. It is the format MapLibre, Planetiler and OGC API Tiles clients use for vector tiles.
+  - id: tilejson
+    name: TileJSON
+    domain: places
+    category: data_format
+    steward: Mapbox (published openly, no standards body)
+    commitment: A tile set a style refers to is described by a TileJSON document
+    current: Version 3.0.0; the specification text is CC BY 3.0 US (read at source 2026-11-03)
+    governs: >-
+      A small JSON document that describes a tile set: where its tiles are, its
+      zoom range and its bounds.
+    status: proposed
+    decided: Owner direction 2026-11-03 (Nyuchi Maps is a self-hosted map platform; the OGC API - Tiles guide was supplied as important), nyuchi/maps#4; listing proposed, adoption awaits the owner
+    url: https://github.com/mapbox/tilejson-spec
+    notes: Not a standards-body specification. It sits beside OGC API Tiles for clients (MapLibre) that read a style and not an OGC landing page.
+  - id: pmtiles
+    name: PMTiles
+    domain: places
+    category: data_format
+    steward: Protomaps LLC (published openly, no standards body)
+    commitment: Map tiles are stored as PMTiles archives
+    current: Version 3; the repository is BSD 3-Clause and the specification text states no licence of its own (read at source 2026-11-03)
+    governs: >-
+      A single-file archive of map tiles (a 127-byte header, directories, JSON
+      metadata and the tile data) that is read by byte offsets and lengths, so a
+      tile set can be served from plain storage.
+    status: proposed
+    decided: Owner direction 2026-11-03 (Nyuchi Maps is a self-hosted map platform; the OGC API - Tiles guide was supplied as important), nyuchi/maps#4; listing proposed, adoption awaits the owner
+    url: https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md
+    notes: Not a standards-body specification. A storage format, not an API; the API a client sees is ogc_api_tiles or tilejson.
   - id: sdmx
     name: Statistical Data and Metadata eXchange (SDMX)
     domain: open-data

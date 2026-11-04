@@ -36,6 +36,10 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Proposed the Common Alerting Protocol (CAP, version 1.2, OASIS Standard, 01
+  July 2010), read at its source on 2026-11-04. The severe-weather alert rules
+  in mukoko-weather (#289) read it, and a warning is pushed only from an
+  official CAP source. It stays `proposed` until the owner adopts it.
 - Proposed OGC API - Common, Part 1 Core (OGC 19-072, version 1.0), which OGC
   API - Tiles depends on (found in the Nyuchi Maps tile contract,
   nyuchi/maps#5). It stays `proposed` until the owner adopts it.

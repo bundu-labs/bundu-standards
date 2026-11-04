@@ -1242,6 +1242,29 @@
     }
   },
   {
+    "_id": "standard_oasis_cap",
+    "_schemaVersion": "v3.1",
+    "displayName": "Common Alerting Protocol (CAP)",
+    "category": "data_format",
+    "description": "The alert message: its status, message type and scope, and for each info block the category, urgency, severity, certainty, effective and expiry times and the affected area (polygon, circle or geocode).",
+    "versionCommitment": "A public warning from an official alerting authority is read as a CAP 1.2 alert, and converted at the edge before anything else uses it",
+    "specificationUrl": "https://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2-os.html",
+    "documentationUrl": null,
+    "stewardOrganisation": "OASIS (Emergency Management Technical Committee)",
+    "usageNotes": "Official sources are the alerting authorities in the WMO Register of Alerting Authorities (for Zimbabwe, the Meteorological Services Department). No feed has been read by the platform yet: the XML reader waits on a real sample item. A warning whose area is given only by geocodes cannot be matched to a place and is left out, not guessed.",
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Proposed: Proposed 2026-11-04 under the standards rule: CAP exists, so the severe weather alert rules in mukoko-weather (#289, weather_core::severe_alert) read it instead of inventing a warning format. Adoption awaits the owner, together with the choice to push severe warnings only from an official CAP source"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_hl7_fhir",
     "_schemaVersion": "v3.1",
     "displayName": "HL7 FHIR",

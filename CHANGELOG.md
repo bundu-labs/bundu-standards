@@ -26,6 +26,9 @@ Versions released before then are not renumbered.
 
 ### Fixed
 
+- Removed an approval date (2022-03-24) from the OGC Tile Matrix Set entry: it
+  could not be confirmed at the source (the Nyuchi Maps tile contract reads a
+  different one), so the entry now states the status (Approved) and no date.
 - The seed no longer calls a proposed standard "Adopted": its adoption rationale
   starts "Proposed:" when the register says proposed.
 - Removed a note on GeoJSON that said it was the one document in
@@ -33,6 +36,9 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Proposed OGC API - Common, Part 1 Core (OGC 19-072, version 1.0), which OGC
+  API - Tiles depends on (found in the Nyuchi Maps tile contract,
+  nyuchi/maps#5). It stays `proposed` until the owner adopts it.
 - Five map-tile standards for Nyuchi Maps (nyuchi/maps#4): OGC API - Tiles
   (Part 1 Core 1.0, OGC 20-057), the OGC Two Dimensional Tile Matrix Set and
   Tile Set Metadata (2.0, OGC 17-083r4), the Mapbox Vector Tile specification

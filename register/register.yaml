@@ -866,6 +866,36 @@ standards:
     status: adopted
     decided: OD (register P-14)
     url: https://cfconventions.org/
+  - id: oasis_cap
+    name: Common Alerting Protocol (CAP)
+    domain: weather
+    category: data_format
+    steward: OASIS (Emergency Management Technical Committee)
+    commitment: >-
+      A public warning from an official alerting authority is read as a CAP 1.2
+      alert, and converted at the edge before anything else uses it
+    current: >-
+      Version 1.2, OASIS Standard, 01 July 2010 (read at source 2026-11-04; the
+      cover page states the status and date, and names the Emergency Management
+      TC as its committee)
+    governs: >-
+      The alert message: its status, message type and scope, and for each info
+      block the category, urgency, severity, certainty, effective and expiry
+      times and the affected area (polygon, circle or geocode).
+    status: proposed
+    decided: >-
+      Proposed 2026-11-04 under the standards rule: CAP exists, so the severe
+      weather alert rules in mukoko-weather (#289, weather_core::severe_alert)
+      read it instead of inventing a warning format. Adoption awaits the owner,
+      together with the choice to push severe warnings only from an official CAP
+      source
+    url: https://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2-os.html
+    notes: >-
+      Official sources are the alerting authorities in the WMO Register of
+      Alerting Authorities (for Zimbabwe, the Meteorological Services Department).
+      No feed has been read by the platform yet: the XML reader waits on a real
+      sample item. A warning whose area is given only by geocodes cannot be
+      matched to a place and is left out, not guessed.
 
   # --- health -----------------------------------------------------------------
   - id: hl7_fhir

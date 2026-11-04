@@ -1757,7 +1757,7 @@
     "specificationUrl": "https://www.ogc.org/standards/ogcapi-tiles/",
     "documentationUrl": "https://docs.ogc.org/is/20-057/20-057.html",
     "stewardOrganisation": "Open Geospatial Consortium",
-    "usageNotes": "Names tile matrix sets by reference to ogc_tms. The format of a tile is separate (mvt for vector tiles).",
+    "usageNotes": "Names tile matrix sets by reference to ogc_tms. The format of a tile is separate (mvt for vector tiles). Scope: the tile contract of Nyuchi Maps (nyuchi/maps#4). The weather Worker's /v1/map-tiles raster proxy and the MapTiler base map the apps use today predate it and are not covered by this entry.",
     "isActive": true,
     "bundu": {
       "isFoundational": false,
@@ -1826,7 +1826,7 @@
     "specificationUrl": "https://github.com/mapbox/tilejson-spec",
     "documentationUrl": null,
     "stewardOrganisation": "Mapbox (published openly, no standards body)",
-    "usageNotes": "Not a standards-body specification. It sits beside OGC API Tiles for clients (MapLibre) that read a style and not an OGC landing page.",
+    "usageNotes": "Not a standards-body specification. It sits beside OGC API Tiles for clients (MapLibre) that read a style and not an OGC landing page. OGC API - Tiles (ogc_api_tiles) is the canonical description of a tile set: a TileJSON document is derived from it and never states a bound, zoom range or tile URL that the OGC tileset metadata does not.",
     "isActive": true,
     "bundu": {
       "isFoundational": false,

@@ -9,14 +9,22 @@ CC0 for the schema and context (like the vocabulary).
 The rule in `AGENTS.md`: adopt the global standard; where none exists, write one. A search on
 2026-11-11 found standards for the _parts_ of an AI assistant and none for what a person keeps in it:
 
-| Part                            | Standard                                                  | Covers                                                        |
-| ------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------- |
-| Skills                          | Agent Skills (agentskills.io; Agentic AI Foundation)      | A skill: a folder with a `SKILL.md`                           |
-| One exchange on the wire        | Open Responses (openresponses.org; Agentic AI Foundation) | Request, response, typed items, streaming                     |
-| Project instructions            | AGENTS.md (Agentic AI Foundation)                         | Plain-Markdown instructions for an agent                      |
-| Tools and context               | MCP; agent to agent: A2A (both in the register)           | Calling tools, agents calling agents                          |
-| **Stored conversations**        | **none**                                                  | ChatGPT and Claude each export their own `conversations.json` |
-| **Projects, artifacts, memory** | **none**                                                  | Dropped or lost when a person moves assistant                 |
+| Part                                  | Standard                                                                        | Covers                                                                                      |
+| ------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Skills                                | Agent Skills (agentskills.io; Agentic AI Foundation)                            | A skill: a folder with a `SKILL.md`                                                         |
+| One exchange on the wire              | Open Responses (openresponses.org; Agentic AI Foundation)                       | Request, response, typed items, streaming. No stored-conversation resource                  |
+| Project instructions                  | AGENTS.md (Agentic AI Foundation)                                               | Plain-Markdown instructions for an agent                                                    |
+| Tools and context                     | MCP; agent to agent: A2A (both in the register)                                 | Calling tools, agents calling agents. A2A defines Message, Task history and Artifact        |
+| Telemetry                             | OpenTelemetry GenAI conventions (Development, no release)                       | Spans, `gen_ai.conversation.id`, memory operations; not a storage format                    |
+| **Stored conversations**              | **none found**                                                                  | ChatGPT and Claude each export their own `conversations.json`                               |
+| **Projects**                          | **none found** beyond AGENTS.md for instructions                                | Dropped or lost when a person moves assistant                                               |
+| **Saved, versioned, cited artifacts** | **none found**; A2A Artifact is per task, with no version, lineage or citation  | schema.org CreativeWork and C2PA are building blocks                                        |
+| **Memory**                            | **proposals only** (MacPaw Portable Memory, Letta `.af`, a W3C community group) | None has independent adopters seen; BCI does not mint a memory standard, see open questions |
+
+The gap analysis (Bundu standards coordinator, 2026-11-11) found the live wire shape standardised
+and the _stored_ record not. BCI is therefore a thin profile: a `Message` holds an Open Responses
+item unchanged, and an `Artifact` extends the idea of A2A's Artifact with a stable id, version,
+lineage, citations and provenance rather than replacing it.
 
 So a person's history, the answers they kept, their projects and what the assistant remembers about
 them belong to a product, not to the person. BCI is the record of those things, in a form any
@@ -96,15 +104,17 @@ dropped and reported.
    `provenance`, `consent`. Those terms need adding to `vocab.bundu.org` (`src/terms.rs`) before 0.1.0 is
    published; schema.org has `Project` only as a pending type. Prefer a schema.org type where one is
    stable.
-3. **Versions and licences of the standards it builds on** were read on 2026-11-11 from their
-   pages, which state no version number for Open Responses or Agent Skills; the repositories and
-   licences must be read at source before adoption (see the register entries, `proposed`).
-4. **Binary artifacts.** `contentRef` points at a file in an archive. Whether the archive is a ZIP
+3. **Versions of the standards it builds on.** Agent Skills and Open Responses have no tags or
+   releases (Open Responses has dated OpenAPI snapshots); pin a commit or snapshot date. Licences
+   were read 2026-11-11 (Apache-2.0, Apache-2.0, MIT). Only A2A (1.0.0) and MCP have clear version ids.
+4. **Memory.** `MemoryEntry` is a requirement list for the W3C community group and MacPaw, not a
+   proposed standard. Whether to keep it in BCI or drop it is the owner's decision.
+5. **Binary artifacts.** `contentRef` points at a file in an archive. Whether the archive is a ZIP
    or an OCI artifact, and how the digest is checked, is not decided.
-5. **Branches and edits.** ChatGPT-style conversation branching and message edits are not modelled.
+6. **Branches and edits.** ChatGPT-style conversation branching and message edits are not modelled.
    A branch could be a new `Conversation` with a `bci:forkOf` extension; decide once a second
    implementation needs it.
-6. **A harness profile.** The harness (the loop around a model: context policy, tool-call dialect,
+7. **A harness profile.** The harness (the loop around a model: context policy, tool-call dialect,
    permissions, session log, sandbox) has no published standard either. That is a separate
    standard, to be scoped after this one; BCI's append-only, ordered `Message` stream is its natural
    session log.

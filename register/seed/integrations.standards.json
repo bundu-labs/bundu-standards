@@ -598,6 +598,75 @@
     }
   },
   {
+    "_id": "standard_rfc_8628",
+    "_schemaVersion": "v3.1",
+    "displayName": "OAuth 2.0 Device Authorization Grant",
+    "category": "rfc",
+    "description": "Pairing a display or desktop that has no keyboard to a household: the device shows a user_code and a QR code of verification_uri_complete, a household member approves on their phone, and the device polls the token endpoint (authorization_pending, slow_down, access_denied, expired_token). Records: device.pairings (model DevicePairing).",
+    "versionCommitment": "RFC 8628",
+    "specificationUrl": "https://www.rfc-editor.org/rfc/rfc8628",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF",
+    "usageNotes": "Run by the Nyuchi API (/v1/devices) behind id-worker's /oauth/device_authorization and /oauth/token. WorkOS CLI Auth was not used: it issues the person's own tokens, and a shared device must never hold a person's token.",
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Proposed: The Mukoko Home design (mukoko-dev/mukoko-home#24, 2026-10-07); awaiting the owner"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_rfc_6749",
+    "_schemaVersion": "v3.1",
+    "displayName": "The OAuth 2.0 Authorization Framework",
+    "category": "rfc",
+    "description": "A paired device's refresh token: opaque, stored only as a hash, rotated on every use, and a replayed old token revokes the session. Records: device.sessions (model DeviceSession).",
+    "versionCommitment": "RFC 6749 (refresh token grant, §6), with rotation and reuse detection as OAuth 2.1 and RFC 9700 §4.14 require",
+    "specificationUrl": "https://www.rfc-editor.org/rfc/rfc6749",
+    "documentationUrl": null,
+    "stewardOrganisation": "IETF",
+    "usageNotes": "OAuth 2.1 (adopted) is the platform's commitment; this entry names the RFC the device grant (RFC 8628) extends, until OAuth 2.1 is an RFC.",
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Proposed: The Mukoko Home design (mukoko-dev/mukoko-home#24, 2026-10-07); awaiting the owner"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_schema_org_product",
+    "_schemaVersion": "v3.1",
+    "displayName": "Schema.org Product",
+    "category": "vocabulary",
+    "description": "What a device is in JSON-LD: a schema:Product (device.devices, model Device), its kind as additionalType (vocab.bundu.org terms for user_device, weather_station, kiosk and datacentre_node are not yet proposed there), and deviceIdentifier as serialNumber.",
+    "versionCommitment": "Schema.org core type, with additionalType for the device category",
+    "specificationUrl": "https://schema.org/Product",
+    "documentationUrl": null,
+    "stewardOrganisation": "Schema.org Community Group (W3C)",
+    "usageNotes": null,
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Proposed: The Mukoko Home design (mukoko-dev/mukoko-home#24, 2026-10-07); awaiting the owner"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_mcp",
     "_schemaVersion": "v3.1",
     "displayName": "Model Context Protocol (MCP)",

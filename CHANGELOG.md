@@ -36,6 +36,12 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Proposed three standards for the device domain (nyuchi/data-infra#96, the
+  Mukoko Home pairing work, mukoko-dev/mukoko-home#24) under a new `devices`
+  domain, "Devices and pairing": the OAuth 2.0 Device Authorization Grant (RFC
+  8628), the OAuth 2.0 Authorization Framework (RFC 6749, for the paired
+  device's rotating refresh token) and Schema.org Product (what a device is in
+  JSON-LD). They stay `proposed` until the owner adopts them.
 - Proposed the Common Alerting Protocol (CAP, version 1.2, OASIS Standard, 01
   July 2010), read at its source on 2026-11-04. The severe-weather alert rules
   in mukoko-weather (#289) read it, and a warning is pushed only from an

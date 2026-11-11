@@ -67,4 +67,4 @@ not part of any standard above.
 
 A harness passes when, for every row of section 1 that applies to it, it uses the named standard,
 and it satisfies section 4. Section 3 lists what it cannot yet be checked against. Open items are in
-#50.
+the tracking issue (#50).

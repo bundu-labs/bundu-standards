@@ -468,15 +468,16 @@ standards:
     current: >-
       The specification page (agentskills.io/specification) states no version
       number; read 2026-11-11. Published as an open standard 2025-12-18 and
-      donated to the Agentic AI Foundation 2026-10-22. Licence not stated on the
-      page: read it in the repository before adoption.
+      donated to the Agentic AI Foundation 2026-10-22. Repository
+      agentskills/agentskills, licence Apache-2.0, last push 2026-11-04 (GitHub
+      API, read 2026-11-11). Pin the commit; there is no release number.
     governs: >-
       The format of a reusable agent skill: a folder with a SKILL.md (frontmatter
       name, description, license, compatibility, metadata, allowed-tools) and
       optional scripts, references and assets. Bundu Conversation Interchange
       names skills by their `name` field.
-    status: proposed
-    decided: Proposed on the owner's instruction 2026-11-11; version and licence to be verified at source before adoption
+    status: adopted
+    decided: Adopted on the owner's instruction 2026-11-11 (adopt every existing standard that fits); licence and activity verified at source 2026-11-11
     url: https://agentskills.io/specification
 
   - id: open_responses
@@ -488,14 +489,16 @@ standards:
     current: >-
       The specification page (openresponses.org/specification) states no version
       number; read 2026-11-11. Donated to the Agentic AI Foundation 2026-10-22.
-      Licence not stated on the page: read it in the repository before adoption.
+      Repository openresponses/openresponses, licence Apache-2.0, last push
+      2026-10-29 (GitHub API, read 2026-11-11). Pin the commit; there is no
+      release number.
     governs: >-
       The shared request and response schema for LLM interfaces: polymorphic typed
       items (message, function_call and extension items named
       `implementor_slug:type`), streaming events. A Message in Bundu Conversation
       Interchange holds one item unchanged.
-    status: proposed
-    decided: Proposed on the owner's instruction 2026-11-11; version and licence to be verified at source before adoption
+    status: adopted
+    decided: Adopted on the owner's instruction 2026-11-11 (adopt every existing standard that fits); licence and activity verified at source 2026-11-11
     url: https://www.openresponses.org/specification
 
   - id: agents_md
@@ -504,12 +507,15 @@ standards:
     category: specification
     steward: Agentic AI Foundation (Linux Foundation)
     commitment: Track the specification.
-    current: Not read at source for this entry. Listed as an Agentic AI Foundation project in the foundation's announcement of 2026-10-22 (linuxfoundation.org).
+    current: >-
+      Repository agentsmd/agents.md, licence MIT, last push 2026-09-10 (GitHub
+      API, read 2026-11-11). Named in the Agentic AI Foundation's announcement
+      of 2026-10-22. Pin the commit; there is no release number.
     governs: >-
       Plain-Markdown instructions for an agent, at the root of a repository. A
       Bundu Conversation Interchange Project's `instructions` use the same style.
-    status: proposed
-    decided: Proposed on the owner's instruction 2026-11-11; version and licence to be verified at source before adoption
+    status: adopted
+    decided: Adopted on the owner's instruction 2026-11-11 (adopt every existing standard that fits); licence and activity verified at source 2026-11-11
     url: https://www.linuxfoundation.org/press/agentic-ai-foundation-announces-four-new-projects-agent-skills-open-responses-openenv-and-opensandbox
 
   # --- devices ----------------------------------------------------------------

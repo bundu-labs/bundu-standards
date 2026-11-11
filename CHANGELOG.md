@@ -15,6 +15,12 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- Re-read UCUM at its source on 2026-11-11 (still version 2.2, 2024-06-17) and
+  recorded its licence in the entry: Regenstrief Institute's own UCUM Copyright
+  Notice and License, version 1.1, which is neither open-source nor Creative
+  Commons and bars modified copies and derivative works. UCUM was the eighth
+  standard on nyuchi/data-infra#94; it was already adopted (2026-10-30), so it
+  gets no new entry and stays adopted.
 - Adopted three standards from the Agentic AI Foundation: Agent Skills, Open
   Responses and AGENTS.md. The decision recorded is the owner's instruction of
   2026-11-11 in the coordinator's chat ("Adopt the three AAIF projects, ACP
@@ -58,6 +64,21 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Proposed seven standards that the October 2026 standards audit found in use
+  on the data platform and not in the register (nyuchi/data-infra#94, tracked in
+  #179): H3 (places, release 4.5.0), IPTC ninjs (news, version 3.2), IPTC
+  Digital Source Type (news, released 2024-10-23), Apache Avro (streaming,
+  release 1.12.2), Activity Streams 2.0 (communication, W3C Recommendations of
+  2017-05-23), SPDX (open data, specification 3.0.1 and License List 3.29.0) and
+  the Legal Entity Identifier (identity, ISO 17442-1:2020 and -2:2020). Each was
+  read at its source on 2026-11-11, and its entry records the steward, the
+  version, the licence of the specification and of any reference code, and where
+  the platform uses it. They stay `proposed`, not adopted: #94 lists them and
+  says that adding a standard is an owner decision. Two findings are recorded in
+  the entries: ISO/IEC 5962:2021 is SPDX 2.2.1 and SPDX 3.0 is in ISO's final
+  approval stage (50.20) and not yet published; IPTC's ninjs page still names 3.0
+  as current while its repository and schema say 3.2. Applying the seed to the
+  live `integrations.standards` collection is an owner step and was not done.
 - Proposed the Agent Client Protocol (ACP; protocol version 1 is the stable
   version and version 2 is in alpha), read at its source on 2026-11-11. It
   standardises how a code editor drives a coding agent. Its governance is

@@ -454,8 +454,11 @@ standards:
       Selective disclosure of verification outcomes, so a holder can prove
       "government-verified" or "over 18" without the document. Also the
       encoding AP2 v0.2 mandates use (gap G-2).
-    status: proposed
-    decided: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3), listed as Proposed
+    status: adopted
+    decided: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3), listed as Proposed.
+      Adopted 2026-11-11 on the owner's instruction in the coordinator's chat ("all the proposed
+      standards please release them, into a beta. if they are ones we are adopting then we fully adopt
+      everything now", then "we fully adopt").
     url: https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/
   - id: iso_17442
     name: Legal Entity Identifier (LEI, ISO 17442)
@@ -479,13 +482,16 @@ standards:
       unique and stands for one entity, so an organisation can be named across
       systems and checked against GLEIF's Global LEI Index (`schema:leiCode`).
       Proposed for B2B verification of organisations; no LEI is stored today.
-    status: proposed
+    status: adopted
     decided: >-
       The October 2026 standards audit (nyuchi/data-infra#94,
       docs/standards-audit-2026-10.md, 2026-10-07) lists LEI as proposed, not yet
       used, for B2B verification. #94 lists it and does not adopt it ("Adding a
-      standard is an owner decision"), so it stays proposed until the owner adopts
-      it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179
+      standard is an owner decision"), so it was registered as proposed until the owner adopted it. Listed in the
+      register on 2026-11-11, tracked in nyuchi/data-infra#179.
+      Adopted 2026-11-11 on the owner's instruction in the coordinator's chat ("all the proposed
+      standards please release them, into a beta. if they are ones we are adopting then we fully adopt
+      everything now", then "we fully adopt").
     url: https://www.iso.org/standard/78829.html
     docs: https://www.gleif.org/en/about-lei/iso-17442-the-lei-code-structure
     notes: >-
@@ -862,14 +868,17 @@ standards:
       (Person, Organization, Place, Event, Article, Note, Like, Follow, Create,
       Join, Leave, View), and the vocabulary ActivityPub (activitypub) is built
       on.
-    status: proposed
+    status: adopted
     decided: >-
       The October 2026 standards audit (nyuchi/data-infra#94,
       docs/standards-audit-2026-10.md, 2026-10-07) found the model using Activity
       Streams 2.0 through ActivityPub and the standard not registered on its own.
       #94 lists it and does not adopt it ("Adding a standard is an owner
-      decision"), so it stays proposed until the owner adopts it. Listed in the
-      register on 2026-11-11, tracked in nyuchi/data-infra#179
+      decision"), so it was registered as proposed until the owner adopted it. Listed in the
+      register on 2026-11-11, tracked in nyuchi/data-infra#179.
+      Adopted 2026-11-11 on the owner's instruction in the coordinator's chat ("all the proposed
+      standards please release them, into a beta. if they are ones we are adopting then we fully adopt
+      everything now", then "we fully adopt").
     url: https://www.w3.org/TR/activitystreams-vocabulary/
     docs: https://www.w3.org/TR/activitystreams-core/
     notes: >-
@@ -993,14 +1002,17 @@ standards:
       subjects, people, organisations, places, renditions, rights and
       digitalSourceType. It is the target shape of news API output, and what
       `NewsArticle` maps to closely.
-    status: proposed
+    status: adopted
     decided: >-
       The October 2026 standards audit (nyuchi/data-infra#94,
       docs/standards-audit-2026-10.md, 2026-10-07) found ninjs in use as the news
       target shape and not in the register. #94 lists it and does not adopt it
-      ("Adding a standard is an owner decision"), so it stays proposed until the
-      owner adopts it. Listed in the register on 2026-11-11, tracked in
-      nyuchi/data-infra#179
+      ("Adding a standard is an owner decision"), so it was registered as proposed until the owner adopted it.
+      Listed in the register on 2026-11-11, tracked in
+      nyuchi/data-infra#179.
+      Adopted 2026-11-11 on the owner's instruction in the coordinator's chat ("all the proposed
+      standards please release them, into a beta. if they are ones we are adopting then we fully adopt
+      everything now", then "we fully adopt").
     url: https://iptc.org/std/ninjs/
     docs: https://github.com/iptc/newsinjson
     notes: >-
@@ -1034,14 +1046,17 @@ standards:
       Generative AI") and `compositeWithTrainedAlgorithmicMedia` ("Edited using
       Generative AI"). The data platform uses it to mark AI-made article text and
       images.
-    status: proposed
+    status: adopted
     decided: >-
       The October 2026 standards audit (nyuchi/data-infra#94,
       docs/standards-audit-2026-10.md, 2026-10-07) found it the shared code list
       for AI provenance on content and not in the register. #94 lists it and does
-      not adopt it ("Adding a standard is an owner decision"), so it stays
-      proposed until the owner adopts it. Listed in the register on 2026-11-11,
-      tracked in nyuchi/data-infra#179
+      not adopt it ("Adding a standard is an owner decision"), so it was registered as proposed until the owner
+      adopted it. Listed in the register on 2026-11-11,
+      tracked in nyuchi/data-infra#179.
+      Adopted 2026-11-11 on the owner's instruction in the coordinator's chat ("all the proposed
+      standards please release them, into a beta. if they are ones we are adopting then we fully adopt
+      everything now", then "we fully adopt").
     url: https://cv.iptc.org/newscodes/digitalsourcetype/
     notes: >-
       Licence: Creative Commons Attribution 4.0 (the vocabulary page: "Copyright
@@ -1163,14 +1178,17 @@ standards:
       are 16 resolutions (0 to 15); resolution 0 has 122 base cells (110 hexagons
       and 12 pentagons) and each finer resolution has about one seventh of the
       area (aperture 7).
-    status: proposed
+    status: adopted
     decided: >-
       The October 2026 standards audit (nyuchi/data-infra#94,
       docs/standards-audit-2026-10.md, 2026-10-07) found H3 planned for the data
       platform and not in the register. #94 lists it and does not adopt it
-      ("Adding a standard is an owner decision"), so it stays proposed until the
-      owner adopts it. Listed in the register on 2026-11-11, tracked in
-      nyuchi/data-infra#179
+      ("Adding a standard is an owner decision"), so it was registered as proposed until the owner adopted it.
+      Listed in the register on 2026-11-11, tracked in
+      nyuchi/data-infra#179.
+      Adopted 2026-11-11 on the owner's instruction in the coordinator's chat ("all the proposed
+      standards please release them, into a beta. if they are ones we are adopting then we fully adopt
+      everything now", then "we fully adopt").
     url: https://h3geo.org/
     docs: https://github.com/uber/h3
     notes: >-
@@ -1320,13 +1338,18 @@ standards:
       The alert message: its status, message type and scope, and for each info
       block the category, urgency, severity, certainty, effective and expiry
       times and the affected area (polygon, circle or geocode).
-    status: proposed
+    status: adopted
     decided: >-
       Proposed 2026-11-04 under the standards rule: CAP exists, so the severe
       weather alert rules in mukoko-weather (#289, weather_core::severe_alert)
       read it instead of inventing a warning format. Adoption awaits the owner,
       together with the choice to push severe warnings only from an official CAP
-      source
+      source.
+      Adopted 2026-11-11 on the owner's instruction in the coordinator's chat ("all the proposed
+      standards please release them, into a beta. if they are ones we are adopting then we fully adopt
+      everything now", then "we fully adopt").
+      This adopts CAP the standard only. The separate choice to push severe warnings only from an
+      official CAP source is still open.
     url: https://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2-os.html
     notes: >-
       Official sources are the alerting authorities in the WMO Register of
@@ -1480,14 +1503,17 @@ standards:
       The identifier of a licence (`MIT`, `Apache-2.0`, `CC-BY-4.0`) and licence
       expressions (a licence `WITH` an exception), so a provider's licence is a
       code and not free text: `integrations.providers.license.spdxIdentifier`.
-    status: proposed
+    status: adopted
     decided: >-
       The October 2026 standards audit (nyuchi/data-infra#94,
       docs/standards-audit-2026-10.md, 2026-10-07) found `spdxIdentifier` on the
       integrations providers and SPDX not in the register. #94 lists it and does
-      not adopt it ("Adding a standard is an owner decision"), so it stays
-      proposed until the owner adopts it. Listed in the register on 2026-11-11,
-      tracked in nyuchi/data-infra#179
+      not adopt it ("Adding a standard is an owner decision"), so it was registered as proposed until the owner
+      adopted it. Listed in the register on 2026-11-11,
+      tracked in nyuchi/data-infra#179.
+      Adopted 2026-11-11 on the owner's instruction in the coordinator's chat ("all the proposed
+      standards please release them, into a beta. if they are ones we are adopting then we fully adopt
+      everything now", then "we fully adopt").
     url: https://spdx.dev/use/specifications/
     docs: https://spdx.org/licenses/
     notes: >-
@@ -1564,14 +1590,17 @@ standards:
       registry; also the object container file, the single-object encoding and
       the schema-resolution rules for a reader whose schema differs from the
       writer's.
-    status: proposed
+    status: adopted
     decided: >-
       The October 2026 standards audit (nyuchi/data-infra#94,
       docs/standards-audit-2026-10.md, 2026-10-07) found event payloads serialised
       as Avro and Avro not in the register. #94 lists it and does not adopt it
-      ("Adding a standard is an owner decision"), so it stays proposed until the
-      owner adopts it. Listed in the register on 2026-11-11, tracked in
-      nyuchi/data-infra#179
+      ("Adding a standard is an owner decision"), so it was registered as proposed until the owner adopted it.
+      Listed in the register on 2026-11-11, tracked in
+      nyuchi/data-infra#179.
+      Adopted 2026-11-11 on the owner's instruction in the coordinator's chat ("all the proposed
+      standards please release them, into a beta. if they are ones we are adopting then we fully adopt
+      everything now", then "we fully adopt").
     url: https://avro.apache.org/docs/current/specification/
     docs: https://github.com/apache/avro
     notes: >-
@@ -1776,12 +1805,15 @@ standards:
       The landing page, the conformance declaration and the rules for links that
       every OGC API shares. OGC API - Tiles (ogc_api_tiles) builds on it: its
       tileset list and tileset resources depend on classes defined here.
-    status: proposed
+    status: adopted
     decided: >-
       Found 2026-11-04 in the Nyuchi Maps tile contract (nyuchi/maps#5): OGC API -
       Tiles depends on it, and the owner adopted OGC API - Tiles the same day;
       listed as proposed because the owner adopted five named standards, not this
-      one; adoption awaits the owner
+      one; adoption awaits the owner.
+      Adopted 2026-11-11 on the owner's instruction in the coordinator's chat ("all the proposed
+      standards please release them, into a beta. if they are ones we are adopting then we fully adopt
+      everything now", then "we fully adopt").
     url: https://www.ogc.org/standards/ogcapi-common/
     docs: https://docs.ogc.org/is/19-072/19-072.html
     notes: >-

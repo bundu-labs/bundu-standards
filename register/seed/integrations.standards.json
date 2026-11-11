@@ -585,10 +585,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "IETF OAuth Working Group",
     "usageNotes": null,
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3), listed as Proposed"
+      "adoptionRationale": "Adopted: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3), listed as Proposed. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -608,10 +608,10 @@
     "documentationUrl": "https://www.gleif.org/en/about-lei/iso-17442-the-lei-code-structure",
     "stewardOrganisation": "ISO (ISO/TC 68/SC 8); the LEI system is run by GLEIF",
     "usageNotes": "Licence: the standard's text is sold by ISO (CHF 67 for Part 1; \"(c) ISO\" on the page) and no open licence for the text was found. The data is open: GLEIF's LEI Data Terms of Use (gleif.org/en/meta/lei-data-terms-of-use) say the data available through its access service \"are provided under the CC0 licence\", and GLEIF describes the LEI as \"A public good, available free of charge to all users\". Steward: ISO/TC 68/SC 8 is the responsible committee; GLEIF (Global Legal Entity Identifier Foundation), a Swiss not-for-profit foundation incorporated by the Financial Stability Board, runs the system with the local operating units (LOUs) it accredits, under the Regulatory Oversight Committee. Scope: legal entities, including international branches and individuals acting in a business capacity (sole traders are an ISO example), and not natural persons. Schema.org has the property `leiCode` (\"An organization identifier that uniquely identifies a legal entity as defined in ISO 17442\"). Platform use: none yet; the entity model has `taxId`, `registrationNumber`, `gln` and `openCorporatesId` and no `leiCode` (audit 2026-10-07, nyuchi/data-infra#94). Added from nyuchi/data-infra#94 and #179.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) lists LEI as proposed, not yet used, for B2B verification. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it stays proposed until the owner adopts it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179"
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) lists LEI as proposed, not yet used, for B2B verification. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -953,10 +953,10 @@
     "documentationUrl": "https://www.w3.org/TR/activitystreams-core/",
     "stewardOrganisation": "W3C (Social Web Working Group)",
     "usageNotes": "Licence: no reference code. Both documents carry \"W3C liability, trademark and permissive document license rules apply\", linking the W3C Software and Document License (2015 version; that page says it was in effect from 2015-05-13 to 2022-12-31 and has since been replaced by a later version). The JSON-LD context is served at https://www.w3.org/ns/activitystreams. ActivityPub (activitypub) is \"based upon the ActivityStreams 2.0 data format\" (its abstract). Platform use: the Activity Streams 2.0 close mappings on the model's classes, listed by the audit (docs/standards-audit-2026-10.md, 2026-10-07). Added from nyuchi/data-infra#94 and #179.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found the model using Activity Streams 2.0 through ActivityPub and the standard not registered on its own. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it stays proposed until the owner adopts it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179"
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found the model using Activity Streams 2.0 through ActivityPub and the standard not registered on its own. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1114,10 +1114,10 @@
     "documentationUrl": "https://github.com/iptc/newsinjson",
     "stewardOrganisation": "IPTC (International Press Telecommunications Council)",
     "usageNotes": "Licence: the JSON Schema is Creative Commons Attribution 4.0 (stated in the schema's own description, \"copyright 2025 IPTC\"); the repository (LICENSE, \"Copyright (c) 2024 International Press Telecommunications Council (IPTC)\") is MIT. The 3.2 schema has a `digitalSourceType` property whose suggested vocabulary is the IPTC Digital Source Type (iptc_digital_source_type). Platform use: `NewsArticle` has a close mapping `iptc:ninjs` that expands under NewsCodes and does not resolve, and the audit names ninjs 3.2 as the target shape of the news APIs (nyuchi/data-infra#86). Added from nyuchi/data-infra#94 and #179.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found ninjs in use as the news target shape and not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it stays proposed until the owner adopts it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179"
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found ninjs in use as the news target shape and not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1137,10 +1137,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "IPTC (International Press Telecommunications Council)",
     "usageNotes": "Licence: Creative Commons Attribution 4.0 (the vocabulary page: \"Copyright 2024 IPTC ... The Creative Commons Attribution (CC BY) 4.0 license applies to all NewsCodes\"; the scheme's JSON names IPTC as copyright holder and links CC BY 4.0). It is data, not code. The scheme's own definition says \"from which source a digital image was created\" and the concept definitions say \"media\"; none of the 20 concept definitions names text, so using the codes for AI-made article text is the platform's application of them, not something IPTC states. C2PA 2.4 (c2pa) takes these URIs in its digitalSourceType field, and the ninjs 3.2 schema (iptc_ninjs) has a digitalSourceType property that suggests this vocabulary (both read 2026-11-11). Platform use: the AI-made fields of an article (aiSummary on 99%, aiKeywords, aiSentiment, aiCategories) carry no source type today (audit 2026-10-07, nyuchi/data-infra#86). Added from nyuchi/data-infra#94 and #179.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found it the shared code list for AI provenance on content and not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it stays proposed until the owner adopts it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179"
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found it the shared code list for AI provenance on content and not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1298,10 +1298,10 @@
     "documentationUrl": "https://github.com/uber/h3",
     "stewardOrganisation": "Uber Technologies, Inc. (an open-source project; no standards body or foundation)",
     "usageNotes": "Licence: Apache-2.0 for the library and its documentation (LICENSE; NOTICE \"Copyright 2017-2021 Uber Technologies, Inc.\"; the README names Apache 2.0 and also carries DGGRID, \"Copyright (c) 2015 Southern Oregon University\"). The grid is defined by the documentation at h3geo.org and by the library, which is the reference implementation: no separate specification document and no separate documentation licence is stated, and the site source (website/ in the repository) sits under the same LICENSE. Governance: an Uber project, and contributions need the Uber Contributor License Agreement (README); no other steward is named. The grid sits on a sphere with the WGS 84 authalic radius (the core-library overview). Platform use: H3 cells are the key of the `*_by_cell_*` tables planned for Doris and Cassandra (nyuchi/data-infra#22, Phase 4 #59); the audit found no H3 cell on a place or event and no slot for one in the model (nyuchi/data-infra#87). GeoJSON stays the geometry (geojson): an H3 cell id is an index, not a geometry. Added from nyuchi/data-infra#94 and #179.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found H3 planned for the data platform and not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it stays proposed until the owner adopts it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179"
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found H3 planned for the data platform and not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1528,10 +1528,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "OASIS (Emergency Management Technical Committee)",
     "usageNotes": "Official sources are the alerting authorities in the WMO Register of Alerting Authorities (for Zimbabwe, the Meteorological Services Department). No feed has been read by the platform yet: the XML reader waits on a real sample item. A warning whose area is given only by geocodes cannot be matched to a place and is left out, not guessed.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Proposed 2026-11-04 under the standards rule: CAP exists, so the severe weather alert rules in mukoko-weather (#289, weather_core::severe_alert) read it instead of inventing a warning format. Adoption awaits the owner, together with the choice to push severe warnings only from an official CAP source"
+      "adoptionRationale": "Adopted: Proposed 2026-11-04 under the standards rule: CAP exists, so the severe weather alert rules in mukoko-weather (#289, weather_core::severe_alert) read it instead of inventing a warning format. Adoption awaits the owner, together with the choice to push severe warnings only from an official CAP source. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\"). This adopts CAP the standard only. The separate choice to push severe warnings only from an official CAP source is still open."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1758,10 +1758,10 @@
     "documentationUrl": "https://spdx.org/licenses/",
     "stewardOrganisation": "Linux Foundation (SPDX project)",
     "usageNotes": "Standing: ISO's page for SPDX 3.0 is a draft in the approval phase, so SPDX 3.x is not yet an ISO edition; spdx.dev says \"The SPDX specification is an international open standard (ISO/IEC 5962:2021)\", which is the 2.2.1 text. Licence: the specification is under the Community Specification License 1.0, with pre-existing portions under CC-BY-3.0 (spdx-spec LICENSE; spdx.dev legal notices); the SPDX 3 model repository is under the Community Specification License 1.0 (License.md). The licence of the License List data is not recorded: no licence file or statement was found for it in spdx/license-list-data, spdx/license-list-XML or on spdx.org/licenses, and each licence text belongs to its licensor. Platform use: `integrations.providers.license.spdxIdentifier` holds a licence identifier (audit 2026-10-07: providers are live in MongoDB `integrations.providers` and not yet modelled). Added from nyuchi/data-infra#94 and #179.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found `spdxIdentifier` on the integrations providers and SPDX not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it stays proposed until the owner adopts it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179"
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found `spdxIdentifier` on the integrations providers and SPDX not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1850,10 +1850,10 @@
     "documentationUrl": "https://github.com/apache/avro",
     "stewardOrganisation": "Apache Software Foundation",
     "usageNotes": "Licence: Apache-2.0 for the specification and the code alike (LICENSE.txt; doc/LICENSE, which covers the specification source under doc/; NOTICE \"Copyright 2010-2025 The Apache Software Foundation\"). The specification page itself states no licence. Governance: an Apache Software Foundation project. See also cloudevents (the event envelope) and asyncapi (the topic catalogue) in this register. Platform use: Avro serialises the event envelope and payloads (audit 2026-10-07, nyuchi/data-infra#94: in use and not registered), and the Redpanda schema registry holds Avro subjects (nyuchi/data-infra#179). Added from nyuchi/data-infra#94 and #179.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found event payloads serialised as Avro and Avro not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it stays proposed until the owner adopts it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179"
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found event payloads serialised as Avro and Avro not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -2126,10 +2126,10 @@
     "documentationUrl": "https://docs.ogc.org/is/19-072/19-072.html",
     "stewardOrganisation": "Open Geospatial Consortium",
     "usageNotes": "Listed so the standards ogc_api_tiles needs are all in the register. Nothing is built on it that ogc_api_tiles does not already require.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Found 2026-11-04 in the Nyuchi Maps tile contract (nyuchi/maps#5): OGC API - Tiles depends on it, and the owner adopted OGC API - Tiles the same day; listed as proposed because the owner adopted five named standards, not this one; adoption awaits the owner"
+      "adoptionRationale": "Adopted: Found 2026-11-04 in the Nyuchi Maps tile contract (nyuchi/maps#5): OGC API - Tiles depends on it, and the owner adopted OGC API - Tiles the same day; listed as proposed because the owner adopted five named standards, not this one; adoption awaits the owner. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"

@@ -1955,6 +1955,29 @@
     }
   },
   {
+    "_id": "standard_bci",
+    "_schemaVersion": "v3.1",
+    "displayName": "Bundu Conversation Interchange (BCI)",
+    "category": "specification",
+    "description": "How a person's conversations, messages, projects, saved answers (artifacts) and memory are written down so they can move between assistants. A message holds an Open Responses item unchanged; skills are named by Agent Skills `name`; times are RFC 3339, ids UUIDs, provenance C2PA. Shamwari is the first implementation. No portable standard for the stored record was found (the live wire shape, ACP sessions and A2A artifacts exist); the coordinator's gap analysis qualifies this claim.",
+    "versionCommitment": "0.1.0 draft (semver); nothing published until the owner approves its scope.",
+    "specificationUrl": "https://standards.bundu.org/conversation-interchange/",
+    "documentationUrl": null,
+    "stewardOrganisation": "Bundu Foundation",
+    "usageNotes": null,
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "A person's history belongs to the person, not to a product. If none exists we build one and publish it (AGENTS.md, the rule)."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_ucum",
     "_schemaVersion": "v3.1",
     "displayName": "Unified Code for Units of Measure (UCUM)",

@@ -93,6 +93,12 @@ Versions released before then are not renumbered.
   approval stage (50.20) and not yet published; IPTC's ninjs page still names 3.0
   as current while its repository and schema say 3.2. Applying the seed to the
   live `integrations.standards` collection is an owner step and was not done.
+- Draft of Bundu Conversation Interchange 0.1.0 (`standards/conversation-interchange/`): a JSON
+  Schema, JSON-LD context, an example stream and tests for how conversations, messages, projects,
+  saved answers and memory are written down so a person can move them between assistants. A thin
+  profile: a message holds an Open Responses item unchanged. Registered as `bci`, `proposed`. Not
+  published until the owner approves its scope (#48).
+
 - Proposed the Agent Client Protocol (ACP; protocol version 1 is the stable
   version and version 2 is in alpha), read at its source on 2026-11-11. It
   standardises how a code editor drives a coding agent. Its governance is

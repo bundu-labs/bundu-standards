@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://standards.bundu.org/conversation-interchange/0.1.0/bci.schema.json",
+  "title": "Bundu Conversation Interchange (BCI) 0.1.0 (draft): one record",
+  "description": "One line of a BCI stream. Each record has a `type`; the schema for that type applies. See README.md.",
+  "type": "object",
+  "required": ["type"],
+  "oneOf": [
+    { "$ref": "#/$defs/Header" },
+    { "$ref": "#/$defs/Conversation" },
+    { "$ref": "#/$defs/Message" },
+    { "$ref": "#/$defs/Project" },
+    { "$ref": "#/$defs/Artifact" },
+    { "$ref": "#/$defs/MemoryEntry" }
+  ],
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "A UUID (RFC 9562), lower case. Version 7 is recommended: it sorts by creation time."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$",
+      "description": "RFC 3339, UTC, with a Z."
+    },
+    "scope": {
+      "enum": ["personal", "community", "platform"],
+      "description": "Whose knowledge an exchange is about. `personal` data is never sent to third-party inference and never trains a model."
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+      "description": "A BCP 47 tag, for example en, sn, nd."
+    },
+    "extensible": {
+      "patternProperties": { "^[a-z][a-z0-9-]*:[a-z][a-z0-9_]*$": {} },
+      "description": "Extension members are named `<implementor>:<name>`. A reader ignores the ones it does not know and keeps them when it passes the record on."
+    },
+    "Citation": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The instrument or work, for example a statute's title."
+        },
+        "headline": {
+          "type": "string",
+          "description": "The part within it, for example a section heading."
+        },
+        "publisher": { "type": "string" },
+        "datePublished": { "type": "string", "format": "date" },
+        "validFrom": {
+          "type": "string",
+          "format": "date",
+          "description": "When the text took effect, when it is known."
+        },
+        "url": { "type": "string", "format": "uri" }
+      },
+      "additionalProperties": false,
+      "description": "A source behind an answer. The property names are schema.org's (CreativeWork) so a citation is valid JSON-LD without translation."
+    },
+    "Provenance": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "description": "The model that produced the content, as the provider names it."
+        },
+        "licenseClass": {
+          "type": ["string", "null"],
+          "description": "The model's licence class. `open_weight` is the only class whose output may train a model; null when there is no honest class."
+        },
+        "c2pa": {
+          "type": "string",
+          "format": "uri",
+          "description": "A C2PA manifest for the content, when there is one."
+        }
+      },
+      "additionalProperties": false
+    },
+    "Header": {
+      "type": "object",
+      "required": ["type", "bci", "exportedAt"],
+      "properties": {
+        "type": { "const": "Header" },
+        "bci": { "const": "0.1.0" },
+        "exportedAt": { "$ref": "#/$defs/timestamp" },
+        "producer": {
+          "type": "string",
+          "description": "The product that wrote the stream, for example shamwari.ai."
+        },
+        "owner": {
+          "type": "string",
+          "description": "An opaque identifier of the person the stream belongs to. Never an email address or a name."
+        }
+      },
+      "patternProperties": { "^[a-z][a-z0-9-]*:[a-z][a-z0-9_]*$": {} },
+      "additionalProperties": false
+    },
+    "Conversation": {
+      "type": "object",
+      "required": ["type", "id", "created", "updated"],
+      "properties": {
+        "type": { "const": "Conversation" },
+        "id": { "$ref": "#/$defs/uuid" },
+        "title": { "type": "string", "maxLength": 80 },
+        "created": { "$ref": "#/$defs/timestamp" },
+        "updated": {
+          "$ref": "#/$defs/timestamp",
+          "description": "The time of the last message."
+        },
+        "language": { "$ref": "#/$defs/language" },
+        "surface": {
+          "type": "string",
+          "description": "Where it was held, for example web, lite, mobile, sms, ussd, cli."
+        },
+        "project": {
+          "$ref": "#/$defs/uuid",
+          "description": "The Project it is filed in, at most one."
+        },
+        "pinned": { "type": "boolean", "default": false },
+        "messageCount": { "type": "integer", "minimum": 0 }
+      },
+      "patternProperties": { "^[a-z][a-z0-9-]*:[a-z][a-z0-9_]*$": {} },
+      "additionalProperties": false
+    },
+    "Message": {
+      "type": "object",
+      "required": [
+        "type",
+        "id",
+        "conversation",
+        "sequence",
+        "created",
+        "scope",
+        "item"
+      ],
+      "properties": {
+        "type": { "const": "Message" },
+        "id": { "$ref": "#/$defs/uuid" },
+        "conversation": { "$ref": "#/$defs/uuid" },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "1, 2, 3 ... without gaps, in the order the messages happened."
+        },
+        "created": { "$ref": "#/$defs/timestamp" },
+        "scope": { "$ref": "#/$defs/scope" },
+        "item": {
+          "type": "object",
+          "required": ["type"],
+          "description": "An Open Responses item, unchanged: a `message` with its `role` and `content` parts, or a tool call, or an extension item (`<implementor>:<type>`). BCI adds no wire shape of its own.",
+          "properties": { "type": { "type": "string" } }
+        },
+        "citations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Citation" }
+        },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "trainable": {
+          "const": false,
+          "description": "Always false in an interchange stream: being stored or exported does not make a message training data. Whether anything may train a model is decided by the rules in README.md, never by this field being set."
+        }
+      },
+      "patternProperties": { "^[a-z][a-z0-9-]*:[a-z][a-z0-9_]*$": {} },
+      "additionalProperties": false
+    },
+    "Project": {
+      "type": "object",
+      "required": ["type", "id", "name", "updated"],
+      "properties": {
+        "type": { "const": "Project" },
+        "id": { "$ref": "#/$defs/uuid" },
+        "name": { "type": "string", "maxLength": 60 },
+        "instructions": {
+          "type": "string",
+          "description": "Standing instructions for every conversation in the project, in the AGENTS.md style: plain Markdown."
+        },
+        "skills": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Agent Skills the project uses, by skill `name` (the Agent Skills specification's `name` field). The skills themselves are not embedded."
+        },
+        "pinned": { "type": "boolean", "default": false },
+        "updated": { "$ref": "#/$defs/timestamp" }
+      },
+      "patternProperties": { "^[a-z][a-z0-9-]*:[a-z][a-z0-9_]*$": {} },
+      "additionalProperties": false
+    },
+    "Artifact": {
+      "type": "object",
+      "required": ["type", "id", "title", "mediaType", "created"],
+      "properties": {
+        "type": { "const": "Artifact" },
+        "id": { "$ref": "#/$defs/uuid" },
+        "title": { "type": "string", "maxLength": 80 },
+        "mediaType": {
+          "type": "string",
+          "pattern": "^[a-z]+/[a-z0-9.+-]+$",
+          "description": "An IANA media type. text/markdown for a saved answer."
+        },
+        "text": {
+          "type": "string",
+          "description": "The content, when it is text."
+        },
+        "contentRef": {
+          "type": "string",
+          "format": "uri",
+          "description": "Where the content is, when it is not inline. A relative path inside the archive, or a URL."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The digest of the content, so a copy can be checked."
+        },
+        "created": { "$ref": "#/$defs/timestamp" },
+        "derivedFrom": {
+          "type": "object",
+          "required": ["conversation"],
+          "properties": {
+            "conversation": { "$ref": "#/$defs/uuid" },
+            "sequence": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": false,
+          "description": "The conversation, and optionally the message, it came from. The conversation may no longer exist: an artifact survives its conversation."
+        },
+        "citations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Citation" }
+        },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "license": {
+          "type": "string",
+          "description": "An SPDX identifier or a URL."
+        }
+      },
+      "oneOf": [{ "required": ["text"] }, { "required": ["contentRef"] }],
+      "patternProperties": { "^[a-z][a-z0-9-]*:[a-z][a-z0-9_]*$": {} },
+      "additionalProperties": false
+    },
+    "MemoryEntry": {
+      "type": "object",
+      "required": ["type", "id", "text", "created", "scope", "consent"],
+      "properties": {
+        "type": { "const": "MemoryEntry" },
+        "id": { "$ref": "#/$defs/uuid" },
+        "text": { "type": "string", "maxLength": 2000 },
+        "created": { "$ref": "#/$defs/timestamp" },
+        "expires": { "$ref": "#/$defs/timestamp" },
+        "scope": { "$ref": "#/$defs/scope" },
+        "consent": {
+          "enum": ["stated", "confirmed"],
+          "description": "`stated`: the person said it. `confirmed`: the assistant inferred it and the person accepted it. There is no value for an inference the person has not seen."
+        },
+        "source": {
+          "$ref": "#/$defs/uuid",
+          "description": "The conversation it came from, when there is one."
+        }
+      },
+      "patternProperties": { "^[a-z][a-z0-9-]*:[a-z][a-z0-9_]*$": {} },
+      "additionalProperties": false
+    }
+  }
+}

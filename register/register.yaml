@@ -1660,6 +1660,28 @@ standards:
     decided: A§13
     url: https://openntl.org
 
+  - id: bci
+    name: Bundu Conversation Interchange (BCI)
+    domain: first-party
+    category: specification
+    steward: Bundu Foundation
+    commitment: 0.1.0 draft (semver); nothing published until the owner approves its scope.
+    current: 0.1.0 draft, standards/conversation-interchange/
+    governs: >-
+      How a person's conversations, messages, projects, saved answers (artifacts)
+      and memory are written down so they can move between assistants. A message
+      holds an Open Responses item unchanged; skills are named by Agent Skills
+      `name`; times are RFC 3339, ids UUIDs, provenance C2PA. Shamwari is the first
+      implementation. No portable standard for the stored record was found (the live wire
+      shape, ACP sessions and A2A artifacts exist); the coordinator's gap analysis
+      qualifies this claim.
+    status: proposed
+    decided: Drafted on the owner's instruction 2026-11-11; scope awaits the owner's approval
+    url: https://standards.bundu.org/conversation-interchange/
+    rationale: >-
+      A person's history belongs to the person, not to a product. If none exists we
+      build one and publish it (AGENTS.md, the rule).
+
   # --- adopted 2026-10-30: the standards the weather and agriculture models are
   # --- built on. Versions checked at source on 2026-10-30.
   - id: ucum

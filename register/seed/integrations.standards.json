@@ -759,6 +759,98 @@
     }
   },
   {
+    "_id": "standard_agent_skills",
+    "_schemaVersion": "v3.1",
+    "displayName": "Agent Skills",
+    "category": "specification",
+    "description": "The format of a reusable agent skill: a folder with a SKILL.md (frontmatter name, description, license, compatibility, metadata, allowed-tools) and optional scripts, references and assets.",
+    "versionCommitment": "Track the specification. It has no version, so pin the commit a consumer builds against.",
+    "specificationUrl": "https://agentskills.io/specification",
+    "documentationUrl": "https://github.com/agentskills/agentskills",
+    "stewardOrganisation": "Agentic AI Foundation (Linux Foundation); contributed by Anthropic",
+    "usageNotes": "Licence: code Apache-2.0 (LICENSE, \"Copyright 2025 Anthropic, PBC\"); documentation CC-BY-4.0 (README; docs/LICENSE). GOVERNANCE.md says specifications are released under the project licence (Apache-2.0) and documentation other than specifications under CC BY 4.0, while the specification text sits in docs/, which carries the CC-BY-4.0 LICENSE: which of the two covers the specification text is not stated, so both are recorded. The project is established as \"Agent Skills a Series of LF Projects, LLC\" (GOVERNANCE.md).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_open_responses",
+    "_schemaVersion": "v3.1",
+    "displayName": "Open Responses",
+    "category": "specification",
+    "description": "The shared request and response schema for LLM interfaces: polymorphic typed items (message, function_call and extension items named `implementor_slug:type`), streaming events.",
+    "versionCommitment": "A dated release (the latest is 2026-04-24); pin the date, because each dated release is immutable.",
+    "specificationUrl": "https://www.openresponses.org/specification",
+    "documentationUrl": "https://github.com/openresponses/openresponses",
+    "stewardOrganisation": "Agentic AI Foundation (Linux Foundation); contributed by OpenAI",
+    "usageNotes": "Licence: code Apache-2.0 (LICENSE; the copyright line is left as the unfilled template); CHARTER.md says documentation is CC BY 4.0. Pin the dated file, not public/openapi/openapi.json: that \"latest\" file differs from the 2026-04-24 file (regenerated from TypeSpec since 2026-10-08) while still labelled 2026-04-24. The 2026-04-24 OpenAPI defines POST /responses and /responses/compact and continues a conversation with previous_response_id and store; it has no conversation, project, artifact or memory resource. The project is established as \"Open Responses a Series of LF Projects, LLC\".",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_agents_md",
+    "_schemaVersion": "v3.1",
+    "displayName": "AGENTS.md",
+    "category": "specification",
+    "description": "Plain-Markdown instructions for a coding agent, at the root of a repository (the closest AGENTS.md to an edited file wins; an explicit user prompt overrides it, per agents.md).",
+    "versionCommitment": "Track the format. It has no version.",
+    "specificationUrl": "https://agents.md",
+    "documentationUrl": "https://github.com/agentsmd/agents.md",
+    "stewardOrganisation": "Agentic AI Foundation (Linux Foundation); contributed by OpenAI",
+    "usageNotes": "Licence MIT (LICENSE, \"Copyright (c) 2025 OpenAI\"); the Technical Charter names MIT as the project licence and CC BY 4.0 for documentation. The repository holds the website and a README example, and no schema: the format is a convention, not a machine-validated specification. The project is established as \"AGENTS.md a Series of LF Projects, LLC\".",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_agent_client_protocol",
+    "_schemaVersion": "v3.1",
+    "displayName": "Agent Client Protocol (ACP)",
+    "category": "protocol",
+    "description": "How a code editor or IDE (the client) drives a coding agent: JSON-RPC 2.0 over stdio (a Streamable HTTP transport is an open RFD), sessions (new, load with history replay, list, resume, delete), prompt turns with streamed updates, tool calls, permission requests and client file and terminal access. The client passes MCP servers to the agent in session/new.",
+    "versionCommitment": "Protocol version 1, negotiated in `initialize`; pin the schema release a consumer builds against.",
+    "specificationUrl": "https://agentclientprotocol.com/protocol/v1/overview",
+    "documentationUrl": "https://github.com/agentclientprotocol/agent-client-protocol",
+    "stewardOrganisation": "Zed Industries and JetBrains, jointly (interim governance; no foundation host confirmed)",
+    "usageNotes": "Licence Apache-2.0 (LICENSE, \"Copyright 2025 Zed Industries, Inc. and contributors\"; the governance page says all repositories in the ACP organisation should be Apache 2.0, with no CLA); no separate documentation licence was found. Governance (agentclientprotocol.com/community/governance, read 2026-11-11): \"an interim governance model\"; \"jointly governed by Zed and JetBrains ... working toward transitioning to an independent foundation\"; lead maintainers Ben Brandt (Zed) and Sergey Ignatov (JetBrains). Foundation host: not confirmed; ACP is not among the ten projects the Agentic AI Foundation listed on 2026-10-22. Not IBM's Agent Communication Protocol, which merged into A2A (ACP's related-protocols page).",
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Proposed: Proposed 2026-11-11 on the owner's request relayed via the Shamwari session. Left proposed on the owner's instruction the same day in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Its governance is interim (Zed and JetBrains jointly) and no foundation host is confirmed, so adoption awaits a foundation host"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_bags",
     "_schemaVersion": "v3.1",
     "displayName": "Bundu AI Guardrails Standard (BAGS)",

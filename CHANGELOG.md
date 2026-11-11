@@ -15,6 +15,18 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- Adopted three standards from the Agentic AI Foundation: Agent Skills, Open
+  Responses and AGENTS.md. The decision recorded is the owner's instruction of
+  2026-11-11 in the coordinator's chat ("Adopt the three AAIF projects, ACP
+  stays proposed"). Each was read at its source on 2026-11-11. Agent Skills and
+  AGENTS.md have no version (no tags, none stated on their pages), so a consumer
+  pins the commit; Open Responses is versioned by immutable dated releases, the
+  latest 2026-04-24, and a consumer pins that dated file, not the "latest" one,
+  which differs from it. The licences are recorded as the repositories state
+  them: Agent Skills code Apache-2.0 and documentation CC-BY-4.0, Open Responses
+  code Apache-2.0 and documentation CC BY 4.0, AGENTS.md MIT. Applying the seed
+  to the live `integrations.standards` collection is an owner step and was not
+  done.
 - Adopted three device-domain standards: the OAuth 2.0 Device Authorization
   Grant (RFC 8628), the OAuth 2.0 Authorization Framework (RFC 6749) and
   Schema.org Product. The decision recorded is the owner's instruction of
@@ -46,6 +58,12 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Proposed the Agent Client Protocol (ACP; protocol version 1 is the stable
+  version and version 2 is in alpha), read at its source on 2026-11-11. It
+  standardises how a code editor drives a coding agent. Its governance is
+  interim, jointly Zed and JetBrains, and no foundation host is confirmed, so it
+  stays `proposed` (the owner left it so on 2026-11-11). It is not IBM's Agent
+  Communication Protocol, which merged into A2A.
 - Proposed three standards for the device domain (nyuchi/data-infra#96, the
   Mukoko Home pairing work, mukoko-dev/mukoko-home#24) under a new `devices`
   domain, "Devices and pairing": the OAuth 2.0 Device Authorization Grant (RFC

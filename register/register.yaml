@@ -458,6 +458,60 @@ standards:
     decided: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3), listed as Proposed
     url: https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/
 
+  # --- agents: adopted elsewhere, proposed here (owner 2026-11-11) -------------
+  - id: agent_skills
+    name: Agent Skills
+    domain: agents
+    category: specification
+    steward: Agentic AI Foundation (Linux Foundation); contributed by Anthropic
+    commitment: Track the specification; pin the commit a consumer builds against.
+    current: >-
+      The specification page (agentskills.io/specification) states no version
+      number; read 2026-11-11. Published as an open standard 2025-12-18 and
+      donated to the Agentic AI Foundation 2026-10-22. Licence not stated on the
+      page: read it in the repository before adoption.
+    governs: >-
+      The format of a reusable agent skill: a folder with a SKILL.md (frontmatter
+      name, description, license, compatibility, metadata, allowed-tools) and
+      optional scripts, references and assets. Bundu Conversation Interchange
+      names skills by their `name` field.
+    status: proposed
+    decided: Proposed on the owner's instruction 2026-11-11; version and licence to be verified at source before adoption
+    url: https://agentskills.io/specification
+
+  - id: open_responses
+    name: Open Responses
+    domain: agents
+    category: specification
+    steward: Agentic AI Foundation (Linux Foundation); contributed by OpenAI
+    commitment: Track the specification; pin the commit a consumer builds against.
+    current: >-
+      The specification page (openresponses.org/specification) states no version
+      number; read 2026-11-11. Donated to the Agentic AI Foundation 2026-10-22.
+      Licence not stated on the page: read it in the repository before adoption.
+    governs: >-
+      The shared request and response schema for LLM interfaces: polymorphic typed
+      items (message, function_call and extension items named
+      `implementor_slug:type`), streaming events. A Message in Bundu Conversation
+      Interchange holds one item unchanged.
+    status: proposed
+    decided: Proposed on the owner's instruction 2026-11-11; version and licence to be verified at source before adoption
+    url: https://www.openresponses.org/specification
+
+  - id: agents_md
+    name: AGENTS.md
+    domain: agents
+    category: specification
+    steward: Agentic AI Foundation (Linux Foundation)
+    commitment: Track the specification.
+    current: Not read at source for this entry. Listed as an Agentic AI Foundation project in the foundation's announcement of 2026-10-22 (linuxfoundation.org).
+    governs: >-
+      Plain-Markdown instructions for an agent, at the root of a repository. A
+      Bundu Conversation Interchange Project's `instructions` use the same style.
+    status: proposed
+    decided: Proposed on the owner's instruction 2026-11-11; version and licence to be verified at source before adoption
+    url: https://www.linuxfoundation.org/press/agentic-ai-foundation-announces-four-new-projects-agent-skills-open-responses-openenv-and-opensandbox
+
   # --- devices ----------------------------------------------------------------
   - id: rfc_8628
     name: OAuth 2.0 Device Authorization Grant
@@ -1172,6 +1226,27 @@ standards:
     status: adopted
     decided: A§13
     url: https://openntl.org
+
+  - id: bci
+    name: Bundu Conversation Interchange (BCI)
+    domain: first-party
+    category: specification
+    steward: Bundu Foundation
+    commitment: 0.1.0 draft (semver); nothing published until the owner approves its scope.
+    current: 0.1.0 draft, standards/conversation-interchange/
+    governs: >-
+      How a person's conversations, messages, projects, saved answers (artifacts)
+      and memory are written down so they can move between assistants. A message
+      holds an Open Responses item unchanged; skills are named by Agent Skills
+      `name`; times are RFC 3339, ids UUIDs, provenance C2PA. Shamwari is the first
+      implementation. No published standard covers this: ChatGPT and Claude each
+      export their own conversations.json and lose projects, artifacts and memory.
+    status: proposed
+    decided: Drafted on the owner's instruction 2026-11-11; scope awaits the owner's approval
+    url: https://standards.bundu.org/conversation-interchange/
+    rationale: >-
+      A person's history belongs to the person, not to a product. If none exists we
+      build one and publish it (AGENTS.md, the rule).
 
   # --- adopted 2026-10-30: the standards the weather and agriculture models are
   # --- built on. Versions checked at source on 2026-10-30.

@@ -46,6 +46,13 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Draft of Bundu Conversation Interchange 0.1.0 (`standards/conversation-interchange/`): a JSON
+  Schema, JSON-LD context, an example stream and tests for how conversations, messages,
+  projects, artifacts and memory are written down so a person can move them between assistants.
+  No published standard covers this. Registered as `proposed`, with Agent Skills, Open Responses
+  and AGENTS.md (each `proposed`; version and licence still to be read at source). Drafted on the
+  owner's instruction of 2026-11-11; not published until the owner approves the scope.
+
 - Proposed three standards for the device domain (nyuchi/data-infra#96, the
   Mukoko Home pairing work, mukoko-dev/mukoko-home#24) under a new `devices`
   domain, "Devices and pairing": the OAuth 2.0 Device Authorization Grant (RFC

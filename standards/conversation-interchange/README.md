@@ -111,16 +111,18 @@ dropped and reported.
    Apache-2.0 code, CC-BY-4.0 docs. Open Responses: pin the dated OpenAPI file (latest 2026-04-24),
    not `openapi.json`; Apache-2.0; it has no conversation, project, artifact or memory resource.
    AGENTS.md: unversioned, MIT. Only A2A (1.0.0) and MCP have clear version ids.
-4. **Memory.** `MemoryEntry` is a requirement list for the W3C community group and MacPaw, not a
-   proposed standard. Whether to keep it in BCI or drop it is the owner's decision.
+4. **Memory.** Decided by the owner 2026-11-11: `MemoryEntry` stays in BCI. It remains a thin
+   record with the consent rule; BCI still does not claim to be the memory standard, and its
+   requirements are shared with the W3C community group and MacPaw so that a real one can replace it.
 5. **Binary artifacts.** `contentRef` points at a file in an archive. Whether the archive is a ZIP
    or an OCI artifact, and how the digest is checked, is not decided.
 6. **Branches and edits.** ChatGPT-style conversation branching and message edits are not modelled.
    A branch could be a new `Conversation` with a `bci:forkOf` extension; decide once a second
    implementation needs it.
 7. **A harness profile.** The harness (the loop around a model: context policy, tool-call dialect,
-   permissions, session log, sandbox) is only partly covered: Open Responses covers the agentic loop and tool calls, OpenSandbox (AAIF) a sandbox lifecycle, ACP has `session/request_permission`. Context policy and the session-log format may remain gaps. That is a separate
-   standard, to be scoped after this one; BCI's append-only, ordered `Message` stream is its natural
+   permissions, session log, sandbox) is only partly covered: Open Responses covers the agentic loop and tool calls, OpenSandbox (AAIF) a sandbox lifecycle, ACP has `session/request_permission`. Context policy and the session-log format may remain gaps. The owner (2026-11-11) calls the
+   harness important to all Bundu work, not only this repository, so a harness profile is in scope as
+   a separate standard (tracked in its own issue, drafted after the coordinator's go); BCI's append-only, ordered `Message` stream is its natural
    session log.
 
 ## First implementation

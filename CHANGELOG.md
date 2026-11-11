@@ -15,6 +15,16 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- Adopted three device-domain standards: the OAuth 2.0 Device Authorization
+  Grant (RFC 8628), the OAuth 2.0 Authorization Framework (RFC 6749) and
+  Schema.org Product. The decision recorded is the owner's instruction of
+  2026-11-11 in the coordinator's chat ("Go ahead and adapt the standards, push
+  and release to production across the repos"), which the coordinator read as
+  adopting these three; "adapt" is the owner's word, and the reading is
+  recorded as a reading. Each was read at its source on 2026-11-11 (RFC 8628 and
+  RFC 6749 are Proposed Standards, neither obsoleted; RFC 6749 is updated by
+  RFC 8252, RFC 8996 and RFC 9700). Applying the seed to the live
+  `integrations.standards` collection is an owner step and was not done.
 - Adopted eight standards (owner, 2026-10-30): UCUM (2.2), SOSA/SSN (W3C
   Recommendation 2017), OGC SensorThings (Part 1 1.1, Part 2 1.0), WMDR
   (WMO-No. 1192, 2019 edition), WIS2 (Manual on WIS, Volume II), OGC API -
@@ -41,7 +51,8 @@ Versions released before then are not renumbered.
   domain, "Devices and pairing": the OAuth 2.0 Device Authorization Grant (RFC
   8628), the OAuth 2.0 Authorization Framework (RFC 6749, for the paired
   device's rotating refresh token) and Schema.org Product (what a device is in
-  JSON-LD). They stay `proposed` until the owner adopts them.
+  JSON-LD). They were proposed on 2026-11-11 and adopted the same day (see
+  Changed).
 - Proposed the Common Alerting Protocol (CAP, version 1.2, OASIS Standard, 01
   July 2010), read at its source on 2026-11-04. The severe-weather alert rules
   in mukoko-weather (#289) read it, and a warning is pushed only from an

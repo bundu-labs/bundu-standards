@@ -465,15 +465,19 @@ standards:
     category: rfc
     steward: IETF
     commitment: RFC 8628
-    current: RFC 8628 (Aug 2019)
+    current: RFC 8628 (Aug 2019), Proposed Standard; read at source 2026-11-11
     governs: >-
       Pairing a display or desktop that has no keyboard to a household: the
       device shows a user_code and a QR code of verification_uri_complete, a
       household member approves on their phone, and the device polls the
       token endpoint (authorization_pending, slow_down, access_denied,
       expired_token). Records: device.pairings (model DevicePairing).
-    status: proposed
-    decided: The Mukoko Home design (mukoko-dev/mukoko-home#24, 2026-10-07); awaiting the owner
+    status: adopted
+    decided: >-
+      Owner instruction 2026-11-11, in the coordinator's chat: "Go ahead and adapt
+      the standards, push and release to production across the repos"; the
+      coordinator read "adapt" as "adopt" the three device-domain standards
+      proposed that day (the Mukoko Home design, mukoko-dev/mukoko-home#24)
     url: https://www.rfc-editor.org/rfc/rfc8628
     notes: >-
       Run by the Nyuchi API (/v1/devices) behind id-worker's
@@ -486,13 +490,20 @@ standards:
     category: rfc
     steward: IETF
     commitment: RFC 6749 (refresh token grant, §6), with rotation and reuse detection as OAuth 2.1 and RFC 9700 §4.14 require
-    current: RFC 6749 (Oct 2012); the OAuth 2.1 draft is tracked in the oauth_2_1 entry
+    current: >-
+      RFC 6749 (Oct 2012), Proposed Standard, updated by RFC 8252, RFC 8996 and
+      RFC 9700; read at source 2026-11-11. The OAuth 2.1 draft is tracked in the
+      oauth_2_1 entry
     governs: >-
       A paired device's refresh token: opaque, stored only as a hash,
       rotated on every use, and a replayed old token revokes the session.
       Records: device.sessions (model DeviceSession).
-    status: proposed
-    decided: The Mukoko Home design (mukoko-dev/mukoko-home#24, 2026-10-07); awaiting the owner
+    status: adopted
+    decided: >-
+      Owner instruction 2026-11-11, in the coordinator's chat: "Go ahead and adapt
+      the standards, push and release to production across the repos"; the
+      coordinator read "adapt" as "adopt" the three device-domain standards
+      proposed that day (the Mukoko Home design, mukoko-dev/mukoko-home#24)
     url: https://www.rfc-editor.org/rfc/rfc6749
     notes: >-
       OAuth 2.1 (adopted) is the platform's commitment; this entry names the
@@ -503,14 +514,18 @@ standards:
     category: vocabulary
     steward: Schema.org Community Group (W3C)
     commitment: Schema.org core type, with additionalType for the device category
-    current: Core type
+    current: Core type; read at source 2026-11-11
     governs: >-
       What a device is in JSON-LD: a schema:Product (device.devices, model
       Device), its kind as additionalType (vocab.bundu.org terms for
       user_device, weather_station, kiosk and datacentre_node are not yet
       proposed there), and deviceIdentifier as serialNumber.
-    status: proposed
-    decided: The Mukoko Home design (mukoko-dev/mukoko-home#24, 2026-10-07); awaiting the owner
+    status: adopted
+    decided: >-
+      Owner instruction 2026-11-11, in the coordinator's chat: "Go ahead and adapt
+      the standards, push and release to production across the repos"; the
+      coordinator read "adapt" as "adopt" the three device-domain standards
+      proposed that day (the Mukoko Home design, mukoko-dev/mukoko-home#24)
     url: https://schema.org/Product
 
   # --- agents -----------------------------------------------------------------

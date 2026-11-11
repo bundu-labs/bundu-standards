@@ -608,10 +608,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "IETF",
     "usageNotes": "Run by the Nyuchi API (/v1/devices) behind id-worker's /oauth/device_authorization and /oauth/token. WorkOS CLI Auth was not used: it issues the person's own tokens, and a shared device must never hold a person's token.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: The Mukoko Home design (mukoko-dev/mukoko-home#24, 2026-10-07); awaiting the owner"
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Go ahead and adapt the standards, push and release to production across the repos\"; the coordinator read \"adapt\" as \"adopt\" the three device-domain standards proposed that day (the Mukoko Home design, mukoko-dev/mukoko-home#24)"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -631,10 +631,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "IETF",
     "usageNotes": "OAuth 2.1 (adopted) is the platform's commitment; this entry names the RFC the device grant (RFC 8628) extends, until OAuth 2.1 is an RFC.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: The Mukoko Home design (mukoko-dev/mukoko-home#24, 2026-10-07); awaiting the owner"
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Go ahead and adapt the standards, push and release to production across the repos\"; the coordinator read \"adapt\" as \"adopt\" the three device-domain standards proposed that day (the Mukoko Home design, mukoko-dev/mukoko-home#24)"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -654,10 +654,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "Schema.org Community Group (W3C)",
     "usageNotes": null,
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: The Mukoko Home design (mukoko-dev/mukoko-home#24, 2026-10-07); awaiting the owner"
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Go ahead and adapt the standards, push and release to production across the repos\"; the coordinator read \"adapt\" as \"adopt\" the three device-domain standards proposed that day (the Mukoko Home design, mukoko-dev/mukoko-home#24)"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"

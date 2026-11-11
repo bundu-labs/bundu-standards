@@ -598,75 +598,6 @@
     }
   },
   {
-    "_id": "standard_agent_skills",
-    "_schemaVersion": "v3.1",
-    "displayName": "Agent Skills",
-    "category": "specification",
-    "description": "The format of a reusable agent skill: a folder with a SKILL.md (frontmatter name, description, license, compatibility, metadata, allowed-tools) and optional scripts, references and assets. Bundu Conversation Interchange names skills by their `name` field.",
-    "versionCommitment": "Track the specification; pin the commit a consumer builds against.",
-    "specificationUrl": "https://agentskills.io/specification",
-    "documentationUrl": null,
-    "stewardOrganisation": "Agentic AI Foundation (Linux Foundation); contributed by Anthropic",
-    "usageNotes": null,
-    "isActive": false,
-    "bundu": {
-      "isFoundational": false,
-      "adoptionRationale": "Proposed: Proposed 2026-11-11; licence and activity read at source; adoption awaits the owner's word to the coordinator"
-    },
-    "createdAt": {
-      "$date": "2026-10-02T00:00:00Z"
-    },
-    "updatedAt": {
-      "$date": "2026-10-02T00:00:00Z"
-    }
-  },
-  {
-    "_id": "standard_open_responses",
-    "_schemaVersion": "v3.1",
-    "displayName": "Open Responses",
-    "category": "specification",
-    "description": "The shared request and response schema for LLM interfaces: polymorphic typed items (message, function_call and extension items named `implementor_slug:type`), streaming events. A Message in Bundu Conversation Interchange holds one item unchanged.",
-    "versionCommitment": "Track the specification; pin the commit a consumer builds against.",
-    "specificationUrl": "https://www.openresponses.org/specification",
-    "documentationUrl": null,
-    "stewardOrganisation": "Agentic AI Foundation (Linux Foundation); contributed by OpenAI",
-    "usageNotes": null,
-    "isActive": false,
-    "bundu": {
-      "isFoundational": false,
-      "adoptionRationale": "Proposed: Proposed 2026-11-11; licence and activity read at source; adoption awaits the owner's word to the coordinator"
-    },
-    "createdAt": {
-      "$date": "2026-10-02T00:00:00Z"
-    },
-    "updatedAt": {
-      "$date": "2026-10-02T00:00:00Z"
-    }
-  },
-  {
-    "_id": "standard_agents_md",
-    "_schemaVersion": "v3.1",
-    "displayName": "AGENTS.md",
-    "category": "specification",
-    "description": "Plain-Markdown instructions for an agent, at the root of a repository. A Bundu Conversation Interchange Project's `instructions` use the same style.",
-    "versionCommitment": "Track the specification.",
-    "specificationUrl": "https://www.linuxfoundation.org/press/agentic-ai-foundation-announces-four-new-projects-agent-skills-open-responses-openenv-and-opensandbox",
-    "documentationUrl": null,
-    "stewardOrganisation": "Agentic AI Foundation (Linux Foundation)",
-    "usageNotes": null,
-    "isActive": false,
-    "bundu": {
-      "isFoundational": false,
-      "adoptionRationale": "Proposed: Proposed 2026-11-11; licence and activity read at source; adoption awaits the owner's word to the coordinator"
-    },
-    "createdAt": {
-      "$date": "2026-10-02T00:00:00Z"
-    },
-    "updatedAt": {
-      "$date": "2026-10-02T00:00:00Z"
-    }
-  },
-  {
     "_id": "standard_rfc_8628",
     "_schemaVersion": "v3.1",
     "displayName": "OAuth 2.0 Device Authorization Grant",
@@ -1775,7 +1706,7 @@
     "_schemaVersion": "v3.1",
     "displayName": "Bundu Conversation Interchange (BCI)",
     "category": "specification",
-    "description": "How a person's conversations, messages, projects, saved answers (artifacts) and memory are written down so they can move between assistants. A message holds an Open Responses item unchanged; skills are named by Agent Skills `name`; times are RFC 3339, ids UUIDs, provenance C2PA. Shamwari is the first implementation. No published standard covers this: ChatGPT and Claude each export their own conversations.json and lose projects, artifacts and memory.",
+    "description": "How a person's conversations, messages, projects, saved answers (artifacts) and memory are written down so they can move between assistants. A message holds an Open Responses item unchanged; skills are named by Agent Skills `name`; times are RFC 3339, ids UUIDs, provenance C2PA. Shamwari is the first implementation. No portable standard for the stored record was found (the live wire shape, ACP sessions and A2A artifacts exist); the coordinator's gap analysis qualifies this claim.",
     "versionCommitment": "0.1.0 draft (semver); nothing published until the owner approves its scope.",
     "specificationUrl": "https://standards.bundu.org/conversation-interchange/",
     "documentationUrl": null,

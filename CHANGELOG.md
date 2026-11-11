@@ -49,9 +49,8 @@ Versions released before then are not renumbered.
 - Draft of Bundu Conversation Interchange 0.1.0 (`standards/conversation-interchange/`): a JSON
   Schema, JSON-LD context, an example stream and tests for how conversations, messages,
   projects, artifacts and memory are written down so a person can move them between assistants.
-  No published standard covers this. Registered as `proposed`, with Agent Skills, Open Responses
-  and AGENTS.md. Licences read at source 2026-11-11 (still `proposed`; adoption awaits the owner's word): Agent Skills
-  and Open Responses Apache-2.0, AGENTS.md MIT. Drafted on the
+  No published standard covers this. Registered as `proposed`. (Agent Skills, Open Responses and
+  AGENTS.md are registered separately by the coordinator.) Drafted on the
   owner's instruction of 2026-11-11; not published until the owner approves the scope.
 
 - Proposed three standards for the device domain (nyuchi/data-infra#96, the

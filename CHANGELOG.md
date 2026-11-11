@@ -15,6 +15,20 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- Adopted ten standards that were proposed: H3, IPTC ninjs, IPTC Digital
+  Source Type, Apache Avro, Activity Streams 2.0, SPDX, the Common Alerting
+  Protocol (CAP 1.2), OGC API - Common, SD-JWT VC and the Legal Entity Identifier
+  (ISO 17442). The decision is the owner's instruction of 2026-11-11 in the
+  coordinator's chat: "all the proposed standards please release them, into a
+  beta. if they are ones we are adopting then we fully adopt everything now",
+  then "we fully adopt". Each entry quotes it in `decided`. The Agent Client
+  Protocol stays proposed, as the owner decided earlier the same day (no
+  foundation host is confirmed). Adopting CAP the standard does not settle the
+  separate choice to push severe warnings only from an official CAP source,
+  which is still open. Adopted 88 to 98, proposed 11 to 1. REGISTER.md and the
+  integrations.standards seed are regenerated with `register.py write`; applying
+  the seed to the live collection is a separate step. Merging to `staging`
+  releases this to the live beta as the next patch.
 - Re-read UCUM at its source on 2026-11-11 (still version 2.2, 2024-06-17) and
   recorded its licence in the entry: Regenstrief Institute's own UCUM Copyright
   Notice and License, version 1.1, which is neither open-source nor Creative

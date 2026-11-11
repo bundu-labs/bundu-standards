@@ -28,6 +28,7 @@
 domains:
   core: "Core: the identity of data"
   identity: Identity, trust and verification
+  devices: Devices and pairing
   agents: Agents and machine-readable surfaces
   communication: Communication and federation
   commerce: Commerce and payments
@@ -457,6 +458,76 @@ standards:
     decided: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3), listed as Proposed
     url: https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/
 
+  # --- devices ----------------------------------------------------------------
+  - id: rfc_8628
+    name: OAuth 2.0 Device Authorization Grant
+    domain: devices
+    category: rfc
+    steward: IETF
+    commitment: RFC 8628
+    current: RFC 8628 (Aug 2019), Proposed Standard; read at source 2026-11-11
+    governs: >-
+      Pairing a display or desktop that has no keyboard to a household: the
+      device shows a user_code and a QR code of verification_uri_complete, a
+      household member approves on their phone, and the device polls the
+      token endpoint (authorization_pending, slow_down, access_denied,
+      expired_token). Records: device.pairings (model DevicePairing).
+    status: adopted
+    decided: >-
+      Owner instruction 2026-11-11, in the coordinator's chat: "Go ahead and adapt
+      the standards, push and release to production across the repos"; the
+      coordinator read "adapt" as "adopt" the three device-domain standards
+      proposed that day (the Mukoko Home design, mukoko-dev/mukoko-home#24)
+    url: https://www.rfc-editor.org/rfc/rfc8628
+    notes: >-
+      Run by the Nyuchi API (/v1/devices) behind id-worker's
+      /oauth/device_authorization and /oauth/token. WorkOS CLI Auth was not
+      used: it issues the person's own tokens, and a shared device must
+      never hold a person's token.
+  - id: rfc_6749
+    name: The OAuth 2.0 Authorization Framework
+    domain: devices
+    category: rfc
+    steward: IETF
+    commitment: RFC 6749 (refresh token grant, §6), with rotation and reuse detection as OAuth 2.1 and RFC 9700 §4.14 require
+    current: >-
+      RFC 6749 (Oct 2012), Proposed Standard, updated by RFC 8252, RFC 8996 and
+      RFC 9700; read at source 2026-11-11. The OAuth 2.1 draft is tracked in the
+      oauth_2_1 entry
+    governs: >-
+      A paired device's refresh token: opaque, stored only as a hash,
+      rotated on every use, and a replayed old token revokes the session.
+      Records: device.sessions (model DeviceSession).
+    status: adopted
+    decided: >-
+      Owner instruction 2026-11-11, in the coordinator's chat: "Go ahead and adapt
+      the standards, push and release to production across the repos"; the
+      coordinator read "adapt" as "adopt" the three device-domain standards
+      proposed that day (the Mukoko Home design, mukoko-dev/mukoko-home#24)
+    url: https://www.rfc-editor.org/rfc/rfc6749
+    notes: >-
+      OAuth 2.1 (adopted) is the platform's commitment; this entry names the
+      RFC the device grant (RFC 8628) extends, until OAuth 2.1 is an RFC.
+  - id: schema_org_product
+    name: Schema.org Product
+    domain: devices
+    category: vocabulary
+    steward: Schema.org Community Group (W3C)
+    commitment: Schema.org core type, with additionalType for the device category
+    current: Core type; read at source 2026-11-11
+    governs: >-
+      What a device is in JSON-LD: a schema:Product (device.devices, model
+      Device), its kind as additionalType (vocab.bundu.org terms for
+      user_device, weather_station, kiosk and datacentre_node are not yet
+      proposed there), and deviceIdentifier as serialNumber.
+    status: adopted
+    decided: >-
+      Owner instruction 2026-11-11, in the coordinator's chat: "Go ahead and adapt
+      the standards, push and release to production across the repos"; the
+      coordinator read "adapt" as "adopt" the three device-domain standards
+      proposed that day (the Mukoko Home design, mukoko-dev/mukoko-home#24)
+    url: https://schema.org/Product
+
   # --- agents -----------------------------------------------------------------
   - id: mcp
     name: Model Context Protocol (MCP)
@@ -866,6 +937,36 @@ standards:
     status: adopted
     decided: OD (register P-14)
     url: https://cfconventions.org/
+  - id: oasis_cap
+    name: Common Alerting Protocol (CAP)
+    domain: weather
+    category: data_format
+    steward: OASIS (Emergency Management Technical Committee)
+    commitment: >-
+      A public warning from an official alerting authority is read as a CAP 1.2
+      alert, and converted at the edge before anything else uses it
+    current: >-
+      Version 1.2, OASIS Standard, 01 July 2010 (read at source 2026-11-04; the
+      cover page states the status and date, and names the Emergency Management
+      TC as its committee)
+    governs: >-
+      The alert message: its status, message type and scope, and for each info
+      block the category, urgency, severity, certainty, effective and expiry
+      times and the affected area (polygon, circle or geocode).
+    status: proposed
+    decided: >-
+      Proposed 2026-11-04 under the standards rule: CAP exists, so the severe
+      weather alert rules in mukoko-weather (#289, weather_core::severe_alert)
+      read it instead of inventing a warning format. Adoption awaits the owner,
+      together with the choice to push severe warnings only from an official CAP
+      source
+    url: https://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2-os.html
+    notes: >-
+      Official sources are the alerting authorities in the WMO Register of
+      Alerting Authorities (for Zimbabwe, the Meteorological Services Department).
+      No feed has been read by the platform yet: the XML reader waits on a real
+      sample item. A warning whose area is given only by geocodes cannot be
+      matched to a place and is left out, not guessed.
 
   # --- health -----------------------------------------------------------------
   - id: hl7_fhir
@@ -1158,6 +1259,134 @@ standards:
     status: adopted
     decided: "Owner decision 2026-10-30, adopt global standards and convert at the edge"
     url: https://ogcapi.ogc.org/features/
+  - id: ogc_api_tiles
+    name: OGC API - Tiles
+    domain: places
+    category: protocol
+    steward: Open Geospatial Consortium
+    commitment: Tile sets (the base map, weather and places layers) are served and read as OGC API Tiles
+    current: Part 1 Core, version 1.0, OGC 20-057, OGC Implementation Standard (read at source 2026-11-03)
+    governs: >-
+      The API shape of tiled map data: the landing page, the list of tilesets, a
+      tile by tile matrix, and the conformance classes a server declares. The
+      successor to WMTS.
+    status: adopted
+    decided: >-
+      Owner decision 2026-11-04, adopt the five map-tile standards (proposed
+      2026-11-03: Nyuchi Maps is a self-hosted map platform and the OGC API - Tiles
+      guide was supplied as important), nyuchi/maps#4
+    url: https://www.ogc.org/standards/ogcapi-tiles/
+    docs: https://docs.ogc.org/is/20-057/20-057.html
+    notes: >-
+      Names tile matrix sets by reference to ogc_tms. The format of a tile is
+      separate (mvt for vector tiles). Scope: the tile contract of Nyuchi Maps
+      (nyuchi/maps#4). The weather Worker's /v1/map-tiles raster proxy and the
+      MapTiler base map the apps use today predate it and are not covered by
+      this entry.
+  - id: ogc_api_common
+    name: OGC API - Common, Part 1 Core
+    domain: places
+    category: specification
+    steward: Open Geospatial Consortium
+    commitment: >-
+      The shared building blocks of an OGC API (landing page, conformance, links,
+      OpenAPI definition) follow OGC API - Common
+    current: >-
+      Part 1 Core, version 1.0, OGC 19-072 (read at the OGC standard page
+      2026-11-04, which gives the number and version and not the status; the
+      Approved status is from the Nyuchi Maps tile contract, nyuchi/maps#5)
+    governs: >-
+      The landing page, the conformance declaration and the rules for links that
+      every OGC API shares. OGC API - Tiles (ogc_api_tiles) builds on it: its
+      tileset list and tileset resources depend on classes defined here.
+    status: proposed
+    decided: >-
+      Found 2026-11-04 in the Nyuchi Maps tile contract (nyuchi/maps#5): OGC API -
+      Tiles depends on it, and the owner adopted OGC API - Tiles the same day;
+      listed as proposed because the owner adopted five named standards, not this
+      one; adoption awaits the owner
+    url: https://www.ogc.org/standards/ogcapi-common/
+    docs: https://docs.ogc.org/is/19-072/19-072.html
+    notes: >-
+      Listed so the standards ogc_api_tiles needs are all in the register. Nothing
+      is built on it that ogc_api_tiles does not already require.
+  - id: ogc_tms
+    name: OGC Two Dimensional Tile Matrix Set and Tile Set Metadata
+    domain: places
+    category: specification
+    steward: Open Geospatial Consortium
+    commitment: How a tiled map divides the world, and how a tile set is described, follow the OGC Tile Matrix Set standard
+    current: >-
+      Version 2.0, OGC 17-083r4, OGC Standard, status Approved (read at source
+      2026-11-03; the approval and publication dates are not stated here)
+    governs: >-
+      The tile matrix sets (WebMercatorQuad and WorldCRS84Quad among them) that
+      say what zoom, row and column mean, and the metadata that describes a tile set.
+    status: adopted
+    decided: >-
+      Owner decision 2026-11-04, adopt the five map-tile standards (proposed
+      2026-11-03: Nyuchi Maps is a self-hosted map platform and the OGC API - Tiles
+      guide was supplied as important), nyuchi/maps#4
+    url: https://docs.ogc.org/is/17-083r4/17-083r4.html
+  - id: mvt
+    name: Mapbox Vector Tile specification
+    domain: places
+    category: data_format
+    steward: Mapbox (published openly, no standards body)
+    commitment: Vector tiles are encoded as Mapbox Vector Tiles
+    current: Version 2.1; the specification text is CC BY 3.0 US (read at source 2026-11-03)
+    governs: >-
+      The encoding of one vector tile: its layers, features, attributes and
+      geometry commands.
+    status: adopted
+    decided: >-
+      Owner decision 2026-11-04, adopt the five map-tile standards (proposed
+      2026-11-03: Nyuchi Maps is a self-hosted map platform and the OGC API - Tiles
+      guide was supplied as important), nyuchi/maps#4
+    url: https://github.com/mapbox/vector-tile-spec
+    notes: Not a standards-body specification. It is the format MapLibre, Planetiler and OGC API Tiles clients use for vector tiles.
+  - id: tilejson
+    name: TileJSON
+    domain: places
+    category: data_format
+    steward: Mapbox (published openly, no standards body)
+    commitment: A tile set a style refers to is described by a TileJSON document
+    current: Version 3.0.0; the specification text is CC BY 3.0 US (read at source 2026-11-03)
+    governs: >-
+      A small JSON document that describes a tile set: where its tiles are, its
+      zoom range and its bounds.
+    status: adopted
+    decided: >-
+      Owner decision 2026-11-04, adopt the five map-tile standards (proposed
+      2026-11-03: Nyuchi Maps is a self-hosted map platform and the OGC API - Tiles
+      guide was supplied as important), nyuchi/maps#4
+    url: https://github.com/mapbox/tilejson-spec
+    notes: >-
+      Not a standards-body specification. It sits beside OGC API Tiles for clients
+      (MapLibre) that read a style and not an OGC landing page. OGC API - Tiles
+      (ogc_api_tiles) is the canonical description of a tile set: a TileJSON
+      document is derived from it and never states a bound, zoom range or tile
+      URL that the OGC tileset metadata does not.
+  - id: pmtiles
+    name: PMTiles
+    domain: places
+    category: data_format
+    steward: Protomaps LLC (published openly, no standards body)
+    commitment: Map tiles are stored as PMTiles archives
+    current: >-
+      Version 3; the repository is BSD 3-Clause and the specification text states
+      no licence of its own (read at source 2026-11-03)
+    governs: >-
+      A single-file archive of map tiles (a 127-byte header, directories, JSON
+      metadata and the tile data) that is read by byte offsets and lengths, so a
+      tile set can be served from plain storage.
+    status: adopted
+    decided: >-
+      Owner decision 2026-11-04, adopt the five map-tile standards (proposed
+      2026-11-03: Nyuchi Maps is a self-hosted map platform and the OGC API - Tiles
+      guide was supplied as important), nyuchi/maps#4
+    url: https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md
+    notes: Not a standards-body specification. A storage format, not an API; the API a client sees is ogc_api_tiles or tilejson.
   - id: sdmx
     name: Statistical Data and Metadata eXchange (SDMX)
     domain: open-data

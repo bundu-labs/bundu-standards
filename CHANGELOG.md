@@ -13,6 +13,50 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+## 0.4.0 - 2026-11-11
+
+### Changed
+
+- Adopted three device-domain standards: the OAuth 2.0 Device Authorization
+  Grant (RFC 8628), the OAuth 2.0 Authorization Framework (RFC 6749) and
+  Schema.org Product. The decision recorded is the owner's instruction of
+  2026-11-11 in the coordinator's chat ("Go ahead and adapt the standards, push
+  and release to production across the repos"), which the coordinator read as
+  adopting these three; "adapt" is the owner's word, and the reading is
+  recorded as a reading. Each was read at its source on 2026-11-11 (RFC 8628 and
+  RFC 6749 are Proposed Standards, neither obsoleted; RFC 6749 is updated by
+  RFC 8252, RFC 8996 and RFC 9700). Applying the seed to the live
+  `integrations.standards` collection is an owner step and was not done.
+
+### Fixed
+
+- Removed an approval date (2022-03-24) from the OGC Tile Matrix Set entry: it
+  could not be confirmed at the source (the Nyuchi Maps tile contract reads a
+  different one), so the entry now states the status (Approved) and no date.
+
+### Added
+
+- Proposed three standards for the device domain (nyuchi/data-infra#96, the
+  Mukoko Home pairing work, mukoko-dev/mukoko-home#24) under a new `devices`
+  domain, "Devices and pairing": the OAuth 2.0 Device Authorization Grant (RFC
+  8628), the OAuth 2.0 Authorization Framework (RFC 6749, for the paired
+  device's rotating refresh token) and Schema.org Product (what a device is in
+  JSON-LD). They were proposed on 2026-11-11 and adopted the same day (see
+  Changed).
+- Proposed the Common Alerting Protocol (CAP, version 1.2, OASIS Standard, 01
+  July 2010), read at its source on 2026-11-04. The severe-weather alert rules
+  in mukoko-weather (#289) read it, and a warning is pushed only from an
+  official CAP source. It stays `proposed` until the owner adopts it.
+- Proposed OGC API - Common, Part 1 Core (OGC 19-072, version 1.0), which OGC
+  API - Tiles depends on (found in the Nyuchi Maps tile contract,
+  nyuchi/maps#5). It stays `proposed` until the owner adopts it.
+- Five map-tile standards for Nyuchi Maps (nyuchi/maps#4): OGC API - Tiles
+  (Part 1 Core 1.0, OGC 20-057), the OGC Two Dimensional Tile Matrix Set and
+  Tile Set Metadata (2.0, OGC 17-083r4), the Mapbox Vector Tile specification
+  (2.1), TileJSON (3.0.0) and PMTiles (version 3). Each was read at its source
+  on 2026-11-03, proposed that day and adopted by the owner on 2026-11-04. The
+  base-map schema (OpenMapTiles or another) is not listed: it is not decided.
+
 ## 0.3.0 - 2026-11-02
 
 ### Changed

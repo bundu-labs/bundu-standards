@@ -476,8 +476,8 @@ standards:
       name, description, license, compatibility, metadata, allowed-tools) and
       optional scripts, references and assets. Bundu Conversation Interchange
       names skills by their `name` field.
-    status: adopted
-    decided: Adopted on the owner's instruction 2026-11-11 (adopt every existing standard that fits); licence and activity verified at source 2026-11-11
+    status: proposed
+    decided: Proposed 2026-11-11; licence and activity read at source; adoption awaits the owner's word to the coordinator
     url: https://agentskills.io/specification
 
   - id: open_responses
@@ -497,8 +497,8 @@ standards:
       items (message, function_call and extension items named
       `implementor_slug:type`), streaming events. A Message in Bundu Conversation
       Interchange holds one item unchanged.
-    status: adopted
-    decided: Adopted on the owner's instruction 2026-11-11 (adopt every existing standard that fits); licence and activity verified at source 2026-11-11
+    status: proposed
+    decided: Proposed 2026-11-11; licence and activity read at source; adoption awaits the owner's word to the coordinator
     url: https://www.openresponses.org/specification
 
   - id: agents_md
@@ -514,8 +514,8 @@ standards:
     governs: >-
       Plain-Markdown instructions for an agent, at the root of a repository. A
       Bundu Conversation Interchange Project's `instructions` use the same style.
-    status: adopted
-    decided: Adopted on the owner's instruction 2026-11-11 (adopt every existing standard that fits); licence and activity verified at source 2026-11-11
+    status: proposed
+    decided: Proposed 2026-11-11; licence and activity read at source; adoption awaits the owner's word to the coordinator
     url: https://www.linuxfoundation.org/press/agentic-ai-foundation-announces-four-new-projects-agent-skills-open-responses-openenv-and-opensandbox
 
   # --- devices ----------------------------------------------------------------

@@ -608,10 +608,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "Agentic AI Foundation (Linux Foundation); contributed by Anthropic",
     "usageNotes": null,
-    "isActive": true,
+    "isActive": false,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Adopted: Adopted on the owner's instruction 2026-11-11 (adopt every existing standard that fits); licence and activity verified at source 2026-11-11"
+      "adoptionRationale": "Proposed: Proposed 2026-11-11; licence and activity read at source; adoption awaits the owner's word to the coordinator"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -631,10 +631,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "Agentic AI Foundation (Linux Foundation); contributed by OpenAI",
     "usageNotes": null,
-    "isActive": true,
+    "isActive": false,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Adopted: Adopted on the owner's instruction 2026-11-11 (adopt every existing standard that fits); licence and activity verified at source 2026-11-11"
+      "adoptionRationale": "Proposed: Proposed 2026-11-11; licence and activity read at source; adoption awaits the owner's word to the coordinator"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -654,10 +654,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "Agentic AI Foundation (Linux Foundation)",
     "usageNotes": null,
-    "isActive": true,
+    "isActive": false,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Adopted: Adopted on the owner's instruction 2026-11-11 (adopt every existing standard that fits); licence and activity verified at source 2026-11-11"
+      "adoptionRationale": "Proposed: Proposed 2026-11-11; licence and activity read at source; adoption awaits the owner's word to the coordinator"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"

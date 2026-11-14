@@ -175,6 +175,9 @@ Versions released before then are not renumbered.
   never set, so the live site stayed at 78 standards. Only `main` deploys to
   the live site now; other branches, `staging` included, get preview versions.
   The post-deploy smoke test went with the workflow.
+- The site builds and is tested on Node 24, in CI and on Workers Builds
+  (`NODE_VERSION` 24): Node 22 is no longer supported. `workers/standards`
+  requires Node 24 or later (`engines`).
 
 ## 0.2.0 (2026-10-05)
 

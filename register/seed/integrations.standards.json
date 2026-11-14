@@ -585,10 +585,33 @@
     "documentationUrl": null,
     "stewardOrganisation": "IETF OAuth Working Group",
     "usageNotes": null,
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3), listed as Proposed"
+      "adoptionRationale": "Adopted: OD 2026-10-03 (mukoko-dev/nyuchi-identity#23, decision D3), listed as Proposed. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_iso_17442",
+    "_schemaVersion": "v3.1",
+    "displayName": "Legal Entity Identifier (LEI, ISO 17442)",
+    "category": "identifier_scheme",
+    "description": "The identifier of a legal entity: a 20-character alphanumeric code that is unique and stands for one entity, so an organisation can be named across systems and checked against GLEIF's Global LEI Index (`schema:leiCode`). Proposed for B2B verification of organisations; no LEI is stored today.",
+    "versionCommitment": "ISO 17442-1:2020 for the LEI and its assignment; ISO 17442-2:2020 for an LEI in a digital certificate",
+    "specificationUrl": "https://www.iso.org/standard/78829.html",
+    "documentationUrl": "https://www.gleif.org/en/about-lei/iso-17442-the-lei-code-structure",
+    "stewardOrganisation": "ISO (ISO/TC 68/SC 8); the LEI system is run by GLEIF",
+    "usageNotes": "Licence: the standard's text is sold by ISO (CHF 67 for Part 1; \"(c) ISO\" on the page) and no open licence for the text was found. The data is open: GLEIF's LEI Data Terms of Use (gleif.org/en/meta/lei-data-terms-of-use) say the data available through its access service \"are provided under the CC0 licence\", and GLEIF describes the LEI as \"A public good, available free of charge to all users\". Steward: ISO/TC 68/SC 8 is the responsible committee; GLEIF (Global Legal Entity Identifier Foundation), a Swiss not-for-profit foundation incorporated by the Financial Stability Board, runs the system with the local operating units (LOUs) it accredits, under the Regulatory Oversight Committee. Scope: legal entities, including international branches and individuals acting in a business capacity (sole traders are an ISO example), and not natural persons. Schema.org has the property `leiCode` (\"An organization identifier that uniquely identifies a legal entity as defined in ISO 17442\"). Platform use: none yet; the entity model has `taxId`, `registrationNumber`, `gln` and `openCorporatesId` and no `leiCode` (audit 2026-10-07, nyuchi/data-infra#94). Added from nyuchi/data-infra#94 and #179.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) lists LEI as proposed, not yet used, for B2B verification. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -759,6 +782,98 @@
     }
   },
   {
+    "_id": "standard_agent_skills",
+    "_schemaVersion": "v3.1",
+    "displayName": "Agent Skills",
+    "category": "specification",
+    "description": "The format of a reusable agent skill: a folder with a SKILL.md (frontmatter name, description, license, compatibility, metadata, allowed-tools) and optional scripts, references and assets.",
+    "versionCommitment": "Track the specification. It has no version, so pin the commit a consumer builds against.",
+    "specificationUrl": "https://agentskills.io/specification",
+    "documentationUrl": "https://github.com/agentskills/agentskills",
+    "stewardOrganisation": "Agentic AI Foundation (Linux Foundation); contributed by Anthropic",
+    "usageNotes": "Licence: code Apache-2.0 (LICENSE, \"Copyright 2025 Anthropic, PBC\"); documentation CC-BY-4.0 (README; docs/LICENSE). GOVERNANCE.md says specifications are released under the project licence (Apache-2.0) and documentation other than specifications under CC BY 4.0, while the specification text sits in docs/, which carries the CC-BY-4.0 LICENSE: which of the two covers the specification text is not stated, so both are recorded. The project is established as \"Agent Skills a Series of LF Projects, LLC\" (GOVERNANCE.md).",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_open_responses",
+    "_schemaVersion": "v3.1",
+    "displayName": "Open Responses",
+    "category": "specification",
+    "description": "The shared request and response schema for LLM interfaces: polymorphic typed items (message, function_call and extension items named `implementor_slug:type`), streaming events.",
+    "versionCommitment": "A dated release (the latest is 2026-04-24); pin the date, because each dated release is immutable.",
+    "specificationUrl": "https://www.openresponses.org/specification",
+    "documentationUrl": "https://github.com/openresponses/openresponses",
+    "stewardOrganisation": "Agentic AI Foundation (Linux Foundation); contributed by OpenAI",
+    "usageNotes": "Licence: code Apache-2.0 (LICENSE; the copyright line is left as the unfilled template); CHARTER.md says documentation is CC BY 4.0. Pin the dated file, not public/openapi/openapi.json: that \"latest\" file differs from the 2026-04-24 file (regenerated from TypeSpec since 2026-10-08) while still labelled 2026-04-24. The 2026-04-24 OpenAPI defines POST /responses and /responses/compact and continues a conversation with previous_response_id and store; it has no conversation, project, artifact or memory resource. The project is established as \"Open Responses a Series of LF Projects, LLC\".",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_agents_md",
+    "_schemaVersion": "v3.1",
+    "displayName": "AGENTS.md",
+    "category": "specification",
+    "description": "Plain-Markdown instructions for a coding agent, at the root of a repository (the closest AGENTS.md to an edited file wins; an explicit user prompt overrides it, per agents.md).",
+    "versionCommitment": "Track the format. It has no version.",
+    "specificationUrl": "https://agents.md",
+    "documentationUrl": "https://github.com/agentsmd/agents.md",
+    "stewardOrganisation": "Agentic AI Foundation (Linux Foundation); contributed by OpenAI",
+    "usageNotes": "Licence MIT (LICENSE, \"Copyright (c) 2025 OpenAI\"); the Technical Charter names MIT as the project licence and CC BY 4.0 for documentation. The repository holds the website and a README example, and no schema: the format is a convention, not a machine-validated specification. The project is established as \"AGENTS.md a Series of LF Projects, LLC\".",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_agent_client_protocol",
+    "_schemaVersion": "v3.1",
+    "displayName": "Agent Client Protocol (ACP)",
+    "category": "protocol",
+    "description": "How a code editor or IDE (the client) drives a coding agent: JSON-RPC 2.0 over stdio (a Streamable HTTP transport is an open RFD), sessions (new, load with history replay, list, resume, delete), prompt turns with streamed updates, tool calls, permission requests and client file and terminal access. The client passes MCP servers to the agent in session/new.",
+    "versionCommitment": "Protocol version 1, negotiated in `initialize`; pin the schema release a consumer builds against.",
+    "specificationUrl": "https://agentclientprotocol.com/protocol/v1/overview",
+    "documentationUrl": "https://github.com/agentclientprotocol/agent-client-protocol",
+    "stewardOrganisation": "Zed Industries and JetBrains, jointly (interim governance; no foundation host confirmed)",
+    "usageNotes": "Licence Apache-2.0 (LICENSE, \"Copyright 2025 Zed Industries, Inc. and contributors\"; the governance page says all repositories in the ACP organisation should be Apache 2.0, with no CLA); no separate documentation licence was found. Governance (agentclientprotocol.com/community/governance, read 2026-11-11): \"an interim governance model\"; \"jointly governed by Zed and JetBrains ... working toward transitioning to an independent foundation\"; lead maintainers Ben Brandt (Zed) and Sergey Ignatov (JetBrains). Foundation host: not confirmed; ACP is not among the ten projects the Agentic AI Foundation listed on 2026-10-22. Not IBM's Agent Communication Protocol, which merged into A2A (ACP's related-protocols page).",
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Proposed: Proposed 2026-11-11 on the owner's request relayed via the Shamwari session. Left proposed on the owner's instruction the same day in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Its governance is interim (Zed and JetBrains jointly) and no foundation host is confirmed, so adoption awaits a foundation host"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_bags",
     "_schemaVersion": "v3.1",
     "displayName": "Bundu AI Guardrails Standard (BAGS)",
@@ -819,6 +934,29 @@
     "bundu": {
       "isFoundational": false,
       "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_activitystreams_2",
+    "_schemaVersion": "v3.1",
+    "displayName": "Activity Streams 2.0 (Core and Vocabulary)",
+    "category": "vocabulary",
+    "description": "The `as:` mappings of the data model's classes to a social vocabulary (Person, Organization, Place, Event, Article, Note, Like, Follow, Create, Join, Leave, View), and the vocabulary ActivityPub (activitypub) is built on.",
+    "versionCommitment": "W3C Recommendation (2017); the data model's `as:` mappings take their terms from its Activity Vocabulary",
+    "specificationUrl": "https://www.w3.org/TR/activitystreams-vocabulary/",
+    "documentationUrl": "https://www.w3.org/TR/activitystreams-core/",
+    "stewardOrganisation": "W3C (Social Web Working Group)",
+    "usageNotes": "Licence: no reference code. Both documents carry \"W3C liability, trademark and permissive document license rules apply\", linking the W3C Software and Document License (2015 version; that page says it was in effect from 2015-05-13 to 2022-12-31 and has since been replaced by a later version). The JSON-LD context is served at https://www.w3.org/ns/activitystreams. ActivityPub (activitypub) is \"based upon the ActivityStreams 2.0 data format\" (its abstract). Platform use: the Activity Streams 2.0 close mappings on the model's classes, listed by the audit (docs/standards-audit-2026-10.md, 2026-10-07). Added from nyuchi/data-infra#94 and #179.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found the model using Activity Streams 2.0 through ActivityPub and the standard not registered on its own. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -966,6 +1104,52 @@
     }
   },
   {
+    "_id": "standard_iptc_ninjs",
+    "_schemaVersion": "v3.1",
+    "displayName": "IPTC ninjs (News in JSON)",
+    "category": "data_format",
+    "description": "The JSON form of a news item (and, from 3.x, of an event or a planning item): headlines, bodies, language, firstCreated and versionCreated, subjects, people, organisations, places, renditions, rights and digitalSourceType. It is the target shape of news API output, and what `NewsArticle` maps to closely.",
+    "versionCommitment": "ninjs 3.2 for new work, as IPTC recommends for a project starting now; 1.7 and 2.3 are the latest of the older series",
+    "specificationUrl": "https://iptc.org/std/ninjs/",
+    "documentationUrl": "https://github.com/iptc/newsinjson",
+    "stewardOrganisation": "IPTC (International Press Telecommunications Council)",
+    "usageNotes": "Licence: the JSON Schema is Creative Commons Attribution 4.0 (stated in the schema's own description, \"copyright 2025 IPTC\"); the repository (LICENSE, \"Copyright (c) 2024 International Press Telecommunications Council (IPTC)\") is MIT. The 3.2 schema has a `digitalSourceType` property whose suggested vocabulary is the IPTC Digital Source Type (iptc_digital_source_type). Platform use: `NewsArticle` has a close mapping `iptc:ninjs` that expands under NewsCodes and does not resolve, and the audit names ninjs 3.2 as the target shape of the news APIs (nyuchi/data-infra#86). Added from nyuchi/data-infra#94 and #179.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found ninjs in use as the news target shape and not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_iptc_digital_source_type",
+    "_schemaVersion": "v3.1",
+    "displayName": "IPTC Digital Source Type (NewsCodes)",
+    "category": "vocabulary",
+    "description": "Where a piece of media came from: captured, digitised, human-edited, algorithmically altered, composite, or made by a trained model. It marks AI-made content, for example `trainedAlgorithmicMedia` (\"Created using Generative AI\") and `compositeWithTrainedAlgorithmicMedia` (\"Edited using Generative AI\"). The data platform uses it to mark AI-made article text and images.",
+    "versionCommitment": "Track the live vocabulary; store the concept URI (`http://cv.iptc.org/newscodes/digitalsourcetype/<term>`), not a label",
+    "specificationUrl": "https://cv.iptc.org/newscodes/digitalsourcetype/",
+    "documentationUrl": null,
+    "stewardOrganisation": "IPTC (International Press Telecommunications Council)",
+    "usageNotes": "Licence: Creative Commons Attribution 4.0 (the vocabulary page: \"Copyright 2024 IPTC ... The Creative Commons Attribution (CC BY) 4.0 license applies to all NewsCodes\"; the scheme's JSON names IPTC as copyright holder and links CC BY 4.0). It is data, not code. The scheme's own definition says \"from which source a digital image was created\" and the concept definitions say \"media\"; none of the 20 concept definitions names text, so using the codes for AI-made article text is the platform's application of them, not something IPTC states. C2PA 2.4 (c2pa) takes these URIs in its digitalSourceType field, and the ninjs 3.2 schema (iptc_ninjs) has a digitalSourceType property that suggests this vocabulary (both read 2026-11-11). Platform use: the AI-made fields of an article (aiSummary on 99%, aiKeywords, aiSentiment, aiCategories) carry no source type today (audit 2026-10-07, nyuchi/data-infra#86). Added from nyuchi/data-infra#94 and #179.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found it the shared code list for AI provenance on content and not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_c2pa",
     "_schemaVersion": "v3.1",
     "displayName": "C2PA content credentials",
@@ -1095,6 +1279,29 @@
     "bundu": {
       "isFoundational": false,
       "adoptionRationale": "Adopted: Live validators"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_h3",
+    "_schemaVersion": "v3.1",
+    "displayName": "H3 hexagonal hierarchical geospatial index",
+    "category": "specification",
+    "description": "The cell id of a place or event on a hexagonal, hierarchical global grid, so geography can be joined and aggregated across datasets at a chosen resolution: the `*_by_cell_*` tables planned in Doris and Cassandra. There are 16 resolutions (0 to 15); resolution 0 has 122 base cells (110 hexagons and 12 pentagons) and each finer resolution has about one seventh of the area (aperture 7).",
+    "versionCommitment": "Release 4.x, the latest being 4.5.0; the library follows Semantic Versioning, so a consumer pins the release it builds against",
+    "specificationUrl": "https://h3geo.org/",
+    "documentationUrl": "https://github.com/uber/h3",
+    "stewardOrganisation": "Uber Technologies, Inc. (an open-source project; no standards body or foundation)",
+    "usageNotes": "Licence: Apache-2.0 for the library and its documentation (LICENSE; NOTICE \"Copyright 2017-2021 Uber Technologies, Inc.\"; the README names Apache 2.0 and also carries DGGRID, \"Copyright (c) 2015 Southern Oregon University\"). The grid is defined by the documentation at h3geo.org and by the library, which is the reference implementation: no separate specification document and no separate documentation licence is stated, and the site source (website/ in the repository) sits under the same LICENSE. Governance: an Uber project, and contributions need the Uber Contributor License Agreement (README); no other steward is named. The grid sits on a sphere with the WGS 84 authalic radius (the core-library overview). Platform use: H3 cells are the key of the `*_by_cell_*` tables planned for Doris and Cassandra (nyuchi/data-infra#22, Phase 4 #59); the audit found no H3 cell on a place or event and no slot for one in the model (nyuchi/data-infra#87). GeoJSON stays the geometry (geojson): an H3 cell id is an index, not a geometry. Added from nyuchi/data-infra#94 and #179.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found H3 planned for the data platform and not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1321,10 +1528,10 @@
     "documentationUrl": null,
     "stewardOrganisation": "OASIS (Emergency Management Technical Committee)",
     "usageNotes": "Official sources are the alerting authorities in the WMO Register of Alerting Authorities (for Zimbabwe, the Meteorological Services Department). No feed has been read by the platform yet: the XML reader waits on a real sample item. A warning whose area is given only by geocodes cannot be matched to a place and is left out, not guessed.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Proposed 2026-11-04 under the standards rule: CAP exists, so the severe weather alert rules in mukoko-weather (#289, weather_core::severe_alert) read it instead of inventing a warning format. Adoption awaits the owner, together with the choice to push severe warnings only from an official CAP source"
+      "adoptionRationale": "Adopted: Proposed 2026-11-04 under the standards rule: CAP exists, so the severe weather alert rules in mukoko-weather (#289, weather_core::severe_alert) read it instead of inventing a warning format. Adoption awaits the owner, together with the choice to push severe warnings only from an official CAP source. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\"). This adopts CAP the standard only. The separate choice to push severe warnings only from an official CAP source is still open."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1541,6 +1748,29 @@
     }
   },
   {
+    "_id": "standard_spdx",
+    "_schemaVersion": "v3.1",
+    "displayName": "SPDX (specification and License List)",
+    "category": "identifier_scheme",
+    "description": "The identifier of a licence (`MIT`, `Apache-2.0`, `CC-BY-4.0`) and licence expressions (a licence `WITH` an exception), so a provider's licence is a code and not free text: `integrations.providers.license.spdxIdentifier`.",
+    "versionCommitment": "The License List short identifier as the licence value (release 3.29.0 now); for a document that carries it, the specification version, 3.0.1 now",
+    "specificationUrl": "https://spdx.dev/use/specifications/",
+    "documentationUrl": "https://spdx.org/licenses/",
+    "stewardOrganisation": "Linux Foundation (SPDX project)",
+    "usageNotes": "Standing: ISO's page for SPDX 3.0 is a draft in the approval phase, so SPDX 3.x is not yet an ISO edition; spdx.dev says \"The SPDX specification is an international open standard (ISO/IEC 5962:2021)\", which is the 2.2.1 text. Licence: the specification is under the Community Specification License 1.0, with pre-existing portions under CC-BY-3.0 (spdx-spec LICENSE; spdx.dev legal notices); the SPDX 3 model repository is under the Community Specification License 1.0 (License.md). The licence of the License List data is not recorded: no licence file or statement was found for it in spdx/license-list-data, spdx/license-list-XML or on spdx.org/licenses, and each licence text belongs to its licensor. Platform use: `integrations.providers.license.spdxIdentifier` holds a licence identifier (audit 2026-10-07: providers are live in MongoDB `integrations.providers` and not yet modelled). Added from nyuchi/data-infra#94 and #179.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found `spdxIdentifier` on the integrations providers and SPDX not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_dcat",
     "_schemaVersion": "v3.1",
     "displayName": "DCAT",
@@ -1601,6 +1831,29 @@
     "bundu": {
       "isFoundational": false,
       "adoptionRationale": "Adopted: OD (register P-19)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_apache_avro",
+    "_schemaVersion": "v3.1",
+    "displayName": "Apache Avro",
+    "category": "data_format",
+    "description": "The schema language (JSON) and the binary encoding of every event envelope and payload (`schemas/events/`) and the subjects of the Redpanda schema registry; also the object container file, the single-object encoding and the schema-resolution rules for a reader whose schema differs from the writer's.",
+    "versionCommitment": "Avro 1.12, the latest release being 1.12.2; the specification has no version of its own, so a consumer pins the release it builds against",
+    "specificationUrl": "https://avro.apache.org/docs/current/specification/",
+    "documentationUrl": "https://github.com/apache/avro",
+    "stewardOrganisation": "Apache Software Foundation",
+    "usageNotes": "Licence: Apache-2.0 for the specification and the code alike (LICENSE.txt; doc/LICENSE, which covers the specification source under doc/; NOTICE \"Copyright 2010-2025 The Apache Software Foundation\"). The specification page itself states no licence. Governance: an Apache Software Foundation project. See also cloudevents (the event envelope) and asyncapi (the topic catalogue) in this register. Platform use: Avro serialises the event envelope and payloads (audit 2026-10-07, nyuchi/data-infra#94: in use and not registered), and the Redpanda schema registry holds Avro subjects (nyuchi/data-infra#179). Added from nyuchi/data-infra#94 and #179.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: The October 2026 standards audit (nyuchi/data-infra#94, docs/standards-audit-2026-10.md, 2026-10-07) found event payloads serialised as Avro and Avro not in the register. #94 lists it and does not adopt it (\"Adding a standard is an owner decision\"), so it was registered as proposed until the owner adopted it. Listed in the register on 2026-11-11, tracked in nyuchi/data-infra#179. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1702,6 +1955,29 @@
     }
   },
   {
+    "_id": "standard_bci",
+    "_schemaVersion": "v3.1",
+    "displayName": "Bundu Conversation Interchange (BCI)",
+    "category": "specification",
+    "description": "How a person's conversations, messages, projects, saved answers (artifacts) and memory are written down so they can move between assistants. A message holds an Open Responses item unchanged; skills are named by Agent Skills `name`; times are RFC 3339, ids UUIDs, provenance C2PA. Shamwari is the first implementation. No portable standard for the stored record was found (the live wire shape, ACP sessions and A2A artifacts exist); the coordinator's gap analysis qualifies this claim.",
+    "versionCommitment": "0.1.0 draft (semver); nothing published until the owner approves its scope.",
+    "specificationUrl": "https://standards.bundu.org/conversation-interchange/",
+    "documentationUrl": null,
+    "stewardOrganisation": "Bundu Foundation",
+    "usageNotes": null,
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "A person's history belongs to the person, not to a product. If none exists we build one and publish it (AGENTS.md, the rule)."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_ucum",
     "_schemaVersion": "v3.1",
     "displayName": "Unified Code for Units of Measure (UCUM)",
@@ -1711,7 +1987,7 @@
     "specificationUrl": "https://ucum.org/ucum",
     "documentationUrl": null,
     "stewardOrganisation": "Regenstrief Institute",
-    "usageNotes": "CF Conventions accepts UCUM-form units, which is how the two fit together.",
+    "usageNotes": "CF Conventions accepts UCUM-form units, which is how the two fit together. Licence (read 2026-11-11, ucum.org/license): the UCUM Copyright Notice and License, Version 1.1 (June 2024), of Regenstrief Institute, Inc. (copyright 1999-2024), carried in the repository as LICENSE.md. It is neither an open-source nor a Creative Commons licence. It grants a worldwide, non-exclusive, no-charge, royalty-free, revocable licence to reproduce, display and distribute the Work and to use it to develop and commercialise software that interoperates with it. It bars adding to, deleting from or modifying the Work's content and making derivative works; reproducing the Work in its entirety needs a copyright notice, a notice of the licence and a link to it; and software that only interoperates with an unmodified instance of the Work is not a derivative work (section 1.3). The October 2026 audit listed UCUM among the standards in use and not registered (nyuchi/data-infra#94, #179); it had been adopted on 2026-10-30, so it needed no new entry.",
     "isActive": true,
     "bundu": {
       "isFoundational": false,
@@ -1873,10 +2149,10 @@
     "documentationUrl": "https://docs.ogc.org/is/19-072/19-072.html",
     "stewardOrganisation": "Open Geospatial Consortium",
     "usageNotes": "Listed so the standards ogc_api_tiles needs are all in the register. Nothing is built on it that ogc_api_tiles does not already require.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Found 2026-11-04 in the Nyuchi Maps tile contract (nyuchi/maps#5): OGC API - Tiles depends on it, and the owner adopted OGC API - Tiles the same day; listed as proposed because the owner adopted five named standards, not this one; adoption awaits the owner"
+      "adoptionRationale": "Adopted: Found 2026-11-04 in the Nyuchi Maps tile contract (nyuchi/maps#5): OGC API - Tiles depends on it, and the owner adopted OGC API - Tiles the same day; listed as proposed because the owner adopted five named standards, not this one; adoption awaits the owner. Adopted 2026-11-11 on the owner's instruction in the coordinator's chat (\"all the proposed standards please release them, into a beta. if they are ones we are adopting then we fully adopt everything now\", then \"we fully adopt\")."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"

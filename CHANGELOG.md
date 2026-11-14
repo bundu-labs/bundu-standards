@@ -68,6 +68,10 @@ Versions released before then are not renumbered.
 
 ### Fixed
 
+- Updated Astro, which builds standards.bundu.org, from 7.3.3 to 7.4.12. The
+  patch releases tighten how `Host` and the `X-Forwarded-*` headers are
+  validated against `security.allowedDomains`, among other fixes. This replaces
+  Dependabot's PR #55, which targeted `main`; changes go to `staging`.
 - Removed an approval date (2022-03-24) from the OGC Tile Matrix Set entry: it
   could not be confirmed at the source (the Nyuchi Maps tile contract reads a
   different one), so the entry now states the status (Approved) and no date.

@@ -97,6 +97,16 @@ Versions released before then are not renumbered.
   upload data into the platform and how we standardize the uploads and find
   easier ways for people to provide data easily." Both name the standards that
   apply by register id and say what would close them.
+- Weather data colour scales, 0.1.0 draft (`standards/weather-colour-scales/`,
+  #39): six scales as data in `scales.json`. The US EPA AQI colours (May 2026
+  Technical Assistance Document, with the EPA's own ColorVision Assist palette)
+  and the WHO Global Solar UV Index colours are adopted unchanged; temperature,
+  wind (Beaufort breakpoints), rainfall rate (WMO intensity classes) and cloud
+  cover (oktas) are ours, with ColorBrewer ramps. `scales.py` generates
+  `results.md`: legend text contrast (AA enforced), swatch contrast on light and
+  dark surfaces, and neighbour separation under simulated colour-blindness.
+  Register entry `weather_colour_scales`, proposed. The owner approved the
+  scope on 2026-11-14.
 
 - Proposed seven standards that the October 2026 standards audit found in use
   on the data platform and not in the register (nyuchi/data-infra#94, tracked in

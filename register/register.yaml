@@ -1681,6 +1681,100 @@ standards:
     rationale: >-
       A person's history belongs to the person, not to a product. If none exists we
       build one and publish it (AGENTS.md, the rule).
+  - id: us_epa_aqi
+    name: US EPA Air Quality Index (AQI) categories and colours
+    domain: weather
+    category: specification
+    steward: US Environmental Protection Agency
+    commitment: >-
+      The six AQI categories and their standard colours (Table 2), with the
+      ColorVision Assist colours (Table 3) as an accessible alternative.
+    current: >-
+      Technical Assistance Document for the Reporting of Daily Air Quality – the
+      Air Quality Index (AQI), EPA-403/B-26-003, May 2026; PM2.5 breakpoints as
+      revised in 2024 (Good 0.0–9.0 µg/m3). Read 2026-11-14.
+    governs: >-
+      The categories, names and colours an app uses to show air quality (Good,
+      Moderate, Unhealthy for Sensitive Groups, Unhealthy, Very Unhealthy,
+      Hazardous), and the method that turns a pollutant concentration into an
+      index value.
+    status: proposed
+    decided: >-
+      Proposed 2026-11-14 for the weather data colour scales draft (#39);
+      adoption awaits the owner.
+    url: https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf
+    notes: >-
+      A US federal document. The colours are required for EPA reporting, and the
+      document allows the ColorVision Assist set for people with colour-vision
+      deficiencies. Used in standards/weather-colour-scales/ (draft).
+    rationale: >-
+      The most widely recognised air quality colours; the issue (#39) names it as
+      the source to adopt.
+  - id: who_global_solar_uvi
+    name: Global Solar UV Index
+    domain: weather
+    category: specification
+    steward: WHO, with WMO, UNEP and ICNIRP
+    commitment: >-
+      The five exposure categories and their international colour codes (Pantone
+      references), the index reported as a whole number.
+    current: >-
+      Global Solar UV Index: A Practical Guide, 2002 (ISBN 92 4 159007 6), Tables
+      1 and 4; the colours are given only as Pantone references (PMS 375, 102,
+      151, 032, 265). Read 2026-11-14.
+    governs: >-
+      How the UV Index is reported to the public: the exposure categories (Low,
+      Moderate, High, Very high, Extreme) and the colour for each.
+    status: proposed
+    decided: >-
+      Proposed 2026-11-14 for the weather data colour scales draft (#39);
+      adoption awaits the owner.
+    url: https://iris.who.int/handle/10665/42459
+    notes: >-
+      A joint recommendation of WHO, WMO, UNEP and ICNIRP. It gives no sRGB, so
+      screen colours must come from Pantone's published values. Used in
+      standards/weather-colour-scales/ (draft).
+    rationale: The international convention for UV Index colours; the issue (#39) names it as the source to adopt.
+  - id: wmo_beaufort
+    name: Beaufort wind force scale (WMO wind speed equivalents)
+    domain: weather
+    category: specification
+    steward: World Meteorological Organization
+    commitment: Beaufort numbers 0 to 12 and their wind speed equivalents in m/s at 10 m above open flat ground.
+    current: >-
+      Guide to Instruments and Methods of Observation (WMO-No. 8), Volume I,
+      Chapter 5, Table 5.1, 2018 edition as published at the URL. Read
+      2026-11-14.
+    governs: The breakpoints of the wind force scale an app uses to describe and colour wind speed.
+    status: proposed
+    decided: >-
+      Proposed 2026-11-14 for the weather data colour scales draft (#39);
+      adoption awaits the owner.
+    url: https://old.wmo.int/extranet/pages/prog/www/IMOP/publications/CIMO-Guide/Prelim_2018_ed/8_I_5_en_MR_tc.pdf
+    notes: >-
+      The WMO defines speeds, not colours; the colour ramp is Bundu's to write.
+      Used in standards/weather-colour-scales/ (draft).
+    rationale: The standard wind force scale; the issue (#39) names Beaufort breakpoints.
+  - id: bundu_weather_colour_scales
+    name: Bundu weather data colour scales
+    domain: first-party
+    category: specification
+    steward: Bundu Foundation
+    commitment: 0.1.0 draft (semver); nothing published until the owner approves its scope.
+    current: 0.1.0 draft, standards/weather-colour-scales/
+    governs: >-
+      The colours apps use for weather data, as importable data: adopted scales
+      (US EPA AQI, the WHO UV Index, WMO Beaufort breakpoints) carried unchanged
+      with their sources, and the scales no standard covers (temperature, rain,
+      cloud) written here. Colour never carries meaning alone.
+    status: proposed
+    decided: >-
+      Drafted on the owner's instruction 2026-11-14 ("go with all of them", #39);
+      scope awaits the owner's approval
+    url: https://github.com/bundu-labs/bundu-standards/tree/staging/standards/weather-colour-scales
+    rationale: >-
+      Brand colours and per-app scales mislead readers. Adopt the published scales
+      and write only what no standard covers (AGENTS.md, the rule).
 
   # --- adopted 2026-10-30: the standards the weather and agriculture models are
   # --- built on. Versions checked at source on 2026-10-30.

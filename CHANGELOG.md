@@ -78,6 +78,16 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Draft of the weather data colour scales, 0.1.0 (`standards/weather-colour-scales/`,
+  #39): `scales.json` carries the US EPA AQI categories and colours (standard and
+  ColorVision Assist, EPA-403/B-26-003, May 2026), the WHO Global Solar UV Index
+  categories with their Pantone references (2002), and the WMO Beaufort wind
+  speed equivalents in m/s (WMO-No. 8, Table 5.1), each read at source on
+  2026-11-14. Every AQI label meets WCAG AA contrast. UV screen colours,
+  Beaufort colours, temperature, rain and cloud are open. Proposed in the
+  register: `us_epa_aqi`, `who_global_solar_uvi`, `wmo_beaufort` and
+  `bundu_weather_colour_scales` (adopted 98, proposed 2 to 6). Nothing is
+  published until the owner approves the scope.
 - Proposed seven standards that the October 2026 standards audit found in use
   on the data platform and not in the register (nyuchi/data-infra#94, tracked in
   #179): H3 (places, release 4.5.0), IPTC ninjs (news, version 3.2), IPTC

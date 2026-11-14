@@ -1,0 +1,339 @@
+{
+  "$comment": "Bundu weather data colour scales, 0.1.0 draft. Values copied from the cited sources; nothing here is published until the owner approves the scope (#39).",
+  "version": "0.1.0-draft",
+  "rule": "Colour never carries meaning alone: the band label or the value range is always shown beside it.",
+  "scales": {
+    "aqi": {
+      "name": "Air Quality Index categories",
+      "register": "us_epa_aqi",
+      "quantity": "AQI (dimensionless index, 0-500)",
+      "unit": "1",
+      "source": {
+        "title": "Technical Assistance Document for the Reporting of Daily Air Quality – the Air Quality Index (AQI)",
+        "id": "EPA-403/B-26-003",
+        "date": "2026-05",
+        "tables": "Table 1 (names), Table 2 (standard colours), Table 3 (ColorVision Assist colours)",
+        "url": "https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf",
+        "read": "2026-11-14"
+      },
+      "status": "adopted-source",
+      "notes": "The standard colours are required in EPA reporting; ColorVision Assist colours may be used to aid people with colour-vision deficiencies. Pollutant-to-index breakpoints (Table 6, e.g. PM2.5 Good 0.0-9.0 ug/m3 since 2024) are the EPA's and are not restated here.",
+      "bands": [
+        {
+          "key": "good",
+          "label": "Good",
+          "min": 0,
+          "max": 50,
+          "colourName": "Green",
+          "standard": {
+            "srgb": "#00E400",
+            "cmyk": [40, 0, 100, 0],
+            "label": {
+              "text": "#000000",
+              "contrast": 12.1
+            }
+          },
+          "colorVisionAssist": {
+            "srgb": "#9EFF91",
+            "label": {
+              "text": "#000000",
+              "contrast": 17.17
+            }
+          }
+        },
+        {
+          "key": "moderate",
+          "label": "Moderate",
+          "min": 51,
+          "max": 100,
+          "colourName": "Yellow",
+          "standard": {
+            "srgb": "#FFFF00",
+            "cmyk": [0, 0, 100, 0],
+            "label": {
+              "text": "#000000",
+              "contrast": 19.56
+            }
+          },
+          "colorVisionAssist": {
+            "srgb": "#FFC905",
+            "label": {
+              "text": "#000000",
+              "contrast": 13.61
+            }
+          }
+        },
+        {
+          "key": "usg",
+          "label": "Unhealthy for Sensitive Groups",
+          "min": 101,
+          "max": 150,
+          "colourName": "Orange",
+          "standard": {
+            "srgb": "#FF7E00",
+            "cmyk": [0, 52, 100, 0],
+            "label": {
+              "text": "#000000",
+              "contrast": 8.24
+            }
+          },
+          "colorVisionAssist": {
+            "srgb": "#FF8205",
+            "label": {
+              "text": "#000000",
+              "contrast": 8.45
+            }
+          }
+        },
+        {
+          "key": "unhealthy",
+          "label": "Unhealthy",
+          "min": 151,
+          "max": 200,
+          "colourName": "Red",
+          "standard": {
+            "srgb": "#FF0000",
+            "cmyk": [0, 100, 100, 0],
+            "label": {
+              "text": "#000000",
+              "contrast": 5.25
+            }
+          },
+          "colorVisionAssist": {
+            "srgb": "#F02200",
+            "label": {
+              "text": "#000000",
+              "contrast": 4.93
+            }
+          }
+        },
+        {
+          "key": "very_unhealthy",
+          "label": "Very Unhealthy",
+          "min": 201,
+          "max": 300,
+          "colourName": "Purple",
+          "standard": {
+            "srgb": "#8F3F97",
+            "cmyk": [5, 58, 0, 41],
+            "label": {
+              "text": "#FFFFFF",
+              "contrast": 6.31
+            }
+          },
+          "colorVisionAssist": {
+            "srgb": "#890997",
+            "label": {
+              "text": "#FFFFFF",
+              "contrast": 8.24
+            }
+          }
+        },
+        {
+          "key": "hazardous",
+          "label": "Hazardous",
+          "min": 301,
+          "max": null,
+          "colourName": "Maroon",
+          "standard": {
+            "srgb": "#7E0023",
+            "cmyk": [30, 100, 100, 30],
+            "label": {
+              "text": "#FFFFFF",
+              "contrast": 10.99
+            }
+          },
+          "colorVisionAssist": {
+            "srgb": "#640015",
+            "label": {
+              "text": "#FFFFFF",
+              "contrast": 13.52
+            }
+          }
+        }
+      ]
+    },
+    "uv_index": {
+      "name": "Global Solar UV Index exposure categories",
+      "register": "who_global_solar_uvi",
+      "quantity": "UV Index (dimensionless), rounded to the nearest whole number",
+      "unit": "1",
+      "source": {
+        "title": "Global Solar UV Index: A Practical Guide",
+        "publisher": "WHO, WMO, UNEP, ICNIRP",
+        "date": "2002",
+        "isbn": "92 4 159007 6",
+        "tables": "Table 1 (categories), Table 4 (international colour codes)",
+        "url": "https://iris.who.int/handle/10665/42459",
+        "read": "2026-11-14"
+      },
+      "status": "adopted-source",
+      "notes": "The guide defines each colour only as a Pantone (PMS) reference; it gives no sRGB. Screen colours are an open item: they must come from Pantone's own published sRGB values, recorded with their source, never estimated. Table 1 writes Low as '<2' and Table 4 as '(1,2)'; this scale uses 0-2.",
+      "bands": [
+        {
+          "key": "low",
+          "label": "Low",
+          "min": 0,
+          "max": 2,
+          "colourName": "Green",
+          "pantone": "PMS 375",
+          "srgb": null
+        },
+        {
+          "key": "moderate",
+          "label": "Moderate",
+          "min": 3,
+          "max": 5,
+          "colourName": "Yellow",
+          "pantone": "PMS 102",
+          "srgb": null
+        },
+        {
+          "key": "high",
+          "label": "High",
+          "min": 6,
+          "max": 7,
+          "colourName": "Orange",
+          "pantone": "PMS 151",
+          "srgb": null
+        },
+        {
+          "key": "very_high",
+          "label": "Very high",
+          "min": 8,
+          "max": 10,
+          "colourName": "Red",
+          "pantone": "PMS 032",
+          "srgb": null
+        },
+        {
+          "key": "extreme",
+          "label": "Extreme",
+          "min": 11,
+          "max": null,
+          "colourName": "Purple",
+          "pantone": "PMS 265",
+          "srgb": null
+        }
+      ]
+    },
+    "beaufort": {
+      "name": "Beaufort wind force",
+      "register": "wmo_beaufort",
+      "quantity": "wind speed at 10 m above open flat ground",
+      "unit": "m/s",
+      "source": {
+        "title": "Guide to Instruments and Methods of Observation (WMO-No. 8), Volume I, Chapter 5",
+        "edition": "2018 (preliminary edition, as published at the URL)",
+        "tables": "Table 5.1 Wind speed equivalents",
+        "url": "https://old.wmo.int/extranet/pages/prog/www/IMOP/publications/CIMO-Guide/Prelim_2018_ed/8_I_5_en_MR_tc.pdf",
+        "read": "2026-11-14"
+      },
+      "status": "adopted-breakpoints, colours-open",
+      "notes": "Breakpoints are WMO's, in m/s as given (Table 5.1 also gives kt, km/h and mi/h). WMO defines no colours; the ramp is Bundu's to set and is open.",
+      "bands": [
+        {
+          "force": 0,
+          "label": "Calm",
+          "min": 0.0,
+          "max": 0.2,
+          "srgb": null
+        },
+        {
+          "force": 1,
+          "label": "Light air",
+          "min": 0.3,
+          "max": 1.5,
+          "srgb": null
+        },
+        {
+          "force": 2,
+          "label": "Light breeze",
+          "min": 1.6,
+          "max": 3.3,
+          "srgb": null
+        },
+        {
+          "force": 3,
+          "label": "Gentle breeze",
+          "min": 3.4,
+          "max": 5.4,
+          "srgb": null
+        },
+        {
+          "force": 4,
+          "label": "Moderate breeze",
+          "min": 5.5,
+          "max": 7.9,
+          "srgb": null
+        },
+        {
+          "force": 5,
+          "label": "Fresh breeze",
+          "min": 8.0,
+          "max": 10.7,
+          "srgb": null
+        },
+        {
+          "force": 6,
+          "label": "Strong breeze",
+          "min": 10.8,
+          "max": 13.8,
+          "srgb": null
+        },
+        {
+          "force": 7,
+          "label": "Near gale",
+          "min": 13.9,
+          "max": 17.1,
+          "srgb": null
+        },
+        {
+          "force": 8,
+          "label": "Gale",
+          "min": 17.2,
+          "max": 20.7,
+          "srgb": null
+        },
+        {
+          "force": 9,
+          "label": "Strong gale",
+          "min": 20.8,
+          "max": 24.4,
+          "srgb": null
+        },
+        {
+          "force": 10,
+          "label": "Storm",
+          "min": 24.5,
+          "max": 28.4,
+          "srgb": null
+        },
+        {
+          "force": 11,
+          "label": "Violent storm",
+          "min": 28.5,
+          "max": 32.6,
+          "srgb": null
+        },
+        {
+          "force": 12,
+          "label": "Hurricane",
+          "min": 32.7,
+          "max": null,
+          "srgb": null
+        }
+      ]
+    }
+  },
+  "open": [
+    "temperature (breakpoints in Cel, ramp from a published diverging scheme)",
+    "rain rate (mm/h)",
+    "radar reflectivity (dBZ)",
+    "cloud cover",
+    "UV Index screen colours from Pantone's published sRGB",
+    "Beaufort colours",
+    "dark-theme variants",
+    "colour-vision-deficiency separation results for every scale"
+  ]
+}

@@ -78,6 +78,19 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Research notes 0002 and 0003, both open briefs with no findings yet:
+  what each level of weather station should measure, from a homestead to an
+  industrial or network station (`docs/research/0002-station-tiers.md`), and
+  how hand-read rain gauges and manual stations across Africa can send their
+  readings into the Bundu Weather Commons in one standard form
+  (`docs/research/0003-analog-station-uploads.md`). Owner's direction,
+  2026-11-14: "we should be researching what should be included in a
+  different levels of stationkits, home to industrial to much larger. We
+  should also be working on ways to support analog stations across Africa to
+  upload data into the platform and how we standardize the uploads and find
+  easier ways for people to provide data easily." Both name the standards that
+  apply by register id and say what would close them.
+
 - Proposed seven standards that the October 2026 standards audit found in use
   on the data platform and not in the register (nyuchi/data-infra#94, tracked in
   #179): H3 (places, release 4.5.0), IPTC ninjs (news, version 3.2), IPTC

@@ -68,6 +68,10 @@ Versions released before then are not renumbered.
 
 ### Fixed
 
+- Updated Astro, which builds standards.bundu.org, from 7.3.3 to 7.4.12. The
+  patch releases tighten how `Host` and the `X-Forwarded-*` headers are
+  validated against `security.allowedDomains`, among other fixes. This replaces
+  Dependabot's PR #55, which targeted `main`; changes go to `staging`.
 - `standards.bundu.org/register/latest` answered 502 ("The repository answered
   403") for a share of requests: it asked GitHub's REST API for the head of
   `main` without a token, and Cloudflare's shared egress addresses run out of

@@ -132,6 +132,11 @@ jobs:
       - name: Register tool tests
         run: python3 -m unittest discover register/tools
 
+      - name: Weather colour scales are valid and their results are current
+        run: |
+          python3 standards/weather-colour-scales/scales.py check
+          python3 -m unittest standards/weather-colour-scales/test_scales.py
+
   # standards.bundu.org: the Worker that serves the register at a commit.
   endpoint:
     runs-on: ubuntu-latest

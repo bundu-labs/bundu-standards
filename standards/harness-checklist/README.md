@@ -23,6 +23,7 @@ the gaps. Claims are labelled **measured** (read at source on the date and URL g
 | Sandbox lifecycle    | create, run in and destroy a sandbox through a standard protocol | OpenSandbox (Agentic AI Foundation project; **not yet read at source here**) | not verified                                                                                |
 | Editor to agent      | if it talks to an editor, use ACP                                | Agent Client Protocol (`proposed`)                                           | protocol v1 stable; Apache-2.0; Zed-led, no foundation host found (coordinator, 2026-11-11) |
 | Stored conversations | export and import chats, projects, saved answers                 | Bundu Conversation Interchange (draft, #47)                                  | draft 0.1.0                                                                                 |
+| Session log          | write each session as an ordered trajectory                      | ATIF (adopted 2026-11-14)                                                    | ATIF-v1.8 (RFC 0001, Active, April 2026); Apache-2.0                                        |
 
 ## 2. Parts a second gap check found partly covered
 
@@ -47,9 +48,10 @@ document status **Development**, no release cut).
 3. **Cross-harness tool-call dialects**: Open Responses gives one wire shape; harnesses still differ
    in what they emit and accept. Not verified against DeepSeek, Qwen, GLM, Codex, Gemini CLI,
    OpenHands or goose session schemas. **Not verified.**
-4. **Portable session log for Bundu**: ATIF covers the need, but it is Harbor-hosted and evaluation
-   oriented. Whether Bundu adopts it, maps BCI's ordered `Message` stream to it, or neither, is an
-   open decision, not a gap to fill by writing a new format.
+4. **Portable session log: decided.** The owner adopted ATIF on 2026-11-14 (register id `atif`).
+   BCI's ordered `Message` stream maps onto ATIF steps rather than defining its own log; the mapping
+   is an open item on #48. ATIF is Harbor-hosted and evaluation-oriented, with no foundation host,
+   so the adoption is of the format, not an endorsement of its steward.
 
 Not checked: ISO/IEC SC 42 and IEEE items, LangGraph checkpoints, any importer actually losing data.
 

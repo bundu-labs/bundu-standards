@@ -109,6 +109,11 @@ Versions released before then are not renumbered.
   standards it uses: `us_epa_aqi` (EPA-403/B-26-003), `who_global_solar_uvi`
   (2002 guide) and `wmo_beaufort` (WMO-No. 8, Table 5.1). The owner approved
   the scope on 2026-11-14.
+- Adopted the Agent Trajectory Interchange Format (ATIF-v1.8, register id
+  `atif`) as the session log of an agent harness, on the owner's decision of
+  2026-11-14 ("adopt ATIF"). The harness conformance checklist now names it in
+  section 1 and records the decision in section 3; the BCI message stream maps
+  onto ATIF steps instead of defining its own log (#48, #50).
 
 - Proposed seven standards that the October 2026 standards audit found in use
   on the data platform and not in the register (nyuchi/data-infra#94, tracked in

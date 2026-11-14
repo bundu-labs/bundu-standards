@@ -13,6 +13,17 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+### CI
+
+- standards.bundu.org is deployed by Cloudflare Workers Builds, connected to
+  this repository in the Cloudflare dashboard, instead of
+  `.github/workflows/standards-endpoint-deploy.yml`, which is removed. That
+  workflow failed at its Deploy step on every run from 2026-11-10, most likely
+  because the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets were
+  never set, so the live site stayed at 78 standards. Only `main` deploys to
+  the live site now; other branches, `staging` included, get preview versions.
+  The post-deploy smoke test went with the workflow.
+
 ### Changed
 
 - Adopted ten standards that were proposed: H3, IPTC ninjs, IPTC Digital

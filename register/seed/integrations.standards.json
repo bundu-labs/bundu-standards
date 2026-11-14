@@ -851,6 +851,29 @@
     }
   },
   {
+    "_id": "standard_atif",
+    "_schemaVersion": "v3.1",
+    "displayName": "Agent Trajectory Interchange Format (ATIF)",
+    "category": "specification",
+    "description": "The session log of an agent harness: the ordered steps of a session (system, user and agent messages, tool calls, observations, metrics, embedded subagent trajectories), and the context-management convention that records compaction, pruning and injection. A Bundu Conversation Interchange message stream maps onto it rather than defining its own log.",
+    "versionCommitment": "ATIF-v1.8; pin the RFC version a consumer writes, and record it in each trajectory.",
+    "specificationUrl": "https://github.com/harbor-framework/harbor/blob/main/rfcs/0001-trajectory-format.md",
+    "documentationUrl": null,
+    "stewardOrganisation": "Harbor framework (harbor-framework/harbor; maintainer Boxuan Li)",
+    "usageNotes": "Licence Apache-2.0 (repository LICENSE, measured 2026-11-11 by the coordinator). It is Harbor's own format, written for evaluating and training agents, and it has no foundation host; adopting it means the log is portable, not that its steward is neutral. No release other than the RFC's version history.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "A portable session log exists, so we adopt it instead of writing a third format (AGENTS.md, the rule)."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_agent_client_protocol",
     "_schemaVersion": "v3.1",
     "displayName": "Agent Client Protocol (ACP)",

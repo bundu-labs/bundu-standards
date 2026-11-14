@@ -13,6 +13,86 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+## 0.5.0 - 2026-11-14
+
+### Changed
+
+- Adopted ten standards that were proposed: H3, IPTC ninjs, IPTC Digital
+  Source Type, Apache Avro, Activity Streams 2.0, SPDX, the Common Alerting
+  Protocol (CAP 1.2), OGC API - Common, SD-JWT VC and the Legal Entity Identifier
+  (ISO 17442). The decision is the owner's instruction of 2026-11-11 in the
+  coordinator's chat: "all the proposed standards please release them, into a
+  beta. if they are ones we are adopting then we fully adopt everything now",
+  then "we fully adopt". Each entry quotes it in `decided`. The Agent Client
+  Protocol stays proposed, as the owner decided earlier the same day (no
+  foundation host is confirmed). Adopting CAP the standard does not settle the
+  separate choice to push severe warnings only from an official CAP source,
+  which is still open. Adopted 88 to 98, proposed 11 to 1. REGISTER.md and the
+  integrations.standards seed are regenerated with `register.py write`; applying
+  the seed to the live collection is a separate step. Merging to `staging`
+  releases this to the live beta as the next patch.
+- Re-read UCUM at its source on 2026-11-11 (still version 2.2, 2024-06-17) and
+  recorded its licence in the entry: Regenstrief Institute's own UCUM Copyright
+  Notice and License, version 1.1, which is neither open-source nor Creative
+  Commons and bars modified copies and derivative works. UCUM was the eighth
+  standard on nyuchi/data-infra#94; it was already adopted (2026-10-30), so it
+  gets no new entry and stays adopted.
+- Adopted three standards from the Agentic AI Foundation: Agent Skills, Open
+  Responses and AGENTS.md. The decision recorded is the owner's instruction of
+  2026-11-11 in the coordinator's chat ("Adopt the three AAIF projects, ACP
+  stays proposed"). Each was read at its source on 2026-11-11. Agent Skills and
+  AGENTS.md have no version (no tags, none stated on their pages), so a consumer
+  pins the commit; Open Responses is versioned by immutable dated releases, the
+  latest 2026-04-24, and a consumer pins that dated file, not the "latest" one,
+  which differs from it. The licences are recorded as the repositories state
+  them: Agent Skills code Apache-2.0 and documentation CC-BY-4.0, Open Responses
+  code Apache-2.0 and documentation CC BY 4.0, AGENTS.md MIT. Applying the seed
+  to the live `integrations.standards` collection is an owner step and was not
+  done.
+
+### Added
+
+- Proposed seven standards that the October 2026 standards audit found in use
+  on the data platform and not in the register (nyuchi/data-infra#94, tracked in
+  #179): H3 (places, release 4.5.0), IPTC ninjs (news, version 3.2), IPTC
+  Digital Source Type (news, released 2024-10-23), Apache Avro (streaming,
+  release 1.12.2), Activity Streams 2.0 (communication, W3C Recommendations of
+  2017-05-23), SPDX (open data, specification 3.0.1 and License List 3.29.0) and
+  the Legal Entity Identifier (identity, ISO 17442-1:2020 and -2:2020). Each was
+  read at its source on 2026-11-11, and its entry records the steward, the
+  version, the licence of the specification and of any reference code, and where
+  the platform uses it. They stay `proposed`, not adopted: #94 lists them and
+  says that adding a standard is an owner decision. Two findings are recorded in
+  the entries: ISO/IEC 5962:2021 is SPDX 2.2.1 and SPDX 3.0 is in ISO's final
+  approval stage (50.20) and not yet published; IPTC's ninjs page still names 3.0
+  as current while its repository and schema say 3.2. Applying the seed to the
+  live `integrations.standards` collection is an owner step and was not done.
+- Draft of Bundu Conversation Interchange 0.1.0 (`standards/conversation-interchange/`): a JSON
+  Schema, JSON-LD context, an example stream and tests for how conversations, messages, projects,
+  saved answers and memory are written down so a person can move them between assistants. A thin
+  profile: a message holds an Open Responses item unchanged. Registered as `bci`, `proposed`. Not
+  published until the owner approves its scope (#48).
+- Proposed the Agent Client Protocol (ACP; protocol version 1 is the stable
+  version and version 2 is in alpha), read at its source on 2026-11-11. It
+  standardises how a code editor drives a coding agent. Its governance is
+  interim, jointly Zed and JetBrains, and no foundation host is confirmed, so it
+  stays `proposed` (the owner left it so on 2026-11-11). It is not IBM's Agent
+  Communication Protocol, which merged into A2A.
+
+### CI
+
+- standards.bundu.org is deployed by Cloudflare Workers Builds, connected to
+  this repository in the Cloudflare dashboard, instead of
+  `.github/workflows/standards-endpoint-deploy.yml`, which is removed. That
+  workflow failed at its Deploy step on every run from 2026-11-10, most likely
+  because the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets were
+  never set, so the live site stayed at 78 standards. Only `main` deploys to
+  the live site now; other branches, `staging` included, get preview versions.
+  The post-deploy smoke test went with the workflow.
+- The site builds and is tested on Node 24, in CI and on Workers Builds
+  (`NODE_VERSION` 24): Node 22 is no longer supported. `workers/standards`
+  requires Node 24 or later (`engines`).
+
 ## 0.4.0 - 2026-11-11
 
 ### Changed

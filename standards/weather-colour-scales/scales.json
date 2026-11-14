@@ -21,7 +21,10 @@
         "url": "https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf",
         "edition": "May 2026",
         "checked": "2026-11-14",
-        "claim": "measured"
+        "claim": "measured: RGB values from Table 2 and ColorVision Assist values from Table 3, read at source 2026-11-14",
+        "document": "EPA-403/B-26-003",
+        "tables": "Table 1 (names and colours), Table 2 (standard RGB and CMYK), Table 3 (ColorVision Assist)",
+        "register": "us_epa_aqi"
       },
       "bands": [
         {
@@ -80,7 +83,10 @@
         "url": "https://www.who.int/publications/i/item/9241590076",
         "edition": "2002",
         "checked": "2026-11-14",
-        "claim": "measured for categories and Pantone codes; the hex values are inferred from the Pantone codes and must be checked against Pantone's published sRGB"
+        "claim": "measured for categories, colour names and Pantone codes (Table 4); the hex values are inferred from the Pantone codes and must be checked against Pantone's published sRGB or WHO's EPS files at who.int/uv",
+        "document": "ISBN 92 4 159007 6",
+        "tables": "Table 4 (names and Pantone codes)",
+        "register": "who_global_solar_uvi"
       },
       "bands": [
         {
@@ -88,38 +94,43 @@
           "max": 3,
           "label": "Low",
           "colour": "#97D700",
-          "pantone": "375"
+          "pantone": "375",
+          "colour_name": "Green"
         },
         {
           "min": 3,
           "max": 6,
           "label": "Moderate",
           "colour": "#FCE300",
-          "pantone": "102"
+          "pantone": "102",
+          "colour_name": "Yellow"
         },
         {
           "min": 6,
           "max": 8,
           "label": "High",
           "colour": "#FF8200",
-          "pantone": "151"
+          "pantone": "151",
+          "colour_name": "Orange"
         },
         {
           "min": 8,
           "max": 11,
           "label": "Very high",
           "colour": "#EF3340",
-          "pantone": "032"
+          "pantone": "032",
+          "colour_name": "Red"
         },
         {
           "min": 11,
           "max": null,
           "label": "Extreme",
           "colour": "#9063CD",
-          "pantone": "265"
+          "pantone": "265",
+          "colour_name": "Purple"
         }
       ],
-      "notes": "The UVI is reported as a whole number; round before choosing a band."
+      "notes": "The UVI is reported as a whole number; round before choosing a band. The guide names the Extreme colour Purple (PMS 265). Its Table 1 writes Low as '<2'; the bands here follow Table 4."
     },
     {
       "id": "temperature",
@@ -141,15 +152,60 @@
           "label": "Below −10 °C",
           "colour": "#313695"
         },
-        { "min": -10, "max": 0, "label": "−10 to 0 °C", "colour": "#4575B4" },
-        { "min": 0, "max": 5, "label": "0 to 5 °C", "colour": "#74ADD1" },
-        { "min": 5, "max": 10, "label": "5 to 10 °C", "colour": "#ABD9E9" },
-        { "min": 10, "max": 15, "label": "10 to 15 °C", "colour": "#E0F3F8" },
-        { "min": 15, "max": 20, "label": "15 to 20 °C", "colour": "#FFFFBF" },
-        { "min": 20, "max": 25, "label": "20 to 25 °C", "colour": "#FEE090" },
-        { "min": 25, "max": 30, "label": "25 to 30 °C", "colour": "#FDAE61" },
-        { "min": 30, "max": 35, "label": "30 to 35 °C", "colour": "#F46D43" },
-        { "min": 35, "max": 40, "label": "35 to 40 °C", "colour": "#D73027" },
+        {
+          "min": -10,
+          "max": 0,
+          "label": "−10 to 0 °C",
+          "colour": "#4575B4"
+        },
+        {
+          "min": 0,
+          "max": 5,
+          "label": "0 to 5 °C",
+          "colour": "#74ADD1"
+        },
+        {
+          "min": 5,
+          "max": 10,
+          "label": "5 to 10 °C",
+          "colour": "#ABD9E9"
+        },
+        {
+          "min": 10,
+          "max": 15,
+          "label": "10 to 15 °C",
+          "colour": "#E0F3F8"
+        },
+        {
+          "min": 15,
+          "max": 20,
+          "label": "15 to 20 °C",
+          "colour": "#FFFFBF"
+        },
+        {
+          "min": 20,
+          "max": 25,
+          "label": "20 to 25 °C",
+          "colour": "#FEE090"
+        },
+        {
+          "min": 25,
+          "max": 30,
+          "label": "25 to 30 °C",
+          "colour": "#FDAE61"
+        },
+        {
+          "min": 30,
+          "max": 35,
+          "label": "30 to 35 °C",
+          "colour": "#F46D43"
+        },
+        {
+          "min": 35,
+          "max": 40,
+          "label": "35 to 40 °C",
+          "colour": "#D73027"
+        },
         {
           "min": 40,
           "max": null,
@@ -165,12 +221,13 @@
       "unit": "km/h",
       "origin": "ours",
       "source": {
-        "title": "Beaufort scale breakpoints (WMO); ramp ColorBrewer YlGnBu, 7 classes",
+        "title": "Beaufort scale wind speed equivalents (WMO); ramp ColorBrewer YlGnBu, 7 classes",
         "steward": "WMO (breakpoints); Cynthia Brewer, Penn State (ramp)",
-        "url": "https://community.wmo.int/en/activity-areas/marine/beaufort-scale",
-        "edition": "WMO-No. 306 code table 1100",
+        "url": "https://old.wmo.int/extranet/pages/prog/www/IMOP/publications/CIMO-Guide/Prelim_2018_ed/8_I_5_en_MR_tc.pdf",
+        "edition": "WMO-No. 8, Vol. I, Ch. 5, Table 5.1 (2018 preliminary edition), at 10 m above open flat ground",
         "checked": "2026-11-14",
-        "claim": "inferred: breakpoints are the standard km/h equivalents of Beaufort forces, grouped in pairs; verify against WMO-No. 306"
+        "claim": "measured: each lower bound is where Beaufort forces 2, 4, 6, 8, 10 and 12 begin in Table 5.1; the ramp is ours",
+        "register": "wmo_beaufort"
       },
       "bands": [
         {
@@ -216,7 +273,7 @@
           "colour": "#0C2C84"
         }
       ],
-      "notes": "Breakpoints are Beaufort's; the colour ramp is ours, because no published wind colour standard was found."
+      "notes": "Breakpoints are Beaufort's; the colour ramp is ours, because no published wind colour standard was found. WMO's km/h columns are rounded integers; the exact paired bounds in m/s are 0, 1.6, 5.5, 10.8, 17.2, 24.5 and 32.7."
     },
     {
       "id": "rain_rate",
@@ -232,10 +289,30 @@
         "claim": "inferred: the class limits (light below 2.5, moderate 2.5–10, heavy 10–50, violent above 50 mm/h) must be checked against WMO-No. 8"
       },
       "bands": [
-        { "min": 0.1, "max": 2.5, "label": "Light", "colour": "#BDD7E7" },
-        { "min": 2.5, "max": 10, "label": "Moderate", "colour": "#6BAED6" },
-        { "min": 10, "max": 50, "label": "Heavy", "colour": "#3182BD" },
-        { "min": 50, "max": null, "label": "Violent", "colour": "#08519C" }
+        {
+          "min": 0.1,
+          "max": 2.5,
+          "label": "Light",
+          "colour": "#BDD7E7"
+        },
+        {
+          "min": 2.5,
+          "max": 10,
+          "label": "Moderate",
+          "colour": "#6BAED6"
+        },
+        {
+          "min": 10,
+          "max": 50,
+          "label": "Heavy",
+          "colour": "#3182BD"
+        },
+        {
+          "min": 50,
+          "max": null,
+          "label": "Violent",
+          "colour": "#08519C"
+        }
       ],
       "notes": "Below 0.1 mm/h nothing is drawn. Radar reflectivity (dBZ) is a separate scale, not yet adopted: the NWS progression has no published specification or licence statement found."
     },
@@ -253,8 +330,18 @@
         "claim": "inferred: verify the okta grouping against WMO-No. 306"
       },
       "bands": [
-        { "min": 0, "max": 1, "label": "Clear (0 oktas)", "colour": "#F7F7F7" },
-        { "min": 1, "max": 3, "label": "Few (1–2 oktas)", "colour": "#D9D9D9" },
+        {
+          "min": 0,
+          "max": 1,
+          "label": "Clear (0 oktas)",
+          "colour": "#F7F7F7"
+        },
+        {
+          "min": 1,
+          "max": 3,
+          "label": "Few (1–2 oktas)",
+          "colour": "#D9D9D9"
+        },
         {
           "min": 3,
           "max": 5,

@@ -1682,6 +1682,76 @@ standards:
       A person's history belongs to the person, not to a product. If none exists we
       build one and publish it (AGENTS.md, the rule).
 
+  - id: us_epa_aqi
+    name: US Air Quality Index (AQI) categories and colours
+    domain: weather
+    category: specification
+    steward: US EPA
+    commitment: EPA-403/B-26-003 (May 2026); categories, breakpoints and colours unchanged.
+    current: >-
+      Technical Assistance Document for the Reporting of Daily Air Quality – the
+      Air Quality Index (AQI), EPA-403/B-26-003, May 2026 (read 2026-11-14).
+      PM2.5 Good is 0.0–9.0 µg/m3 (Table 6).
+    governs: >-
+      How air quality is reported to people: the six AQI categories, their index
+      ranges, names and colours (Table 2), and the ColorVision Assist colours for
+      colour-blind display (Table 3). Used by the weather colour scales.
+    status: adopted
+    decided: >-
+      Owner approval 2026-11-14 in the marketing session ("start #39", then "i
+      approve of all the of standards"); scope in #39
+    url: https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf
+    notes: >-
+      A US index. Where a country publishes its own index (Canada's AQHI, the EU
+      EAQI), that index is proposed separately and replaces the AQI for that
+      country. US federal works are not subject to US copyright.
+
+  - id: who_global_solar_uvi
+    name: Global Solar UV Index (UVI)
+    domain: weather
+    category: specification
+    steward: WHO, WMO, UNEP and ICNIRP (joint recommendation)
+    commitment: Global Solar UV Index – A Practical Guide (2002), ISBN 92 4 159007 6.
+    current: >-
+      2002 edition, the current guide (read 2026-11-14 from WHO IRIS, file
+      9241590076.pdf). Categories Low (1–2), Moderate (3–5), High (6–7), Very high
+      (8–10), Extreme (11+); colours given as Pantone codes (Table 4).
+    governs: >-
+      How UV radiation is reported: the index, its whole-number rounding, the
+      five exposure categories and their colours. Used by the weather colour
+      scales.
+    status: adopted
+    decided: >-
+      Owner approval 2026-11-14 in the marketing session ("start #39", then "i
+      approve of all the of standards"); scope in #39
+    url: https://www.who.int/publications/i/item/9241590076
+    notes: >-
+      The guide gives Pantone codes, not sRGB (footnote 1 points to EPS files at
+      who.int/uv for the standardised scheme). The sRGB values in the colour
+      scales are inferred until checked against those files.
+
+  - id: wmo_beaufort
+    name: Beaufort scale (WMO wind speed equivalents)
+    domain: weather
+    category: specification
+    steward: WMO
+    commitment: WMO-No. 8, Vol. I, Ch. 5, Table 5.1; m/s is the exact unit.
+    current: >-
+      WMO-No. 8 (Guide to Instruments and Methods of Observation), Vol. I,
+      Chapter 5, Table 5.1 "Wind speed equivalents", 2018 preliminary edition,
+      at 10 m above open flat ground (read 2026-11-14).
+    governs: >-
+      The thirteen Beaufort forces and their wind speed equivalents in m/s,
+      knots and km/h. Used by the weather colour scales for wind bands.
+    status: adopted
+    decided: >-
+      Owner approval 2026-11-14 in the marketing session ("start #39", then "i
+      approve of all the of standards"); scope in #39
+    url: https://old.wmo.int/extranet/pages/prog/www/IMOP/publications/CIMO-Guide/Prelim_2018_ed/8_I_5_en_MR_tc.pdf
+    notes: >-
+      The km/h columns are rounded integers; convert from m/s for exact bounds.
+      Check the current WMO-No. 8 edition against the 2018 preliminary text.
+
   - id: weather_colour_scales
     name: Weather data colour scales
     domain: weather

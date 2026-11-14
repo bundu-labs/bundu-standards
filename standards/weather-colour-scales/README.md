@@ -17,14 +17,14 @@ one here, so that every app built on the platform shows the same reading in the 
 `scales.json` holds every scale as data, so apps and Workers import it rather than copy it. Each band
 is `[min, max)` in the scale's UCUM unit, with a label and an sRGB colour.
 
-| Scale                 | Unit      | Origin                                                                     |
-| --------------------- | --------- | -------------------------------------------------------------------------- |
-| Air quality (US AQI)  | `{index}` | **Adopted.** US EPA, Technical Assistance Document, May 2026               |
-| UV index              | `{index}` | **Adopted.** WHO, WMO, UNEP, ICNIRP: Global Solar UV Index, 2002           |
-| Air temperature       | `Cel`     | **Ours.** Breakpoints ours; ColorBrewer RdYlBu ramp                        |
-| Wind speed (Beaufort) | `km/h`    | **Ours.** Beaufort breakpoints (WMO); ColorBrewer YlGnBu ramp              |
-| Rainfall rate         | `mm/h`    | **Ours.** WMO rainfall intensity classes; ColorBrewer Blues ramp           |
-| Cloud cover           | `{okta}`  | **Ours.** Okta classes as in METAR (FEW, SCT, BKN, OVC); ColorBrewer Greys |
+| Scale                 | Unit      | Origin                                                                                                 |
+| --------------------- | --------- | ------------------------------------------------------------------------------------------------------ |
+| Air quality (US AQI)  | `{index}` | **Adopted.** US EPA, EPA-403/B-26-003, May 2026 (register `us_epa_aqi`)                                |
+| UV index              | `{index}` | **Adopted.** WHO, WMO, UNEP, ICNIRP, 2002 (register `who_global_solar_uvi`)                            |
+| Air temperature       | `Cel`     | **Ours.** Breakpoints ours; ColorBrewer RdYlBu ramp                                                    |
+| Wind speed (Beaufort) | `km/h`    | **Ours.** Beaufort breakpoints, WMO-No. 8 Table 5.1 (register `wmo_beaufort`); ColorBrewer YlGnBu ramp |
+| Rainfall rate         | `mm/h`    | **Ours.** WMO rainfall intensity classes; ColorBrewer Blues ramp                                       |
+| Cloud cover           | `{okta}`  | **Ours.** Okta classes as in METAR (FEW, SCT, BKN, OVC); ColorBrewer Greys                             |
 
 Each scale records its source, steward, edition, the date it was checked and whether each claim was
 **measured** at source or is **inferred**. Inferred claims are listed below and must be confirmed
@@ -58,8 +58,9 @@ ramp. Rule 1 covers both. The EPA publishes its own colour-blind palette for the
   values are Pantone's sRGB equivalents as we understand them and must be checked against Pantone.
 - **ColorBrewer licence.** The ramps are ColorBrewer's published values; the licence (Apache-2.0
   style) must be confirmed at source.
-- **Beaufort, rainfall and okta limits.** The km/h Beaufort equivalents, the WMO rainfall intensity
-  limits (2.5, 10, 50 mm/h) and the okta grouping must be checked against WMO-No. 306 and WMO-No. 8.
+- **Rainfall and okta limits.** The WMO rainfall intensity limits (2.5, 10, 50 mm/h) and the okta
+  grouping must be checked against WMO-No. 8 and WMO-No. 306. The Beaufort bounds were checked at
+  source (WMO-No. 8, Vol. I, Table 5.1) on 2026-11-14.
 
 ## Not yet covered
 

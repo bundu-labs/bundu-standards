@@ -1978,6 +1978,75 @@
     }
   },
   {
+    "_id": "standard_us_epa_aqi",
+    "_schemaVersion": "v3.1",
+    "displayName": "US Air Quality Index (AQI) categories and colours",
+    "category": "specification",
+    "description": "How air quality is reported to people: the six AQI categories, their index ranges, names and colours (Table 2), and the ColorVision Assist colours for colour-blind display (Table 3). Used by the weather colour scales.",
+    "versionCommitment": "EPA-403/B-26-003 (May 2026); categories, breakpoints and colours unchanged.",
+    "specificationUrl": "https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf",
+    "documentationUrl": null,
+    "stewardOrganisation": "US EPA",
+    "usageNotes": "A US index. Where a country publishes its own index (Canada's AQHI, the EU EAQI), that index is proposed separately and replaces the AQI for that country. US federal works are not subject to US copyright.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Owner approval 2026-11-14 in the marketing session (\"start #39\", then \"i approve of all the of standards\"); scope in #39"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_who_global_solar_uvi",
+    "_schemaVersion": "v3.1",
+    "displayName": "Global Solar UV Index (UVI)",
+    "category": "specification",
+    "description": "How UV radiation is reported: the index, its whole-number rounding, the five exposure categories and their colours. Used by the weather colour scales.",
+    "versionCommitment": "Global Solar UV Index – A Practical Guide (2002), ISBN 92 4 159007 6.",
+    "specificationUrl": "https://www.who.int/publications/i/item/9241590076",
+    "documentationUrl": null,
+    "stewardOrganisation": "WHO, WMO, UNEP and ICNIRP (joint recommendation)",
+    "usageNotes": "The guide gives Pantone codes, not sRGB (footnote 1 points to EPS files at who.int/uv for the standardised scheme). The sRGB values in the colour scales are inferred until checked against those files.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Owner approval 2026-11-14 in the marketing session (\"start #39\", then \"i approve of all the of standards\"); scope in #39"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_wmo_beaufort",
+    "_schemaVersion": "v3.1",
+    "displayName": "Beaufort scale (WMO wind speed equivalents)",
+    "category": "specification",
+    "description": "The thirteen Beaufort forces and their wind speed equivalents in m/s, knots and km/h. Used by the weather colour scales for wind bands.",
+    "versionCommitment": "WMO-No. 8, Vol. I, Ch. 5, Table 5.1; m/s is the exact unit.",
+    "specificationUrl": "https://old.wmo.int/extranet/pages/prog/www/IMOP/publications/CIMO-Guide/Prelim_2018_ed/8_I_5_en_MR_tc.pdf",
+    "documentationUrl": null,
+    "stewardOrganisation": "WMO",
+    "usageNotes": "The km/h columns are rounded integers; convert from m/s for exact bounds. Check the current WMO-No. 8 edition against the 2018 preliminary text.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Adopted: Owner approval 2026-11-14 in the marketing session (\"start #39\", then \"i approve of all the of standards\"); scope in #39"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_weather_colour_scales",
     "_schemaVersion": "v3.1",
     "displayName": "Weather data colour scales",

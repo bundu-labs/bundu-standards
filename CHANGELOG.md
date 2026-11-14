@@ -79,6 +79,20 @@ Versions released before then are not renumbered.
   stays `proposed` (the owner left it so on 2026-11-11). It is not IBM's Agent
   Communication Protocol, which merged into A2A.
 
+### CI
+
+- standards.bundu.org is deployed by Cloudflare Workers Builds, connected to
+  this repository in the Cloudflare dashboard, instead of
+  `.github/workflows/standards-endpoint-deploy.yml`, which is removed. That
+  workflow failed at its Deploy step on every run from 2026-11-10, most likely
+  because the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets were
+  never set, so the live site stayed at 78 standards. Only `main` deploys to
+  the live site now; other branches, `staging` included, get preview versions.
+  The post-deploy smoke test went with the workflow.
+- The site builds and is tested on Node 24, in CI and on Workers Builds
+  (`NODE_VERSION` 24): Node 22 is no longer supported. `workers/standards`
+  requires Node 24 or later (`engines`).
+
 ## 0.4.0 - 2026-11-11
 
 ### Changed

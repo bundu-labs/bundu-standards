@@ -86,8 +86,9 @@ trust. This matters most for `tools/register.py`, which a consumer runs.
 The site is `workers/standards/`, an Astro project on Cloudflare Workers with
 no database, no bindings and no secrets. Its pages (`/register/`, one per
 standard, `/register/index.json`) are built from `register/register.yaml`, so
-they cannot drift from it. It is deployed by
-`.github/workflows/standards-endpoint-deploy.yml` on every push to `main` or
-`staging` that changes the site or the register. It needs two repository
-secrets (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`) and fails loudly
-without them.
+they cannot drift from it. Cloudflare Workers Builds deploys it: the
+`bundu-standards` Worker is connected to this repository in the Cloudflare
+dashboard, with `workers/standards` as its root directory. A push to `main`
+deploys standards.bundu.org; a push to any other branch, `staging` included,
+uploads a preview version and leaves the live site alone. The repository holds
+no Cloudflare secrets. CI still tests and builds the site on every pull request.

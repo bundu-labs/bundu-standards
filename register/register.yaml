@@ -1682,6 +1682,26 @@ standards:
       A person's history belongs to the person, not to a product. If none exists we
       build one and publish it (AGENTS.md, the rule).
 
+  - id: weather_colour_scales
+    name: Weather data colour scales
+    domain: weather
+    category: specification
+    steward: Bundu Foundation
+    commitment: 0.1.0 draft (semver); released with the next staging-to-main release.
+    current: 0.1.0 draft, standards/weather-colour-scales/
+    governs: >-
+      The colours, breakpoints and labels every app uses to show weather data:
+      air quality, UV, temperature, wind, rainfall rate and cloud cover. Adopts
+      the US EPA AQI colours and the WHO Global Solar UV Index colours unchanged;
+      writes the scales no published standard covers. Units by UCUM.
+    status: proposed
+    decided: Owner approved the scope 2026-11-14 (#39)
+    url: https://standards.bundu.org/weather-colour-scales/
+    rationale: >-
+      Brand colours and invented scales mislead readers of weather data. Adopt
+      the published scale; where none exists, write one and publish it (AGENTS.md,
+      the rule).
+
   # --- adopted 2026-10-30: the standards the weather and agriculture models are
   # --- built on. Versions checked at source on 2026-10-30.
   - id: ucum

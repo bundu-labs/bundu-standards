@@ -1978,6 +1978,29 @@
     }
   },
   {
+    "_id": "standard_weather_colour_scales",
+    "_schemaVersion": "v3.1",
+    "displayName": "Weather data colour scales",
+    "category": "specification",
+    "description": "The colours, breakpoints and labels every app uses to show weather data: air quality, UV, temperature, wind, rainfall rate and cloud cover. Adopts the US EPA AQI colours and the WHO Global Solar UV Index colours unchanged; writes the scales no published standard covers. Units by UCUM.",
+    "versionCommitment": "0.1.0 draft (semver); released with the next staging-to-main release.",
+    "specificationUrl": "https://standards.bundu.org/weather-colour-scales/",
+    "documentationUrl": null,
+    "stewardOrganisation": "Bundu Foundation",
+    "usageNotes": null,
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Brand colours and invented scales mislead readers of weather data. Adopt the published scale; where none exists, write one and publish it (AGENTS.md, the rule)."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_ucum",
     "_schemaVersion": "v3.1",
     "displayName": "Unified Code for Units of Measure (UCUM)",

@@ -1,0 +1,166 @@
+{
+  "$comment": "Weather data colour scales, 0.1.0 draft. Generated results: results.md (python3 standards/weather-colour-scales/scales.py write). Bands are [min, max): min inclusive, max exclusive; null max is open-ended. Colours are sRGB hex.",
+  "version": "0.1.0",
+  "status": "draft",
+  "rules": [
+    "The band label or its value range is always printed beside the colour. Colour alone never carries the meaning.",
+    "Where a published scale exists it is adopted unchanged: breakpoints, labels and colours.",
+    "Brand colours (the Mzizi minerals) are never used for data scales.",
+    "Values are converted to the scale's UCUM unit at the edge before a band is chosen.",
+    "Where a swatch has less than 3:1 contrast with the surface it sits on (see results.md), it is drawn with a 1px border in the legend text colour."
+  ],
+  "scales": [
+    {
+      "id": "air_quality_us_aqi",
+      "name": "Air quality (US AQI)",
+      "unit": "{index}",
+      "origin": "adopted",
+      "source": {
+        "title": "Technical Assistance Document for the Reporting of Daily Air Quality – the Air Quality Index (AQI)",
+        "steward": "US EPA",
+        "url": "https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf",
+        "edition": "May 2026",
+        "checked": "2026-11-14",
+        "claim": "measured"
+      },
+      "bands": [
+        { "min": 0, "max": 51, "label": "Good", "colour": "#00E400", "assist": "#9EFF91" },
+        { "min": 51, "max": 101, "label": "Moderate", "colour": "#FFFF00", "assist": "#FFC905" },
+        {
+          "min": 101,
+          "max": 151,
+          "label": "Unhealthy for sensitive groups",
+          "colour": "#FF7E00",
+          "assist": "#FF8205"
+        },
+        { "min": 151, "max": 201, "label": "Unhealthy", "colour": "#FF0000", "assist": "#F02200" },
+        {
+          "min": 201,
+          "max": 301,
+          "label": "Very unhealthy",
+          "colour": "#8F3F97",
+          "assist": "#890997"
+        },
+        { "min": 301, "max": null, "label": "Hazardous", "colour": "#7E0023", "assist": "#640015" }
+      ],
+      "notes": "`assist` is the EPA's own ColorVision Assist palette from the same document, adopted for colour-blind display. The AQI is the US index; a national index (for example the AQHI or the EU EAQI) replaces it where a country publishes one."
+    },
+    {
+      "id": "uv_index",
+      "name": "UV index (Global Solar UV Index)",
+      "unit": "{index}",
+      "origin": "adopted",
+      "source": {
+        "title": "Global Solar UV Index: A Practical Guide",
+        "steward": "WHO, WMO, UNEP, ICNIRP",
+        "url": "https://www.who.int/publications/i/item/9241590076",
+        "edition": "2002",
+        "checked": "2026-11-14",
+        "claim": "measured for categories and Pantone codes; the hex values are inferred from the Pantone codes and must be checked against Pantone's published sRGB"
+      },
+      "bands": [
+        { "min": 0, "max": 3, "label": "Low", "colour": "#97D700", "pantone": "375" },
+        { "min": 3, "max": 6, "label": "Moderate", "colour": "#FCE300", "pantone": "102" },
+        { "min": 6, "max": 8, "label": "High", "colour": "#FF8200", "pantone": "151" },
+        { "min": 8, "max": 11, "label": "Very high", "colour": "#EF3340", "pantone": "032" },
+        { "min": 11, "max": null, "label": "Extreme", "colour": "#9063CD", "pantone": "265" }
+      ],
+      "notes": "The UVI is reported as a whole number; round before choosing a band."
+    },
+    {
+      "id": "temperature",
+      "name": "Air temperature",
+      "unit": "Cel",
+      "origin": "ours",
+      "source": {
+        "title": "ColorBrewer RdYlBu, 11 classes (ramp only; breakpoints are ours)",
+        "steward": "Cynthia Brewer, Penn State",
+        "url": "https://colorbrewer2.org/",
+        "edition": "2.0",
+        "checked": "2026-11-14",
+        "claim": "inferred: the ramp values are ColorBrewer's published RdYlBu-11; the licence (Apache-2.0-style) must be confirmed at source"
+      },
+      "bands": [
+        { "min": null, "max": -10, "label": "Below −10 °C", "colour": "#313695" },
+        { "min": -10, "max": 0, "label": "−10 to 0 °C", "colour": "#4575B4" },
+        { "min": 0, "max": 5, "label": "0 to 5 °C", "colour": "#74ADD1" },
+        { "min": 5, "max": 10, "label": "5 to 10 °C", "colour": "#ABD9E9" },
+        { "min": 10, "max": 15, "label": "10 to 15 °C", "colour": "#E0F3F8" },
+        { "min": 15, "max": 20, "label": "15 to 20 °C", "colour": "#FFFFBF" },
+        { "min": 20, "max": 25, "label": "20 to 25 °C", "colour": "#FEE090" },
+        { "min": 25, "max": 30, "label": "25 to 30 °C", "colour": "#FDAE61" },
+        { "min": 30, "max": 35, "label": "30 to 35 °C", "colour": "#F46D43" },
+        { "min": 35, "max": 40, "label": "35 to 40 °C", "colour": "#D73027" },
+        { "min": 40, "max": null, "label": "40 °C and above", "colour": "#A50026" }
+      ],
+      "notes": "No published standard sets temperature map breakpoints. These are chosen for the African range: fine steps where people live and work, open ends at both extremes. Cold to hot is blue to red."
+    },
+    {
+      "id": "wind_beaufort",
+      "name": "Wind speed (Beaufort)",
+      "unit": "km/h",
+      "origin": "ours",
+      "source": {
+        "title": "Beaufort scale breakpoints (WMO); ramp ColorBrewer YlGnBu, 7 classes",
+        "steward": "WMO (breakpoints); Cynthia Brewer, Penn State (ramp)",
+        "url": "https://community.wmo.int/en/activity-areas/marine/beaufort-scale",
+        "edition": "WMO-No. 306 code table 1100",
+        "checked": "2026-11-14",
+        "claim": "inferred: breakpoints are the standard km/h equivalents of Beaufort forces, grouped in pairs; verify against WMO-No. 306"
+      },
+      "bands": [
+        { "min": 0, "max": 6, "label": "Calm to light air (Beaufort 0–1)", "colour": "#FFFFCC" },
+        { "min": 6, "max": 20, "label": "Light to gentle breeze (2–3)", "colour": "#C7E9B4" },
+        { "min": 20, "max": 39, "label": "Moderate to fresh breeze (4–5)", "colour": "#7FCDBB" },
+        { "min": 39, "max": 62, "label": "Strong breeze to near gale (6–7)", "colour": "#41B6C4" },
+        { "min": 62, "max": 89, "label": "Gale to strong gale (8–9)", "colour": "#1D91C0" },
+        { "min": 89, "max": 118, "label": "Storm to violent storm (10–11)", "colour": "#225EA8" },
+        { "min": 118, "max": null, "label": "Hurricane force (12)", "colour": "#0C2C84" }
+      ],
+      "notes": "Breakpoints are Beaufort's; the colour ramp is ours, because no published wind colour standard was found."
+    },
+    {
+      "id": "rain_rate",
+      "name": "Rainfall rate",
+      "unit": "mm/h",
+      "origin": "ours",
+      "source": {
+        "title": "WMO rainfall intensity classes; ramp ColorBrewer Blues",
+        "steward": "WMO (classes); Cynthia Brewer, Penn State (ramp)",
+        "url": "https://library.wmo.int/idurl/4/68695",
+        "edition": "WMO-No. 8 (Guide to Instruments and Methods of Observation)",
+        "checked": "2026-11-14",
+        "claim": "inferred: the class limits (light below 2.5, moderate 2.5–10, heavy 10–50, violent above 50 mm/h) must be checked against WMO-No. 8"
+      },
+      "bands": [
+        { "min": 0.1, "max": 2.5, "label": "Light", "colour": "#BDD7E7" },
+        { "min": 2.5, "max": 10, "label": "Moderate", "colour": "#6BAED6" },
+        { "min": 10, "max": 50, "label": "Heavy", "colour": "#3182BD" },
+        { "min": 50, "max": null, "label": "Violent", "colour": "#08519C" }
+      ],
+      "notes": "Below 0.1 mm/h nothing is drawn. Radar reflectivity (dBZ) is a separate scale, not yet adopted: the NWS progression has no published specification or licence statement found."
+    },
+    {
+      "id": "cloud_cover",
+      "name": "Cloud cover",
+      "unit": "{okta}",
+      "origin": "ours",
+      "source": {
+        "title": "Okta cover classes as used in METAR (FEW, SCT, BKN, OVC); ramp ColorBrewer Greys",
+        "steward": "WMO / ICAO (classes); Cynthia Brewer, Penn State (ramp)",
+        "url": "https://library.wmo.int/idurl/4/35713",
+        "edition": "WMO-No. 306 Vol I.1",
+        "checked": "2026-11-14",
+        "claim": "inferred: verify the okta grouping against WMO-No. 306"
+      },
+      "bands": [
+        { "min": 0, "max": 1, "label": "Clear (0 oktas)", "colour": "#F7F7F7" },
+        { "min": 1, "max": 3, "label": "Few (1–2 oktas)", "colour": "#D9D9D9" },
+        { "min": 3, "max": 5, "label": "Scattered (3–4 oktas)", "colour": "#BDBDBD" },
+        { "min": 5, "max": 8, "label": "Broken (5–7 oktas)", "colour": "#969696" },
+        { "min": 8, "max": null, "label": "Overcast (8 oktas)", "colour": "#636363" }
+      ],
+      "notes": "Percent cover converts to oktas by eighths before a band is chosen."
+    }
+  ]
+}

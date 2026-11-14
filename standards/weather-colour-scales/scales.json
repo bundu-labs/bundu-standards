@@ -24,8 +24,20 @@
         "claim": "measured"
       },
       "bands": [
-        { "min": 0, "max": 51, "label": "Good", "colour": "#00E400", "assist": "#9EFF91" },
-        { "min": 51, "max": 101, "label": "Moderate", "colour": "#FFFF00", "assist": "#FFC905" },
+        {
+          "min": 0,
+          "max": 51,
+          "label": "Good",
+          "colour": "#00E400",
+          "assist": "#9EFF91"
+        },
+        {
+          "min": 51,
+          "max": 101,
+          "label": "Moderate",
+          "colour": "#FFFF00",
+          "assist": "#FFC905"
+        },
         {
           "min": 101,
           "max": 151,
@@ -33,7 +45,13 @@
           "colour": "#FF7E00",
           "assist": "#FF8205"
         },
-        { "min": 151, "max": 201, "label": "Unhealthy", "colour": "#FF0000", "assist": "#F02200" },
+        {
+          "min": 151,
+          "max": 201,
+          "label": "Unhealthy",
+          "colour": "#FF0000",
+          "assist": "#F02200"
+        },
         {
           "min": 201,
           "max": 301,
@@ -41,7 +59,13 @@
           "colour": "#8F3F97",
           "assist": "#890997"
         },
-        { "min": 301, "max": null, "label": "Hazardous", "colour": "#7E0023", "assist": "#640015" }
+        {
+          "min": 301,
+          "max": null,
+          "label": "Hazardous",
+          "colour": "#7E0023",
+          "assist": "#640015"
+        }
       ],
       "notes": "`assist` is the EPA's own ColorVision Assist palette from the same document, adopted for colour-blind display. The AQI is the US index; a national index (for example the AQHI or the EU EAQI) replaces it where a country publishes one."
     },
@@ -59,11 +83,41 @@
         "claim": "measured for categories and Pantone codes; the hex values are inferred from the Pantone codes and must be checked against Pantone's published sRGB"
       },
       "bands": [
-        { "min": 0, "max": 3, "label": "Low", "colour": "#97D700", "pantone": "375" },
-        { "min": 3, "max": 6, "label": "Moderate", "colour": "#FCE300", "pantone": "102" },
-        { "min": 6, "max": 8, "label": "High", "colour": "#FF8200", "pantone": "151" },
-        { "min": 8, "max": 11, "label": "Very high", "colour": "#EF3340", "pantone": "032" },
-        { "min": 11, "max": null, "label": "Extreme", "colour": "#9063CD", "pantone": "265" }
+        {
+          "min": 0,
+          "max": 3,
+          "label": "Low",
+          "colour": "#97D700",
+          "pantone": "375"
+        },
+        {
+          "min": 3,
+          "max": 6,
+          "label": "Moderate",
+          "colour": "#FCE300",
+          "pantone": "102"
+        },
+        {
+          "min": 6,
+          "max": 8,
+          "label": "High",
+          "colour": "#FF8200",
+          "pantone": "151"
+        },
+        {
+          "min": 8,
+          "max": 11,
+          "label": "Very high",
+          "colour": "#EF3340",
+          "pantone": "032"
+        },
+        {
+          "min": 11,
+          "max": null,
+          "label": "Extreme",
+          "colour": "#9063CD",
+          "pantone": "265"
+        }
       ],
       "notes": "The UVI is reported as a whole number; round before choosing a band."
     },
@@ -81,7 +135,12 @@
         "claim": "inferred: the ramp values are ColorBrewer's published RdYlBu-11; the licence (Apache-2.0-style) must be confirmed at source"
       },
       "bands": [
-        { "min": null, "max": -10, "label": "Below −10 °C", "colour": "#313695" },
+        {
+          "min": null,
+          "max": -10,
+          "label": "Below −10 °C",
+          "colour": "#313695"
+        },
         { "min": -10, "max": 0, "label": "−10 to 0 °C", "colour": "#4575B4" },
         { "min": 0, "max": 5, "label": "0 to 5 °C", "colour": "#74ADD1" },
         { "min": 5, "max": 10, "label": "5 to 10 °C", "colour": "#ABD9E9" },
@@ -91,7 +150,12 @@
         { "min": 25, "max": 30, "label": "25 to 30 °C", "colour": "#FDAE61" },
         { "min": 30, "max": 35, "label": "30 to 35 °C", "colour": "#F46D43" },
         { "min": 35, "max": 40, "label": "35 to 40 °C", "colour": "#D73027" },
-        { "min": 40, "max": null, "label": "40 °C and above", "colour": "#A50026" }
+        {
+          "min": 40,
+          "max": null,
+          "label": "40 °C and above",
+          "colour": "#A50026"
+        }
       ],
       "notes": "No published standard sets temperature map breakpoints. These are chosen for the African range: fine steps where people live and work, open ends at both extremes. Cold to hot is blue to red."
     },
@@ -109,13 +173,48 @@
         "claim": "inferred: breakpoints are the standard km/h equivalents of Beaufort forces, grouped in pairs; verify against WMO-No. 306"
       },
       "bands": [
-        { "min": 0, "max": 6, "label": "Calm to light air (Beaufort 0–1)", "colour": "#FFFFCC" },
-        { "min": 6, "max": 20, "label": "Light to gentle breeze (2–3)", "colour": "#C7E9B4" },
-        { "min": 20, "max": 39, "label": "Moderate to fresh breeze (4–5)", "colour": "#7FCDBB" },
-        { "min": 39, "max": 62, "label": "Strong breeze to near gale (6–7)", "colour": "#41B6C4" },
-        { "min": 62, "max": 89, "label": "Gale to strong gale (8–9)", "colour": "#1D91C0" },
-        { "min": 89, "max": 118, "label": "Storm to violent storm (10–11)", "colour": "#225EA8" },
-        { "min": 118, "max": null, "label": "Hurricane force (12)", "colour": "#0C2C84" }
+        {
+          "min": 0,
+          "max": 6,
+          "label": "Calm to light air (Beaufort 0–1)",
+          "colour": "#FFFFCC"
+        },
+        {
+          "min": 6,
+          "max": 20,
+          "label": "Light to gentle breeze (2–3)",
+          "colour": "#C7E9B4"
+        },
+        {
+          "min": 20,
+          "max": 39,
+          "label": "Moderate to fresh breeze (4–5)",
+          "colour": "#7FCDBB"
+        },
+        {
+          "min": 39,
+          "max": 62,
+          "label": "Strong breeze to near gale (6–7)",
+          "colour": "#41B6C4"
+        },
+        {
+          "min": 62,
+          "max": 89,
+          "label": "Gale to strong gale (8–9)",
+          "colour": "#1D91C0"
+        },
+        {
+          "min": 89,
+          "max": 118,
+          "label": "Storm to violent storm (10–11)",
+          "colour": "#225EA8"
+        },
+        {
+          "min": 118,
+          "max": null,
+          "label": "Hurricane force (12)",
+          "colour": "#0C2C84"
+        }
       ],
       "notes": "Breakpoints are Beaufort's; the colour ramp is ours, because no published wind colour standard was found."
     },
@@ -156,9 +255,24 @@
       "bands": [
         { "min": 0, "max": 1, "label": "Clear (0 oktas)", "colour": "#F7F7F7" },
         { "min": 1, "max": 3, "label": "Few (1–2 oktas)", "colour": "#D9D9D9" },
-        { "min": 3, "max": 5, "label": "Scattered (3–4 oktas)", "colour": "#BDBDBD" },
-        { "min": 5, "max": 8, "label": "Broken (5–7 oktas)", "colour": "#969696" },
-        { "min": 8, "max": null, "label": "Overcast (8 oktas)", "colour": "#636363" }
+        {
+          "min": 3,
+          "max": 5,
+          "label": "Scattered (3–4 oktas)",
+          "colour": "#BDBDBD"
+        },
+        {
+          "min": 5,
+          "max": 8,
+          "label": "Broken (5–7 oktas)",
+          "colour": "#969696"
+        },
+        {
+          "min": 8,
+          "max": null,
+          "label": "Overcast (8 oktas)",
+          "colour": "#636363"
+        }
       ],
       "notes": "Percent cover converts to oktas by eighths before a band is chosen."
     }

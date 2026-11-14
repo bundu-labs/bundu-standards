@@ -68,6 +68,13 @@ Versions released before then are not renumbered.
 
 ### Fixed
 
+- `standards.bundu.org/register/latest` answered 502 ("The repository answered
+  403") for a share of requests: it asked GitHub's REST API for the head of
+  `main` without a token, and Cloudflare's shared egress addresses run out of
+  that API's 60 requests an hour. When the API refuses, the endpoint now reads
+  the head of `main` from git's own ref advertisement (`info/refs`), which is
+  not held to that limit. Two tests cover the fallback and the case where
+  neither names `main`.
 - Removed an approval date (2022-03-24) from the OGC Tile Matrix Set entry: it
   could not be confirmed at the source (the Nyuchi Maps tile contract reads a
   different one), so the entry now states the status (Approved) and no date.

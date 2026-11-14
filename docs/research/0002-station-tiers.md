@@ -36,12 +36,12 @@ commons has one registered station.
 These are working hypotheses for the research to confirm or replace, not a
 specification.
 
-| Level | Who it is for | Candidate core | Open questions |
-| --- | --- | --- | --- |
-| Home and community | Homesteads, small plots, community gardens | Temperature, humidity, pressure, rainfall | Is rainfall without wind useful enough? What siting can a household realistically meet? |
-| Farm and school | Commercial farms, cooperatives, schools, clinics | Home, plus wind speed and direction, soil moisture, solar radiation or UV | Which soil depths? Is leaf wetness worth its cost for disease advice? |
-| Agrometeorological | Extension services, research farms, district forecasters | Farm, plus a ventilated radiation shield, soil temperature, evapotranspiration inputs, a calibration schedule | How close to WMO siting guidance must it be to count as reference-grade for the commons? |
-| Industrial and network | Mines, airfields, utilities, large estates, national networks | Agrometeorological, plus redundancy, lightning, visibility, and particulate air quality where relevant | Which of these belong in a station and which in a separate instrument? What uptime and maintenance commitment comes with the level? |
+| Level                  | Who it is for                                                 | Candidate core                                                                                                | Open questions                                                                                                                      |
+| ---------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Home and community     | Homesteads, small plots, community gardens                    | Temperature, humidity, pressure, rainfall                                                                     | Is rainfall without wind useful enough? What siting can a household realistically meet?                                             |
+| Farm and school        | Commercial farms, cooperatives, schools, clinics              | Home, plus wind speed and direction, soil moisture, solar radiation or UV                                     | Which soil depths? Is leaf wetness worth its cost for disease advice?                                                               |
+| Agrometeorological     | Extension services, research farms, district forecasters      | Farm, plus a ventilated radiation shield, soil temperature, evapotranspiration inputs, a calibration schedule | How close to WMO siting guidance must it be to count as reference-grade for the commons?                                            |
+| Industrial and network | Mines, airfields, utilities, large estates, national networks | Agrometeorological, plus redundancy, lightning, visibility, and particulate air quality where relevant        | Which of these belong in a station and which in a separate instrument? What uptime and maintenance commitment comes with the level? |
 
 ## How the research will answer it
 

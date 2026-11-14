@@ -41,13 +41,13 @@ administrative area), `ogc_sensorthings` (how the result is served).
 
 ## Ways in to test
 
-| Channel | Suits | To find out |
-| --- | --- | --- |
-| A spreadsheet template (CSVW) | Schools, offices, anyone with a computer and months of logbook to enter | Can one template cover rainfall-only gauges and full manual stations? |
-| A short form in Mukoko Weather | Smartphone users reading one gauge daily | How few taps does a daily rainfall reading need? |
-| SMS, USSD or WhatsApp with a fixed message shape | Feature phones, low data, the most remote observers | What message shape survives typing errors, and how is the sender bound to a station? |
-| A photo of the logbook page, read and confirmed by the observer | Historical records and observers who will not type | How accurate is reading handwritten tables, and what must a person confirm? |
-| Bulk transfer from a partner's records | Extension services, research farms, NGOs with archives | What licence and attribution terms let the data be published? |
+| Channel                                                         | Suits                                                                   | To find out                                                                          |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| A spreadsheet template (CSVW)                                   | Schools, offices, anyone with a computer and months of logbook to enter | Can one template cover rainfall-only gauges and full manual stations?                |
+| A short form in Mukoko Weather                                  | Smartphone users reading one gauge daily                                | How few taps does a daily rainfall reading need?                                     |
+| SMS, USSD or WhatsApp with a fixed message shape                | Feature phones, low data, the most remote observers                     | What message shape survives typing errors, and how is the sender bound to a station? |
+| A photo of the logbook page, read and confirmed by the observer | Historical records and observers who will not type                      | How accurate is reading handwritten tables, and what must a person confirm?          |
+| Bulk transfer from a partner's records                          | Extension services, research farms, NGOs with archives                  | What licence and attribution terms let the data be published?                        |
 
 ## Questions the research must answer
 

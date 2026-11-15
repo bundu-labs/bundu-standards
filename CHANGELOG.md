@@ -39,6 +39,10 @@ Versions released before then are not renumbered.
 
 ### CI
 
+- The 0.6.0 changelog is carried onto `staging`, so `main` and `staging` stop
+  disagreeing on it. The 0.5.0 and 0.6.0 releases copied staging's tree onto
+  `main` without its history, which made every automatic release PR conflict
+  (#64); the next release is a true merge of `staging` into `main`.
 - `.github/dependabot.yml`: Dependabot opens its version and security PRs
   against `staging` (npm for `workers/standards`, cargo, GitHub Actions; Astro
   and `@astrojs/*` grouped), so its PRs follow the release flow instead of

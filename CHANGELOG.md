@@ -13,6 +13,63 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+## 0.6.0 - 2026-11-15
+
+### Added
+
+- Research notes 0002 and 0003, both open briefs with no findings yet:
+  what each level of weather station should measure, from a homestead to an
+  industrial or network station (`docs/research/0002-station-tiers.md`), and
+  how hand-read rain gauges and manual stations across Africa can send their
+  readings into the Bundu Weather Commons in one standard form
+  (`docs/research/0003-analog-station-uploads.md`). Owner's direction,
+  2026-11-14: "we should be researching what should be included in a
+  different levels of stationkits, home to industrial to much larger. We
+  should also be working on ways to support analog stations across Africa to
+  upload data into the platform and how we standardize the uploads and find
+  easier ways for people to provide data easily." Both name the standards that
+  apply by register id and say what would close them.
+- Weather data colour scales, 0.1.0 draft (`standards/weather-colour-scales/`,
+  #39): six scales as data in `scales.json`. The US EPA AQI colours (May 2026
+  Technical Assistance Document, with the EPA's own ColorVision Assist palette)
+  and the WHO Global Solar UV Index colours are adopted unchanged; temperature,
+  wind (Beaufort breakpoints), rainfall rate (WMO intensity classes) and cloud
+  cover (oktas) are ours, with ColorBrewer ramps. `scales.py` generates
+  `results.md`: legend text contrast (AA enforced), swatch contrast on light and
+  dark surfaces, and neighbour separation under simulated colour-blindness.
+  Register entry `weather_colour_scales`, proposed. Adopted the three external
+  standards it uses: `us_epa_aqi` (EPA-403/B-26-003), `who_global_solar_uvi`
+  (2002 guide) and `wmo_beaufort` (WMO-No. 8, Table 5.1). The owner approved
+  the scope on 2026-11-14.
+- Adopted the Agent Trajectory Interchange Format (ATIF-v1.8, register id
+  `atif`) as the session log of an agent harness, on the owner's decision of
+  2026-11-14 ("adopt ATIF"). The harness conformance checklist now names it in
+  section 1 and records the decision in section 3; the BCI message stream maps
+  onto ATIF steps instead of defining its own log (#48, #50).
+- A draft harness conformance checklist (`standards/harness-checklist/`, #50).
+  It lists what an agent harness should meet from the standards the register
+  already adopts; it is a checklist, not a standard of its own. Shamwari's
+  gateway and harness were the first two audits against it.
+
+### Fixed
+
+- Updated Astro, which builds standards.bundu.org, from 7.3.3 to 7.4.12. The
+  patch releases tighten how `Host` and the `X-Forwarded-*` headers are
+  validated against `security.allowedDomains`, among other fixes. This replaces
+  Dependabot's PR #55, which targeted `main`; changes go to `staging`.
+- `standards.bundu.org/register/latest` answered 502 ("The repository answered
+  403") for a share of requests: it asked GitHub's REST API for the head of
+  `main` without a token, and Cloudflare's shared egress addresses run out of
+  that API's 60 requests an hour. When the API refuses, the endpoint now reads
+  the head of `main` from git's own ref advertisement (`info/refs`), which is
+  not held to that limit. Two tests cover the fallback and the case where
+  neither names `main`.
+
+### CI
+
+- CI runs the weather colour scales check (`scales.py check`) and its tests,
+  so `results.md` cannot drift from `scales.json`.
+
 ## 0.5.0 - 2026-11-14
 
 ### Changed

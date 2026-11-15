@@ -37,56 +37,6 @@ Versions released before then are not renumbered.
   single green SVG that did not follow the theme. vocab.bundu.org serves the
   same files from the binary, and a test keeps its copies identical to the
   standards site's.
-- Adopted ten standards that were proposed: H3, IPTC ninjs, IPTC Digital
-  Source Type, Apache Avro, Activity Streams 2.0, SPDX, the Common Alerting
-  Protocol (CAP 1.2), OGC API - Common, SD-JWT VC and the Legal Entity Identifier
-  (ISO 17442). The decision is the owner's instruction of 2026-11-11 in the
-  coordinator's chat: "all the proposed standards please release them, into a
-  beta. if they are ones we are adopting then we fully adopt everything now",
-  then "we fully adopt". Each entry quotes it in `decided`. The Agent Client
-  Protocol stays proposed, as the owner decided earlier the same day (no
-  foundation host is confirmed). Adopting CAP the standard does not settle the
-  separate choice to push severe warnings only from an official CAP source,
-  which is still open. Adopted 88 to 98, proposed 11 to 1. REGISTER.md and the
-  integrations.standards seed are regenerated with `register.py write`; applying
-  the seed to the live collection is a separate step. Merging to `staging`
-  releases this to the live beta as the next patch.
-- Re-read UCUM at its source on 2026-11-11 (still version 2.2, 2024-06-17) and
-  recorded its licence in the entry: Regenstrief Institute's own UCUM Copyright
-  Notice and License, version 1.1, which is neither open-source nor Creative
-  Commons and bars modified copies and derivative works. UCUM was the eighth
-  standard on nyuchi/data-infra#94; it was already adopted (2026-10-30), so it
-  gets no new entry and stays adopted.
-- Adopted three standards from the Agentic AI Foundation: Agent Skills, Open
-  Responses and AGENTS.md. The decision recorded is the owner's instruction of
-  2026-11-11 in the coordinator's chat ("Adopt the three AAIF projects, ACP
-  stays proposed"). Each was read at its source on 2026-11-11. Agent Skills and
-  AGENTS.md have no version (no tags, none stated on their pages), so a consumer
-  pins the commit; Open Responses is versioned by immutable dated releases, the
-  latest 2026-04-24, and a consumer pins that dated file, not the "latest" one,
-  which differs from it. The licences are recorded as the repositories state
-  them: Agent Skills code Apache-2.0 and documentation CC-BY-4.0, Open Responses
-  code Apache-2.0 and documentation CC BY 4.0, AGENTS.md MIT. Applying the seed
-  to the live `integrations.standards` collection is an owner step and was not
-  done.
-- Adopted three device-domain standards: the OAuth 2.0 Device Authorization
-  Grant (RFC 8628), the OAuth 2.0 Authorization Framework (RFC 6749) and
-  Schema.org Product. The decision recorded is the owner's instruction of
-  2026-11-11 in the coordinator's chat ("Go ahead and adapt the standards, push
-  and release to production across the repos"), which the coordinator read as
-  adopting these three; "adapt" is the owner's word, and the reading is
-  recorded as a reading. Each was read at its source on 2026-11-11 (RFC 8628 and
-  RFC 6749 are Proposed Standards, neither obsoleted; RFC 6749 is updated by
-  RFC 8252, RFC 8996 and RFC 9700). Applying the seed to the live
-  `integrations.standards` collection is an owner step and was not done.
-- Adopted eight standards (owner, 2026-10-30): UCUM (2.2), SOSA/SSN (W3C
-  Recommendation 2017), OGC SensorThings (Part 1 1.1, Part 2 1.0), WMDR
-  (WMO-No. 1192, 2019 edition), WIS2 (Manual on WIS, Volume II), OGC API -
-  Features (Part 1 corrigendum 1.0.1, ISO 19168-1:2020), SDMX (3.1, May 2025)
-  and OCHA COD-AB. Each version was read at its source on that day. `sd_jwt_vc`
-  stays proposed.
-- Corrected the links for WMDR and WIS2, which pointed at WMO pages that return
-  404, and for SDMX and OCHA COD, which now point at the standard itself.
 
 ### Fixed
 
@@ -94,24 +44,18 @@ Versions released before then are not renumbered.
   flagged 1.53.1 as unsound (RUSTSEC-2026-0386: `AsyncFd::new` and related
   constructors violate I/O safety; patched in 1.53.3 and later). The audit is
   now clean (82 crates, 1509 advisories, 2026-11-15).
-- Updated Astro, which builds standards.bundu.org, from 7.3.3 to 7.4.12. The
-  patch releases tighten how `Host` and the `X-Forwarded-*` headers are
-  validated against `security.allowedDomains`, among other fixes. This replaces
-  Dependabot's PR #55, which targeted `main`; changes go to `staging`.
-- `standards.bundu.org/register/latest` answered 502 ("The repository answered
-  403") for a share of requests: it asked GitHub's REST API for the head of
-  `main` without a token, and Cloudflare's shared egress addresses run out of
-  that API's 60 requests an hour. When the API refuses, the endpoint now reads
-  the head of `main` from git's own ref advertisement (`info/refs`), which is
-  not held to that limit. Two tests cover the fallback and the case where
-  neither names `main`.
-- Removed an approval date (2022-03-24) from the OGC Tile Matrix Set entry: it
-  could not be confirmed at the source (the Nyuchi Maps tile contract reads a
-  different one), so the entry now states the status (Approved) and no date.
-- The seed no longer calls a proposed standard "Adopted": its adoption rationale
-  starts "Proposed:" when the register says proposed.
-- Removed a note on GeoJSON that said it was the one document in
-  `integrations.standards`, which stopped being true when the register was loaded.
+
+### CI
+
+- `.github/dependabot.yml`: Dependabot opens its version and security PRs
+  against `staging` (npm for `workers/standards`, cargo, GitHub Actions; Astro
+  and `@astrojs/*` grouped), so its PRs follow the release flow instead of
+  targeting `main` as #55 did. Version updates wait 7 days after a release
+  (`cooldown`), as Semgrep's Dependabot rule requires; security updates do not
+  wait. It takes effect once released to `main`, the
+  branch Dependabot reads its configuration from.
+
+## 0.6.0 - 2026-11-15
 
 ### Added
 
@@ -158,6 +102,68 @@ Versions released before then are not renumbered.
   2026-11-14 ("adopt ATIF"). The harness conformance checklist now names it in
   section 1 and records the decision in section 3; the BCI message stream maps
   onto ATIF steps instead of defining its own log (#48, #50).
+- A draft harness conformance checklist (`standards/harness-checklist/`, #50).
+  It lists what an agent harness should meet from the standards the register
+  already adopts; it is a checklist, not a standard of its own. Shamwari's
+  gateway and harness were the first two audits against it.
+
+### Fixed
+
+- Updated Astro, which builds standards.bundu.org, from 7.3.3 to 7.4.12. The
+  patch releases tighten how `Host` and the `X-Forwarded-*` headers are
+  validated against `security.allowedDomains`, among other fixes. This replaces
+  Dependabot's PR #55, which targeted `main`; changes go to `staging`.
+- `standards.bundu.org/register/latest` answered 502 ("The repository answered
+  403") for a share of requests: it asked GitHub's REST API for the head of
+  `main` without a token, and Cloudflare's shared egress addresses run out of
+  that API's 60 requests an hour. When the API refuses, the endpoint now reads
+  the head of `main` from git's own ref advertisement (`info/refs`), which is
+  not held to that limit. Two tests cover the fallback and the case where
+  neither names `main`.
+
+### CI
+
+- CI runs the weather colour scales check (`scales.py check`) and its tests,
+  so `results.md` cannot drift from `scales.json`.
+
+## 0.5.0 - 2026-11-14
+
+### Changed
+
+- Adopted ten standards that were proposed: H3, IPTC ninjs, IPTC Digital
+  Source Type, Apache Avro, Activity Streams 2.0, SPDX, the Common Alerting
+  Protocol (CAP 1.2), OGC API - Common, SD-JWT VC and the Legal Entity Identifier
+  (ISO 17442). The decision is the owner's instruction of 2026-11-11 in the
+  coordinator's chat: "all the proposed standards please release them, into a
+  beta. if they are ones we are adopting then we fully adopt everything now",
+  then "we fully adopt". Each entry quotes it in `decided`. The Agent Client
+  Protocol stays proposed, as the owner decided earlier the same day (no
+  foundation host is confirmed). Adopting CAP the standard does not settle the
+  separate choice to push severe warnings only from an official CAP source,
+  which is still open. Adopted 88 to 98, proposed 11 to 1. REGISTER.md and the
+  integrations.standards seed are regenerated with `register.py write`; applying
+  the seed to the live collection is a separate step. Merging to `staging`
+  releases this to the live beta as the next patch.
+- Re-read UCUM at its source on 2026-11-11 (still version 2.2, 2024-06-17) and
+  recorded its licence in the entry: Regenstrief Institute's own UCUM Copyright
+  Notice and License, version 1.1, which is neither open-source nor Creative
+  Commons and bars modified copies and derivative works. UCUM was the eighth
+  standard on nyuchi/data-infra#94; it was already adopted (2026-10-30), so it
+  gets no new entry and stays adopted.
+- Adopted three standards from the Agentic AI Foundation: Agent Skills, Open
+  Responses and AGENTS.md. The decision recorded is the owner's instruction of
+  2026-11-11 in the coordinator's chat ("Adopt the three AAIF projects, ACP
+  stays proposed"). Each was read at its source on 2026-11-11. Agent Skills and
+  AGENTS.md have no version (no tags, none stated on their pages), so a consumer
+  pins the commit; Open Responses is versioned by immutable dated releases, the
+  latest 2026-04-24, and a consumer pins that dated file, not the "latest" one,
+  which differs from it. The licences are recorded as the repositories state
+  them: Agent Skills code Apache-2.0 and documentation CC-BY-4.0, Open Responses
+  code Apache-2.0 and documentation CC BY 4.0, AGENTS.md MIT. Applying the seed
+  to the live `integrations.standards` collection is an owner step and was not
+  done.
+
+### Added
 
 - Proposed seven standards that the October 2026 standards audit found in use
   on the data platform and not in the register (nyuchi/data-infra#94, tracked in
@@ -179,13 +185,50 @@ Versions released before then are not renumbered.
   saved answers and memory are written down so a person can move them between assistants. A thin
   profile: a message holds an Open Responses item unchanged. Registered as `bci`, `proposed`. Not
   published until the owner approves its scope (#48).
-
 - Proposed the Agent Client Protocol (ACP; protocol version 1 is the stable
   version and version 2 is in alpha), read at its source on 2026-11-11. It
   standardises how a code editor drives a coding agent. Its governance is
   interim, jointly Zed and JetBrains, and no foundation host is confirmed, so it
   stays `proposed` (the owner left it so on 2026-11-11). It is not IBM's Agent
   Communication Protocol, which merged into A2A.
+
+### CI
+
+- standards.bundu.org is deployed by Cloudflare Workers Builds, connected to
+  this repository in the Cloudflare dashboard, instead of
+  `.github/workflows/standards-endpoint-deploy.yml`, which is removed. That
+  workflow failed at its Deploy step on every run from 2026-11-10, most likely
+  because the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets were
+  never set, so the live site stayed at 78 standards. Only `main` deploys to
+  the live site now; other branches, `staging` included, get preview versions.
+  The post-deploy smoke test went with the workflow.
+- The site builds and is tested on Node 24, in CI and on Workers Builds
+  (`NODE_VERSION` 24): Node 22 is no longer supported. `workers/standards`
+  requires Node 24 or later (`engines`).
+
+## 0.4.0 - 2026-11-11
+
+### Changed
+
+- Adopted three device-domain standards: the OAuth 2.0 Device Authorization
+  Grant (RFC 8628), the OAuth 2.0 Authorization Framework (RFC 6749) and
+  Schema.org Product. The decision recorded is the owner's instruction of
+  2026-11-11 in the coordinator's chat ("Go ahead and adapt the standards, push
+  and release to production across the repos"), which the coordinator read as
+  adopting these three; "adapt" is the owner's word, and the reading is
+  recorded as a reading. Each was read at its source on 2026-11-11 (RFC 8628 and
+  RFC 6749 are Proposed Standards, neither obsoleted; RFC 6749 is updated by
+  RFC 8252, RFC 8996 and RFC 9700). Applying the seed to the live
+  `integrations.standards` collection is an owner step and was not done.
+
+### Fixed
+
+- Removed an approval date (2022-03-24) from the OGC Tile Matrix Set entry: it
+  could not be confirmed at the source (the Nyuchi Maps tile contract reads a
+  different one), so the entry now states the status (Approved) and no date.
+
+### Added
+
 - Proposed three standards for the device domain (nyuchi/data-infra#96, the
   Mukoko Home pairing work, mukoko-dev/mukoko-home#24) under a new `devices`
   domain, "Devices and pairing": the OAuth 2.0 Device Authorization Grant (RFC
@@ -206,6 +249,29 @@ Versions released before then are not renumbered.
   (2.1), TileJSON (3.0.0) and PMTiles (version 3). Each was read at its source
   on 2026-11-03, proposed that day and adopted by the owner on 2026-11-04. The
   base-map schema (OpenMapTiles or another) is not listed: it is not decided.
+
+## 0.3.0 - 2026-11-02
+
+### Changed
+
+- Adopted eight standards (owner, 2026-10-30): UCUM (2.2), SOSA/SSN (W3C
+  Recommendation 2017), OGC SensorThings (Part 1 1.1, Part 2 1.0), WMDR
+  (WMO-No. 1192, 2019 edition), WIS2 (Manual on WIS, Volume II), OGC API -
+  Features (Part 1 corrigendum 1.0.1, ISO 19168-1:2020), SDMX (3.1, May 2025)
+  and OCHA COD-AB. Each version was read at its source on that day. `sd_jwt_vc`
+  stays proposed.
+- Corrected the links for WMDR and WIS2, which pointed at WMO pages that return
+  404, and for SDMX and OCHA COD, which now point at the standard itself.
+
+### Fixed
+
+- The seed no longer calls a proposed standard "Adopted": its adoption rationale
+  starts "Proposed:" when the register says proposed.
+- Removed a note on GeoJSON that said it was the one document in
+  `integrations.standards`, which stopped being true when the register was loaded.
+
+### Added
+
 - `register/`: the register of external standards the platform adopts
   (`register.yaml`), moved here from `nyuchi/data-infra` `standards/` so that
   standards have one home. It generates `REGISTER.md` and
@@ -242,30 +308,12 @@ Versions released before then are not renumbered.
 
 ### CI
 
-- `.github/dependabot.yml`: Dependabot opens its version and security PRs
-  against `staging` (npm for `workers/standards`, cargo, GitHub Actions; Astro
-  and `@astrojs/*` grouped), so its PRs follow the release flow instead of
-  targeting `main` as #55 did. Version updates wait 7 days after a release
-  (`cooldown`), as Semgrep's Dependabot rule requires; security updates do not
-  wait. It takes effect once released to `main`, the
-  branch Dependabot reads its configuration from.
 - Production deploys move to `.github/workflows/fly-deploy.yml`, which runs
   when `CI` passes on a push to `main` and deploys the commit CI tested to the
   Fly app `bundu-vocab`, then smoke-tests vocab.bundu.org. Without the
   `FLY_API_TOKEN` secret it skips with a notice. The tag-and-release job stays
   on its own as `.github/workflows/release.yml` (the Release workflow), which
   no longer deploys.
-- standards.bundu.org is deployed by Cloudflare Workers Builds, connected to
-  this repository in the Cloudflare dashboard, instead of
-  `.github/workflows/standards-endpoint-deploy.yml`, which is removed. That
-  workflow failed at its Deploy step on every run from 2026-11-10, most likely
-  because the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets were
-  never set, so the live site stayed at 78 standards. Only `main` deploys to
-  the live site now; other branches, `staging` included, get preview versions.
-  The post-deploy smoke test went with the workflow.
-- The site builds and is tested on Node 24, in CI and on Workers Builds
-  (`NODE_VERSION` 24): Node 22 is no longer supported. `workers/standards`
-  requires Node 24 or later (`engines`).
 
 ## 0.2.0 (2026-10-05)
 

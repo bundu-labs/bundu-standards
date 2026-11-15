@@ -2033,7 +2033,7 @@
     "specificationUrl": "https://www.who.int/publications/i/item/9241590076",
     "documentationUrl": null,
     "stewardOrganisation": "WHO, WMO, UNEP and ICNIRP (joint recommendation)",
-    "usageNotes": "The guide gives Pantone codes, not sRGB (footnote 1 points to EPS files at who.int/uv for the standardised scheme). The sRGB values in the colour scales are inferred until checked against those files.",
+    "usageNotes": "The guide gives Pantone codes, not sRGB. WHO's notes on its UV index clipart (2002) give WHO's own 8-bit RGB per category and call the Pantone codes an approximate guide; the colour scales use that RGB (checked 2026-11-15).",
     "isActive": true,
     "bundu": {
       "isFoundational": false,
@@ -2075,12 +2075,12 @@
     "displayName": "Weather data colour scales",
     "category": "specification",
     "description": "The colours, breakpoints and labels every app uses to show weather data: air quality, UV, temperature, wind, rainfall rate and cloud cover. Adopts the US EPA AQI colours and the WHO Global Solar UV Index colours unchanged; writes the scales no published standard covers. Units by UCUM.",
-    "versionCommitment": "0.1.0 draft (semver); released with the next staging-to-main release.",
+    "versionCommitment": "1.0.0 (semver); a colour, breakpoint or label change is a major.",
     "specificationUrl": "https://standards.bundu.org/weather-colour-scales/",
     "documentationUrl": null,
     "stewardOrganisation": "Bundu Foundation",
     "usageNotes": null,
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
       "adoptionRationale": "Brand colours and invented scales mislead readers of weather data. Adopt the published scale; where none exists, write one and publish it (AGENTS.md, the rule)."

@@ -41,20 +41,20 @@ Assist palette (`assist`):
 
 ## UV index (Global Solar UV Index) (`uv_index`, adopted)
 
-| Band      | Range                | Colour    | Text | Text contrast | Label     | On light    | On dark |
-| --------- | -------------------- | --------- | ---- | ------------- | --------- | ----------- | ------- |
-| Low       | 0 to 3 {index}       | `#97D700` | dark | 12.04         | on swatch | 1.74 border | 10.74   |
-| Moderate  | 3 to 6 {index}       | `#FCE300` | dark | 16.13         | on swatch | 1.30 border | 14.39   |
-| High      | 6 to 8 {index}       | `#FF8200` | dark | 8.45          | on swatch | 2.49 border | 7.53    |
-| Very high | 8 to 11 {index}      | `#EF3340` | dark | 5.22          | beside    | 4.02        | 4.65    |
-| Extreme   | 11 {index} and above | `#9063CD` | dark | 4.85          | beside    | 4.33        | 4.33    |
+| Band      | Range                | Colour    | Text  | Text contrast | Label     | On light    | On dark |
+| --------- | -------------------- | --------- | ----- | ------------- | --------- | ----------- | ------- |
+| Low       | 0 to 3 {index}       | `#289500` | dark  | 5.39          | beside    | 3.90        | 4.81    |
+| Moderate  | 3 to 6 {index}       | `#F7E400` | dark  | 16.05         | on swatch | 1.31 border | 14.32   |
+| High      | 6 to 8 {index}       | `#F85900` | dark  | 6.42          | beside    | 3.27        | 5.73    |
+| Very high | 8 to 11 {index}      | `#D8001D` | light | 5.33          | beside    | 5.33        | 3.51    |
+| Extreme   | 11 {index} and above | `#6B49C8` | light | 6.15          | beside    | 6.15        | 3.04    |
 
-| Vision       | Smallest neighbour delta E | Note               |
-| ------------ | -------------------------- | ------------------ |
-| typical      | 38.7                       |                    |
-| protanopia   | 9.9                        | hard to tell apart |
-| deuteranopia | 17.8                       |                    |
-| tritanopia   | 30.0                       |                    |
+| Vision       | Smallest neighbour delta E | Note |
+| ------------ | -------------------------- | ---- |
+| typical      | 27.7                       |      |
+| protanopia   | 28.8                       |      |
+| deuteranopia | 18.9                       |      |
+| tritanopia   | 23.5                       |      |
 
 ## Air temperature (`temperature`, ours)
 

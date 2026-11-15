@@ -13,6 +13,23 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+### Changed
+
+- Weather colour scales 1.0.0, adopted. Every claim marked inferred in 0.1.0
+  was checked at source on 2026-11-15:
+  - UV colours now use WHO's own RGB from its UV index clipart notes (2002):
+    `#289500`, `#F7E400`, `#F85900`, `#D8001D`, `#6B49C8`. WHO calls the
+    Pantone codes an approximate guide only. With these colours the UV scale
+    clears delta E 10 between neighbours under all three colour-vision
+    simulations; the old values fell to 9.9 under protanopia.
+  - ColorBrewer is Apache-2.0; the attribution is in the README, and every
+    ramp colour matches ColorBrewer's own `colorbrewer.js`.
+  - Rainfall limits match WMO-No. 8, Part I, Chapter 14, Annex, and the okta
+    classes match WMO-No. 306, FM 15 METAR, regulation 15.9.1.1. Okta 9 (sky
+    obscured) takes no band.
+- Register: `weather_colour_scales` is adopted at 1.0.0, and the
+  `who_global_solar_uvi` notes name WHO's RGB source.
+
 ## 0.7.0 - 2026-11-15
 
 ### Changed

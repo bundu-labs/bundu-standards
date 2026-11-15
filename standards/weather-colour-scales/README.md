@@ -1,8 +1,10 @@
 # Weather data colour scales
 
-**Version 0.1.0, draft.** Scope approved by the owner on 2026-11-14 (#39); not published until it
-merges and is released. Licence: CC BY 4.0 for the text, CC0 for `scales.json`. The adopted scales
-remain their stewards' work and are cited, not relicensed.
+**Version 1.0.0, adopted.** Scope approved by the owner on 2026-11-14 (#39); every claim checked at
+source on 2026-11-15. Licence: CC BY 4.0 for the text, CC0 for `scales.json`. The adopted scales
+remain their stewards' work and are cited, not relicensed. The ramps of our own scales are
+ColorBrewer's, under Apache-2.0: this product includes color specifications and designs developed by
+Cynthia Brewer (<http://colorbrewer.org/>).
 
 ## Why this exists
 
@@ -27,8 +29,8 @@ is `[min, max)` in the scale's UCUM unit, with a label and an sRGB colour.
 | Cloud cover           | `{okta}`  | **Ours.** Okta classes as in METAR (FEW, SCT, BKN, OVC); ColorBrewer Greys                             |
 
 Each scale records its source, steward, edition, the date it was checked and whether each claim was
-**measured** at source or is **inferred**. Inferred claims are listed below and must be confirmed
-before 1.0.
+**measured** at source or is **inferred**. Since 1.0.0 every claim is measured; the sources are
+listed below.
 
 ## Rules
 
@@ -59,19 +61,29 @@ between neighbouring bands, for typical vision and simulated protanopia, deutera
 (Machado, Oliveira and Fernandes, 2009).
 
 Every scale of ours clears delta E 10 under all four. The wind ramp now takes seven of ColorBrewer
-YlGnBu's nine classes; the 7-class scheme fell to 9.0 under protanopia. The adopted UV colours fall to
-9.9 under protanopia and keep their colours, as an adopted scale must: rule 1 covers them. The EPA
-publishes its own colour-blind palette for the AQI, adopted here as `assist`.
+YlGnBu's nine classes; the 7-class scheme fell to 9.0 under protanopia. The adopted UV colours, in
+WHO's own RGB, clear it too (18.9 at their closest, under deuteranopia). The EPA publishes its own
+colour-blind palette for the AQI, adopted here as `assist`.
 
-## Inferred, to confirm before 1.0
+## Checked at source for 1.0
 
-- **UV hex values.** The WHO guide gives Pantone codes (375, 102, 151, 032, 265), not RGB. The hex
-  values are Pantone's sRGB equivalents as we understand them and must be checked against Pantone.
-- **ColorBrewer licence.** The ramps are ColorBrewer's published values; the licence (Apache-2.0
-  style) must be confirmed at source.
-- **Rainfall and okta limits.** The WMO rainfall intensity limits (2.5, 10, 50 mm/h) and the okta
-  grouping must be checked against WMO-No. 8 and WMO-No. 306. The Beaufort bounds were checked at
-  source (WMO-No. 8, Vol. I, Table 5.1) on 2026-11-14.
+All checked on 2026-11-15.
+
+- **UV colours.** The WHO guide's Table 4 gives Pantone codes (375, 102, 151, 032, 265). WHO's notes on
+  its UV index clipart (2002) give its own 8-bit RGB for each category and call the Pantone codes an
+  approximate guide only, so 1.0 takes WHO's RGB: `#289500`, `#F7E400`, `#F85900`, `#D8001D`,
+  `#6B49C8`. These replace the 0.1.0 values, which were our reading of the Pantone codes.
+- **ColorBrewer licence.** Apache-2.0, from `LICENCE.txt` in github.com/axismaps/colorbrewer, with the
+  attribution above. Every ramp colour was checked against ColorBrewer's own `colorbrewer.js`:
+  temperature is RdYlBu 11 reversed, wind is YlGnBu 9 (classes 1, 3 to 7, 9), rainfall is Blues 5
+  (classes 2 to 5), cloud is Greys 6 (classes 1 to 5).
+- **Rainfall limits.** WMO-No. 8, Part I, Chapter 14, Annex: rain is light below 2.5 mm/h, moderate from
+  2.5 to below 10.0, heavy from 10.0 to below 50.0 and violent from 50.0. Checked in the 2008 edition.
+  The 0.1 mm/h floor is ours.
+- **Okta classes.** WMO-No. 306, Vol. I.1, FM 15 METAR, regulation 15.9.1.1: few 1 to 2 oktas,
+  scattered 3 to 4, broken 5 to 7, overcast 8. The clear class (0 oktas) is ours. Okta 9, sky obscured,
+  is not an amount and takes no band.
+- **Beaufort bounds.** WMO-No. 8, Vol. I, Table 5.1, checked on 2026-11-14.
 
 ## Not yet covered
 

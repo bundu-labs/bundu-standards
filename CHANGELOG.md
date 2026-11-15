@@ -15,6 +15,20 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- **Adopted, by the owner's decision of 2026-11-15** ("We should be adopting all standards
+  immediately before people start using our app"): the last three proposed standards in the
+  register. All 105 are now adopted.
+  - BCI 0.1.0, with open questions 8 and 9 resolved in the text. Every reference resolves inside the
+    stream, and the `Header` names no omitted records. A reader refuses a valid stream only for a
+    limit it states in advance, and reports what it cannot keep. Questions 10 to 13 became a
+    non-normative "Guidance for readers" section. No schema change beyond dropping "(draft)" from its
+    title. Open questions 1 to 7 (name and home, vocabulary terms, binary archives, branches, the
+    harness profile) remain open.
+  - The Agent Client Protocol (ACP), protocol version 1. This reverses the 2026-11-11 instruction to
+    wait for a foundation host; it still has none, and the register says so.
+  - Weather data colour scales 0.1.0 (scope approved 2026-11-14, #39).
+  - The harness conformance checklist is not a standard and has no register entry, so it is
+    unchanged.
 - BCI (`standards/conversation-interchange/`): the "First implementation" section now says what is
   built, and that it is not merged or deployed. That is export and import over the Servers API
   (nyuchi/nyuchi-servers-api#50). Six findings from building it are added as open questions 8 to 13:

@@ -1,7 +1,7 @@
 {
-  "$comment": "Weather data colour scales, 0.1.0 draft. Generated results: results.md (python3 standards/weather-colour-scales/scales.py write). Bands are [min, max): min inclusive, max exclusive; null max is open-ended. Colours are sRGB hex.",
+  "$comment": "Weather data colour scales, 0.1.0. Generated results: results.md (python3 standards/weather-colour-scales/scales.py write). Bands are [min, max): min inclusive, max exclusive; null max is open-ended. Colours are sRGB hex.",
   "version": "0.1.0",
-  "status": "draft",
+  "status": "adopted",
   "rules": [
     "The band label or its value range is always printed beside the colour. Colour alone never carries the meaning.",
     "Where a published scale exists it is adopted unchanged: breakpoints, labels and colours.",

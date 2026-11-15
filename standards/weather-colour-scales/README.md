@@ -37,20 +37,31 @@ before 1.0.
 2. An adopted scale is used unchanged: its breakpoints, labels and colours.
 3. Brand colours (the Mzizi minerals) are never used for data. The tests enforce this.
 4. Values are converted to the scale's UCUM unit at the edge, before a band is chosen.
-5. A swatch with less than 3:1 contrast against the surface it sits on takes a 1px border in the
-   legend text colour. `results.md` says which swatches need it on light and dark surfaces.
+5. A swatch with less than 3:1 contrast against the surface it sits on takes a 1px outline in the
+   legend text colour (WCAG 1.4.11). Each band's `outline` lists the surfaces where it needs one.
+6. A label goes on a swatch only where black or white text on it reaches 7:1, the Bundu floor (WCAG
+   1.4.6 AAA). Otherwise it sits beside the swatch, on the page, in the page's own text colour. Each
+   band's `labelText` and `labelOnSwatch` say which (and `assistLabelText`, `assistLabelOnSwatch` for
+   the AQI's assist palette).
+7. A scale of ours keeps every pair of neighbouring bands at least delta E 10 apart under typical vision
+   and simulated protanopia, deuteranopia and tritanopia. The tests enforce this.
+8. A legend is readable without sight or colour: it is a list or a table whose every band has its label
+   and range as text, never only a colour or an image, so screen readers and keyboard users get the same
+   information.
 
 ## Accessibility, measured
 
-`results.md` is generated from `scales.json` and checked in CI. For every band it gives the legend
-text colour (black or white) and its contrast, which must reach 4.5:1 (WCAG 1.4.3 AA; the tests fail
-otherwise), and the swatch's contrast on light and dark surfaces. For every scale it gives the smallest
-colour difference (CIE76 delta E) between neighbouring bands, for typical vision and simulated
-protanopia, deuteranopia and tritanopia (Machado, Oliveira and Fernandes, 2009).
+`scales.py write` fills in each band's `labelText`, `labelOnSwatch` and `outline` in `scales.json` and
+generates `results.md`; CI fails if either is stale. For every band `results.md` gives the label colour
+(black or white), its contrast and whether it goes on the swatch or beside it, and the swatch's contrast
+on light and dark surfaces. For every scale it gives the smallest colour difference (CIE76 delta E)
+between neighbouring bands, for typical vision and simulated protanopia, deuteranopia and tritanopia
+(Machado, Oliveira and Fernandes, 2009).
 
-Two scales have neighbours closer than delta E 10 under protanopia: the adopted UV colours and our wind
-ramp. Rule 1 covers both. The EPA publishes its own colour-blind palette for the AQI, adopted here as
-`assist`.
+Every scale of ours clears delta E 10 under all four. The wind ramp now takes seven of ColorBrewer
+YlGnBu's nine classes; the 7-class scheme fell to 9.0 under protanopia. The adopted UV colours fall to
+9.9 under protanopia and keep their colours, as an adopted scale must: rule 1 covers them. The EPA
+publishes its own colour-blind palette for the AQI, adopted here as `assist`.
 
 ## Inferred, to confirm before 1.0
 

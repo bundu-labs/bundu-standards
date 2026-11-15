@@ -47,6 +47,11 @@ async fn main() {
         .route("/", get(index))
         .route("/health", get(|| async { "ok" }))
         .route("/context.jsonld", get(context))
+        .route("/favicon-32x32.png", get(|| icon(FAVICON_32)))
+        .route("/favicon-16x16.png", get(|| icon(FAVICON_16)))
+        .route("/favicon-32x32-dark.png", get(|| icon(FAVICON_32_DARK)))
+        .route("/favicon-16x16-dark.png", get(|| icon(FAVICON_16_DARK)))
+        .route("/apple-touch-icon.png", get(|| icon(APPLE_TOUCH_ICON)))
         .route("/:term", get(term))
         .layer(CompressionLayer::new())
         .layer(TraceLayer::new_for_http());
@@ -187,6 +192,29 @@ async fn context() -> Response {
     jsonld(json!({ "@context": Value::Object(map) }))
 }
 
+// ── Brand ─────────────────────────────────────────────────────────────────
+
+// The official Bundu mark (copper), as shipped by www.bundu.org: a
+// light-surface and a dark-surface pair, picked by the browser's colour
+// scheme, never redrawn. The same files are in workers/standards/public; a
+// test keeps the two copies identical.
+const FAVICON_32: &[u8] = include_bytes!("brand/favicon-32x32.png");
+const FAVICON_16: &[u8] = include_bytes!("brand/favicon-16x16.png");
+const FAVICON_32_DARK: &[u8] = include_bytes!("brand/favicon-32x32-dark.png");
+const FAVICON_16_DARK: &[u8] = include_bytes!("brand/favicon-16x16-dark.png");
+const APPLE_TOUCH_ICON: &[u8] = include_bytes!("brand/apple-touch-icon.png");
+
+async fn icon(bytes: &'static [u8]) -> Response {
+    (
+        [
+            (header::CONTENT_TYPE, "image/png"),
+            (header::CACHE_CONTROL, "public, max-age=86400"),
+        ],
+        bytes,
+    )
+        .into_response()
+}
+
 // ── Handlers ─────────────────────────────────────────────────────────────
 
 async fn index(headers: HeaderMap) -> Response {
@@ -321,17 +349,17 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
     }
     let table = rows
         .iter()
-        .map(|(k, v)| format!("<tr><th>{k}</th><td>{v}</td></tr>"))
+        .map(|(k, v)| format!(r#"<tr><th scope="row">{k}</th><td>{v}</td></tr>"#))
         .collect::<Vec<_>>()
         .join("\n");
 
     let values_section = t.values.map_or_else(String::new, |values| {
         let rows = values
             .iter()
-            .map(|(v, desc)| format!("<tr><th><code>{v}</code></th><td>{}</td></tr>", esc(desc)))
+            .map(|(v, desc)| format!(r#"<tr><th scope="row"><code>{v}</code></th><td>{}</td></tr>"#, esc(desc)))
             .collect::<Vec<_>>()
             .join("\n");
-        format!("<section>\n  <h2>Permitted values</h2>\n  <table>{rows}</table>\n</section>")
+        format!("<section>\n  <h2>Permitted values</h2>\n  <table><caption class=\"sr-only\">Permitted values</caption>{rows}</table>\n</section>")
     });
 
     html(page(
@@ -342,7 +370,7 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
   <h1><code class="term">{id}</code></h1>
   <p class="lede">{comment}</p>
 </header>
-<table>{table}</table>
+<table><caption class="sr-only">About this term</caption>{table}</table>
 {values_section}
 <section>
   <h2>Why this term exists</h2>
@@ -426,29 +454,67 @@ fn esc(s: &str) -> String {
 
 fn page(title: &str, body: &str) -> String {
     format!(
-        r#"<!doctype html>
+        r##"<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} — Bundu vocabulary</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32-dark.png" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16-dark.png" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#FAF9F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B0D" media="(prefers-color-scheme: dark)">
 <style>
+/* The Bundu pattern: copper, the stewardship mineral (Mzizi seven-minerals),
+   on neutral grounds, within the Bundu floor (7:1 body contrast, 17px body on
+   touch and 15px on a fine pointer, 1.5 leading, 14px captions). */
 :root {{
+  color-scheme: light dark;
   --ground: #FAF9F5; --surface: #fff; --line: #E2DFD6;
-  --text: #17161A; --muted: #6A6675; --accent: #5B21B6;
+  --text: #17161A; --muted: #4D4A45; --accent: #7E3B24;
+  --body: 17px; --caption: 14px; --leading: 1.5; --hit: 49px;
 }}
 @media (prefers-color-scheme: dark) {{
   :root {{
     --ground: #0B0B0D; --surface: #131317; --line: #2B2B34;
-    --text: #F2F1EE; --muted: #9A98A6; --accent: #B388FF;
+    --text: #F2F1EE; --muted: #B0ACA2; --accent: #FFC3B0;
   }}
+}}
+@media (pointer: fine) and (hover: hover) and (min-width: 64rem) and (not (any-pointer: coarse)) {{
+  :root {{ --body: 15px; --hit: 28px; }}
 }}
 * {{ box-sizing: border-box; }}
 body {{
   background: var(--ground); color: var(--text);
-  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font: var(--body)/var(--leading) -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0; padding: 0 24px 96px;
 }}
+.mark {{ display: block; }}
+.mark-dark {{ display: none; }}
+@media (prefers-color-scheme: dark) {{
+  .mark-light {{ display: none; }}
+  .mark-dark {{ display: block; }}
+}}
+header.site, footer.site {{ max-width: 680px; margin: 0 auto; }}
+header.site {{ display: flex; flex-wrap: wrap; align-items: center; column-gap: 20px; row-gap: 7px; padding-top: 14px; }}
+header.site a {{ display: inline-flex; align-items: center; gap: 7px; min-height: var(--hit); }}
+header.site a.home {{ color: var(--text); font-weight: 700; text-decoration: none; }}
+header.site ul {{ display: flex; flex-wrap: wrap; column-gap: 20px; row-gap: 7px; list-style: none; margin: 0; padding: 0; }}
+footer.site {{ color: var(--muted); font-size: max(.88rem, var(--caption)); border-top: 1px solid var(--line); margin-top: 48px; padding-top: 14px; }}
+.skip {{ position: absolute; left: 14px; top: -100vh; z-index: 10; padding: 14px; background: var(--ground);
+        color: var(--accent); border: 2px solid var(--accent); border-radius: 8px; font-weight: 600; }}
+.skip:focus {{ top: 14px; }}
+:focus-visible {{ outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 3px; }}
+main:focus {{ outline: none; }}
+.sr-only {{ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+            clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }}
+kbd {{ font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: max(.88em, var(--caption));
+      border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 .3em; background: var(--surface); }}
+@media (prefers-reduced-motion: reduce) {{ * {{ scroll-behavior: auto !important; transition: none !important; animation: none !important; }} }}
+@media (forced-colors: active) {{ :focus-visible {{ outline-color: Highlight; }} }}
 main {{ max-width: 680px; margin: 0 auto; }}
 header {{ padding: 72px 0 8px; }}
 h1 {{ font-size: 2.2rem; line-height: 1.1; letter-spacing: -.03em; margin: .2em 0; }}
@@ -456,35 +522,47 @@ h2 {{ font-size: 1.05rem; letter-spacing: -.01em; margin: 2.4rem 0 .6rem; }}
 p {{ margin: .7em 0; }}
 .eyebrow {{
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+  font-size: var(--caption); letter-spacing: .14em; text-transform: uppercase;
   color: var(--muted); margin: 0;
 }}
 .lede {{ font-size: 1.05rem; color: var(--muted); }}
 a {{ color: var(--accent); text-underline-offset: 2px; }}
-a:focus-visible {{ outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }}
 code {{
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: .88em; background: var(--surface);
+  font-size: max(.88em, var(--caption)); background: var(--surface);
   border: 1px solid var(--line); border-radius: 4px; padding: .08em .34em;
 }}
-code.term {{ font-size: .8em; background: none; border: none; padding: 0; }}
+code.term {{ font-size: max(.8em, var(--caption)); background: none; border: none; padding: 0; }}
 pre {{ overflow-x: auto; background: var(--surface); border: 1px solid var(--line);
       border-radius: 8px; padding: 1rem; }}
 pre code {{ background: none; border: none; padding: 0; }}
 table {{ border-collapse: collapse; width: 100%; margin: 1.6rem 0; }}
 th, td {{ text-align: left; padding: .55rem .2rem; border-bottom: 1px solid var(--line);
          vertical-align: top; }}
-th {{ width: 9rem; font-weight: 600; color: var(--muted); font-size: .88rem; }}
+th {{ width: 9rem; font-weight: 600; color: var(--muted); font-size: max(.88rem, var(--caption)); }}
 ul.terms {{ list-style: none; padding: 0; margin: 0; }}
 ul.terms li {{ padding: 1rem 0; border-bottom: 1px solid var(--line); }}
-ul.terms li span {{ color: var(--muted); font-size: .88rem; margin-left: .6rem; }}
-ul.terms li p {{ margin: .35em 0 0; color: var(--muted); font-size: .93rem; }}
+ul.terms li span {{ color: var(--muted); font-size: max(.88rem, var(--caption)); margin-left: .6rem; }}
+ul.terms li p {{ margin: .35em 0 0; color: var(--muted); font-size: max(.93rem, var(--caption)); }}
 </style>
 </head>
-<body><main>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="site">
+<a class="home" href="/"><img class="mark mark-light" src="/favicon-32x32.png" alt="" width="28" height="28"><img class="mark mark-dark" src="/favicon-32x32-dark.png" alt="" width="28" height="28"><span>Bundu vocabulary</span></a>
+<nav aria-label="Main"><ul>
+<li><a href="/">All terms</a></li>
+<li><a href="/context.jsonld">JSON-LD context</a></li>
+<li><a href="https://standards.bundu.org/register/">Standards register</a></li>
+<li><a href="https://standards.bundu.org/accessibility/">Accessibility</a></li>
+</ul></nav>
+</header>
+<main id="main" tabindex="-1">
 {body}
-</main></body>
-</html>"#
+</main>
+<footer class="site"><p>Every page works with a keyboard alone: <kbd>Tab</kbd> moves forward, <kbd>Shift</kbd>+<kbd>Tab</kbd> moves back, <kbd>Enter</kbd> follows a link. <a href="https://github.com/bundu-labs/bundu-standards/issues/new?title=Accessibility%3A%20">Report a barrier</a>.</p></footer>
+</body>
+</html>"##
     )
 }
 
@@ -501,6 +579,125 @@ mod tests {
 
     /// Browsers ask for HTML explicitly; RDF tooling asks for JSON-LD or
     /// nothing. Defaulting to JSON-LD is what makes `curl <term>` useful.
+    /// The Bundu mark ships twice: compiled into this binary and in the
+    /// standards site's public/ folder. Both must be the same files.
+    #[test]
+    fn brand_icons_match_the_standards_site() {
+        let site =
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("workers/standards/public");
+        for (name, bytes) in [
+            ("favicon-32x32.png", FAVICON_32),
+            ("favicon-16x16.png", FAVICON_16),
+            ("favicon-32x32-dark.png", FAVICON_32_DARK),
+            ("favicon-16x16-dark.png", FAVICON_16_DARK),
+            ("apple-touch-icon.png", APPLE_TOUCH_ICON),
+        ] {
+            assert!(bytes.starts_with(b"\x89PNG"), "{name} is not a PNG");
+            assert_eq!(
+                std::fs::read(site.join(name)).unwrap(),
+                bytes,
+                "{name} differs from the standards site"
+            );
+        }
+    }
+
+    /// Keyboard and screen-reader aids every page must keep.
+    #[test]
+    fn every_page_has_a_skip_link_landmarks_and_keyboard_help() {
+        let html = page("t", "<p>b</p>");
+        let body = html.find("<body>").unwrap();
+        let skip = html
+            .find(r##"<a class="skip" href="#main">Skip to main content</a>"##)
+            .unwrap();
+        assert!(
+            skip > body && skip < html.find("<header").unwrap(),
+            "skip link must come first"
+        );
+        assert!(html.contains(r#"<nav aria-label="Main">"#));
+        assert!(html.contains(r#"<main id="main" tabindex="-1">"#));
+        assert!(html.contains("<footer") && html.contains("<kbd>Tab</kbd>"));
+        assert!(html.contains("Report a barrier"));
+        assert!(html.contains(r#"<html lang="en">"#));
+        for img in html
+            .match_indices("<img ")
+            .map(|(i, _)| &html[i..i + html[i..].find('>').unwrap()])
+        {
+            assert!(
+                img.contains(r#"alt="""#),
+                "decorative image without alt=\"\": {img}"
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn term_tables_have_captions_and_row_headers() {
+        for t in terms::TERMS {
+            let html = body(term(Path(t.id.to_string()), accept("text/html")).await).await;
+            for (i, _) in html.match_indices("<table>") {
+                assert!(
+                    html[i..].starts_with(r#"<table><caption class="sr-only">"#),
+                    "{}: table without a caption",
+                    t.id
+                );
+            }
+            assert!(
+                !html.contains("<th>"),
+                "{}: a header cell without scope",
+                t.id
+            );
+        }
+    }
+
+    fn luminance(hex: &str) -> f64 {
+        let c: Vec<f64> = (0..3)
+            .map(|i| u8::from_str_radix(&hex[1 + 2 * i..3 + 2 * i], 16).unwrap() as f64 / 255.0)
+            .map(|v| {
+                if v <= 0.04045 {
+                    v / 12.92
+                } else {
+                    ((v + 0.055) / 1.055).powf(2.4)
+                }
+            })
+            .collect();
+        0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+    }
+
+    fn contrast(a: &str, b: &str) -> f64 {
+        let (x, y) = (luminance(a), luminance(b));
+        (x.max(y) + 0.05) / (x.min(y) + 0.05)
+    }
+
+    fn token(block: &str, name: &str) -> String {
+        let at = block
+            .find(&format!("--{name}: "))
+            .unwrap_or_else(|| panic!("--{name} missing"));
+        block[at + name.len() + 4..at + name.len() + 11].to_string()
+    }
+
+    /// The Bundu floor: every text colour pair at 7:1 or more, in both themes.
+    #[test]
+    fn text_colours_meet_the_bundu_floor_in_both_themes() {
+        let html = page("t", "");
+        let light = &html[html.find(":root {").unwrap()..];
+        let dark = &html[html.find("@media (prefers-color-scheme: dark)").unwrap()..];
+        for block in [light, dark] {
+            let ground = token(block, "ground");
+            for fg in ["text", "muted", "accent"] {
+                let c = contrast(&token(block, fg), &ground);
+                assert!(c >= 7.0, "--{fg} on --ground is {c:.2}:1");
+            }
+        }
+    }
+
+    #[test]
+    fn every_page_links_a_light_and_a_dark_icon() {
+        let html = page("t", "<p>b</p>");
+        assert!(html.contains(r#"href="/favicon-32x32.png" media="(prefers-color-scheme: light)""#));
+        assert!(
+            html.contains(r#"href="/favicon-32x32-dark.png" media="(prefers-color-scheme: dark)""#)
+        );
+    }
+
     #[test]
     fn content_negotiation_defaults_to_json_ld() {
         assert!(wants_html(&accept("text/html,application/xhtml+xml")));
@@ -681,6 +878,13 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn icons_are_served_as_png() {
+        let res = icon(FAVICON_32_DARK).await;
+        assert_eq!(res.status(), StatusCode::OK);
+        assert_eq!(res.headers()[header::CONTENT_TYPE], "image/png");
+    }
+
+    #[tokio::test]
     async fn context_and_index_list_every_term() {
         let ctx: Value = serde_json::from_str(&body(context().await).await).unwrap();
         let idx_json: Value =
@@ -747,7 +951,7 @@ mod tests {
         assert_eq!(set["@type"], json!(["schema:DefinedTermSet"]));
 
         let page = body(term(Path("BAGS-08".into()), accept("text/html")).await).await;
-        assert!(page.contains("<th>Code</th><td><code>BAGS-08</code></td>"));
+        assert!(page.contains(r#"<th scope="row">Code</th><td><code>BAGS-08</code></td>"#));
         assert!(page.contains(r#"<a href="/BAGS"><code>bundu:BAGS</code></a>"#));
         assert!(page.contains("<code>prompt_injection</code>"));
     }

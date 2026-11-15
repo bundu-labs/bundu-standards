@@ -15,6 +15,14 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- Weather colour scales: the label-contrast target rises from 4.5:1 to 7:1,
+  the Bundu floor. A label goes on a swatch only where black or white text
+  reaches 7:1; otherwise it sits beside it. `scales.py write` now records each
+  band's `labelText`, `labelOnSwatch` and `outline` in `scales.json`, and CI
+  fails if they are stale. Scales of ours must keep neighbouring bands at delta
+  E 10 or more under typical vision and simulated protanopia, deuteranopia and
+  tritanopia: the wind ramp now takes seven of ColorBrewer YlGnBu's nine classes
+  (the 7-class scheme fell to 9.0 under protanopia; this pick holds 11.0).
 - standards.bundu.org and vocab.bundu.org follow the Bundu pattern: copper, the
   stewardship mineral and Bundu's colour (Mzizi seven-minerals), replaces the
   green and purple accents. Links use copper's text tokens (#7E3B24 on light,
@@ -107,6 +115,20 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Accessibility on standards.bundu.org and vocab.bundu.org, for people who use a
+  keyboard, a screen reader, zoom or colour-blind vision. Every page now starts
+  with a skip link to the main region and has a labelled main navigation that
+  marks the current page, a footer with keyboard help and a link to report a
+  barrier, and a visible 3px copper focus outline. Short links carry a full
+  accessible name ("JSON", "Source"), a standard's status is read as "Status:
+  adopted", decorative images are hidden, vocabulary tables have captions and
+  row headers, the register has jump links to each group, and long text wraps at
+  320px (400% zoom) instead of scrolling sideways. A new
+  [accessibility statement](https://standards.bundu.org/accessibility/) explains
+  the keys, what screen readers get and how to report a barrier. axe-core (WCAG
+  2.2 AA and best practice) finds no violations on either site in light or dark
+  mode. Tests on both sites fail if any of this regresses or a text colour drops
+  under 7:1.
 - Research notes 0002 and 0003, both open briefs with no findings yet:
   what each level of weather station should measure, from a homestead to an
   industrial or network station (`docs/research/0002-station-tiers.md`), and

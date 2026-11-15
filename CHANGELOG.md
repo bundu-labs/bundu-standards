@@ -13,6 +13,8 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+## 0.7.0 - 2026-11-15
+
 ### Changed
 
 - Weather colour scales: the label-contrast target rises from 4.5:1 to 7:1,

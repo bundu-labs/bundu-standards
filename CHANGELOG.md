@@ -17,8 +17,7 @@ Versions released before then are not renumbered.
 
 - **Adopted, by the owner's decision of 2026-11-15** ("We should be adopting all standards
   immediately before people start using our app"): BCI and ACP. The third proposed standard, the
-  weather colour scales, is adopted at 1.0.0 in its own pull request (#85), so with both merged all
-  105 are adopted.
+  weather colour scales, was adopted at 1.0.0 in #85 (below), so with this all 105 are adopted.
   - BCI 0.1.0, with open questions 8 and 9 resolved in the text. Every reference resolves inside the
     stream, and the `Header` names no omitted records. A reader refuses a valid stream only for a
     limit it states in advance, and reports what it cannot keep. Questions 10 to 13 became a
@@ -35,6 +34,25 @@ Versions released before then are not renumbered.
   the `Header` has no member for omitted records, a reader with stated limits, record order, items a
   reader cannot hold, importing twice and someone else's ids, and `Header.owner` as informative only.
   No schema change; the register entry notes the implementation.
+- Weather colour scales 1.0.0, adopted. Every claim marked inferred in 0.1.0
+  was checked at source on 2026-11-15:
+  - UV colours now use WHO's own RGB from its UV index clipart notes (2002):
+    `#289500`, `#F7E400`, `#F85900`, `#D8001D`, `#6B49C8`. WHO calls the
+    Pantone codes an approximate guide only. With these colours the UV scale
+    clears delta E 10 between neighbours under all three colour-vision
+    simulations; the old values fell to 9.9 under protanopia.
+  - ColorBrewer is Apache-2.0; the attribution is in the README, and every
+    ramp colour matches ColorBrewer's own `colorbrewer.js`.
+  - Rainfall limits match WMO-No. 8, Part I, Chapter 14, Annex, and the okta
+    classes match WMO-No. 306, FM 15 METAR, regulation 15.9.1.1. Okta 9 (sky
+    obscured) takes no band.
+- Register: `weather_colour_scales` is adopted at 1.0.0, and the
+  `who_global_solar_uvi` notes name WHO's RGB source.
+
+## 0.7.0 - 2026-11-15
+
+### Changed
+
 - Weather colour scales: the label-contrast target rises from 4.5:1 to 7:1,
   the Bundu floor. A label goes on a swatch only where black or white text
   reaches 7:1; otherwise it sits beside it. `scales.py write` now records each

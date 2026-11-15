@@ -1764,9 +1764,10 @@ standards:
       approve of all the of standards"); scope in #39
     url: https://www.who.int/publications/i/item/9241590076
     notes: >-
-      The guide gives Pantone codes, not sRGB (footnote 1 points to EPS files at
-      who.int/uv for the standardised scheme). The sRGB values in the colour
-      scales are inferred until checked against those files.
+      The guide gives Pantone codes, not sRGB. WHO's notes on its UV index
+      clipart (2002) give WHO's own 8-bit RGB per category and call the Pantone
+      codes an approximate guide; the colour scales use that RGB (checked
+      2026-11-15).
 
   - id: wmo_beaufort
     name: Beaufort scale (WMO wind speed equivalents)
@@ -1795,15 +1796,19 @@ standards:
     domain: weather
     category: specification
     steward: Bundu Foundation
-    commitment: 0.1.0 draft (semver); released with the next staging-to-main release.
-    current: 0.1.0 draft, standards/weather-colour-scales/
+    commitment: 1.0.0 (semver); a colour, breakpoint or label change is a major.
+    current: >-
+      1.0.0, standards/weather-colour-scales/. Every source checked at source
+      2026-11-15; ramps are ColorBrewer, Apache-2.0.
     governs: >-
       The colours, breakpoints and labels every app uses to show weather data:
       air quality, UV, temperature, wind, rainfall rate and cloud cover. Adopts
       the US EPA AQI colours and the WHO Global Solar UV Index colours unchanged;
       writes the scales no published standard covers. Units by UCUM.
-    status: proposed
-    decided: Owner approved the scope 2026-11-14 (#39)
+    status: adopted
+    decided: >-
+      Owner approved the scope 2026-11-14 (#39) and asked for 1.0 on 2026-11-15
+      ("Confirm the colour scale items and ship 1.0")
     url: https://standards.bundu.org/weather-colour-scales/
     rationale: >-
       Brand colours and invented scales mislead readers of weather data. Adopt

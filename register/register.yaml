@@ -1712,6 +1712,10 @@ standards:
     rationale: >-
       A person's history belongs to the person, not to a product. If none exists we
       build one and publish it (AGENTS.md, the rule).
+    notes: >-
+      First implementation built, not merged or deployed: export and import over the
+      Servers API (nyuchi/nyuchi-servers-api#50, 2026-11-15). Its findings are open
+      questions 8 to 13 in the standard's README.
 
   - id: us_epa_aqi
     name: US Air Quality Index (AQI) categories and colours

@@ -1987,7 +1987,7 @@
     "specificationUrl": "https://standards.bundu.org/conversation-interchange/",
     "documentationUrl": null,
     "stewardOrganisation": "Bundu Foundation",
-    "usageNotes": null,
+    "usageNotes": "First implementation built, not merged or deployed: export and import over the Servers API (nyuchi/nyuchi-servers-api#50, 2026-11-15). Its findings are open questions 8 to 13 in the standard's README.",
     "isActive": false,
     "bundu": {
       "isFoundational": false,

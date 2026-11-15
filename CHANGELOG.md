@@ -15,6 +15,12 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- BCI (`standards/conversation-interchange/`): the "First implementation" section now says what is
+  built, and that it is not merged or deployed. That is export and import over the Servers API
+  (nyuchi/nyuchi-servers-api#50). Six findings from building it are added as open questions 8 to 13:
+  the `Header` has no member for omitted records, a reader with stated limits, record order, items a
+  reader cannot hold, importing twice and someone else's ids, and `Header.owner` as informative only.
+  No schema change; the register entry notes the implementation.
 - standards.bundu.org and vocab.bundu.org follow the Bundu pattern: copper, the
   stewardship mineral and Bundu's colour (Mzizi seven-minerals), replaces the
   green and purple accents. Links use copper's text tokens (#7E3B24 on light,

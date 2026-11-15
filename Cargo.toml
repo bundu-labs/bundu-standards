@@ -11,7 +11,7 @@ description = "The Bundu vocabulary — RDF terms for concepts schema.org has no
 
 [dependencies]
 tokio = { version = "1.40", features = ["macros", "rt-multi-thread", "signal"] }
-axum = "0.7"
+axum = "0.8"
 tower-http = { version = "0.6", features = ["trace", "compression-br"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

@@ -35,6 +35,14 @@ Versions released before then are not renumbered.
   the `Header` has no member for omitted records, a reader with stated limits, record order, items a
   reader cannot hold, importing twice and someone else's ids, and `Header.owner` as informative only.
   No schema change; the register entry notes the implementation.
+- Weather colour scales: the label-contrast target rises from 4.5:1 to 7:1,
+  the Bundu floor. A label goes on a swatch only where black or white text
+  reaches 7:1; otherwise it sits beside it. `scales.py write` now records each
+  band's `labelText`, `labelOnSwatch` and `outline` in `scales.json`, and CI
+  fails if they are stale. Scales of ours must keep neighbouring bands at delta
+  E 10 or more under typical vision and simulated protanopia, deuteranopia and
+  tritanopia: the wind ramp now takes seven of ColorBrewer YlGnBu's nine classes
+  (the 7-class scheme fell to 9.0 under protanopia; this pick holds 11.0).
 - standards.bundu.org and vocab.bundu.org follow the Bundu pattern: copper, the
   stewardship mineral and Bundu's colour (Mzizi seven-minerals), replaces the
   green and purple accents. Links use copper's text tokens (#7E3B24 on light,
@@ -49,6 +57,103 @@ Versions released before then are not renumbered.
   single green SVG that did not follow the theme. vocab.bundu.org serves the
   same files from the binary, and a test keeps its copies identical to the
   standards site's.
+
+### Fixed
+
+- Updated tokio from 1.53.1 to 1.54.1 in the vocab server. `cargo audit`
+  flagged 1.53.1 as unsound (RUSTSEC-2026-0386: `AsyncFd::new` and related
+  constructors violate I/O safety; patched in 1.53.3 and later). The audit is
+  now clean (82 crates, 1509 advisories, 2026-11-15).
+
+### CI
+
+- The 0.6.0 changelog is carried onto `staging`, so `main` and `staging` stop
+  disagreeing on it. The 0.5.0 and 0.6.0 releases copied staging's tree onto
+  `main` without its history, which made every automatic release PR conflict
+  (#64); the next release is a true merge of `staging` into `main`.
+- `.github/dependabot.yml`: Dependabot opens its version and security PRs
+  against `staging` (npm for `workers/standards`, cargo, GitHub Actions; Astro
+  and `@astrojs/*` grouped), so its PRs follow the release flow instead of
+  targeting `main` as #55 did. Version updates wait 7 days after a release
+  (`cooldown`), as Semgrep's Dependabot rule requires; security updates do not
+  wait. It takes effect once released to `main`, the
+  branch Dependabot reads its configuration from.
+
+## 0.6.0 - 2026-11-15
+
+### Added
+
+- Accessibility on standards.bundu.org and vocab.bundu.org, for people who use a
+  keyboard, a screen reader, zoom or colour-blind vision. Every page now starts
+  with a skip link to the main region and has a labelled main navigation that
+  marks the current page, a footer with keyboard help and a link to report a
+  barrier, and a visible 3px copper focus outline. Short links carry a full
+  accessible name ("JSON", "Source"), a standard's status is read as "Status:
+  adopted", decorative images are hidden, vocabulary tables have captions and
+  row headers, the register has jump links to each group, and long text wraps at
+  320px (400% zoom) instead of scrolling sideways. A new
+  [accessibility statement](https://standards.bundu.org/accessibility/) explains
+  the keys, what screen readers get and how to report a barrier. axe-core (WCAG
+  2.2 AA and best practice) finds no violations on either site in light or dark
+  mode. Tests on both sites fail if any of this regresses or a text colour drops
+  under 7:1.
+- Research notes 0002 and 0003, both open briefs with no findings yet:
+  what each level of weather station should measure, from a homestead to an
+  industrial or network station (`docs/research/0002-station-tiers.md`), and
+  how hand-read rain gauges and manual stations across Africa can send their
+  readings into the Bundu Weather Commons in one standard form
+  (`docs/research/0003-analog-station-uploads.md`). Owner's direction,
+  2026-11-14: "we should be researching what should be included in a
+  different levels of stationkits, home to industrial to much larger. We
+  should also be working on ways to support analog stations across Africa to
+  upload data into the platform and how we standardize the uploads and find
+  easier ways for people to provide data easily." Both name the standards that
+  apply by register id and say what would close them.
+- Weather data colour scales, 0.1.0 draft (`standards/weather-colour-scales/`,
+  #39): six scales as data in `scales.json`. The US EPA AQI colours (May 2026
+  Technical Assistance Document, with the EPA's own ColorVision Assist palette)
+  and the WHO Global Solar UV Index colours are adopted unchanged; temperature,
+  wind (Beaufort breakpoints), rainfall rate (WMO intensity classes) and cloud
+  cover (oktas) are ours, with ColorBrewer ramps. `scales.py` generates
+  `results.md`: legend text contrast (AA enforced), swatch contrast on light and
+  dark surfaces, and neighbour separation under simulated colour-blindness.
+  Register entry `weather_colour_scales`, proposed. Adopted the three external
+  standards it uses: `us_epa_aqi` (EPA-403/B-26-003), `who_global_solar_uvi`
+  (2002 guide) and `wmo_beaufort` (WMO-No. 8, Table 5.1). The owner approved
+  the scope on 2026-11-14.
+- Adopted the Agent Trajectory Interchange Format (ATIF-v1.8, register id
+  `atif`) as the session log of an agent harness, on the owner's decision of
+  2026-11-14 ("adopt ATIF"). The harness conformance checklist now names it in
+  section 1 and records the decision in section 3; the BCI message stream maps
+  onto ATIF steps instead of defining its own log (#48, #50).
+- A draft harness conformance checklist (`standards/harness-checklist/`, #50).
+  It lists what an agent harness should meet from the standards the register
+  already adopts; it is a checklist, not a standard of its own. Shamwari's
+  gateway and harness were the first two audits against it.
+
+### Fixed
+
+- Updated Astro, which builds standards.bundu.org, from 7.3.3 to 7.4.12. The
+  patch releases tighten how `Host` and the `X-Forwarded-*` headers are
+  validated against `security.allowedDomains`, among other fixes. This replaces
+  Dependabot's PR #55, which targeted `main`; changes go to `staging`.
+- `standards.bundu.org/register/latest` answered 502 ("The repository answered
+  403") for a share of requests: it asked GitHub's REST API for the head of
+  `main` without a token, and Cloudflare's shared egress addresses run out of
+  that API's 60 requests an hour. When the API refuses, the endpoint now reads
+  the head of `main` from git's own ref advertisement (`info/refs`), which is
+  not held to that limit. Two tests cover the fallback and the case where
+  neither names `main`.
+
+### CI
+
+- CI runs the weather colour scales check (`scales.py check`) and its tests,
+  so `results.md` cannot drift from `scales.json`.
+
+## 0.5.0 - 2026-11-14
+
+### Changed
+
 - Adopted ten standards that were proposed: H3, IPTC ninjs, IPTC Digital
   Source Type, Apache Avro, Activity Streams 2.0, SPDX, the Common Alerting
   Protocol (CAP 1.2), OGC API - Common, SD-JWT VC and the Legal Entity Identifier
@@ -81,81 +186,8 @@ Versions released before then are not renumbered.
   code Apache-2.0 and documentation CC BY 4.0, AGENTS.md MIT. Applying the seed
   to the live `integrations.standards` collection is an owner step and was not
   done.
-- Adopted three device-domain standards: the OAuth 2.0 Device Authorization
-  Grant (RFC 8628), the OAuth 2.0 Authorization Framework (RFC 6749) and
-  Schema.org Product. The decision recorded is the owner's instruction of
-  2026-11-11 in the coordinator's chat ("Go ahead and adapt the standards, push
-  and release to production across the repos"), which the coordinator read as
-  adopting these three; "adapt" is the owner's word, and the reading is
-  recorded as a reading. Each was read at its source on 2026-11-11 (RFC 8628 and
-  RFC 6749 are Proposed Standards, neither obsoleted; RFC 6749 is updated by
-  RFC 8252, RFC 8996 and RFC 9700). Applying the seed to the live
-  `integrations.standards` collection is an owner step and was not done.
-- Adopted eight standards (owner, 2026-10-30): UCUM (2.2), SOSA/SSN (W3C
-  Recommendation 2017), OGC SensorThings (Part 1 1.1, Part 2 1.0), WMDR
-  (WMO-No. 1192, 2019 edition), WIS2 (Manual on WIS, Volume II), OGC API -
-  Features (Part 1 corrigendum 1.0.1, ISO 19168-1:2020), SDMX (3.1, May 2025)
-  and OCHA COD-AB. Each version was read at its source on that day. `sd_jwt_vc`
-  stays proposed.
-- Corrected the links for WMDR and WIS2, which pointed at WMO pages that return
-  404, and for SDMX and OCHA COD, which now point at the standard itself.
-
-### Fixed
-
-- Updated tokio from 1.53.1 to 1.54.1 in the vocab server. `cargo audit`
-  flagged 1.53.1 as unsound (RUSTSEC-2026-0386: `AsyncFd::new` and related
-  constructors violate I/O safety; patched in 1.53.3 and later). The audit is
-  now clean (82 crates, 1509 advisories, 2026-11-15).
-- Updated Astro, which builds standards.bundu.org, from 7.3.3 to 7.4.12. The
-  patch releases tighten how `Host` and the `X-Forwarded-*` headers are
-  validated against `security.allowedDomains`, among other fixes. This replaces
-  Dependabot's PR #55, which targeted `main`; changes go to `staging`.
-- `standards.bundu.org/register/latest` answered 502 ("The repository answered
-  403") for a share of requests: it asked GitHub's REST API for the head of
-  `main` without a token, and Cloudflare's shared egress addresses run out of
-  that API's 60 requests an hour. When the API refuses, the endpoint now reads
-  the head of `main` from git's own ref advertisement (`info/refs`), which is
-  not held to that limit. Two tests cover the fallback and the case where
-  neither names `main`.
-- Removed an approval date (2022-03-24) from the OGC Tile Matrix Set entry: it
-  could not be confirmed at the source (the Nyuchi Maps tile contract reads a
-  different one), so the entry now states the status (Approved) and no date.
-- The seed no longer calls a proposed standard "Adopted": its adoption rationale
-  starts "Proposed:" when the register says proposed.
-- Removed a note on GeoJSON that said it was the one document in
-  `integrations.standards`, which stopped being true when the register was loaded.
 
 ### Added
-
-- Research notes 0002 and 0003, both open briefs with no findings yet:
-  what each level of weather station should measure, from a homestead to an
-  industrial or network station (`docs/research/0002-station-tiers.md`), and
-  how hand-read rain gauges and manual stations across Africa can send their
-  readings into the Bundu Weather Commons in one standard form
-  (`docs/research/0003-analog-station-uploads.md`). Owner's direction,
-  2026-11-14: "we should be researching what should be included in a
-  different levels of stationkits, home to industrial to much larger. We
-  should also be working on ways to support analog stations across Africa to
-  upload data into the platform and how we standardize the uploads and find
-  easier ways for people to provide data easily." Both name the standards that
-  apply by register id and say what would close them.
-- Weather data colour scales, 0.1.0 draft (`standards/weather-colour-scales/`,
-  #39): six scales as data in `scales.json`. The US EPA AQI colours (May 2026
-  Technical Assistance Document, with the EPA's own ColorVision Assist palette)
-  and the WHO Global Solar UV Index colours are adopted unchanged; temperature,
-  wind (Beaufort breakpoints), rainfall rate (WMO intensity classes) and cloud
-  cover (oktas) are ours, with ColorBrewer ramps. `scales.py` generates
-  `results.md`: legend text contrast (AA enforced), swatch contrast on light and
-  dark surfaces, and neighbour separation under simulated colour-blindness.
-  Register entry `weather_colour_scales`, proposed. Adopted the three external
-  standards it uses: `us_epa_aqi` (EPA-403/B-26-003), `who_global_solar_uvi`
-  (2002 guide) and `wmo_beaufort` (WMO-No. 8, Table 5.1). The owner approved
-  the scope on 2026-11-14.
-- Adopted the Agent Trajectory Interchange Format (ATIF-v1.8, register id
-  `atif`) as the session log of an agent harness, on the owner's decision of
-  2026-11-14 ("adopt ATIF"). The harness conformance checklist now names it in
-  section 1 and records the decision in section 3; the BCI message stream maps
-  onto ATIF steps instead of defining its own log (#48, #50).
 
 - Proposed seven standards that the October 2026 standards audit found in use
   on the data platform and not in the register (nyuchi/data-infra#94, tracked in
@@ -177,13 +209,50 @@ Versions released before then are not renumbered.
   saved answers and memory are written down so a person can move them between assistants. A thin
   profile: a message holds an Open Responses item unchanged. Registered as `bci`, `proposed`. Not
   published until the owner approves its scope (#48).
-
 - Proposed the Agent Client Protocol (ACP; protocol version 1 is the stable
   version and version 2 is in alpha), read at its source on 2026-11-11. It
   standardises how a code editor drives a coding agent. Its governance is
   interim, jointly Zed and JetBrains, and no foundation host is confirmed, so it
   stays `proposed` (the owner left it so on 2026-11-11). It is not IBM's Agent
   Communication Protocol, which merged into A2A.
+
+### CI
+
+- standards.bundu.org is deployed by Cloudflare Workers Builds, connected to
+  this repository in the Cloudflare dashboard, instead of
+  `.github/workflows/standards-endpoint-deploy.yml`, which is removed. That
+  workflow failed at its Deploy step on every run from 2026-11-10, most likely
+  because the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets were
+  never set, so the live site stayed at 78 standards. Only `main` deploys to
+  the live site now; other branches, `staging` included, get preview versions.
+  The post-deploy smoke test went with the workflow.
+- The site builds and is tested on Node 24, in CI and on Workers Builds
+  (`NODE_VERSION` 24): Node 22 is no longer supported. `workers/standards`
+  requires Node 24 or later (`engines`).
+
+## 0.4.0 - 2026-11-11
+
+### Changed
+
+- Adopted three device-domain standards: the OAuth 2.0 Device Authorization
+  Grant (RFC 8628), the OAuth 2.0 Authorization Framework (RFC 6749) and
+  Schema.org Product. The decision recorded is the owner's instruction of
+  2026-11-11 in the coordinator's chat ("Go ahead and adapt the standards, push
+  and release to production across the repos"), which the coordinator read as
+  adopting these three; "adapt" is the owner's word, and the reading is
+  recorded as a reading. Each was read at its source on 2026-11-11 (RFC 8628 and
+  RFC 6749 are Proposed Standards, neither obsoleted; RFC 6749 is updated by
+  RFC 8252, RFC 8996 and RFC 9700). Applying the seed to the live
+  `integrations.standards` collection is an owner step and was not done.
+
+### Fixed
+
+- Removed an approval date (2022-03-24) from the OGC Tile Matrix Set entry: it
+  could not be confirmed at the source (the Nyuchi Maps tile contract reads a
+  different one), so the entry now states the status (Approved) and no date.
+
+### Added
+
 - Proposed three standards for the device domain (nyuchi/data-infra#96, the
   Mukoko Home pairing work, mukoko-dev/mukoko-home#24) under a new `devices`
   domain, "Devices and pairing": the OAuth 2.0 Device Authorization Grant (RFC
@@ -204,6 +273,29 @@ Versions released before then are not renumbered.
   (2.1), TileJSON (3.0.0) and PMTiles (version 3). Each was read at its source
   on 2026-11-03, proposed that day and adopted by the owner on 2026-11-04. The
   base-map schema (OpenMapTiles or another) is not listed: it is not decided.
+
+## 0.3.0 - 2026-11-02
+
+### Changed
+
+- Adopted eight standards (owner, 2026-10-30): UCUM (2.2), SOSA/SSN (W3C
+  Recommendation 2017), OGC SensorThings (Part 1 1.1, Part 2 1.0), WMDR
+  (WMO-No. 1192, 2019 edition), WIS2 (Manual on WIS, Volume II), OGC API -
+  Features (Part 1 corrigendum 1.0.1, ISO 19168-1:2020), SDMX (3.1, May 2025)
+  and OCHA COD-AB. Each version was read at its source on that day. `sd_jwt_vc`
+  stays proposed.
+- Corrected the links for WMDR and WIS2, which pointed at WMO pages that return
+  404, and for SDMX and OCHA COD, which now point at the standard itself.
+
+### Fixed
+
+- The seed no longer calls a proposed standard "Adopted": its adoption rationale
+  starts "Proposed:" when the register says proposed.
+- Removed a note on GeoJSON that said it was the one document in
+  `integrations.standards`, which stopped being true when the register was loaded.
+
+### Added
+
 - `register/`: the register of external standards the platform adopts
   (`register.yaml`), moved here from `nyuchi/data-infra` `standards/` so that
   standards have one home. It generates `REGISTER.md` and
@@ -240,30 +332,12 @@ Versions released before then are not renumbered.
 
 ### CI
 
-- `.github/dependabot.yml`: Dependabot opens its version and security PRs
-  against `staging` (npm for `workers/standards`, cargo, GitHub Actions; Astro
-  and `@astrojs/*` grouped), so its PRs follow the release flow instead of
-  targeting `main` as #55 did. Version updates wait 7 days after a release
-  (`cooldown`), as Semgrep's Dependabot rule requires; security updates do not
-  wait. It takes effect once released to `main`, the
-  branch Dependabot reads its configuration from.
 - Production deploys move to `.github/workflows/fly-deploy.yml`, which runs
   when `CI` passes on a push to `main` and deploys the commit CI tested to the
   Fly app `bundu-vocab`, then smoke-tests vocab.bundu.org. Without the
   `FLY_API_TOKEN` secret it skips with a notice. The tag-and-release job stays
   on its own as `.github/workflows/release.yml` (the Release workflow), which
   no longer deploys.
-- standards.bundu.org is deployed by Cloudflare Workers Builds, connected to
-  this repository in the Cloudflare dashboard, instead of
-  `.github/workflows/standards-endpoint-deploy.yml`, which is removed. That
-  workflow failed at its Deploy step on every run from 2026-11-10, most likely
-  because the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets were
-  never set, so the live site stayed at 78 standards. Only `main` deploys to
-  the live site now; other branches, `staging` included, get preview versions.
-  The post-deploy smoke test went with the workflow.
-- The site builds and is tested on Node 24, in CI and on Workers Builds
-  (`NODE_VERSION` 24): Node 22 is no longer supported. `workers/standards`
-  requires Node 24 or later (`engines`).
 
 ## 0.2.0 (2026-10-05)
 

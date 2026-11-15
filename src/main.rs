@@ -349,17 +349,17 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
     }
     let table = rows
         .iter()
-        .map(|(k, v)| format!("<tr><th>{k}</th><td>{v}</td></tr>"))
+        .map(|(k, v)| format!(r#"<tr><th scope="row">{k}</th><td>{v}</td></tr>"#))
         .collect::<Vec<_>>()
         .join("\n");
 
     let values_section = t.values.map_or_else(String::new, |values| {
         let rows = values
             .iter()
-            .map(|(v, desc)| format!("<tr><th><code>{v}</code></th><td>{}</td></tr>", esc(desc)))
+            .map(|(v, desc)| format!(r#"<tr><th scope="row"><code>{v}</code></th><td>{}</td></tr>"#, esc(desc)))
             .collect::<Vec<_>>()
             .join("\n");
-        format!("<section>\n  <h2>Permitted values</h2>\n  <table>{rows}</table>\n</section>")
+        format!("<section>\n  <h2>Permitted values</h2>\n  <table><caption class=\"sr-only\">Permitted values</caption>{rows}</table>\n</section>")
     });
 
     html(page(
@@ -370,7 +370,7 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
   <h1><code class="term">{id}</code></h1>
   <p class="lede">{comment}</p>
 </header>
-<table>{table}</table>
+<table><caption class="sr-only">About this term</caption>{table}</table>
 {values_section}
 <section>
   <h2>Why this term exists</h2>
@@ -475,7 +475,7 @@ fn page(title: &str, body: &str) -> String {
   color-scheme: light dark;
   --ground: #FAF9F5; --surface: #fff; --line: #E2DFD6;
   --text: #17161A; --muted: #4D4A45; --accent: #7E3B24;
-  --body: 17px; --caption: 14px; --leading: 1.5;
+  --body: 17px; --caption: 14px; --leading: 1.5; --hit: 49px;
 }}
 @media (prefers-color-scheme: dark) {{
   :root {{
@@ -484,7 +484,7 @@ fn page(title: &str, body: &str) -> String {
   }}
 }}
 @media (pointer: fine) and (hover: hover) and (min-width: 64rem) and (not (any-pointer: coarse)) {{
-  :root {{ --body: 15px; }}
+  :root {{ --body: 15px; --hit: 28px; }}
 }}
 * {{ box-sizing: border-box; }}
 body {{
@@ -492,12 +492,29 @@ body {{
   font: var(--body)/var(--leading) -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0; padding: 0 24px 96px;
 }}
-.mark {{ display: block; margin: 24px 0 0; }}
+.mark {{ display: block; }}
 .mark-dark {{ display: none; }}
 @media (prefers-color-scheme: dark) {{
   .mark-light {{ display: none; }}
   .mark-dark {{ display: block; }}
 }}
+header.site, footer.site {{ max-width: 680px; margin: 0 auto; }}
+header.site {{ display: flex; flex-wrap: wrap; align-items: center; column-gap: 20px; row-gap: 7px; padding-top: 14px; }}
+header.site a {{ display: inline-flex; align-items: center; gap: 7px; min-height: var(--hit); }}
+header.site a.home {{ color: var(--text); font-weight: 700; text-decoration: none; }}
+header.site ul {{ display: flex; flex-wrap: wrap; column-gap: 20px; row-gap: 7px; list-style: none; margin: 0; padding: 0; }}
+footer.site {{ color: var(--muted); font-size: max(.88rem, var(--caption)); border-top: 1px solid var(--line); margin-top: 48px; padding-top: 14px; }}
+.skip {{ position: absolute; left: 14px; top: -100vh; z-index: 10; padding: 14px; background: var(--ground);
+        color: var(--accent); border: 2px solid var(--accent); border-radius: 8px; font-weight: 600; }}
+.skip:focus {{ top: 14px; }}
+:focus-visible {{ outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 3px; }}
+main:focus {{ outline: none; }}
+.sr-only {{ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+            clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }}
+kbd {{ font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: max(.88em, var(--caption));
+      border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 .3em; background: var(--surface); }}
+@media (prefers-reduced-motion: reduce) {{ * {{ scroll-behavior: auto !important; transition: none !important; animation: none !important; }} }}
+@media (forced-colors: active) {{ :focus-visible {{ outline-color: Highlight; }} }}
 main {{ max-width: 680px; margin: 0 auto; }}
 header {{ padding: 72px 0 8px; }}
 h1 {{ font-size: 2.2rem; line-height: 1.1; letter-spacing: -.03em; margin: .2em 0; }}
@@ -510,7 +527,6 @@ p {{ margin: .7em 0; }}
 }}
 .lede {{ font-size: 1.05rem; color: var(--muted); }}
 a {{ color: var(--accent); text-underline-offset: 2px; }}
-a:focus-visible {{ outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }}
 code {{
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: max(.88em, var(--caption)); background: var(--surface);
@@ -530,10 +546,22 @@ ul.terms li span {{ color: var(--muted); font-size: max(.88rem, var(--caption));
 ul.terms li p {{ margin: .35em 0 0; color: var(--muted); font-size: max(.93rem, var(--caption)); }}
 </style>
 </head>
-<body><main>
-<a href="/" aria-label="Bundu vocabulary"><img class="mark mark-light" src="/favicon-32x32.png" alt="" width="28" height="28"><img class="mark mark-dark" src="/favicon-32x32-dark.png" alt="" width="28" height="28"></a>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="site">
+<a class="home" href="/"><img class="mark mark-light" src="/favicon-32x32.png" alt="" width="28" height="28"><img class="mark mark-dark" src="/favicon-32x32-dark.png" alt="" width="28" height="28"><span>Bundu vocabulary</span></a>
+<nav aria-label="Main"><ul>
+<li><a href="/">All terms</a></li>
+<li><a href="/context.jsonld">JSON-LD context</a></li>
+<li><a href="https://standards.bundu.org/register/">Standards register</a></li>
+<li><a href="https://standards.bundu.org/accessibility/">Accessibility</a></li>
+</ul></nav>
+</header>
+<main id="main" tabindex="-1">
 {body}
-</main></body>
+</main>
+<footer class="site"><p>Every page works with a keyboard alone: <kbd>Tab</kbd> moves forward, <kbd>Shift</kbd>+<kbd>Tab</kbd> moves back, <kbd>Enter</kbd> follows a link. <a href="https://github.com/bundu-labs/bundu-standards/issues/new?title=Accessibility%3A%20">Report a barrier</a>.</p></footer>
+</body>
 </html>"##
     )
 }
@@ -570,6 +598,94 @@ mod tests {
                 bytes,
                 "{name} differs from the standards site"
             );
+        }
+    }
+
+    /// Keyboard and screen-reader aids every page must keep.
+    #[test]
+    fn every_page_has_a_skip_link_landmarks_and_keyboard_help() {
+        let html = page("t", "<p>b</p>");
+        let body = html.find("<body>").unwrap();
+        let skip = html
+            .find(r##"<a class="skip" href="#main">Skip to main content</a>"##)
+            .unwrap();
+        assert!(
+            skip > body && skip < html.find("<header").unwrap(),
+            "skip link must come first"
+        );
+        assert!(html.contains(r#"<nav aria-label="Main">"#));
+        assert!(html.contains(r#"<main id="main" tabindex="-1">"#));
+        assert!(html.contains("<footer") && html.contains("<kbd>Tab</kbd>"));
+        assert!(html.contains("Report a barrier"));
+        assert!(html.contains(r#"<html lang="en">"#));
+        for img in html
+            .match_indices("<img ")
+            .map(|(i, _)| &html[i..i + html[i..].find('>').unwrap()])
+        {
+            assert!(
+                img.contains(r#"alt="""#),
+                "decorative image without alt=\"\": {img}"
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn term_tables_have_captions_and_row_headers() {
+        for t in terms::TERMS {
+            let html = body(term(Path(t.id.to_string()), accept("text/html")).await).await;
+            for (i, _) in html.match_indices("<table>") {
+                assert!(
+                    html[i..].starts_with(r#"<table><caption class="sr-only">"#),
+                    "{}: table without a caption",
+                    t.id
+                );
+            }
+            assert!(
+                !html.contains("<th>"),
+                "{}: a header cell without scope",
+                t.id
+            );
+        }
+    }
+
+    fn luminance(hex: &str) -> f64 {
+        let c: Vec<f64> = (0..3)
+            .map(|i| u8::from_str_radix(&hex[1 + 2 * i..3 + 2 * i], 16).unwrap() as f64 / 255.0)
+            .map(|v| {
+                if v <= 0.04045 {
+                    v / 12.92
+                } else {
+                    ((v + 0.055) / 1.055).powf(2.4)
+                }
+            })
+            .collect();
+        0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+    }
+
+    fn contrast(a: &str, b: &str) -> f64 {
+        let (x, y) = (luminance(a), luminance(b));
+        (x.max(y) + 0.05) / (x.min(y) + 0.05)
+    }
+
+    fn token(block: &str, name: &str) -> String {
+        let at = block
+            .find(&format!("--{name}: "))
+            .unwrap_or_else(|| panic!("--{name} missing"));
+        block[at + name.len() + 4..at + name.len() + 11].to_string()
+    }
+
+    /// The Bundu floor: every text colour pair at 7:1 or more, in both themes.
+    #[test]
+    fn text_colours_meet_the_bundu_floor_in_both_themes() {
+        let html = page("t", "");
+        let light = &html[html.find(":root {").unwrap()..];
+        let dark = &html[html.find("@media (prefers-color-scheme: dark)").unwrap()..];
+        for block in [light, dark] {
+            let ground = token(block, "ground");
+            for fg in ["text", "muted", "accent"] {
+                let c = contrast(&token(block, fg), &ground);
+                assert!(c >= 7.0, "--{fg} on --ground is {c:.2}:1");
+            }
         }
     }
 
@@ -835,7 +951,7 @@ mod tests {
         assert_eq!(set["@type"], json!(["schema:DefinedTermSet"]));
 
         let page = body(term(Path("BAGS-08".into()), accept("text/html")).await).await;
-        assert!(page.contains("<th>Code</th><td><code>BAGS-08</code></td>"));
+        assert!(page.contains(r#"<th scope="row">Code</th><td><code>BAGS-08</code></td>"#));
         assert!(page.contains(r#"<a href="/BAGS"><code>bundu:BAGS</code></a>"#));
         assert!(page.contains("<code>prompt_injection</code>"));
     }

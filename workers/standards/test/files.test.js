@@ -1,6 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { route as handle, FILES, RAW, LATEST_URL } from "../src/lib/files.js";
+import {
+  route as handle,
+  FILES,
+  RAW,
+  LATEST_URL,
+  REFS_URL,
+} from "../src/lib/files.js";
 
 const SHA = "e15535a4fbaab894167cc87644baa4168b5f8150";
 const req = (path, method = "GET") =>
@@ -140,6 +146,30 @@ test("latest refuses an answer that is not a commit", async () => {
     (await handle(req("/register/latest"), async () => ok("{}", 403))).status,
     502,
   );
+});
+
+test("latest falls back to git's ref advertisement when the API refuses (rate limit)", async () => {
+  const refs =
+    "001e# service=git-upload-pack\n0000" +
+    `0155${"a".repeat(40)} HEAD\0multi_ack symref=HEAD:refs/heads/main\n` +
+    `003f${SHA} refs/heads/main\n` +
+    `0044${"b".repeat(40)} refs/heads/staging\n0000`;
+  const asked = [];
+  const res = await handle(req("/register/latest"), async (u) => {
+    asked.push(u);
+    return u === LATEST_URL ? ok("{}", 403) : ok(refs);
+  });
+  assert.deepEqual(asked, [LATEST_URL, REFS_URL]);
+  assert.equal(res.status, 200);
+  assert.equal((await res.json()).ref, SHA);
+});
+
+test("latest is a 502 when neither the API nor the ref advertisement names main", async () => {
+  const res = await handle(req("/register/latest"), async (u) =>
+    u === LATEST_URL ? ok("{}", 403) : ok("0000"),
+  );
+  assert.equal(res.status, 502);
+  assert.match((await res.json()).detail, /403/);
 });
 
 test("health", async () => {

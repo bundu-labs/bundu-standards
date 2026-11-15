@@ -21,6 +21,11 @@
 export const REPO = "bundu-labs/bundu-standards";
 export const RAW = `https://raw.githubusercontent.com/${REPO}`;
 export const LATEST_URL = `https://api.github.com/repos/${REPO}/commits/main`;
+// Git's own ref advertisement. It is not the REST API, so it is not held to the
+// API's limit of 60 unauthenticated requests an hour per IP, which Cloudflare's
+// shared egress addresses run out of (GitHub then answers 403).
+export const REFS_URL = `https://github.com/${REPO}.git/info/refs?service=git-upload-pack`;
+const MAIN_REF = /(?:^|\n)[0-9a-f]{4}([0-9a-f]{40}) refs\/heads\/main\n/;
 
 /** The only files served. Anything else is a 404: this is not an open proxy. */
 export const FILES = {
@@ -102,24 +107,41 @@ export async function route(request, fetchImpl = fetch) {
   });
 }
 
-async function latest(url, fetchImpl, path) {
-  let res;
+/** The head of `main` from the REST API, or "" if it does not give one. */
+async function headFromApi(fetchImpl) {
   try {
-    res = await fetchImpl(LATEST_URL, {
+    const res = await fetchImpl(LATEST_URL, {
       headers: { accept: "application/vnd.github+json", "user-agent": "standards.bundu.org" },
     });
+    if (!res.ok) return { status: res.status, ref: "" };
+    const body = await res.json();
+    const ref = body && typeof body.sha === "string" ? body.sha : "";
+    return { status: res.status, ref: SHA.test(ref) ? ref : "" };
   } catch {
-    return problem(502, "Bad gateway", "The repository could not be reached.", path);
+    return { status: 0, ref: "" };
   }
-  if (!res.ok) return problem(502, "Bad gateway", `The repository answered ${res.status}.`, path);
-  let body;
+}
+
+/** The head of `main` from git's ref advertisement, or "". */
+async function headFromRefs(fetchImpl) {
   try {
-    body = await res.json();
+    const res = await fetchImpl(REFS_URL, { headers: { "user-agent": "standards.bundu.org" } });
+    if (!res.ok) return { status: res.status, ref: "" };
+    const m = MAIN_REF.exec(await res.text());
+    return { status: res.status, ref: m ? m[1] : "" };
   } catch {
-    return problem(502, "Bad gateway", "The repository answer was not JSON.", path);
+    return { status: 0, ref: "" };
   }
-  const ref = body && typeof body.sha === "string" ? body.sha : "";
-  if (!SHA.test(ref)) return problem(502, "Bad gateway", "The repository answer had no commit.", path);
+}
+
+async function latest(url, fetchImpl, path) {
+  const api = await headFromApi(fetchImpl);
+  const head = api.ref ? api : await headFromRefs(fetchImpl);
+  if (!head.ref) {
+    const why = api.status && api.status !== 200 ? `The repository answered ${api.status}.` : "The repository answer had no commit.";
+    return problem(502, "Bad gateway", why, path);
+  }
+  const ref = head.ref;
   return json(
     {
       ref,

@@ -790,7 +790,8 @@ standards:
       access. The client passes MCP servers to the agent in session/new.
     status: adopted
     decided: >-
-      Owner adopted 2026-11-15: "We should be adopting all standards immediately before people start using our app". This reverses the 2026-11-11 instruction to keep ACP proposed until it has a
+      Owner adopted 2026-11-15: "We should be adopting all standards immediately before people start
+      using our app". This reverses the 2026-11-11 instruction to keep ACP proposed until it has a
       foundation host; it still has none (interim Zed and JetBrains governance), which is recorded
       here and in notes
     url: https://agentclientprotocol.com/protocol/v1/overview
@@ -1706,7 +1707,8 @@ standards:
       qualifies this claim.
     status: adopted
     decided: >-
-      Owner adopted 2026-11-15: "We should be adopting all standards immediately before people start using our app", with open questions 8 and 9 resolved (every reference resolves inside the
+      Owner adopted 2026-11-15: "We should be adopting all standards immediately before people start
+      using our app", with open questions 8 and 9 resolved (every reference resolves inside the
       stream; a reader refuses only for limits it states in advance). Drafted on the owner's
       instruction 2026-11-11
     url: https://standards.bundu.org/conversation-interchange/

@@ -1,0 +1,36 @@
+# Dependabot opens its PRs against staging: changes go to staging and are
+# released to main, never merged straight into main (AGENTS.md, Branching).
+# Security updates follow the same target-branch.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /workers/standards
+    target-branch: staging
+    schedule:
+      interval: weekly
+    groups:
+      astro:
+        patterns:
+          - "astro"
+          - "@astrojs/*"
+    labels:
+      - dependencies
+      - javascript
+
+  - package-ecosystem: cargo
+    directory: /
+    target-branch: staging
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - rust
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: staging
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - github-actions

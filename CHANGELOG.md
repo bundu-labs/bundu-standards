@@ -15,6 +15,20 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- standards.bundu.org and vocab.bundu.org follow the Bundu pattern: copper, the
+  stewardship mineral and Bundu's colour (Mzizi seven-minerals), replaces the
+  green and purple accents. Links use copper's text tokens (#7E3B24 on light,
+  #FFC3B0 on dark), and the adopted chip uses copper's container pair. Both
+  sites meet the Bundu floor: 17px body on touch and 15px on a fine pointer,
+  1.5 leading, no text under 14px, 49px and 28px hit regions in the site header,
+  and 7:1 contrast for body and muted text (muted moves to #4D4A45 and #B0ACA2;
+  it measured 5.29:1 to 6.94:1 before).
+- Both sites use the official Bundu mark, the light and dark favicon pair from
+  `www.bundu.org`, unchanged, chosen by `prefers-color-scheme`, plus the
+  180px Apple touch icon and a theme-colour per scheme. The old icon was a
+  single green SVG that did not follow the theme. vocab.bundu.org serves the
+  same files from the binary, and a test keeps its copies identical to the
+  standards site's.
 - Adopted ten standards that were proposed: H3, IPTC ninjs, IPTC Digital
   Source Type, Apache Avro, Activity Streams 2.0, SPDX, the Common Alerting
   Protocol (CAP 1.2), OGC API - Common, SD-JWT VC and the Legal Entity Identifier
@@ -202,6 +216,11 @@ Versions released before then are not renumbered.
 
 ### CI
 
+- `.github/dependabot.yml`: Dependabot opens its version and security PRs
+  against `staging` (npm for `workers/standards`, cargo, GitHub Actions; Astro
+  and `@astrojs/*` grouped), so its PRs follow the release flow instead of
+  targeting `main` as #55 did. It takes effect once released to `main`, the
+  branch Dependabot reads its configuration from.
 - Production deploys move to `.github/workflows/fly-deploy.yml`, which runs
   when `CI` passes on a push to `main` and deploys the commit CI tested to the
   Fly app `bundu-vocab`, then smoke-tests vocab.bundu.org. Without the

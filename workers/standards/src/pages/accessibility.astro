@@ -1,0 +1,74 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Accessibility · Bundu standards" description="How standards.bundu.org and vocab.bundu.org work for everyone, with a keyboard, a screen reader, zoom or colour-blind vision, and how to report a barrier.">
+  <h1>Accessibility</h1>
+  <p>
+    The standards register and the Bundu vocabulary are public infrastructure, so everyone has to be able to use
+    them. Both sites are built to the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA, and to the Bundu
+    floor, which goes further: body text at 7:1 contrast, text no smaller than 14px, and controls large enough to
+    hit.
+  </p>
+
+  <h2 id="keyboard">Using a keyboard</h2>
+  <p>Every page works with a keyboard alone. Nothing needs a mouse, and nothing traps the focus.</p>
+  <table>
+    <caption>Keys</caption>
+    <thead>
+      <tr><th scope="col">Key</th><th scope="col">What it does</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><kbd>Tab</kbd></td><td>Moves to the next link or control. The first stop on every page is <em>Skip to main content</em>.</td></tr>
+      <tr><td><kbd>Shift</kbd> + <kbd>Tab</kbd></td><td>Moves back to the previous link or control.</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>Follows the focused link.</td></tr>
+      <tr><td><kbd>Space</kbd> or <kbd>Page Down</kbd></td><td>Scrolls the page down; <kbd>Shift</kbd> + <kbd>Space</kbd> or <kbd>Page Up</kbd> scrolls up.</td></tr>
+      <tr><td>Arrow keys</td><td>Scroll an example block sideways once it has the focus.</td></tr>
+    </tbody>
+  </table>
+  <p>
+    The focused item always shows a visible outline in copper. On the register, <em>On this page</em> jumps straight
+    to each group of standards.
+  </p>
+
+  <h2 id="screen-readers">Using a screen reader</h2>
+  <ul>
+    <li>Each page has one main region, a labelled main navigation and a footer, so landmark navigation works.</li>
+    <li>Headings are in order: one level-one heading per page, then a level-two heading for each section.</li>
+    <li>The page you are on is announced as the current page in the navigation.</li>
+    <li>A standard's status is read as “Status: adopted” or “Status: proposed”, not as a colour.</li>
+    <li>Links say where they go, including the ones whose visible text is short, such as “JSON” and “Source”.</li>
+    <li>Images that only decorate, such as the Bundu mark beside the site name, are hidden from screen readers.</li>
+  </ul>
+
+  <h2 id="vision">Zoom, contrast and colour</h2>
+  <ul>
+    <li>Text can be zoomed to 400% and the page reflows to one column with no sideways scrolling.</li>
+    <li>Light and dark themes follow your device setting. Both meet the contrast floor.</li>
+    <li>Colour never carries meaning on its own: every status and every colour-scale band also has a text label.</li>
+    <li>
+      The weather colour scales publish, for each band, where its label goes and which surfaces it needs an outline
+      on, and the scales we designed stay distinguishable for people with red, green or blue colour blindness.
+    </li>
+  </ul>
+
+  <h2 id="data">Data without the pages</h2>
+  <p>
+    Everything on these pages is also available as data: the register as <a href="/register/index.json">JSON</a> and
+    each vocabulary term as JSON-LD. Assistive tools and scripts can read it directly.
+  </p>
+
+  <h2 id="checked">How this is checked</h2>
+  <p>
+    Every change runs the site's tests, which fail if the skip link, the labelled navigation, the main region or a
+    text label goes missing. The pages are also audited with axe-core against WCAG 2.2 AA in the light and dark
+    themes; the last audit, on 15 November 2026, found no violations.
+  </p>
+
+  <h2 id="report">Report a barrier</h2>
+  <p>
+    If something on these sites does not work for you, tell us. Open an issue at
+    <a href="https://github.com/bundu-labs/bundu-standards/issues/new?title=Accessibility%3A%20">github.com/bundu-labs/bundu-standards</a>,
+    saying which page, what you were trying to do and what you use (for example a screen reader or zoom). A barrier is
+    treated as a bug, not a feature request.
+  </p>
+</Base>

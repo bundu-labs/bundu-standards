@@ -13,10 +13,72 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+## 0.7.0 - 2026-11-15
+
+### Changed
+
+- Weather colour scales: the label-contrast target rises from 4.5:1 to 7:1,
+  the Bundu floor. A label goes on a swatch only where black or white text
+  reaches 7:1; otherwise it sits beside it. `scales.py write` now records each
+  band's `labelText`, `labelOnSwatch` and `outline` in `scales.json`, and CI
+  fails if they are stale. Scales of ours must keep neighbouring bands at delta
+  E 10 or more under typical vision and simulated protanopia, deuteranopia and
+  tritanopia: the wind ramp now takes seven of ColorBrewer YlGnBu's nine classes
+  (the 7-class scheme fell to 9.0 under protanopia; this pick holds 11.0).
+- standards.bundu.org and vocab.bundu.org follow the Bundu pattern: copper, the
+  stewardship mineral and Bundu's colour (Mzizi seven-minerals), replaces the
+  green and purple accents. Links use copper's text tokens (#7E3B24 on light,
+  #FFC3B0 on dark), and the adopted chip uses copper's container pair. Both
+  sites meet the Bundu floor: 17px body on touch and 15px on a fine pointer,
+  1.5 leading, no text under 14px, 49px and 28px hit regions in the site header,
+  and 7:1 contrast for body and muted text (muted moves to #4D4A45 and #B0ACA2;
+  it measured 5.29:1 to 6.94:1 before).
+- Both sites use the official Bundu mark, the light and dark favicon pair from
+  `www.bundu.org`, unchanged, chosen by `prefers-color-scheme`, plus the
+  180px Apple touch icon and a theme-colour per scheme. The old icon was a
+  single green SVG that did not follow the theme. vocab.bundu.org serves the
+  same files from the binary, and a test keeps its copies identical to the
+  standards site's.
+
+### Fixed
+
+- Updated tokio from 1.53.1 to 1.54.1 in the vocab server. `cargo audit`
+  flagged 1.53.1 as unsound (RUSTSEC-2026-0386: `AsyncFd::new` and related
+  constructors violate I/O safety; patched in 1.53.3 and later). The audit is
+  now clean (82 crates, 1509 advisories, 2026-11-15).
+
+### CI
+
+- The 0.6.0 changelog is carried onto `staging`, so `main` and `staging` stop
+  disagreeing on it. The 0.5.0 and 0.6.0 releases copied staging's tree onto
+  `main` without its history, which made every automatic release PR conflict
+  (#64); the next release is a true merge of `staging` into `main`.
+- `.github/dependabot.yml`: Dependabot opens its version and security PRs
+  against `staging` (npm for `workers/standards`, cargo, GitHub Actions; Astro
+  and `@astrojs/*` grouped), so its PRs follow the release flow instead of
+  targeting `main` as #55 did. Version updates wait 7 days after a release
+  (`cooldown`), as Semgrep's Dependabot rule requires; security updates do not
+  wait. It takes effect once released to `main`, the
+  branch Dependabot reads its configuration from.
+
 ## 0.6.0 - 2026-11-15
 
 ### Added
 
+- Accessibility on standards.bundu.org and vocab.bundu.org, for people who use a
+  keyboard, a screen reader, zoom or colour-blind vision. Every page now starts
+  with a skip link to the main region and has a labelled main navigation that
+  marks the current page, a footer with keyboard help and a link to report a
+  barrier, and a visible 3px copper focus outline. Short links carry a full
+  accessible name ("JSON", "Source"), a standard's status is read as "Status:
+  adopted", decorative images are hidden, vocabulary tables have captions and
+  row headers, the register has jump links to each group, and long text wraps at
+  320px (400% zoom) instead of scrolling sideways. A new
+  [accessibility statement](https://standards.bundu.org/accessibility/) explains
+  the keys, what screen readers get and how to report a barrier. axe-core (WCAG
+  2.2 AA and best practice) finds no violations on either site in light or dark
+  mode. Tests on both sites fail if any of this regresses or a text colour drops
+  under 7:1.
 - Research notes 0002 and 0003, both open briefs with no findings yet:
   what each level of weather station should measure, from a homestead to an
   industrial or network station (`docs/research/0002-station-tiers.md`), and

@@ -43,11 +43,39 @@ class Scales(unittest.TestCase):
                 if "assist" in b:
                     self.assertRegex(b["assist"], HEX)
 
-    def test_label_text_on_every_swatch_meets_aa(self):
+    def test_a_label_on_a_swatch_meets_the_bundu_floor(self):
+        self.assertGreaterEqual(scales.MIN_TEXT, 7.0)
         for s in scales.SCALES["scales"]:
             for b in s["bands"]:
-                _, c = scales.text_for(b["colour"])
-                self.assertGreaterEqual(c, scales.MIN_TEXT, f"{s['id']} {b['label']} {b['colour']}")
+                for colour, text, on in [(b["colour"], b["labelText"], b["labelOnSwatch"])] + (
+                    [(b["assist"], b["assistLabelText"], b["assistLabelOnSwatch"])] if "assist" in b else []
+                ):
+                    c = scales.contrast(colour, text)
+                    if on:
+                        self.assertGreaterEqual(c, scales.MIN_TEXT, f"{s['id']} {b['label']} {colour}")
+                    else:
+                        # Beside the swatch: no black or white label on it would reach the floor.
+                        self.assertLess(scales.text_for(colour)[1], scales.MIN_TEXT, f"{s['id']} {b['label']}")
+
+    def test_outlines_are_listed_wherever_a_swatch_is_below_3_to_1(self):
+        for s in scales.SCALES["scales"]:
+            for b in s["bands"]:
+                for surface, hex_ in scales.SURFACES.items():
+                    needs = scales.contrast(b["colour"], hex_) < scales.MIN_SWATCH
+                    self.assertEqual(surface in b["outline"], needs, f"{s['id']} {b['label']} on {surface}")
+
+    def test_scales_of_ours_stay_apart_for_colour_blind_readers(self):
+        for s in scales.SCALES["scales"]:
+            if s["origin"] != "ours":
+                continue
+            colours = [b["colour"] for b in s["bands"]]
+            for kind in scales.VISIONS:
+                d = scales.neighbour_separation(colours, kind)
+                self.assertGreaterEqual(d, scales.CLOSE, f"{s['id']} under {kind or 'typical vision'}: delta E {d:.1f}")
+
+    def test_derived_accessibility_fields_are_current(self):
+        on_disk = (scales.HERE / "scales.json").read_text()
+        self.assertEqual(on_disk, scales.dump(scales.with_derived(scales.SCALES)), "run scales.py write")
 
     def test_no_brand_mineral_is_used_as_a_data_colour(self):
         # The seven Mzizi minerals, every variant (mzizi_get_tokens family=minerals, 2026-11-14).

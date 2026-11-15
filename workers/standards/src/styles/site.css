@@ -1,20 +1,43 @@
+/* standards.bundu.org follows the Bundu pattern: copper, the stewardship
+   mineral (Mzizi seven-minerals; tokens from mzizi_get_tokens minerals), on
+   neutral grounds, within the Bundu floor (7:1 body contrast, 17px body on
+   touch and 15px on a fine pointer, 1.5 leading, 14px inset, 14px captions,
+   49px / 28px hit regions). Copper text sits on the page ground only; the
+   adopted chip uses copper's container pair. */
 :root {
   color-scheme: light dark;
   --bg: #fbfaf7;
   --fg: #1c1b19;
-  --muted: #5d5a54;
+  --muted: #4d4a45;
   --line: #d9d5cc;
-  --accent: #1f5f4a;
+  --accent: #7e3b24; /* copper textLight */
   --chip: #eceae3;
+  --copper-container: #fbe4da;
+  --on-copper-container: #5c2410;
+  --inset-floor: 14px;
+  --gap-floor: 7px;
+  --leading-floor: 1.5;
+  --hit: 49px;
+  --body: 17px;
+  --caption: 14px;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #141412;
     --fg: #ece9e1;
-    --muted: #a8a49a;
+    --muted: #b0aca2;
     --line: #2f2d29;
-    --accent: #7fd1b0;
+    --accent: #ffc3b0; /* copper textDark */
     --chip: #23221f;
+    --copper-container: #3a1a0e;
+    --on-copper-container: #ffd3c2;
+  }
+}
+/* Desktop tier: a fine pointer with hover, 64rem and up, and no coarse pointer. */
+@media (pointer: fine) and (hover: hover) and (min-width: 64rem) and (not (any-pointer: coarse)) {
+  :root {
+    --hit: 28px;
+    --body: 15px;
   }
 }
 * { box-sizing: border-box; }
@@ -22,20 +45,48 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font: 1rem/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+  font: var(--body) / var(--leading-floor) system-ui, -apple-system, "Segoe UI", sans-serif;
 }
-main, header.site, footer.site { max-width: 52rem; margin: 0 auto; padding: 1rem; }
-header.site { display: flex; gap: 1.25rem; align-items: baseline; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+main, header.site, footer.site { max-width: 52rem; margin: 0 auto; padding: 1rem max(1rem, var(--inset-floor)); overflow-wrap: anywhere; }
+header.site { display: flex; column-gap: max(1.25rem, var(--gap-floor)); row-gap: var(--gap-floor); align-items: center; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+header.site a { display: inline-flex; align-items: center; gap: var(--gap-floor); min-height: var(--hit); }
+header.site a.brand img { display: block; }
+header.site a.brand .mark-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  header.site a.brand .mark-light { display: none; }
+  header.site a.brand .mark-dark { display: block; }
+}
 header.site a.brand { font-weight: 700; color: var(--fg); text-decoration: none; }
-a { color: var(--accent); }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
 h1 { font-size: 1.75rem; line-height: 1.2; }
 h2 { margin-top: 2rem; font-size: 1.25rem; }
-code, pre { font-family: ui-monospace, "JetBrains Mono", monospace; font-size: 0.9em; }
+code, pre { font-family: ui-monospace, "JetBrains Mono", monospace; font-size: max(0.9em, var(--caption)); }
 pre { background: var(--chip); padding: 0.75rem 1rem; overflow-x: auto; border-radius: 0.5rem; }
-.chip { display: inline-block; padding: 0 0.5rem; border-radius: 999px; background: var(--chip); font-size: 0.8rem; }
-.chip.adopted { color: var(--accent); }
+.chip { display: inline-block; margin-left: var(--gap-floor); padding: 0 0.5rem; border-radius: 999px; background: var(--chip); color: var(--fg); font-size: var(--caption); }
+.chip.adopted { background: var(--copper-container); color: var(--on-copper-container); }
 ul.list { list-style: none; padding: 0; }
 ul.list li { padding: 0.5rem 0; border-bottom: 1px solid var(--line); }
 dl dt { font-weight: 600; margin-top: 1rem; }
 dl dd { margin: 0; color: var(--muted); }
-footer.site { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); margin-top: 3rem; }
+footer.site { color: var(--muted); font-size: max(0.85rem, var(--caption)); border-top: 1px solid var(--line); margin-top: 3rem; }
+
+/* Keyboard and assistive-technology aids. */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: var(--inset-floor); top: -100vh; z-index: 10; padding: var(--inset-floor); background: var(--bg); color: var(--accent); border: 2px solid var(--accent); border-radius: 0.5rem; font-weight: 600; }
+.skip:focus { top: var(--inset-floor); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+main:focus, h2[tabindex="-1"]:focus { outline: none; }
+header.site nav ul { display: flex; flex-wrap: wrap; column-gap: max(1.25rem, var(--gap-floor)); row-gap: var(--gap-floor); list-style: none; margin: 0; padding: 0; }
+header.site a[aria-current] { font-weight: 700; text-decoration-thickness: 2px; }
+ul.toc { columns: 16rem; list-style: none; padding: 0; }
+ul.toc li { padding: 0.25rem 0; }
+ul.toc a { display: inline-flex; align-items: center; min-height: var(--hit); }
+.muted { color: var(--muted); }
+kbd { font-family: ui-monospace, "JetBrains Mono", monospace; font-size: max(0.9em, var(--caption)); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 0.3rem; background: var(--chip); color: var(--fg); }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+caption { text-align: left; font-weight: 600; padding-bottom: var(--gap-floor); }
+th, td { text-align: left; vertical-align: top; padding: var(--gap-floor) var(--inset-floor) var(--gap-floor) 0; border-bottom: 1px solid var(--line); }
+footer.site p { margin: 0.5rem 0; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
+@media (forced-colors: active) { .chip { border: 1px solid CanvasText; } :focus-visible { outline-color: Highlight; } }

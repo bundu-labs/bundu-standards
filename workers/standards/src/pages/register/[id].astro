@@ -10,8 +10,8 @@ const { s } = Astro.props;
 const jsonLd = { "@context": "https://schema.org", ...definedTerm(s) };
 ---
 <Base title={`${s.name} · Bundu standards`} description={s.governs.replace(/\s+/g, " ").trim()} jsonLd={jsonLd}>
-  <p><a href="/register/">← Register</a></p>
-  <h1>{s.name} <span class={`chip ${s.status}`}>{s.status}</span></h1>
+  <nav aria-label="Breadcrumb"><p><a href="/register/"><span aria-hidden="true">← </span>Register</a></p></nav>
+  <h1>{s.name} <span class={`chip ${s.status}`}><span class="sr-only">Status: </span>{s.status}</span></h1>
   <dl>
     <dt>Governs</dt><dd>{s.governs}</dd>
     <dt>Current</dt><dd>{s.current}</dd>

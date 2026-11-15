@@ -2,6 +2,10 @@
 import "../styles/site.css";
 const { title, description, jsonLd } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+// The current section, for aria-current: the register's pages count as the register.
+const path = Astro.url.pathname;
+const current = (href) =>
+  href === "/" ? (path === "/" ? "page" : undefined) : path === href ? "page" : path.startsWith(href) ? "location" : undefined;
 ---
 <!doctype html>
 <html lang="en">
@@ -11,19 +15,43 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- The official Bundu mark (copper), as shipped by www.bundu.org: a light-surface and a dark-surface pair, picked by the browser's colour scheme. Never redrawn. -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32-dark.png" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16-dark.png" media="(prefers-color-scheme: dark)" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141412" media="(prefers-color-scheme: dark)" />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, "\\u003c")} />}
   </head>
   <body>
+    <a class="skip" href="#main">Skip to main content</a>
     <header class="site">
-      <a class="brand" href="/">Bundu standards</a>
-      <a href="/register/">Register</a>
-      <a href="/register/index.json">JSON</a>
-      <a href="https://github.com/bundu-labs/bundu-standards">Source</a>
+      <a class="brand" href="/" aria-current={current("/")}>
+        <img class="mark-light" src="/favicon-32x32.png" alt="" width="24" height="24" />
+        <img class="mark-dark" src="/favicon-32x32-dark.png" alt="" width="24" height="24" />
+        Bundu standards
+      </a>
+      <nav aria-label="Main">
+        <ul>
+          <li><a href="/register/" aria-current={current("/register/")}>Register</a></li>
+          <li><a href="/register/index.json">JSON<span class="sr-only"> (the register as JSON data)</span></a></li>
+          <li><a href="https://github.com/bundu-labs/bundu-standards">Source<span class="sr-only"> code on GitHub</span></a></li>
+          <li><a href="/accessibility/" aria-current={current("/accessibility/")}>Accessibility</a></li>
+        </ul>
+      </nav>
     </header>
-    <main><slot /></main>
+    <main id="main" tabindex="-1"><slot /></main>
     <footer class="site">
-      Published by the <a href="https://www.bundu.org">Bundu Foundation</a>. The register is CC0.
+      <p>
+        Published by the <a href="https://www.bundu.org">Bundu Foundation</a>. The register is CC0.
+      </p>
+      <p>
+        Every page works with a keyboard alone: <kbd>Tab</kbd> moves forward, <kbd>Shift</kbd>+<kbd>Tab</kbd> moves
+        back, <kbd>Enter</kbd> follows a link. Read the <a href="/accessibility/">accessibility statement</a> or
+        <a href="https://github.com/bundu-labs/bundu-standards/issues/new?title=Accessibility%3A%20">report a barrier</a>.
+      </p>
     </footer>
   </body>
 </html>

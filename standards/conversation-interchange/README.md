@@ -124,6 +124,32 @@ dropped and reported.
    harness important to all Bundu work, not only this repository, so a harness profile is in scope as
    a separate standard (tracked in its own issue, drafted after the coordinator's go); BCI's append-only, ordered `Message` stream is its natural
    session log.
+8. **Naming omitted records** (found by the first implementation, as are 9 to 13). The writer rule
+   says a reference may name "one the writer says it omitted in the `Header`", but `Header` has no
+   member for that, and the schema allows none but extensions. Either add one (for example a list of
+   omitted ids, or a flag that the stream is partial), or drop the clause so every reference must
+   resolve inside the stream. The first implementation does the second: it refuses a `Message` whose
+   `Conversation` is not in the stream.
+9. **A reader with limits.** "A reader conforms if it accepts every valid stream" cannot hold for a
+   store with real limits: a maximum message size, no memory, no binary files, a maximum stream size.
+   Proposed wording: a reader may refuse a valid stream only for a limit it states in advance, and
+   must name the record that broke it; anything it accepts but cannot keep it reports, by record type
+   and field. The first implementation refuses a message over 32 KiB rather than cutting it.
+10. **Record order.** The draft does not say whether a `Conversation` must come before its messages, or
+    a `Project` before the conversations filed in it. The first implementation accepts any order after
+    the `Header` and writes projects, then each conversation followed by its messages, then artifacts.
+    Recommend that order for writers and require readers to accept any.
+11. **Items a reader cannot hold.** A reader that keeps only text messages drops tool calls and
+    reasoning items, so the messages it keeps are no longer numbered without gaps. The first
+    implementation renumbers them 1, 2, 3 and still requires that an answer follows a question. Say
+    whether the gapless rule binds only the stream, or the reader's stored form too.
+12. **Importing twice, and someone else's ids.** The draft says nothing about a record whose id the
+    reader already holds. The first implementation keeps ids. A record the person already has is
+    left as it is (an import never overwrites or merges), and an id held by another person is skipped
+    without saying whose. Recommend this as reader guidance, because it makes an import safe to repeat.
+13. **Who the stream is for.** `Header.owner` describes where a stream came from. The first
+    implementation never uses it to decide whose history the records join; it uses the person the
+    product authenticated. Recommend saying so: `Header.owner` is informative, never authority.
 
 ## First implementation
 
@@ -145,33 +171,5 @@ device and offers BCI export and import.
   artifacts and other implementors' extensions. Its own citation shape travels in a
   `shamwari:citations` extension.
 
-## Findings from the first implementation (for the owner and the standards session)
-
-Building the reader and writer raised points the draft does not settle. None of them changes the
-schema here; each needs a decision before 0.1.0 is published.
-
-8. **Naming omitted records.** The writer rule says a reference may name "one the writer says it
-   omitted in the `Header`", but `Header` has no member for that, and the schema allows none but
-   extensions. Either add one (for example a list of omitted ids, or a flag that the stream is
-   partial), or drop the clause so every reference must resolve inside the stream. The first
-   implementation does the second: it refuses a `Message` whose `Conversation` is not in the stream.
-9. **A reader with limits.** "A reader conforms if it accepts every valid stream" cannot hold for a
-   store with real limits: a maximum message size, no memory, no binary files, a maximum stream size.
-   Proposed wording: a reader may refuse a valid stream only for a limit it states in advance, and
-   must name the record that broke it; anything it accepts but cannot keep it reports, by record type
-   and field. The first implementation refuses a message over 32 KiB rather than cutting it.
-10. **Record order.** The draft does not say whether a `Conversation` must come before its messages, or
-    a `Project` before the conversations filed in it. The first implementation accepts any order after
-    the `Header` and writes projects, then each conversation followed by its messages, then artifacts.
-    Recommend that order for writers and require readers to accept any.
-11. **Items a reader cannot hold.** A reader that keeps only text messages drops tool calls and
-    reasoning items, so the messages it keeps are no longer numbered without gaps. The first
-    implementation renumbers them 1, 2, 3 and still requires that an answer follows a question. Say
-    whether the gapless rule binds only the stream, or the reader's stored form too.
-12. **Importing twice, and someone else's ids.** The draft says nothing about a record whose id the
-    reader already holds. The first implementation keeps ids. A record the person already has is
-    left as it is (an import never overwrites or merges), and an id held by another person is skipped
-    without saying whose. Recommend this as reader guidance, because it makes an import safe to repeat.
-13. **Who the stream is for.** `Header.owner` describes where a stream came from. The first
-    implementation never uses it to decide whose history the records join; it uses the person the
-    product authenticated. Recommend saying so: `Header.owner` is informative, never authority.
+What building it found is open questions 8 to 13 above. None of them changes the schema here; each
+needs a decision before 0.1.0 is published.

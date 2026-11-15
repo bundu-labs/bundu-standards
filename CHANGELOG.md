@@ -82,6 +82,10 @@ Versions released before then are not renumbered.
 
 ### Fixed
 
+- Updated tokio from 1.53.1 to 1.54.1 in the vocab server. `cargo audit`
+  flagged 1.53.1 as unsound (RUSTSEC-2026-0386: `AsyncFd::new` and related
+  constructors violate I/O safety; patched in 1.53.3 and later). The audit is
+  now clean (82 crates, 1509 advisories, 2026-11-15).
 - Updated Astro, which builds standards.bundu.org, from 7.3.3 to 7.4.12. The
   patch releases tighten how `Host` and the `X-Forwarded-*` headers are
   validated against `security.allowedDomains`, among other fixes. This replaces

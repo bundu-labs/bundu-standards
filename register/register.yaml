@@ -1795,17 +1795,15 @@ standards:
     domain: weather
     category: specification
     steward: Bundu Foundation
-    commitment: 0.1.0 (semver); released with the next staging-to-main release.
-    current: 0.1.0, standards/weather-colour-scales/
+    commitment: 0.1.0 draft (semver); released with the next staging-to-main release.
+    current: 0.1.0 draft, standards/weather-colour-scales/
     governs: >-
       The colours, breakpoints and labels every app uses to show weather data:
       air quality, UV, temperature, wind, rainfall rate and cloud cover. Adopts
       the US EPA AQI colours and the WHO Global Solar UV Index colours unchanged;
       writes the scales no published standard covers. Units by UCUM.
-    status: adopted
-    decided: >-
-      Owner adopted 2026-11-15: "We should be adopting all standards immediately before
-      people start using our app"; scope approved 2026-11-14 (#39)
+    status: proposed
+    decided: Owner approved the scope 2026-11-14 (#39)
     url: https://standards.bundu.org/weather-colour-scales/
     rationale: >-
       Brand colours and invented scales mislead readers of weather data. Adopt

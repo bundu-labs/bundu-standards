@@ -1,9 +1,8 @@
 # Weather data colour scales
 
-**Version 0.1.0. Adopted by the owner on 2026-11-15** ("We should be adopting all standards
-immediately before people start using our app"); scope approved 2026-11-14 (#39). Licence: CC BY 4.0
-for the text, CC0 for `scales.json`. The adopted scales remain their stewards' work and are cited, not
-relicensed.
+**Version 0.1.0, draft.** Scope approved by the owner on 2026-11-14 (#39); not published until it
+merges and is released. Licence: CC BY 4.0 for the text, CC0 for `scales.json`. The adopted scales
+remain their stewards' work and are cited, not relicensed.
 
 ## Why this exists
 

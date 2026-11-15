@@ -223,7 +223,9 @@ Versions released before then are not renumbered.
 - `.github/dependabot.yml`: Dependabot opens its version and security PRs
   against `staging` (npm for `workers/standards`, cargo, GitHub Actions; Astro
   and `@astrojs/*` grouped), so its PRs follow the release flow instead of
-  targeting `main` as #55 did. It takes effect once released to `main`, the
+  targeting `main` as #55 did. Version updates wait 7 days after a release
+  (`cooldown`), as Semgrep's Dependabot rule requires; security updates do not
+  wait. It takes effect once released to `main`, the
   branch Dependabot reads its configuration from.
 - Production deploys move to `.github/workflows/fly-deploy.yml`, which runs
   when `CI` passes on a push to `main` and deploys the commit CI tested to the

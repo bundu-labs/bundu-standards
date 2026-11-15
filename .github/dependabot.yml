@@ -1,6 +1,8 @@
 # Dependabot opens its PRs against staging: changes go to staging and are
 # released to main, never merged straight into main (AGENTS.md, Branching).
-# Security updates follow the same target-branch.
+# Security updates follow the same target-branch. Version updates wait 7 days
+# after a release (cooldown), since a just-published package is the likeliest
+# to be malicious or broken; the cooldown does not delay security updates.
 version: 2
 updates:
   - package-ecosystem: npm
@@ -8,6 +10,8 @@ updates:
     target-branch: staging
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
     groups:
       astro:
         patterns:
@@ -22,6 +26,8 @@ updates:
     target-branch: staging
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
     labels:
       - dependencies
       - rust
@@ -31,6 +37,8 @@ updates:
     target-branch: staging
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
     labels:
       - dependencies
       - github-actions

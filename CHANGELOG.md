@@ -30,6 +30,17 @@ Versions released before then are not renumbered.
 - Register: `weather_colour_scales` is adopted at 1.0.0, and the
   `who_global_solar_uvi` notes name WHO's RGB source.
 
+### CI
+
+- CI moves from Node and inline Python to Deno, the first repository in the owner's
+  Deno-CI pilot (2026-11-16). The standards endpoint job installs, tests and builds
+  `workers/standards` with Deno (`deno install`, `deno task test`, `deno task build`); its
+  25 tests run unchanged on Deno's `node:test` support. The vocabulary contract check is
+  one script, `tools/contract.ts`, in place of the inline Python and curl. It checks the
+  same things: every term as JSON-LD and HTML, JSON-LD by default, and 404 for an unknown
+  term. `package-lock.json` stays, because Cloudflare Workers Builds deploys the site from it.
+  The register tools are still Python for now.
+
 ## 0.7.0 - 2026-11-15
 
 ### Changed

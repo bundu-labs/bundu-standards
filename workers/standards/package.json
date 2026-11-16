@@ -12,7 +12,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "test": "deno test --no-check --allow-read --allow-env test/",
+    "test": "node --test test/*.test.js",
+    "test:deno": "deno test --no-check --allow-read --allow-env test/",
     "deploy": "astro build && wrangler deploy"
   },
   "dependencies": {

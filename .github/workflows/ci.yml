@@ -127,8 +127,37 @@ jobs:
         working-directory: workers/standards
         run: deno task build
 
+  standards-api:
+    runs-on: ubuntu-latest
+    name: Standards API (Rust Worker)
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: workers/standards-api
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: workers/standards-api
+      - name: Format
+        run: cargo fmt --check
+      - name: Clippy (native and wasm32)
+        run: |
+          cargo clippy --all-targets -- -D warnings
+          cargo clippy --release --target wasm32-unknown-unknown -- -D warnings
+      - name: Tests (the cases of workers/standards/test/files.test.js)
+        run: cargo test
+      - name: Build for Workers
+        run: cargo build --release --target wasm32-unknown-unknown
+
   comment:
-    needs: [test, contract, register, endpoint]
+    needs: [test, contract, register, endpoint, standards-api]
     # Push runs (main, staging) have no pull request to comment on.
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest

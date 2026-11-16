@@ -41,6 +41,15 @@ Versions released before then are not renumbered.
   term. `package-lock.json` stays, because Cloudflare Workers Builds deploys the site from it.
   The register tools are still Python for now.
 
+### Added
+
+- The file endpoint of standards.bundu.org in Rust: `workers/standards-api`, a `workers-rs`
+  Worker with the same routes, problems, headers and edge cache as `src/lib/files.js`. Its 12
+  tests are the JS test cases, run natively, and CI builds it for wasm32. The Astro pages
+  hand requests to it through a `STANDARDS_API` service binding, and fall back to the JS when
+  the binding is absent, so nothing changes until the Worker is deployed and bound
+  (`workers/standards-api/README.md`; #87).
+
 ## 0.7.0 - 2026-11-15
 
 ### Changed

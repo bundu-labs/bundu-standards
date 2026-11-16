@@ -50,6 +50,13 @@ Versions released before then are not renumbered.
   the binding is absent, so nothing changes until the Worker is deployed and bound
   (`workers/standards-api/README.md`; #87).
 
+### Fixed
+
+- Cloudflare Workers Builds deploys standards.bundu.org again. Its build command runs the
+  `test` script, which #88 had pointed at Deno; the build image has no Deno, so every build
+  since failed and the live site stayed on the deploy from before #88. The `test` script runs
+  the 25 tests on Node again, and CI runs them on Deno through `test:deno`.
+
 ## 0.7.0 - 2026-11-15
 
 ### Changed

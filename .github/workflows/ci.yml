@@ -69,48 +69,12 @@ jobs:
             sleep 1
           done
 
-      - name: Every term resolves in both representations
-        run: |
-          set -euo pipefail
-          TERMS=$(curl -sf http://127.0.0.1:8080/context.jsonld \
-            | python3 -c "import json,sys; print(' '.join(k for k in json.load(sys.stdin)['@context'] if k not in ('schema','bundu')))")
-          echo "checking: $TERMS"
-          # Valid JSON-LD that names the term, with a definition, a
-          # rationale and a W3C vocabulary status.
-          CHECK_JSONLD='
-          import json, os, sys
-          d = json.load(sys.stdin)
-          t = os.environ["T"]
-          assert d["@id"] == "bundu:" + t, d["@id"]
-          assert d["vs:term_status"] in ("stable", "testing")
-          assert d["rdfs:comment"] and d["bundu:rationale"]
-          '
-          CHECK_JSONLD=$(printf '%s' "$CHECK_JSONLD" | sed 's/^ *//')
-          for t in $TERMS; do
-            curl -sf -H 'Accept: application/ld+json' "http://127.0.0.1:8080/$t" \
-              | T="$t" python3 -c "$CHECK_JSONLD" \
-              || { echo "::error::$t does not resolve as valid JSON-LD"; exit 1; }
-            page=$(curl -sf -H 'Accept: text/html' "http://127.0.0.1:8080/$t") \
-              || { echo "::error::$t does not resolve as HTML"; exit 1; }
-            case "$page" in *"<code class=\"term\">$t</code>"*) ;; \
-              *) echo "::error::$t HTML page does not render the term"; exit 1;; esac
-          done
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: v2.x
+      - name: Vocabulary contract (every term in both representations, negotiation, 404)
+        run: deno run --allow-net tools/contract.ts http://127.0.0.1:8080
 
-      - name: Content negotiation and 404 behaviour
-        run: |
-          set -euo pipefail
-          ct=$(curl -s -o /dev/null -w '%{content_type}' http://127.0.0.1:8080/Family)
-          [ "${ct%%;*}" = "application/ld+json" ] \
-            || { echo "::error::default representation must be JSON-LD, got $ct"; exit 1; }
-
-          ct=$(curl -s -o /dev/null -w '%{content_type}' -H 'Accept: text/html' http://127.0.0.1:8080/Family)
-          case "$ct" in text/html*) ;; *) echo "::error::HTML not served, got $ct"; exit 1;; esac
-
-          code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/NotATerm)
-          [ "$code" = "404" ] || { echo "::error::unknown term returned $code"; exit 1; }
-
-  # The register of adopted standards: one source (register/register.yaml), the
-  # generated files must match it, and the tool's own tests must pass.
   register:
     runs-on: ubuntu-latest
     name: Standards register
@@ -146,23 +110,22 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
         with:
-          node-version: "24"
-          cache: npm
-          cache-dependency-path: workers/standards/package-lock.json
-
+          deno-version: v2.x
       - name: Install
         working-directory: workers/standards
-        run: npm ci
+        # Deno resolves the packages from package.json; package-lock.json stays as the lock
+        # Cloudflare Workers Builds deploys from. esbuild and workerd need their install scripts.
+        run: deno install --allow-scripts=npm:esbuild,npm:workerd
 
       - name: Tests
         working-directory: workers/standards
-        run: npm test
+        run: deno task test
 
       - name: Build
         working-directory: workers/standards
-        run: npm run build
+        run: deno task build
 
   comment:
     needs: [test, contract, register, endpoint]

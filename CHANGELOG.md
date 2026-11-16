@@ -49,9 +49,17 @@ Versions released before then are not renumbered.
   hand requests to it through a `STANDARDS_API` service binding, and fall back to the JS when
   the binding is absent, so nothing changes until the Worker is deployed and bound
   (`workers/standards-api/README.md`; #87).
+- The pages of standards.bundu.org in Rust, in the same Worker: the home page, the register,
+  each standard's page, the accessibility statement and `/register/index.json`, rendered on
+  the server with Dioxus and Mzizi Roots (`mzizi-ui`'s `Badge` for each status). `build.rs`
+  reads and checks `register/register.yaml` at build time. All 108 pages match the Astro
+  build in elements, attributes and text, and the JSON matches byte for byte. Nothing changes
+  until the custom domain moves to `bundu-standards-api`; the steps are in the README.
 
 ### Fixed
 
+- The home page reads "103 adopted, 2 proposed" in the Rust build, where Astro dropped the
+  space after the comma.
 - Cloudflare Workers Builds deploys standards.bundu.org again. Its build command runs the
   `test` script, which #88 had pointed at Deno; the build image has no Deno, so every build
   since failed and the live site stayed on the deploy from before #88. The `test` script runs

@@ -1,11 +1,11 @@
-# standards.bundu.org's file endpoint, in Rust (workers-rs). Issue #87.
+# standards.bundu.org in Rust (workers-rs): the pages and the file endpoint. Issue #87.
 #
-# It has no route of its own: the Astro Worker (workers/standards) keeps standards.bundu.org and
-# hands /register/latest and /<commit>/register/<file> to this Worker through the service binding
-# STANDARDS_API. Until that binding exists, the Astro Worker answers with its own JS, so deploying
-# this Worker changes nothing until the binding is added.
+# The pages are rendered with Dioxus and Mzizi Roots from the register built into the Worker;
+# the file endpoint reads a public repository. No bindings and no secrets.
 #
-# No bindings and no secrets: it reads a public repository.
+# It has no route yet: the Astro Worker (workers/standards) still holds standards.bundu.org.
+# Deploying this Worker changes nothing until the custom domain moves to it (README, "Turning
+# it on").
 name = "bundu-standards-api"
 main = "build/worker/shim.mjs"
 compatibility_date = "2026-10-01"
@@ -13,6 +13,11 @@ workers_dev = false
 
 [build]
 command = "cargo install -q worker-build && worker-build --release"
+
+# The favicons, robots.txt and _headers, served before the Worker runs. Shared with the Astro
+# Worker until it is retired, then moved here.
+[assets]
+directory = "../standards/public"
 
 [observability]
 enabled = true

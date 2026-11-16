@@ -1,10 +1,14 @@
-//! standards.bundu.org's file endpoint as a Rust Cloudflare Worker.
+//! standards.bundu.org as a Rust Cloudflare Worker: the pages and the file endpoint.
 //!
-//! The behaviour lives in [`core`], which has no platform dependency and is tested natively
-//! (`cargo test`). This file is only the Worker glue: it maps a request to [`core::route`],
+//! The behaviour lives in [`core`] (the file endpoint), [`site`] and [`pages`] (the pages,
+//! rendered with Dioxus and Mzizi Roots), none of which has a platform dependency; all are
+//! tested natively (`cargo test`). This file is only the Worker glue: it maps a request to [`core::route`],
 //! reaches GitHub with the platform's `fetch`, and keeps successful GETs in the edge cache.
 
 pub mod core;
+pub mod pages;
+pub mod register;
+pub mod site;
 
 #[cfg(target_arch = "wasm32")]
 mod worker_glue {
@@ -51,6 +55,12 @@ mod worker_glue {
         let origin = url.origin().ascii_serialization();
         let path = url.path().to_owned();
         let method = req.method().to_string();
+
+        // The pages, the JSON and the stylesheet are rendered here, from the register built
+        // into the Worker: no upstream and no cache needed.
+        if let Some(reply) = crate::site::reply(&method, &path) {
+            return to_response(reply);
+        }
 
         let cache = Cache::default();
         let key = (method == "GET").then(|| core::cache_key(&origin, &path));

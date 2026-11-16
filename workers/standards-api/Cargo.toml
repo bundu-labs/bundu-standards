@@ -2,9 +2,9 @@
 name = "bundu-standards-api"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.83"
+rust-version = "1.85"
 license = "Apache-2.0"
-description = "The file endpoint of standards.bundu.org, as a Rust Cloudflare Worker"
+description = "standards.bundu.org, its pages and its file endpoint, as a Rust Cloudflare Worker"
 publish = false
 
 # Its own package, not part of the vocab server's: it builds for wasm32 and has its own deps.
@@ -14,7 +14,18 @@ publish = false
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-serde_json = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+# Mzizi Roots: the pages are Dioxus components rendered on the server, with the Mzizi badge.
+dioxus = { version = "0.7", default-features = false, features = ["macro", "html"] }
+dioxus-ssr = "0.7"
+mzizi-ui = "0.7"
+
+# build.rs turns register/register.yaml into JSON, so no YAML parser goes into the wasm.
+[build-dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+serde_yaml = "0.9"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 worker = "0.9"

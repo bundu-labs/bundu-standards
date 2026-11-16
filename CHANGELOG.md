@@ -15,6 +15,10 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- standards.bundu.org is served by the Rust Worker, `bundu-standards-api`: its
+  `wrangler.toml` claims the custom domain, and the Astro Worker's `wrangler.jsonc` no longer
+  does, so a deploy of either keeps the domain where it is.
+
 - Weather colour scales 1.0.0, adopted. Every claim marked inferred in 0.1.0
   was checked at source on 2026-11-15:
   - UV colours now use WHO's own RGB from its UV index clipart notes (2002):

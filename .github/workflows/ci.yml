@@ -121,7 +121,7 @@ jobs:
 
       - name: Tests
         working-directory: workers/standards
-        run: deno task test
+        run: deno task test:deno
 
       - name: Build
         working-directory: workers/standards

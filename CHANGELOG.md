@@ -15,6 +15,25 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- **The AAIF software is adopted into the build** (owner, 2026-11-17): Agent
+  Router (Shamwari's model routing), agentgateway (MCP and A2A) and goose (a
+  client). They are implementations, so the harness checklist records them and
+  the register does not. Shamwari's placement is in shamwari-ai/shamwari#325.
+
+- **OpenSandbox adopted** (owner, 2026-11-17: "Yes to open sandbox"). Its
+  Lifecycle API is pre-v1, so a harness pins the OpenAPI files. Every row of
+  the harness conformance checklist now names an adopted standard.
+- **The nine Bundu Conversation Interchange vocabulary terms are stable**
+  (owner, 2026-11-17). BCI 0.1.0 is adopted and published on
+  standards.bundu.org, which is the vocabulary's bar for a stable term. 48
+  terms: 47 stable, 1 testing (`notificationPreference`).
+- **OpenEnv adopted** (register id `openenv`; owner, 2026-11-17: "Those 4 we
+  should immediately adopt"): Hugging Face's environments for training
+  agents, an AAIF project since 2026-10-22, BSD-3-Clause. Its environment spec
+  (RFC 002) is still In Review, so a trainer pins the release. The harness
+  checklist now accounts for all ten AAIF projects, and notes goose,
+  agentgateway and Agent Router as implementations rather than standards.
+
 - **Adopted, by the owner's decision of 2026-11-15** ("We should be adopting all standards
   immediately before people start using our app"): BCI and ACP. The third proposed standard, the
   weather colour scales, was adopted at 1.0.0 in #85 (below), so with this every standard proposed
@@ -166,6 +185,11 @@ Versions released before then are not renumbered.
 
 ### Fixed
 
+- standards.bundu.org's content security policy allows `connect-src 'self'`.
+  With the nonce live, Cloudflare's bot detection ran but its report to
+  `/cdn-cgi/challenge-platform/` on the same origin was blocked, because the
+  policy allowed no connections at all. It may now connect to this origin and
+  nowhere else.
 - standards.bundu.org's content security policy now carries a fresh nonce on
   every page (128 bits from the Worker's cryptographic random source). Cloudflare
   reads it and stamps it on the inline script its bot detection injects, so Bot

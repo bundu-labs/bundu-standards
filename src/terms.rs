@@ -65,8 +65,7 @@ pub enum Status {
     Stable,
     /// Its standard is still being written. The URI is permanent, but the
     /// definition may still be refined before the term becomes stable.
-    /// New terms start here (today: `notificationPreference` and the nine
-    /// Bundu Conversation Interchange terms).
+    /// New terms start here (today: `notificationPreference`).
     Pending,
 }
 
@@ -1310,13 +1309,14 @@ pub const TERMS: &[Term] = &[
     },
     // ── Conversations and assistants ───────────────────────────────────
     // The terms the Bundu Conversation Interchange (BCI) 0.1.0 context
-    // (`standards/conversation-interchange/context.jsonld`) names. Pending
-    // until BCI is published on standards.bundu.org.
+    // (`standards/conversation-interchange/context.jsonld`) names. Stable
+    // since BCI 0.1.0 was adopted (2026-11-15) and published on
+    // standards.bundu.org.
     Term {
         id: "Project",
         kind: Kind::Class,
         domain: Domain::ConversationsAndAssistants,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "Project",
         comment: "A named group of a person's conversations with an AI \
                   assistant, with standing instructions and the skills the \
@@ -1341,7 +1341,7 @@ pub const TERMS: &[Term] = &[
         id: "Artifact",
         kind: Kind::Class,
         domain: Domain::ConversationsAndAssistants,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "Artifact",
         comment: "An answer or file a person chose to keep from a \
                   conversation with an AI assistant, with a stable id, its \
@@ -1370,7 +1370,7 @@ pub const TERMS: &[Term] = &[
         id: "MemoryEntry",
         kind: Kind::Class,
         domain: Domain::ConversationsAndAssistants,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "Memory Entry",
         comment: "One thing an AI assistant remembers about a person, which \
                   the person stated or confirmed (`consent`). An assistant \
@@ -1393,7 +1393,7 @@ pub const TERMS: &[Term] = &[
         id: "scope",
         kind: Kind::Property,
         domain: Domain::ConversationsAndAssistants,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "scope",
         comment: "Whose knowledge a message or memory entry is about. \
                   `personal` content is never sent to a third-party \
@@ -1416,7 +1416,7 @@ pub const TERMS: &[Term] = &[
         id: "pinned",
         kind: Kind::Property,
         domain: Domain::ConversationsAndAssistants,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "pinned",
         comment: "True when the person pinned a conversation or project so \
                   it stays at the top of their list. A choice of the person, \
@@ -1437,7 +1437,7 @@ pub const TERMS: &[Term] = &[
         id: "instructions",
         kind: Kind::Property,
         domain: Domain::ConversationsAndAssistants,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "instructions",
         comment: "Standing instructions an AI assistant follows in every \
                   conversation of a project, as plain Markdown in the \
@@ -1458,7 +1458,7 @@ pub const TERMS: &[Term] = &[
         id: "skill",
         kind: Kind::Property,
         domain: Domain::ConversationsAndAssistants,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "skill",
         comment: "An Agent Skill a project uses, named by the Agent Skills \
                   `name` field. The skill itself (its `SKILL.md` folder) is \
@@ -1479,7 +1479,7 @@ pub const TERMS: &[Term] = &[
         id: "provenance",
         kind: Kind::Property,
         domain: Domain::ConversationsAndAssistants,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "provenance",
         comment: "Where an AI-generated message or saved answer came from: \
                   the model as its provider names it, the model's licence \
@@ -1503,7 +1503,7 @@ pub const TERMS: &[Term] = &[
         id: "consent",
         kind: Kind::Property,
         domain: Domain::ConversationsAndAssistants,
-        status: Status::Pending,
+        status: Status::Stable,
         label: "consent",
         comment: "How a memory entry came to be held: the person stated it, \
                   or confirmed it after the assistant showed it to them. \
@@ -1877,7 +1877,7 @@ mod tests {
     ];
 
     #[test]
-    fn every_bundu_term_in_the_bci_context_is_defined_and_pending() {
+    fn every_bundu_term_in_the_bci_context_is_defined_and_stable() {
         let context = include_str!("../standards/conversation-interchange/context.jsonld");
         let named: HashSet<&str> = context
             .match_indices("\"bundu:")
@@ -1890,8 +1890,9 @@ mod tests {
         for id in BCI_TERMS {
             let t = find(id).unwrap_or_else(|| panic!("missing BCI term: {id}"));
             assert_eq!(t.domain, Domain::ConversationsAndAssistants, "{id}");
-            // Pending until BCI is published on standards.bundu.org.
-            assert_eq!(t.status, Status::Pending, "{id}");
+            // BCI 0.1.0 is adopted and published on standards.bundu.org
+            // (owner, 2026-11-17), so its terms' meaning is fixed.
+            assert_eq!(t.status, Status::Stable, "{id}");
         }
     }
 

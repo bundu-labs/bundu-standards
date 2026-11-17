@@ -73,7 +73,7 @@
     "_schemaVersion": "v3.1",
     "displayName": "Bundu vocabulary (vocab.bundu.org)",
     "category": "vocabulary",
-    "description": "Terms Schema.org lacks. Stable: Family, Community, PlaceOwner, PublishingHouse, NewsDesk, recognitionBasis, verificationTier, ubuntuScore, communityVouches, isInformal, assuranceLevel, attestation, defaultFamily, kAnonymity, maxReidentificationRisk, and, since BAGS was published on bundu.org, the AI guardrail terms (AIGuardrail, PlatformGuardrail, EntityGuardrail, GuardrailCategory, guardrailSeverity, guardrailCategory, appliesToSurface, enforcementLayer, isCoreGuardrail, standardVersion) and the BAGS set with BAGS-01 to BAGS-12. Testing: notificationPreference (identity.persons.notificationPreferences), and the Bundu Conversation Interchange terms Project, Artifact, MemoryEntry, scope, pinned, instructions, skill, provenance and consent (until BCI is published). Proposed, not yet in the live index: trustScore (a cached schema.org Rating per trust context in `bundu`, nyuchi/api-gateway#272); added in bundu-labs/bundu-standards before any app emits it.",
+    "description": "Terms Schema.org lacks. Stable: Family, Community, PlaceOwner, PublishingHouse, NewsDesk, recognitionBasis, verificationTier, ubuntuScore, communityVouches, isInformal, assuranceLevel, attestation, defaultFamily, kAnonymity, maxReidentificationRisk, and, since BAGS was published on bundu.org, the AI guardrail terms (AIGuardrail, PlatformGuardrail, EntityGuardrail, GuardrailCategory, guardrailSeverity, guardrailCategory, appliesToSurface, enforcementLayer, isCoreGuardrail, standardVersion) and the BAGS set with BAGS-01 to BAGS-12. Testing: notificationPreference (identity.persons.notificationPreferences). Stable since 2026-11-17, for the Bundu Conversation Interchange: Project, Artifact, MemoryEntry, scope, pinned, instructions, skill, provenance and consent. Proposed, not yet in the live index: trustScore (a cached schema.org Rating per trust context in `bundu`, nyuchi/api-gateway#272); added in bundu-labs/bundu-standards before any app emits it.",
     "versionCommitment": "Live terms (CC0); additions by review in bundu-labs/bundu-standards; flat URIs (vocab.bundu.org/<term>); stable terms never change meaning",
     "specificationUrl": "https://vocab.bundu.org",
     "documentationUrl": "https://github.com/bundu-labs/bundu-standards",
@@ -884,10 +884,33 @@
     "documentationUrl": "https://open-sandbox.ai/",
     "stewardOrganisation": "OpenSandbox a Series of LF Projects, LLC, under the Agentic AI Foundation (AAIF); maintainers mainly Alibaba-affiliated",
     "usageNotes": "Licence Apache-2.0 (repository LICENSE, measured 2026-11-17). Foundation host: confirmed. The AAIF proposal (aaif/project-proposals#26, opened 2026-05-05) is closed as completed with the labels Approved, Sandbox and contribution-agreement/signed, and CHARTER.md establishes \"OpenSandbox a Series of LF Projects, LLC\", adopted 2026-10-20, with AAIF named as its foundation contact. Caveats, measured in the same proposal thread: a reviewer noted that the Lifecycle API is pre-v1 and that some behaviour is still defined by the reference implementation; the proposers state that maintainers are primarily Alibaba-affiliated and that governance is to broaden. Bundu runs no sandbox today: Shamwari's data plane (nyuchi/nyuchi-servers-api) executes no model-written code. The entry matters when a Bundu harness runs code.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
       "adoptionRationale": "A standard sandbox protocol exists under a foundation, so a harness uses it rather than defining its own (AGENTS.md, the rule)."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_openenv",
+    "_schemaVersion": "v3.1",
+    "displayName": "OpenEnv (environments for training AI agents)",
+    "category": "specification",
+    "description": "How a reinforcement-learning environment for an agent is packaged and called: a containerised service that exposes a Gym-style training interface and MCP to the agent, so environments are interchangeable between training libraries.",
+    "versionCommitment": "Pin the release a trainer or environment builds against (v0.13.0); the environment spec is an RFC still in review.",
+    "specificationUrl": "https://github.com/huggingface/OpenEnv/blob/main/rfcs/002-env-spec.md",
+    "documentationUrl": "https://huggingface.co/docs/openenv/index",
+    "stewardOrganisation": "OpenEnv a Series of LF Projects, LLC, under the Agentic AI Foundation (AAIF); contributed by Hugging Face",
+    "usageNotes": "Licence BSD-3-Clause (repository LICENSE, measured 2026-11-17). Foundation host: confirmed. TECHNICAL_CHARTER.md establishes \"OpenEnv a Series of LF Projects, LLC\", adopted 2026-10-22, and AAIF announced it as a project that day (aaif.io/news/agentic-ai-foundation-announces-four-new-projects). The other AAIF projects not in this register are implementations, not standards, so they are noted in the harness checklist instead: goose (an agent), agentgateway and Agent Router (gateways), all Apache-2.0.",
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "If Bundu trains agents, environments follow the foundation-hosted format rather than a private one (AGENTS.md, the rule)."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"

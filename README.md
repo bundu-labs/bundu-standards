@@ -154,19 +154,20 @@ vocabulary.
 Terms for the Bundu Conversation Interchange (BCI 0.1.0,
 `standards/conversation-interchange/`), the record of what a person keeps in
 an AI assistant. They are the `bundu:` terms its `context.jsonld` names. They
-are pending until BCI is published on standards.bundu.org.
+are stable: BCI 0.1.0 was adopted on 2026-11-15 and is published on
+standards.bundu.org.
 
-| Term           | Kind     | Extends or value                                                    | Status  |
-| -------------- | -------- | ------------------------------------------------------------------- | ------- |
-| `Project`      | class    | `schema:CreativeWork`                                               | pending |
-| `Artifact`     | class    | `schema:CreativeWork`; mapped to, not the same as, the A2A Artifact | pending |
-| `MemoryEntry`  | class    | `schema:Statement`                                                  | pending |
-| `scope`        | property | `personal` · `community` · `platform`                               | pending |
-| `pinned`       | property | boolean                                                             | pending |
-| `instructions` | property | text, Markdown in the AGENTS.md style (on a `Project`)              | pending |
-| `skill`        | property | text, an Agent Skills `name` (on a `Project`)                       | pending |
-| `provenance`   | property | `schema:StructuredValue`: `model`, `licenseClass`, `c2pa`           | pending |
-| `consent`      | property | `stated` · `confirmed` (on a `MemoryEntry`)                         | pending |
+| Term           | Kind     | Extends or value                                                    | Status |
+| -------------- | -------- | ------------------------------------------------------------------- | ------ |
+| `Project`      | class    | `schema:CreativeWork`                                               | stable |
+| `Artifact`     | class    | `schema:CreativeWork`; mapped to, not the same as, the A2A Artifact | stable |
+| `MemoryEntry`  | class    | `schema:Statement`                                                  | stable |
+| `scope`        | property | `personal` · `community` · `platform`                               | stable |
+| `pinned`       | property | boolean                                                             | stable |
+| `instructions` | property | text, Markdown in the AGENTS.md style (on a `Project`)              | stable |
+| `skill`        | property | text, an Agent Skills `name` (on a `Project`)                       | stable |
+| `provenance`   | property | `schema:StructuredValue`: `model`, `licenseClass`, `c2pa`           | stable |
+| `consent`      | property | `stated` · `confirmed` (on a `MemoryEntry`)                         | stable |
 
 ## Using it
 

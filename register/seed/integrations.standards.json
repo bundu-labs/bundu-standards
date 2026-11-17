@@ -2005,7 +2005,7 @@
     "_schemaVersion": "v3.1",
     "displayName": "Bundu Cell (.cell), the personal data store format",
     "category": "data_format",
-    "description": "How one record a person owns (a cell) is written so it is the same bytes in a .cell file or a database row keyed by its @id: JSON-LD 1.1 with schema.org types and a CommonMark text field that may name facts only as {{field}}. Each cell carries an RFC 8785 (JCS) hash, a VC Data Integrity proof and a version chain. A pod is one person's cells; the Nyuchi Honeycomb holds pods and adopts the Solid Protocol for them.",
+    "description": "How one record a person owns (a cell) is written so it is the same bytes in a .cell file or a database row keyed by its @id: JSON-LD 1.1 with schema.org types and a CommonMark text field that may name facts only as {{field}}. Each cell carries an RFC 8785 (JCS) hash, a VC Data Integrity proof and a version chain. A pod is one person's cells; the Nyuchi Honeycomb holds pods and adopts the Solid Protocol for them. Maps directly to SiafuDB: on the device and at the edge a cell is a SiafuDB node keyed by its @id, and the SiafuDB Graph Sync Protocol (siafudb_graph_sync) carries cells from device to cloud to pod without reshaping them.",
     "versionCommitment": "0.1.0 draft (semver); nothing is final until the owner approves its scope.",
     "specificationUrl": "https://standards.bundu.org/cell/",
     "documentationUrl": null,

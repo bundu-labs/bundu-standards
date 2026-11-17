@@ -48,9 +48,7 @@
   "paths": {
     "/": {
       "get": {
-        "tags": [
-          "pages"
-        ],
+        "tags": ["pages"],
         "summary": "Home page",
         "description": "The home page: what the register is and how many standards it holds.",
         "operationId": "getHome",
@@ -76,9 +74,7 @@
         }
       },
       "head": {
-        "tags": [
-          "pages"
-        ],
+        "tags": ["pages"],
         "summary": "Home page (headers only)",
         "operationId": "headHome",
         "responses": {
@@ -98,9 +94,7 @@
     },
     "/register/": {
       "get": {
-        "tags": [
-          "pages"
-        ],
+        "tags": ["pages"],
         "summary": "Register: adopted standards",
         "description": "Every adopted standard, by domain. Carries the register as schema.org DefinedTermSet JSON-LD.",
         "operationId": "getRegister",
@@ -126,9 +120,7 @@
         }
       },
       "head": {
-        "tags": [
-          "pages"
-        ],
+        "tags": ["pages"],
         "summary": "Register: adopted standards (headers only)",
         "operationId": "headRegister",
         "responses": {
@@ -148,9 +140,7 @@
     },
     "/register/proposed/": {
       "get": {
-        "tags": [
-          "pages"
-        ],
+        "tags": ["pages"],
         "summary": "Register: proposed standards",
         "description": "Every proposed standard, by domain.",
         "operationId": "getRegisterProposed",
@@ -176,9 +166,7 @@
         }
       },
       "head": {
-        "tags": [
-          "pages"
-        ],
+        "tags": ["pages"],
         "summary": "Register: proposed standards (headers only)",
         "operationId": "headRegisterProposed",
         "responses": {
@@ -203,9 +191,7 @@
         }
       ],
       "get": {
-        "tags": [
-          "pages"
-        ],
+        "tags": ["pages"],
         "summary": "One standard's register entry",
         "description": "A standard's page, with its schema.org DefinedTerm JSON-LD. 404 when the register has no such id.",
         "operationId": "getRegisterId",
@@ -234,9 +220,7 @@
         }
       },
       "head": {
-        "tags": [
-          "pages"
-        ],
+        "tags": ["pages"],
         "summary": "One standard's register entry (headers only)",
         "operationId": "headRegisterId",
         "responses": {
@@ -259,9 +243,7 @@
     },
     "/accessibility/": {
       "get": {
-        "tags": [
-          "pages"
-        ],
+        "tags": ["pages"],
         "summary": "Accessibility statement",
         "description": "How standards.bundu.org and vocab.bundu.org work for everyone, and how to report a barrier.",
         "operationId": "getAccessibility",
@@ -287,9 +269,7 @@
         }
       },
       "head": {
-        "tags": [
-          "pages"
-        ],
+        "tags": ["pages"],
         "summary": "Accessibility statement (headers only)",
         "operationId": "headAccessibility",
         "responses": {
@@ -309,9 +289,7 @@
     },
     "/conversation-interchange/": {
       "get": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Bundu Conversation Interchange (BCI): the standard",
         "description": "The page of the standard Bundu Conversation Interchange (BCI), published here, rendered from standards/conversation-interchange/README.md.",
         "operationId": "getConversationInterchange",
@@ -337,9 +315,7 @@
         }
       },
       "head": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Bundu Conversation Interchange (BCI): the standard (headers only)",
         "operationId": "headConversationInterchange",
         "responses": {
@@ -359,9 +335,7 @@
     },
     "/conversation-interchange/README.md": {
       "get": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Bundu Conversation Interchange (BCI): README.md",
         "description": "The standard's text, as Markdown.",
         "operationId": "getConversationInterchangeREADMEMd",
@@ -387,9 +361,7 @@
         }
       },
       "head": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Bundu Conversation Interchange (BCI): README.md (headers only)",
         "operationId": "headConversationInterchangeREADMEMd",
         "responses": {
@@ -409,9 +381,7 @@
     },
     "/conversation-interchange/bci.schema.json": {
       "get": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Bundu Conversation Interchange (BCI): bci.schema.json",
         "description": "The BCI record schema (JSON Schema 2020-12).",
         "operationId": "getConversationInterchangeBciSchemaJson",
@@ -437,9 +407,7 @@
         }
       },
       "head": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Bundu Conversation Interchange (BCI): bci.schema.json (headers only)",
         "operationId": "headConversationInterchangeBciSchemaJson",
         "responses": {
@@ -459,9 +427,7 @@
     },
     "/conversation-interchange/context.jsonld": {
       "get": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Bundu Conversation Interchange (BCI): context.jsonld",
         "description": "The BCI JSON-LD context.",
         "operationId": "getConversationInterchangeContextJsonld",
@@ -487,9 +453,7 @@
         }
       },
       "head": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Bundu Conversation Interchange (BCI): context.jsonld (headers only)",
         "operationId": "headConversationInterchangeContextJsonld",
         "responses": {
@@ -509,9 +473,7 @@
     },
     "/conversation-interchange/examples/minimal.ndjson": {
       "get": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Bundu Conversation Interchange (BCI): examples/minimal.ndjson",
         "description": "A minimal BCI export: one JSON record per line.",
         "operationId": "getConversationInterchangeExamplesMinimalNdjson",
@@ -537,9 +499,7 @@
         }
       },
       "head": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Bundu Conversation Interchange (BCI): examples/minimal.ndjson (headers only)",
         "operationId": "headConversationInterchangeExamplesMinimalNdjson",
         "responses": {
@@ -559,9 +519,7 @@
     },
     "/cell/": {
       "get": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Cell: the standard",
         "description": "The page of the standard Cell, published here, rendered from standards/cell/README.md.",
         "operationId": "getCell",
@@ -587,9 +545,7 @@
         }
       },
       "head": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Cell: the standard (headers only)",
         "operationId": "headCell",
         "responses": {
@@ -609,9 +565,7 @@
     },
     "/cell/README.md": {
       "get": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Cell: README.md",
         "description": "The standard's text, as Markdown.",
         "operationId": "getCellREADMEMd",
@@ -637,9 +591,7 @@
         }
       },
       "head": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Cell: README.md (headers only)",
         "operationId": "headCellREADMEMd",
         "responses": {
@@ -659,9 +611,7 @@
     },
     "/weather-colour-scales/": {
       "get": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Weather colour scales: the standard",
         "description": "The page of the standard Weather colour scales, published here, rendered from standards/weather-colour-scales/README.md.",
         "operationId": "getWeatherColourScales",
@@ -687,9 +637,7 @@
         }
       },
       "head": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Weather colour scales: the standard (headers only)",
         "operationId": "headWeatherColourScales",
         "responses": {
@@ -709,9 +657,7 @@
     },
     "/weather-colour-scales/README.md": {
       "get": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Weather colour scales: README.md",
         "description": "The standard's text, as Markdown.",
         "operationId": "getWeatherColourScalesREADMEMd",
@@ -737,9 +683,7 @@
         }
       },
       "head": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Weather colour scales: README.md (headers only)",
         "operationId": "headWeatherColourScalesREADMEMd",
         "responses": {
@@ -759,9 +703,7 @@
     },
     "/weather-colour-scales/results.md": {
       "get": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Weather colour scales: results.md",
         "description": "The contrast results for every scale, as Markdown.",
         "operationId": "getWeatherColourScalesResultsMd",
@@ -787,9 +729,7 @@
         }
       },
       "head": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Weather colour scales: results.md (headers only)",
         "operationId": "headWeatherColourScalesResultsMd",
         "responses": {
@@ -809,9 +749,7 @@
     },
     "/weather-colour-scales/scales.json": {
       "get": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Weather colour scales: scales.json",
         "description": "The colour scales as data.",
         "operationId": "getWeatherColourScalesScalesJson",
@@ -837,9 +775,7 @@
         }
       },
       "head": {
-        "tags": [
-          "documents"
-        ],
+        "tags": ["documents"],
         "summary": "Weather colour scales: scales.json (headers only)",
         "operationId": "headWeatherColourScalesScalesJson",
         "responses": {
@@ -859,9 +795,7 @@
     },
     "/register/index.json": {
       "get": {
-        "tags": [
-          "register"
-        ],
+        "tags": ["register"],
         "summary": "The register as JSON",
         "description": "Every standard in the register with its status, commitment, current version, steward and page.",
         "operationId": "getRegisterIndexJson",
@@ -887,9 +821,7 @@
         }
       },
       "head": {
-        "tags": [
-          "register"
-        ],
+        "tags": ["register"],
         "summary": "The register as JSON (headers only)",
         "operationId": "headRegisterIndexJson",
         "responses": {
@@ -909,9 +841,7 @@
     },
     "/ecosystem.jsonld": {
       "get": {
-        "tags": [
-          "register"
-        ],
+        "tags": ["register"],
         "summary": "The Bundu ecosystem as JSON-LD",
         "description": "The organisations, products and works of the Bundu ecosystem: a schema.org Dataset. A static file.",
         "operationId": "getEcosystemJsonld",
@@ -937,9 +867,7 @@
         }
       },
       "head": {
-        "tags": [
-          "register"
-        ],
+        "tags": ["register"],
         "summary": "The Bundu ecosystem as JSON-LD (headers only)",
         "operationId": "headEcosystemJsonld",
         "responses": {
@@ -959,9 +887,7 @@
     },
     "/register/latest": {
       "get": {
-        "tags": [
-          "files"
-        ],
+        "tags": ["files"],
         "summary": "The head of main",
         "description": "The commit at the head of `main` and the URLs of the register's four files at that commit. 502 when GitHub cannot be reached.",
         "operationId": "getRegisterLatest",
@@ -990,9 +916,7 @@
         }
       },
       "head": {
-        "tags": [
-          "files"
-        ],
+        "tags": ["files"],
         "summary": "The head of main (headers only)",
         "operationId": "headRegisterLatest",
         "responses": {
@@ -1020,9 +944,7 @@
         }
       ],
       "get": {
-        "tags": [
-          "files"
-        ],
+        "tags": ["files"],
         "summary": "register/register.yaml at a commit",
         "description": "The register's source, as YAML. Read from the public repository at that commit; immutable. 404 when the commit does not exist, 502 when GitHub cannot be reached.",
         "operationId": "getCommitRegisterRegisterYaml",
@@ -1057,9 +979,7 @@
         }
       },
       "head": {
-        "tags": [
-          "files"
-        ],
+        "tags": ["files"],
         "summary": "register/register.yaml at a commit (headers only)",
         "operationId": "headCommitRegisterRegisterYaml",
         "responses": {
@@ -1093,9 +1013,7 @@
         }
       ],
       "get": {
-        "tags": [
-          "files"
-        ],
+        "tags": ["files"],
         "summary": "register/REGISTER.md at a commit",
         "description": "The register as a Markdown table. Read from the public repository at that commit; immutable. 404 when the commit does not exist, 502 when GitHub cannot be reached.",
         "operationId": "getCommitRegisterREGISTERMd",
@@ -1130,9 +1048,7 @@
         }
       },
       "head": {
-        "tags": [
-          "files"
-        ],
+        "tags": ["files"],
         "summary": "register/REGISTER.md at a commit (headers only)",
         "operationId": "headCommitRegisterREGISTERMd",
         "responses": {
@@ -1166,9 +1082,7 @@
         }
       ],
       "get": {
-        "tags": [
-          "files"
-        ],
+        "tags": ["files"],
         "summary": "register/seed/integrations.standards.json at a commit",
         "description": "The register as database seed records. Read from the public repository at that commit; immutable. 404 when the commit does not exist, 502 when GitHub cannot be reached.",
         "operationId": "getCommitRegisterSeedIntegrationsStandardsJson",
@@ -1203,9 +1117,7 @@
         }
       },
       "head": {
-        "tags": [
-          "files"
-        ],
+        "tags": ["files"],
         "summary": "register/seed/integrations.standards.json at a commit (headers only)",
         "operationId": "headCommitRegisterSeedIntegrationsStandardsJson",
         "responses": {
@@ -1239,9 +1151,7 @@
         }
       ],
       "get": {
-        "tags": [
-          "files"
-        ],
+        "tags": ["files"],
         "summary": "register/tools/register.py at a commit",
         "description": "The register's tool, as Python source. Read from the public repository at that commit; immutable. 404 when the commit does not exist, 502 when GitHub cannot be reached.",
         "operationId": "getCommitRegisterToolsRegisterPy",
@@ -1276,9 +1186,7 @@
         }
       },
       "head": {
-        "tags": [
-          "files"
-        ],
+        "tags": ["files"],
         "summary": "register/tools/register.py at a commit (headers only)",
         "operationId": "headCommitRegisterToolsRegisterPy",
         "responses": {
@@ -1307,9 +1215,7 @@
     },
     "/healthz": {
       "get": {
-        "tags": [
-          "meta"
-        ],
+        "tags": ["meta"],
         "summary": "Health",
         "description": "Always ok while the Worker runs.",
         "operationId": "getHealthz",
@@ -1335,9 +1241,7 @@
         }
       },
       "head": {
-        "tags": [
-          "meta"
-        ],
+        "tags": ["meta"],
         "summary": "Health (headers only)",
         "operationId": "headHealthz",
         "responses": {
@@ -1357,9 +1261,7 @@
     },
     "/openapi.json": {
       "get": {
-        "tags": [
-          "meta"
-        ],
+        "tags": ["meta"],
         "summary": "This OpenAPI document",
         "description": "The OpenAPI 3.0 description of every route on this host.",
         "operationId": "getOpenapiJson",
@@ -1378,11 +1280,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "openapi",
-                    "info",
-                    "paths"
-                  ],
+                  "required": ["openapi", "info", "paths"],
                   "properties": {
                     "openapi": {
                       "type": "string",
@@ -1402,9 +1300,7 @@
         }
       },
       "head": {
-        "tags": [
-          "meta"
-        ],
+        "tags": ["meta"],
         "summary": "This OpenAPI document (headers only)",
         "operationId": "headOpenapiJson",
         "responses": {
@@ -1424,9 +1320,7 @@
     },
     "/.well-known/openapi.json": {
       "get": {
-        "tags": [
-          "meta"
-        ],
+        "tags": ["meta"],
         "summary": "This OpenAPI document, at its well-known path",
         "description": "The OpenAPI 3.0 description of every route on this host.",
         "operationId": "getWellKnownOpenapiJson",
@@ -1445,11 +1339,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": [
-                    "openapi",
-                    "info",
-                    "paths"
-                  ],
+                  "required": ["openapi", "info", "paths"],
                   "properties": {
                     "openapi": {
                       "type": "string",
@@ -1469,9 +1359,7 @@
         }
       },
       "head": {
-        "tags": [
-          "meta"
-        ],
+        "tags": ["meta"],
         "summary": "This OpenAPI document, at its well-known path (headers only)",
         "operationId": "headWellKnownOpenapiJson",
         "responses": {
@@ -1491,9 +1379,7 @@
     },
     "/styles/site.css": {
       "get": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "The stylesheet",
         "description": "The site's one stylesheet.",
         "operationId": "getStylesSiteCss",
@@ -1516,9 +1402,7 @@
         }
       },
       "head": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "The stylesheet (headers only)",
         "operationId": "headStylesSiteCss",
         "responses": {
@@ -1535,9 +1419,7 @@
     },
     "/robots.txt": {
       "get": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "robots.txt",
         "description": "A static file.",
         "operationId": "getRobotsTxt",
@@ -1560,9 +1442,7 @@
         }
       },
       "head": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "robots.txt (headers only)",
         "operationId": "headRobotsTxt",
         "responses": {
@@ -1579,9 +1459,7 @@
     },
     "/copy.js": {
       "get": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "The copy-as-JSON control's script",
         "description": "A static file.",
         "operationId": "getCopyJs",
@@ -1604,9 +1482,7 @@
         }
       },
       "head": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "The copy-as-JSON control's script (headers only)",
         "operationId": "headCopyJs",
         "responses": {
@@ -1623,9 +1499,7 @@
     },
     "/favicon-16x16.png": {
       "get": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "Favicon, 16 px, light",
         "description": "A static file.",
         "operationId": "getFavicon16x16Png",
@@ -1649,9 +1523,7 @@
         }
       },
       "head": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "Favicon, 16 px, light (headers only)",
         "operationId": "headFavicon16x16Png",
         "responses": {
@@ -1668,9 +1540,7 @@
     },
     "/favicon-32x32.png": {
       "get": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "Favicon, 32 px, light",
         "description": "A static file.",
         "operationId": "getFavicon32x32Png",
@@ -1694,9 +1564,7 @@
         }
       },
       "head": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "Favicon, 32 px, light (headers only)",
         "operationId": "headFavicon32x32Png",
         "responses": {
@@ -1713,9 +1581,7 @@
     },
     "/favicon-16x16-dark.png": {
       "get": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "Favicon, 16 px, dark",
         "description": "A static file.",
         "operationId": "getFavicon16x16DarkPng",
@@ -1739,9 +1605,7 @@
         }
       },
       "head": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "Favicon, 16 px, dark (headers only)",
         "operationId": "headFavicon16x16DarkPng",
         "responses": {
@@ -1758,9 +1622,7 @@
     },
     "/favicon-32x32-dark.png": {
       "get": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "Favicon, 32 px, dark",
         "description": "A static file.",
         "operationId": "getFavicon32x32DarkPng",
@@ -1784,9 +1646,7 @@
         }
       },
       "head": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "Favicon, 32 px, dark (headers only)",
         "operationId": "headFavicon32x32DarkPng",
         "responses": {
@@ -1803,9 +1663,7 @@
     },
     "/apple-touch-icon.png": {
       "get": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "Apple touch icon, 180 px",
         "description": "A static file.",
         "operationId": "getAppleTouchIconPng",
@@ -1829,9 +1687,7 @@
         }
       },
       "head": {
-        "tags": [
-          "assets"
-        ],
+        "tags": ["assets"],
         "summary": "Apple touch icon, 180 px (headers only)",
         "operationId": "headAppleTouchIconPng",
         "responses": {
@@ -1970,20 +1826,12 @@
       "Problem": {
         "type": "object",
         "description": "RFC 9457 problem details.",
-        "required": [
-          "type",
-          "title",
-          "status",
-          "detail",
-          "instance"
-        ],
+        "required": ["type", "title", "status", "detail", "instance"],
         "additionalProperties": false,
         "properties": {
           "type": {
             "type": "string",
-            "enum": [
-              "about:blank"
-            ]
+            "enum": ["about:blank"]
           },
           "title": {
             "type": "string"
@@ -2004,16 +1852,12 @@
       },
       "Health": {
         "type": "object",
-        "required": [
-          "status"
-        ],
+        "required": ["status"],
         "additionalProperties": false,
         "properties": {
           "status": {
             "type": "string",
-            "enum": [
-              "ok"
-            ]
+            "enum": ["ok"]
           }
         }
       },
@@ -2024,11 +1868,7 @@
       },
       "Latest": {
         "type": "object",
-        "required": [
-          "ref",
-          "branch",
-          "files"
-        ],
+        "required": ["ref", "branch", "files"],
         "additionalProperties": false,
         "properties": {
           "ref": {
@@ -2036,9 +1876,7 @@
           },
           "branch": {
             "type": "string",
-            "enum": [
-              "main"
-            ]
+            "enum": ["main"]
           },
           "files": {
             "type": "array",
@@ -2046,10 +1884,7 @@
             "maxItems": 4,
             "items": {
               "type": "object",
-              "required": [
-                "path",
-                "url"
-              ],
+              "required": ["path", "url"],
               "additionalProperties": false,
               "properties": {
                 "path": {
@@ -2072,11 +1907,7 @@
       },
       "Counts": {
         "type": "object",
-        "required": [
-          "total",
-          "adopted",
-          "proposed"
-        ],
+        "required": ["total", "adopted", "proposed"],
         "additionalProperties": false,
         "properties": {
           "total": {
@@ -2121,10 +1952,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "adopted",
-              "proposed"
-            ]
+            "enum": ["adopted", "proposed"]
           },
           "commitment": {
             "type": "string"
@@ -2148,10 +1976,7 @@
       },
       "RegisterIndex": {
         "type": "object",
-        "required": [
-          "count",
-          "standards"
-        ],
+        "required": ["count", "standards"],
         "additionalProperties": false,
         "properties": {
           "count": {
@@ -2168,10 +1993,7 @@
       "SeedRecord": {
         "type": "object",
         "description": "One register entry as a database seed record. Its shape is that of the commit asked for.",
-        "required": [
-          "_id",
-          "displayName"
-        ],
+        "required": ["_id", "displayName"],
         "properties": {
           "_id": {
             "type": "string"
@@ -2239,10 +2061,7 @@
         "properties": {
           "@type": {
             "type": "string",
-            "enum": [
-              "NGO",
-              "Organization"
-            ]
+            "enum": ["NGO", "Organization"]
           },
           "@id": {
             "type": "string",
@@ -2274,16 +2093,11 @@
           },
           "audience": {
             "type": "object",
-            "required": [
-              "@type",
-              "audienceType"
-            ],
+            "required": ["@type", "audienceType"],
             "properties": {
               "@type": {
                 "type": "string",
-                "enum": [
-                  "Audience"
-                ]
+                "enum": ["Audience"]
               },
               "audienceType": {
                 "type": "string"
@@ -2292,9 +2106,7 @@
           },
           "parentOrganization": {
             "type": "object",
-            "required": [
-              "@id"
-            ],
+            "required": ["@id"],
             "properties": {
               "@id": {
                 "type": "string",
@@ -2306,9 +2118,7 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": [
-                "@id"
-              ],
+              "required": ["@id"],
               "properties": {
                 "@id": {
                   "type": "string",
@@ -2333,10 +2143,7 @@
         "properties": {
           "@type": {
             "type": "string",
-            "enum": [
-              "SoftwareApplication",
-              "CreativeWork"
-            ]
+            "enum": ["SoftwareApplication", "CreativeWork"]
           },
           "@id": {
             "type": "string",
@@ -2368,9 +2175,7 @@
           },
           "maintainer": {
             "type": "object",
-            "required": [
-              "@id"
-            ],
+            "required": ["@id"],
             "properties": {
               "@id": {
                 "type": "string",
@@ -2380,9 +2185,7 @@
           },
           "creator": {
             "type": "object",
-            "required": [
-              "@id"
-            ],
+            "required": ["@id"],
             "properties": {
               "@id": {
                 "type": "string",
@@ -2392,16 +2195,11 @@
           },
           "audience": {
             "type": "object",
-            "required": [
-              "@type",
-              "audienceType"
-            ],
+            "required": ["@type", "audienceType"],
             "properties": {
               "@type": {
                 "type": "string",
-                "enum": [
-                  "Audience"
-                ]
+                "enum": ["Audience"]
               },
               "audienceType": {
                 "type": "string"
@@ -2419,18 +2217,11 @@
       },
       "EcosystemTermSet": {
         "type": "object",
-        "required": [
-          "@type",
-          "@id",
-          "name",
-          "hasDefinedTerm"
-        ],
+        "required": ["@type", "@id", "name", "hasDefinedTerm"],
         "properties": {
           "@type": {
             "type": "string",
-            "enum": [
-              "DefinedTermSet"
-            ]
+            "enum": ["DefinedTermSet"]
           },
           "@id": {
             "type": "string",
@@ -2443,18 +2234,11 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": [
-                "@type",
-                "@id",
-                "name",
-                "termCode"
-              ],
+              "required": ["@type", "@id", "name", "termCode"],
               "properties": {
                 "@type": {
                   "type": "string",
-                  "enum": [
-                    "DefinedTerm"
-                  ]
+                  "enum": ["DefinedTerm"]
                 },
                 "@id": {
                   "type": "string",
@@ -2482,9 +2266,7 @@
                 },
                 "inDefinedTermSet": {
                   "type": "object",
-                  "required": [
-                    "@id"
-                  ],
+                  "required": ["@id"],
                   "properties": {
                     "@id": {
                       "type": "string",
@@ -2515,9 +2297,7 @@
         "properties": {
           "@context": {
             "type": "string",
-            "enum": [
-              "https://schema.org"
-            ]
+            "enum": ["https://schema.org"]
           },
           "@id": {
             "type": "string",
@@ -2525,9 +2305,7 @@
           },
           "@type": {
             "type": "string",
-            "enum": [
-              "Dataset"
-            ]
+            "enum": ["Dataset"]
           },
           "name": {
             "type": "string"
@@ -2553,9 +2331,7 @@
           },
           "publisher": {
             "type": "object",
-            "required": [
-              "@id"
-            ],
+            "required": ["@id"],
             "properties": {
               "@id": {
                 "type": "string",
@@ -2583,9 +2359,7 @@
       },
       "JsonLdContext": {
         "type": "object",
-        "required": [
-          "@context"
-        ],
+        "required": ["@context"],
         "properties": {
           "@context": {
             "type": "object"
@@ -2594,10 +2368,7 @@
       },
       "JsonSchemaDocument": {
         "type": "object",
-        "required": [
-          "$schema",
-          "$id"
-        ],
+        "required": ["$schema", "$id"],
         "properties": {
           "$schema": {
             "type": "string",
@@ -2611,12 +2382,7 @@
       },
       "WeatherColourScales": {
         "type": "object",
-        "required": [
-          "version",
-          "status",
-          "rules",
-          "scales"
-        ],
+        "required": ["version", "status", "rules", "scales"],
         "properties": {
           "$comment": {
             "type": "string"
@@ -2627,10 +2393,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "adopted",
-              "proposed"
-            ]
+            "enum": ["adopted", "proposed"]
           },
           "rules": {
             "type": "array",

@@ -135,6 +135,23 @@ foundations:
       tokens, a registry API and the Rust components (Mzizi Roots). Owned by the Bundu
       Foundation, built by Nyuchi, shared by all four pillars.
 
+  - id: cell
+    name: .cell
+    role: The data store for one entity, stored in SiafuDB
+    owner: bundu-foundation
+    version: 0.1.0
+    status: proposed
+    last_reviewed: 2026-11-17
+    url: https://github.com/siafuDB/cell
+    see: [pod]
+    description: >-
+      The data store for one entity (a person, a household or a business): one JSON-LD document
+      with Markdown inside, stored as a .cell file or as a database row with the same bytes,
+      structured so its data and text cannot diverge. A Foundation project like Mzizi; it maps
+      directly to SiafuDB: on the device and at the edge a cell is a SiafuDB node, and SiafuDB
+      sync carries it to the cloud and the honeycomb. Its reference implementation is being
+      written in Rust. Proposed, not adopted (bundu-labs/bundu-standards#107).
+
   - id: nyuchi-api
     name: Nyuchi API
     role: The common API and infrastructure
@@ -207,21 +224,6 @@ terms:
       A person's own store of data in the Nyuchi Honeycomb, made of cells. Today personal data
       lives on the device and syncs with cloud storage already isolated per person, so the
       move to pods is a simple migration.
-
-  - id: cell
-    name: Cell (.cell)
-    owner: bundu-labs
-    version: 0.1.0
-    status: proposed
-    last_reviewed: 2026-11-17
-    see: [pod]
-    description: >-
-      The data store for one entity (a person, a household or a business): one JSON-LD document
-      with Markdown inside, stored as a .cell file or as a database row with the same bytes,
-      structured so its data and text cannot diverge. Maps directly to SiafuDB: on the device and
-      at the edge a cell is a SiafuDB node, and SiafuDB sync carries it to the cloud and the
-      honeycomb. Proposed, not adopted; the spec lives in github.com/siafuDB/cell
-      (bundu-labs/bundu-standards#107).
 
   - id: mukoko-apps
     name: Mukoko apps

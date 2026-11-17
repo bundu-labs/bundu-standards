@@ -830,13 +830,12 @@ standards:
       access.
 
       The client passes MCP servers to the agent in session/new.
-    status: proposed
+    status: adopted
     decided: >-
-      Proposed 2026-11-11 on the owner's request relayed via the Shamwari session.
-      Left proposed on the owner's instruction the same day in the coordinator's
-      chat: "Adopt the three AAIF projects, ACP stays proposed". Its governance is
-      interim (Zed and JetBrains jointly) and no foundation host is confirmed, so
-      adoption awaits a foundation host.
+      Owner adopted 2026-11-15: "We should be adopting all standards immediately before people start
+      using our app". This reverses the 2026-11-11 instruction to keep ACP proposed until it has a
+      foundation host; it still has none (interim Zed and JetBrains governance), which is recorded
+      here and in notes
     url: https://agentclientprotocol.com/protocol/v1/overview
     docs: https://github.com/agentclientprotocol/agent-client-protocol
     notes: >-
@@ -1814,8 +1813,8 @@ standards:
     domain: first-party
     category: specification
     steward: Bundu Foundation
-    commitment: 0.1.0 draft (semver); nothing published until the owner approves its scope.
-    current: 0.1.0 draft, standards/conversation-interchange/
+    commitment: 0.1.0 (semver).
+    current: 0.1.0, standards/conversation-interchange/
     governs: >-
       How a person's conversations, messages, projects, saved answers (artifacts)
       and memory are written down so they can move between assistants.
@@ -1828,12 +1827,20 @@ standards:
       implementation. No portable standard for the stored record was found (the live wire
       shape, ACP sessions and A2A artifacts exist); the coordinator's gap analysis
       qualifies this claim.
-    status: proposed
-    decided: Drafted on the owner's instruction 2026-11-11; scope awaits the owner's approval
+    status: adopted
+    decided: >-
+      Owner adopted 2026-11-15: "We should be adopting all standards immediately before people start
+      using our app", with open questions 8 and 9 resolved (every reference resolves inside the
+      stream; a reader refuses only for limits it states in advance). Drafted on the owner's
+      instruction 2026-11-11
     url: https://standards.bundu.org/conversation-interchange/
     rationale: >-
       A person's history belongs to the person, not to a product. If none exists we
       build one and publish it (AGENTS.md, the rule).
+    notes: >-
+      First implementation built, not merged or deployed: export and import over the
+      Servers API (nyuchi/nyuchi-servers-api#50, 2026-11-15). Its findings were
+      questions 8 to 13 in the standard's README, decided on adoption (2026-11-15).
 
   - id: cell
     name: Bundu Cell (.cell), the personal data store format

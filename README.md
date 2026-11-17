@@ -229,11 +229,11 @@ Actions tab (`workflow_dispatch`, `main` only).
 
 The first deploy of an app is manual (`fly deploy`); every later one is CI.
 
-Releases are automatic too. Bump `version` in `Cargo.toml`, add a
-`## <version> (date)` section to `CHANGELOG.md`, and merge: once the checks
-pass, [`.github/workflows/release.yml`](.github/workflows/release.yml) tags `v<version>` and creates a GitHub release from
-that section. It doesn't wait for the deploy. A merge that leaves the version
-alone releases nothing. No one pushes tags by hand.
+Releases are automatic too. Every release merge to `main` is tagged, once the
+checks pass, by [`.github/workflows/main-release.yml`](.github/workflows/main-release.yml):
+it takes the next minor above the highest tag and creates a GitHub release from
+that version's `CHANGELOG.md` section, or from `## Unreleased`. It doesn't wait
+for the deploy. A commit that is already tagged releases nothing. No one pushes tags by hand.
 
 Fly.io, Johannesburg, one always-warm machine. The DNS record for
 `vocab.bundu.org` must point at this app before any published `additionalType`
@@ -245,9 +245,9 @@ Releases follow the org policy
 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)):
 
 - A merge into `staging` is a patch (x.y.z → x.y.z+1), tagged automatically.
-- A release to `main` is a minor (x.y.z → x.y+1.0). The releasing PR sets
-  `version` in `Cargo.toml` to the next minor above the highest tag, with a
-  matching `CHANGELOG.md` section. CI refuses any other version.
+- A release to `main` is a minor (x.y.z → x.y+1.0), computed from the tags.
+  No file holds the release version: `version` in `Cargo.toml` is the
+  `bundu-vocab` crate's own and is not read for releases.
 - A major is only released by hand: run the Release workflow with
   `bump: major`. Each segment holds 0–999.
 

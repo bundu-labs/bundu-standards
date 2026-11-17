@@ -1215,8 +1215,9 @@ pub const TERMS: &[Term] = &[
         comment: "Where in an AI system a guardrail is enforced: for \
                   example in the system prompt, on the input before the \
                   model sees it, or on the output before a person sees \
-                  it. Repeatable. The values are fixed by the Bundu AI \
-                  Guardrails Standard.",
+                  it. Repeatable. The values are set by the Bundu AI \
+                  Guardrails Standard; this vocabulary lists them once the \
+                  standard publishes them.",
         sub_class_of: None,
         domain_includes: Some("bundu:AIGuardrail"),
         range: Some("schema:Text"),

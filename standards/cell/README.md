@@ -97,3 +97,25 @@ names that appear in `text` but not as references.
 - Encryption at rest: JWE around the whole cell, or only around sensitive fields?
 - Media type: register `application/vnd.bundu.cell+json` with IANA now, or after adoption?
 - Which repository holds the Honeycomb code that reads and writes pods?
+
+## Stress test, pass 1 (2026-11-17)
+
+`tools/cell.mjs` is a prototype validator; `tools/cell.test.mjs` runs 13 hostile cases against
+it (`node --test standards/cell/tools/cell.test.mjs`; set `CELL_PG` to a `psql` command to add
+the Postgres round trip). Facts and prose stayed in step in every case. The draft needs these
+decisions before it can be adopted; none is made yet:
+
+1. "Same in a file and a database" means the same canonical form and hash, not the same bytes.
+   A Postgres `jsonb` column rewrote the bytes and kept the hash.
+2. All text is NFC (Unicode UAX #15): the same name in two normal forms gave two hashes.
+3. Adopt I-JSON (RFC 7493): no duplicate keys, and integers beyond 2^53 as strings.
+   JavaScript rounded a 17-digit number that Python kept, so the hashes differed.
+4. Offline edits on two devices fork the chain. Proposed: `cell:previous` becomes a list and a
+   merge version names both parents; nothing is dropped silently.
+5. Database key: the current version by `@id`, every version by its hash.
+6. Rule 1 (facts once in prose) is a lint, not a guarantee: paraphrase is not detectable.
+7. References use JSON Pointer (RFC 6901), `{{/possibleTreatment/name}}`, instead of the dotted
+   form the prototype uses.
+8. `text` is a JSON-LD language map keyed by BCP 47 tags; references are checked per language.
+
+Pass 2: MongoDB, size and attachments, key loss and recovery, shared devices.

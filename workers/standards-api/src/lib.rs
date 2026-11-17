@@ -6,6 +6,7 @@
 //! reaches GitHub with the platform's `fetch`, and keeps successful GETs in the edge cache.
 
 pub mod core;
+pub mod openapi;
 pub mod pages;
 pub mod register;
 pub mod site;

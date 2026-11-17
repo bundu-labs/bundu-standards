@@ -15,6 +15,11 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- **The AAIF software is adopted into the build** (owner, 2026-11-17): Agent
+  Router (Shamwari's model routing), agentgateway (MCP and A2A) and goose (a
+  client). They are implementations, so the harness checklist records them and
+  the register does not. Shamwari's placement is in shamwari-ai/shamwari#325.
+
 - **OpenSandbox adopted** (owner, 2026-11-17: "Yes to open sandbox"). Its
   Lifecycle API is pre-v1, so a harness pins the OpenAPI files. Every row of
   the harness conformance checklist now names an adopted standard.

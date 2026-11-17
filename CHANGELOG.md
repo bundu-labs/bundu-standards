@@ -46,6 +46,14 @@ Versions released before then are not renumbered.
 
 ### CI
 
+- A merge is blocked while anything is red or orange (owner, 2026-11-17).
+  A new check, "All checks green", waits until every other check on the commit
+  has finished, then passes only if each passed or was skipped; failed,
+  cancelled, timed out, neutral, action required and pending all block. It
+  runs on pull requests and in the merge queue, and CI now runs in the merge
+  queue too (`merge_group`), so the commit that merges is the commit that was
+  tested. Making this one check required on `staging` and `main` is a setting
+  only an admin can change.
 - CI moves from Node and inline Python to Deno, the first repository in the owner's
   Deno-CI pilot (2026-11-16). The standards endpoint job installs, tests and builds
   `workers/standards` with Deno (`deno install`, `deno task test`, `deno task build`); its

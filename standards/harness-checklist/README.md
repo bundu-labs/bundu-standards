@@ -47,21 +47,74 @@ document status **Development**, no release cut).
 | **Telemetry**          | OTel GenAI defines spans for inference, embeddings, retrieval, `execute_tool`, `create_agent`, `invoke_agent`, memory operations (`gen_ai.memory.client`) and agent-skill loading, with `gen_ai.conversation.id`. **Measured.** Development status: names may change.               | `README.md`, `gen-ai-spans.md`, `execute-tool.md`, `gen-ai-agent-spans.md` |
 | **Permissions**        | ACP v1 has `session/request_permission` (coordinator, 2026-11-11). No permission field appears in the ATIF RFC or in six OTel GenAI documents searched by keyword (`permission`, `approval`). **Measured for those files only.**                                                    | keyword search of the files named                                          |
 
-## 3. Gaps, stated plainly
+## 3. Gaps, checked at source 2026-11-17
 
-1. **Context policy** (what a harness must keep, drop or summarise, and who may see it): ATIF records a
-   transformation after the fact and OTel does not cover it. **Inferred** gap.
-2. **Permission model** (what a person approves, remembered grants, scope): only ACP's request call
-   exists, and only between an editor and an agent. **Inferred** gap for harnesses generally.
-3. **Cross-harness tool-call dialects**: Open Responses gives one wire shape; harnesses still differ
-   in what they emit and accept. Not verified against DeepSeek, Qwen, GLM, Codex, Gemini CLI,
-   OpenHands or goose session schemas. **Not verified.**
+Each gap below was checked at source on 2026-11-17. Repositories were read at these commits: Codex
+05ae1b0, Gemini CLI 4fa64e7, OpenHands software-agent-sdk 06f643c, goose eb4f412, MCP 05aeb07, A2A
+b30ab16, OpenTelemetry semantic-conventions-genai e6658f1, Harbor 110c71b, Open Responses dce9ddb and
+LangGraph 02f2c2e.
+
+1. **Context policy: partly covered.** This is what a harness must keep, drop or summarise, and who
+   may see it.
+   - Open Responses 2026-04-24 has `truncation` ("auto": the server "MAY truncate earlier parts" and
+     "SHOULD apply sensible heuristics"), `previous_response_id` (the server "MUST preserve the
+     semantic order") and a `/responses/compact` endpoint. That is provider-side policy, not
+     harness policy.
+   - ATIF section VII reconstructs the context after the fact.
+   - OTel GenAI says instrumentations "SHOULD NOT capture" inputs and outputs by default, which
+     covers telemetry only.
+   - No rule for what a harness keeps, or for who may see it, was found in MCP. **Measured.**
+2. **Permission model: partly covered.**
+   - MCP 2026-07-28 (`server/tools.mdx`): "there **SHOULD** always be a human in the loop with the
+     ability to deny tool invocations".
+   - MCP elicitation (`client/elicitation.mdx`): clients **MUST** "provide clear decline and cancel
+     options".
+   - MCP tool annotations (`destructiveHint` and the others) are hints that clients **MUST** treat
+     as untrusted unless the server is trusted.
+   - A2A 1.0.0 section 7.6: an agent that needs human approval before a destructive action
+     **MUST** move to `TASK_STATE_AUTH_REQUIRED`. Section 7.6.4 leaves "scope, representation,
+     validity, or revocation" undefined.
+   - ACP has `session/request_permission`, between an editor and an agent only.
+   - **Measured.** No standard defines remembered grants, grant scope or how an approval is
+     recorded.
+3. **Cross-harness tool-call dialects: still a gap.** Four wire dialects are in use: Chat
+   Completions `tool_calls`, the Responses API's `function_call` items, Anthropic `tool_use` and
+   Gemini `functionCall`. None of the products below claims Open Responses conformance. The Codex
+   CLI accepts only the Responses wire, which Open Responses is based on. **Measured** for the
+   repositories and vendor pages named. The Qwen Responses page was read from search excerpts only.
+
+   | Product    | Tool-call wire                                                    | Sessions on disk                         | MCP | AGENTS.md     | Skills | ACP                |
+   | ---------- | ----------------------------------------------------------------- | ---------------------------------------- | --- | ------------- | ------ | ------------------ |
+   | DeepSeek   | Chat Completions; Anthropic Messages; Responses (no `store`)      | n/a                                      | n/a | n/a           | n/a    | n/a                |
+   | Qwen       | Chat Completions; Responses (OpenAI-compatible); DashScope native | n/a                                      | n/a | n/a           | n/a    | n/a                |
+   | GLM (z.ai) | Chat Completions; Anthropic Messages                              | n/a                                      | n/a | n/a           | n/a    | n/a                |
+   | Codex CLI  | Responses only (`wire_api = "chat"` is refused)                   | JSONL rollout files                      | yes | yes           | yes    | through an adapter |
+   | Gemini CLI | Gemini `functionCall`                                             | JSONL chat files                         | yes | if configured | yes    | yes, as an agent   |
+   | OpenHands  | Chat Completions or Responses, through LiteLLM                    | a state file and one JSON file per event | yes | yes           | yes    | yes, as a client   |
+   | goose      | its own message type, translated per provider                     | SQLite                                   | yes | yes           | yes    | yes, as an agent   |
+
+   So the harnesses agree on MCP, AGENTS.md, Agent Skills and, increasingly, ACP. They disagree on
+   the model wire and on how a session is stored. BCI (stored conversations) and ATIF (session log)
+   are the register's answer to the second disagreement. Nothing in the register answers the first
+   beyond adopting Open Responses.
+
 4. **Portable session log: decided.** The owner adopted ATIF on 2026-11-14 (register id `atif`).
    BCI's ordered `Message` stream maps onto ATIF steps rather than defining its own log; the mapping
    is an open item on #48. ATIF is Harbor-hosted and evaluation-oriented, with no foundation host,
    so the adoption is of the format, not an endorsement of its steward.
+   - ISO/IEC 24970 "AI system logging" (JTC 1/SC 42) is at stage 60.00, under publication. It is
+     the nearest formal standard and has not been read here. **Measured** status only.
 
-Not checked: ISO/IEC SC 42 and IEEE items, LangGraph checkpoints, any importer actually losing data.
+Checked and found not to be harness standards:
+
+- IEEE P3119 is about AI procurement. **Measured.**
+- IEEE P3394 "Large Language Model Agent Interface" is an active PAR from 2023-09-21, not
+  published, and its page does not mention tool calls, logs or context. **Measured.**
+- ISO/IEC 42105 (human oversight) and ISO/IEC 42001 (a management system) are not harness formats.
+  **Measured** for 42105's stage, **inferred** for the rest.
+- ISO/IEC AWI TR 27258 (multi-agent interactions) is an early technical report. **Measured.**
+- LangGraph checkpoints (`v: 1`) are a versioned internal persistence format, serialised as Python
+  types, not an interchange format. **Inferred** from the source.
 
 ## 4. Bundu's own rules (not an external standard)
 
@@ -76,5 +129,14 @@ not part of any standard above.
 ## 5. How to use this
 
 A harness passes when, for every row of section 1 that applies to it, it uses the named standard,
-and it satisfies section 4. Section 3 lists what it cannot yet be checked against. Open items are in
-the tracking issue (#50).
+and it satisfies section 4. Section 3 lists what it cannot yet be checked against. Where section 3
+names a partial standard (MCP's human-in-the-loop rules, A2A's `AUTH_REQUIRED`), a harness follows
+it.
+
+What is left is the owner's, not the checklist's:
+
+1. Adopt OpenSandbox, or leave it proposed (register id `opensandbox`).
+2. Whether to write a Bundu profile for the two partly covered gaps: context policy, and permission
+   grants. `AGENTS.md`'s rule says to write one where none exists. The checklist does not start one.
+3. Running this checklist against Shamwari's harness (`shamwari-ai/shamwari`). The data-plane audit
+   is nyuchi/nyuchi-servers-api#48.

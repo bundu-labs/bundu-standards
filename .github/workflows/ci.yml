@@ -104,6 +104,16 @@ jobs:
       - name: Bundu Cell prototype stress tests
         run: node --test standards/cell/tools/cell.test.mjs
 
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: v2.x
+
+      - name: Ecosystem record is valid and its generated files are current
+        run: deno run --allow-read tools/ecosystem.ts check
+
+      - name: Ecosystem tool tests
+        run: deno test --allow-read tools/ecosystem_test.ts
+
   # standards.bundu.org: the Worker that serves the register at a commit.
   endpoint:
     runs-on: ubuntu-latest

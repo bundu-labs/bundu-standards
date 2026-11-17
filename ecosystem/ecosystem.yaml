@@ -212,13 +212,16 @@ terms:
     name: Cell (.cell)
     owner: bundu-labs
     version: 0.1.0
-    status: in-development
+    status: proposed
     last_reviewed: 2026-11-17
     see: [pod]
     description: >-
-      The unit of data in a pod: one JSON-LD document with Markdown inside, stored as a .cell
-      file or as a database row with the same bytes, structured so its data and text cannot
-      diverge. Being scoped in bundu-labs/bundu-standards#107.
+      The data store for one entity (a person, a household or a business): one JSON-LD document
+      with Markdown inside, stored as a .cell file or as a database row with the same bytes,
+      structured so its data and text cannot diverge. Maps directly to SiafuDB: on the device and
+      at the edge a cell is a SiafuDB node, and SiafuDB sync carries it to the cloud and the
+      honeycomb. Proposed, not adopted; the spec lives in github.com/siafuDB/cell
+      (bundu-labs/bundu-standards#107).
 
   - id: mukoko-apps
     name: Mukoko apps

@@ -86,6 +86,17 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- **Nine vocabulary terms for the Bundu Conversation Interchange** (pending,
+  published as `testing`), under a new subject area, "Conversations and
+  assistants": the classes `Project` (extends `schema:CreativeWork`, since
+  `schema:Project` is an Organization), `Artifact` (`schema:CreativeWork`;
+  its definition maps it to the A2A Artifact rather than renaming it) and
+  `MemoryEntry` (`schema:Statement`), and the properties `scope`
+  (`personal` · `community` · `platform`), `pinned`, `instructions`,
+  `skill`, `provenance` and `consent` (`stated` · `confirmed`). They are
+  exactly the `bundu:` terms BCI's `context.jsonld` names, and a test fails
+  if the two drift apart or the value sets stop matching `bci.schema.json`.
+  48 terms (38 stable, 10 testing). This answers BCI open question 2.
 - **OpenSandbox, proposed** (register id `opensandbox`): the sandbox lifecycle
   and execution APIs of an Agentic AI Foundation project (Apache-2.0;
   Lifecycle API 0.1.0, pre-v1; Execd API 1.0.0), read at source 2026-11-17.

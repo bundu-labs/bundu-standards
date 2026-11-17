@@ -74,6 +74,23 @@ The `cell:` names and the context URL are draft. The context is not published ye
 Exporting writes the JSON column to a file unchanged; importing stores the file under its
 `@id`. The hash is the same in both homes, so a round trip can be checked.
 
+## Where cells live: SiafuDB
+
+The .cell work maps directly to [SiafuDB](https://siafudb.org), the Foundation's embedded graph
+database for the device, the edge and the browser. A cell is the record; SiafuDB is where it
+lives and how it moves:
+
+| .cell                       | SiafuDB                                                                           |
+| --------------------------- | --------------------------------------------------------------------------------- |
+| A cell, keyed by `@id`      | A node keyed by `@id`, holding the cell unchanged                                 |
+| Links between cells         | Edges between nodes, from the cell's JSON-LD references                           |
+| Offline first, on the phone | SiafuDB on the device is the cell's first home                                    |
+| Device to cloud to pod      | The [SiafuDB Graph Sync Protocol](https://siafudb.org) carries cells between them |
+| The version chain           | Sync must carry each version unchanged, by its hash                               |
+
+So the .cell spec and SiafuDB move together: a change to one is checked against the other.
+Both are proposed or pre-release; nothing here commits SiafuDB to a release.
+
 ## Why it can't diverge
 
 A validator refuses a cell that breaks any of these rules:
@@ -96,7 +113,8 @@ names that appear in `text` but not as references.
   separate file?
 - Encryption at rest: JWE around the whole cell, or only around sensitive fields?
 - Media type: register `application/vnd.bundu.cell+json` with IANA now, or after adoption?
-- Which repository holds the Honeycomb code that reads and writes pods?
+- Which repository holds the Honeycomb code that reads and writes pods? On the device and at
+  the edge, SiafuDB does; the pod side is still open.
 
 ## Stress test, pass 1 (2026-11-17)
 

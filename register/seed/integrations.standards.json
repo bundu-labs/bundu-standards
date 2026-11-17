@@ -902,12 +902,12 @@
     "displayName": "OpenEnv (environments for training AI agents)",
     "category": "specification",
     "description": "How a reinforcement-learning environment for an agent is packaged and called: a containerised service that exposes a Gym-style training interface and MCP to the agent, so environments are interchangeable between training libraries.",
-    "versionCommitment": "Pin the release a trainer or environment builds against; the environment spec is an RFC still in review.",
+    "versionCommitment": "Pin the release a trainer or environment builds against (v0.13.0); the environment spec is an RFC still in review.",
     "specificationUrl": "https://github.com/huggingface/OpenEnv/blob/main/rfcs/002-env-spec.md",
     "documentationUrl": "https://huggingface.co/docs/openenv/index",
     "stewardOrganisation": "OpenEnv a Series of LF Projects, LLC, under the Agentic AI Foundation (AAIF); contributed by Hugging Face",
     "usageNotes": "Licence BSD-3-Clause (repository LICENSE, measured 2026-11-17). Foundation host: confirmed. TECHNICAL_CHARTER.md establishes \"OpenEnv a Series of LF Projects, LLC\", adopted 2026-10-22, and AAIF announced it as a project that day (aaif.io/news/agentic-ai-foundation-announces-four-new-projects). The other AAIF projects not in this register are implementations, not standards, so they are noted in the harness checklist instead: goose (an agent), agentgateway and Agent Router (gateways), all Apache-2.0.",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
       "adoptionRationale": "If Bundu trains agents, environments follow the foundation-hosted format rather than a private one (AGENTS.md, the rule)."

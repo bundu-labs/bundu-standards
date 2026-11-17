@@ -22,11 +22,12 @@ Versions released before then are not renumbered.
   (owner, 2026-11-17). BCI 0.1.0 is adopted and published on
   standards.bundu.org, which is the vocabulary's bar for a stable term. 48
   terms: 47 stable, 1 testing (`notificationPreference`).
-- **OpenEnv proposed** (register id `openenv`): Hugging Face's environments for
-  training agents, an AAIF project since 2026-10-22, BSD-3-Clause. Its
-  environment spec (RFC 002) is still In Review. The harness checklist now
-  accounts for all ten AAIF projects, and notes goose, agentgateway and Agent
-  Router as implementations rather than standards.
+- **OpenEnv adopted** (register id `openenv`; owner, 2026-11-17: "Those 4 we
+  should immediately adopt"): Hugging Face's environments for training
+  agents, an AAIF project since 2026-10-22, BSD-3-Clause. Its environment spec
+  (RFC 002) is still In Review, so a trainer pins the release. The harness
+  checklist now accounts for all ten AAIF projects, and notes goose,
+  agentgateway and Agent Router as implementations rather than standards.
 
 - **Adopted, by the owner's decision of 2026-11-15** ("We should be adopting all standards
   immediately before people start using our app"): BCI and ACP. The third proposed standard, the

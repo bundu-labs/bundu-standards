@@ -39,9 +39,10 @@ harness runs code.
 The AAIF lists ten projects (aaif.io/projects, read 2026-11-17). **Measured.**
 
 - **In the table above (6):** MCP, AGENTS.md, Agent Skills, Open Responses, A2A and OpenSandbox.
-- **OpenEnv: proposed** (`openenv`). These are environments for training agents with
-  reinforcement learning, from Hugging Face, under BSD-3-Clause. Its environment spec (RFC 002) is
-  still In Review, and Bundu trains no agents that way today, so it is not a harness row yet.
+- **OpenEnv: adopted** (`openenv`, owner 2026-11-17). These are environments for training agents
+  with reinforcement learning, from Hugging Face, under BSD-3-Clause. Its environment spec (RFC 002)
+  is still In Review, so a trainer pins the release. It becomes a harness row when Bundu trains
+  agents.
 - **Implementations, not standards (3):**
   - goose, an agent (see the dialect table in section 3);
   - agentgateway, a gateway for agents, models and tools;
@@ -152,9 +153,7 @@ it.
 
 What is left is the owner's, not the checklist's:
 
-1. Adopt OpenEnv once its spec is accepted and Bundu trains agents, or leave it proposed (register
-   id `openenv`).
-2. Whether to write a Bundu profile for the two partly covered gaps: context policy, and permission
+1. Whether to write a Bundu profile for the two partly covered gaps: context policy, and permission
    grants. `AGENTS.md`'s rule says to write one where none exists. The checklist does not start one.
-3. Running this checklist against Shamwari's harness (`shamwari-ai/shamwari`). The data-plane audit
+2. Running this checklist against Shamwari's harness (`shamwari-ai/shamwari`). The data-plane audit
    is nyuchi/nyuchi-servers-api#48.

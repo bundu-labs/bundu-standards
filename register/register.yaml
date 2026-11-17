@@ -871,7 +871,7 @@ standards:
       OpenEnv a Series of LF Projects, LLC, under the Agentic AI Foundation
       (AAIF); contributed by Hugging Face
     commitment: >-
-      Pin the release a trainer or environment builds against; the
+      Pin the release a trainer or environment builds against (v0.13.0); the
       environment spec is an RFC still in review.
     current: >-
       Release v0.13.0 (git tag; pyproject 0.13.1.dev0 on main). The
@@ -884,11 +884,13 @@ standards:
       called: a containerised service that exposes a Gym-style training
       interface and MCP to the agent, so environments are interchangeable
       between training libraries.
-    status: proposed
+    status: adopted
     decided: >-
-      Proposed 2026-11-17 on the owner's request to note the other AAIF
-      projects ("the env one and others"). Not adopted: its spec is not yet
-      accepted, and Bundu trains no agents with reinforcement learning today.
+      Owner adopted 2026-11-17: "Those 4 we should immediately adopt into our
+      build" (Agent Skills, Open Responses, OpenEnv, OpenSandbox, the four AAIF
+      announced on 2026-10-22). Adopted while its environment spec (RFC 002)
+      is still In Review: pin the release, and re-read the spec when it is
+      accepted.
     url: https://github.com/huggingface/OpenEnv/blob/main/rfcs/002-env-spec.md
     docs: https://huggingface.co/docs/openenv/index
     notes: >-

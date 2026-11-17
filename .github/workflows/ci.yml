@@ -3,6 +3,8 @@ name: CI
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  # The merge queue tests the exact commit it is about to merge.
+  merge_group:
   push:
     branches: [main, staging]
 

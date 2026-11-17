@@ -29,8 +29,7 @@ the register's, each read at source on the date it records.
 | Stored conversations | export and import chats, projects, saved answers                 | BCI (`bci`, adopted 2026-11-15)                                     | 0.1.0; first implementation nyuchi/nyuchi-servers-api#50; vocabulary terms pending in vocab.bundu.org                 |
 | Session log          | write each session as an ordered trajectory                      | ATIF (`atif`, adopted 2026-11-14)                                   | ATIF-v1.8 (RFC 0001, Active, April 2026); Apache-2.0                                                                  |
 
-ACP's and BCI's adoption is in #70; until it merges, the register on `staging` still shows them
-proposed. OpenSandbox is the one row whose standard is not yet adopted; adopting it is the owner's
+ACP and BCI were adopted in #70 (merged 2026-11-17). OpenSandbox is the one row whose standard is not yet adopted; adopting it is the owner's
 decision. Bundu runs no sandbox today, so the row applies only once a Bundu harness runs code.
 
 ## 2. Parts a second gap check found partly covered

@@ -21,7 +21,7 @@ Version 1.0.0, reviewed 2026-11-17. Machine-readable: [https://standards.bundu.o
 
 - **Bundu Labs.** The research and standards arm of the Bundu Foundation. It investigates infrastructure gaps across Africa and emerging markets, and publishes the standards, frameworks and vocabulary the rest of the ecosystem builds on.
 - **Nyuchi Africa.** The platform and infrastructure company of the ecosystem: the Nyuchi API, the console, and its own tools and products. Mukoko is a product of Nyuchi Africa; Nyuchi also sells Shamwari AI and builds Mzizi. It builds platforms others build on; it is not an outsourced IT department or a managed service provider.
-- **Mukoko.** One consumer platform with its apps inside, as Microsoft 365 or Google Workspace hold theirs: a super app, with apps that also stand alone in their own domains. Mukoko is a product of Nyuchi Africa and runs on the Nyuchi API.
+- **Mukoko.** One consumer platform with its apps inside, as Microsoft 365 or Google Workspace hold theirs: a super app, with apps that also stand alone in their own domains. Mukoko is a pillar of Bundu and a product of Nyuchi Africa, built and operated by Nyuchi on the Nyuchi API. It is the proof that what is researched reaches production and is used by people, and the proof that the infrastructure works.
 - **Shamwari AI.** An African AI companion that answers in Shona, Ndebele and English and cites its sources. A pillar and a Bundu Foundation open-source project; it runs on Nyuchi's AI layer and is sold by Nyuchi.
 
 ## Shared foundations

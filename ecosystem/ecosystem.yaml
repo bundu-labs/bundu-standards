@@ -86,7 +86,9 @@ pillars:
     description: >-
       One consumer platform with its apps inside, as Microsoft 365 or Google Workspace hold
       theirs: a super app, with apps that also stand alone in their own domains. Mukoko is a
-      product of Nyuchi Africa and runs on the Nyuchi API.
+      pillar of Bundu and a product of Nyuchi Africa, built and operated by Nyuchi on the
+      Nyuchi API. It is the proof that what is researched reaches production and is used by
+      people, and the proof that the infrastructure works.
 
   - id: shamwari-ai
     name: Shamwari AI

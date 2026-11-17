@@ -1841,7 +1841,7 @@ standards:
     category: data_format
     steward: Bundu Foundation
     commitment: 0.1.0 draft (semver); nothing is final until the owner approves its scope.
-    current: 0.1.0 draft, standards/cell/
+    current: 0.1.0 draft, github.com/siafuDB/cell
     governs: >-
       How one record a person owns (a cell) is written so it is the same bytes in a
       .cell file or a database row keyed by its @id: JSON-LD 1.1 with schema.org
@@ -1854,6 +1854,7 @@ standards:
       Maps directly to SiafuDB: on the device and at the edge a cell is a SiafuDB
       node keyed by its @id, and the SiafuDB Graph Sync Protocol (siafudb_graph_sync)
       carries cells from device to cloud to pod without reshaping them.
+      The spec and the prototype live in siafuDB/cell (owner, 2026-11-17).
     status: proposed
     decided: Scoped on the owner's instruction 2026-11-17 (#107); scope awaits the owner's approval
     url: https://standards.bundu.org/cell/

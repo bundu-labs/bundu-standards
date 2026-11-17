@@ -15,6 +15,15 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- Dependencies, all ten open Dependabot updates (#73 to #82) in one change:
+  axum 0.7.9 to 0.8.9, tower-http 0.6 to 0.7.1, serde_json 1.0.154,
+  `@astrojs/cloudflare` 14.4.6, wrangler 4.158.0, `actions/checkout` 7,
+  `actions/github-script` 9, `actions/setup-python` 7.1.0, and the org's
+  `reusable-staging-release.yml` and `next-version` at v0.11.1 (same inputs
+  and outputs as 0.2.0). axum 0.8 writes path parameters as `{term}`; the old
+  `/:term` route panicked when the server started, which the unit tests did
+  not catch. The router is now built by a function, and a test drives every
+  route through it.
 - standards.bundu.org is served by the Rust Worker (`workers/standards-api`,
   Dioxus and Mzizi Roots). The custom domain moved from `bundu-standards`
   (Astro) to `bundu-standards-api` on 2026-11-17. The route now sits only in

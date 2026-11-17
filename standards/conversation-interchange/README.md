@@ -1,8 +1,9 @@
 # Bundu Conversation Interchange (BCI)
 
-**Version 0.1.0, draft.** Not adopted. Drafted on the owner's instruction (2026-11-11);
-nothing here is published until the owner approves its scope. Licence: CC BY 4.0 for the text,
-CC0 for the schema and context (like the vocabulary).
+**Version 0.1.0. Adopted by the owner on 2026-11-15** ("We should be adopting all standards
+immediately before people start using our app"), with open questions 8 and 9 resolved as written
+below. Drafted on the owner's instruction (2026-11-11). Licence: CC BY 4.0 for the text, CC0 for the
+schema and context (like the vocabulary).
 
 ## Why this exists
 
@@ -73,8 +74,9 @@ complete stream; `test_examples.py` validates it and checks what the schema must
 
 Rules a conforming writer holds to (the schema checks the shape; these need the whole stream):
 
-- Every `Message.conversation` and `Conversation.project` names a record in the stream or one the
-  writer says it omitted in the `Header`.
+- Every `Message.conversation` and `Conversation.project` names a record in the same stream. A
+  stream is never partial. (`Artifact.derivedFrom` may name a conversation that no longer exists:
+  an artifact survives its conversation.)
 - A `Conversation` opens with a person's message; an answer follows a question.
 - `messageCount` equals the number of `Message` records for it, when both are present.
 - Deleting a `Project` keeps its conversations; deleting a `Conversation` keeps its artifacts.
@@ -83,10 +85,30 @@ Rules a conforming writer holds to (the schema checks the shape; these need the 
 ## Conformance
 
 A **writer** conforms if every record it writes validates and the rules above hold. A **reader**
-conforms if it accepts every valid stream, keeps unknown extensions, and refuses a stream whose
-`Header.bci` major version it does not know. Run `python3 -m unittest
+conforms if it:
+
+- accepts every valid stream within limits it states in advance (for example a maximum message
+  size, a maximum number of records, or no memory). When it refuses a valid stream for one of those
+  limits, it names the record and the limit;
+- reports what it accepts but cannot keep, by record type and field, and never drops it silently;
+- keeps extension members it does not know when it passes a record on;
+- refuses a stream whose `Header.bci` major version it does not know. Run `python3 -m unittest
 standards/conversation-interchange/test_examples.py` for the reference checks. An implementation's own
-test suite should run the example stream through its importer and exporter and compare.
+  test suite should run the example stream through its importer and exporter and compare.
+
+## Guidance for readers (not normative)
+
+- **Order.** Writers should write the `Header`, then projects, then each conversation followed by its
+  messages in order, then artifacts and memory entries. Readers should accept any order after the
+  `Header`.
+- **Items a reader cannot hold.** The gapless `sequence` rule binds the stream. A reader that does not
+  keep some items (tool calls, reasoning) may number what it keeps 1, 2, 3 again, still holding that
+  an answer follows a question, and reports what it did not keep.
+- **Importing twice, and ids already held.** Keep ids. A record the person already has is left as it
+  is: an import neither overwrites nor merges into an existing conversation, so it is safe to repeat.
+  A record whose id belongs to someone else is skipped without saying whose.
+- **Who the stream is for.** `Header.owner` says where a stream came from. It never decides whose
+  history the records join; the reader uses the person it authenticated.
 
 ## Mapping from what exists today
 
@@ -125,10 +147,38 @@ dropped and reported.
    harness important to all Bundu work, not only this repository, so a harness profile is in scope as
    a separate standard (tracked in its own issue, drafted after the coordinator's go); BCI's append-only, ordered `Message` stream is its natural
    session log.
+8. **Naming omitted records. Decided 2026-11-15:** every reference must resolve inside the stream;
+   the `Header` names no omitted records (see the writer rules). Found by the first implementation,
+   as were 9 to 13.
+9. **A reader with limits. Decided 2026-11-15:** a reader may refuse a valid stream only for a limit
+   it states in advance, naming the record, and reports what it cannot keep (see Conformance).
+10. **Record order. Decided 2026-11-15:** reader guidance, not a rule (see Guidance for readers).
+11. **Items a reader cannot hold. Decided 2026-11-15:** the gapless rule binds the stream; a reader
+    may renumber what it keeps (see Guidance for readers).
+12. **Importing twice, and someone else's ids. Decided 2026-11-15:** reader guidance (see Guidance
+    for readers).
+13. **Who the stream is for. Decided 2026-11-15:** `Header.owner` is informative, never authority
+    (see Guidance for readers).
 
 ## First implementation
 
 Shamwari (shamwari.ai) stores its web and Lite chats in the `shamwari` MongoDB database through the
-Servers API (`nyuchi/nyuchi-servers-api`, `docs/messages-api.md`, PR #37). Its field names and ids
-are provisional and move to BCI: UUID v7 ids, RFC 3339 times, an `item` per message. The mobile app
-keeps chats on the device and offers BCI export and import.
+Servers API (`nyuchi/nyuchi-servers-api`, `docs/messages-api.md`). The mobile app keeps chats on the
+device and offers BCI export and import.
+
+**Built, not yet merged or deployed** (nyuchi/nyuchi-servers-api#50, read 2026-11-15):
+
+- `GET /v1/shamwari/export` writes a person's conversations with every message, projects and saved
+  answers as one stream. `POST /v1/shamwari/import` reads one into the history of the person the
+  gateway authenticated, never `Header.owner`. The gateway does not call either route yet.
+- New records there get UUID v7 ids. Records made before that keep their old ids, and an export
+  writes each as a version 8 UUID derived from the old id, the same on every export.
+- An export, including a mapped old id, validates against `bci.schema.json` (Draft 2020-12, formats
+  checked). The implementation's tests import `examples/minimal.ndjson` unchanged.
+- What that store has no place for is reported, not dropped. That covers non-message items,
+  `MemoryEntry`, `Project.instructions` and `skills`, `Conversation.language`, `contentRef`
+  artifacts and other implementors' extensions. Its own citation shape travels in a
+  `shamwari:citations` extension.
+
+What building it found was open questions 8 to 13 above, decided on adoption. None of them changed
+the schema.

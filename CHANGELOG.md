@@ -15,6 +15,27 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- **Adopted, by the owner's decision of 2026-11-15** ("We should be adopting all standards
+  immediately before people start using our app"): BCI and ACP. The third proposed standard, the
+  weather colour scales, was adopted at 1.0.0 in #85 (below), so with this every standard proposed
+  by 2026-11-15 is adopted. Bundu Cell, proposed on 2026-11-17 (#109), stays proposed: its scope
+  awaits the owner's approval.
+  - BCI 0.1.0, with open questions 8 and 9 resolved in the text. Every reference resolves inside the
+    stream, and the `Header` names no omitted records. A reader refuses a valid stream only for a
+    limit it states in advance, and reports what it cannot keep. Questions 10 to 13 became a
+    non-normative "Guidance for readers" section. No schema change beyond dropping "(draft)" from its
+    title. Open questions 1 to 7 (name and home, vocabulary terms, binary archives, branches, the
+    harness profile) remain open.
+  - The Agent Client Protocol (ACP), protocol version 1. This reverses the 2026-11-11 instruction to
+    wait for a foundation host; it still has none, and the register says so.
+  - The harness conformance checklist is not a standard and has no register entry, so it is
+    unchanged.
+- BCI (`standards/conversation-interchange/`): the "First implementation" section now says what is
+  built, and that it is not merged or deployed. That is export and import over the Servers API
+  (nyuchi/nyuchi-servers-api#50). Six findings from building it are added as open questions 8 to 13:
+  the `Header` has no member for omitted records, a reader with stated limits, record order, items a
+  reader cannot hold, importing twice and someone else's ids, and `Header.owner` as informative only.
+  No schema change; the register entry notes the implementation.
 - Dependencies, all ten open Dependabot updates (#73 to #82) in one change:
   axum 0.7.9 to 0.8.9, tower-http 0.6 to 0.7.1, serde_json 1.0.154,
   `@astrojs/cloudflare` 14.4.6, wrangler 4.158.0, `actions/checkout` 7,
@@ -46,6 +67,14 @@ Versions released before then are not renumbered.
 
 ### CI
 
+- A merge is blocked while anything is red or orange (owner, 2026-11-17).
+  A new check, "All checks green", waits until every other check on the commit
+  has finished, then passes only if each passed or was skipped; failed,
+  cancelled, timed out, neutral, action required and pending all block. It
+  runs on pull requests and in the merge queue, and CI now runs in the merge
+  queue too (`merge_group`), so the commit that merges is the commit that was
+  tested. Making this one check required on `staging` and `main` is a setting
+  only an admin can change.
 - CI moves from Node and inline Python to Deno, the first repository in the owner's
   Deno-CI pilot (2026-11-16). The standards endpoint job installs, tests and builds
   `workers/standards` with Deno (`deno install`, `deno task test`, `deno task build`); its

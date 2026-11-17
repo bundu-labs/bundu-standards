@@ -884,10 +884,10 @@
     "documentationUrl": "https://github.com/agentclientprotocol/agent-client-protocol",
     "stewardOrganisation": "Zed Industries and JetBrains, jointly (interim governance; no foundation host confirmed)",
     "usageNotes": "Licence Apache-2.0 (LICENSE, \"Copyright 2025 Zed Industries, Inc. and contributors\"; the governance page says all repositories in the ACP organisation should be Apache 2.0, with no CLA); no separate documentation licence was found. Governance (agentclientprotocol.com/community/governance, read 2026-11-11): \"an interim governance model\"; \"jointly governed by Zed and JetBrains ... working toward transitioning to an independent foundation\"; lead maintainers Ben Brandt (Zed) and Sergey Ignatov (JetBrains). Foundation host: not confirmed; ACP is not among the ten projects the Agentic AI Foundation listed on 2026-10-22. Not IBM's Agent Communication Protocol, which merged into A2A (ACP's related-protocols page).",
-    "isActive": false,
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Proposed 2026-11-11 on the owner's request relayed via the Shamwari session. Left proposed on the owner's instruction the same day in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Its governance is interim (Zed and JetBrains jointly) and no foundation host is confirmed, so adoption awaits a foundation host."
+      "adoptionRationale": "Adopted: Owner adopted 2026-11-15: \"We should be adopting all standards immediately before people start using our app\". This reverses the 2026-11-11 instruction to keep ACP proposed until it has a foundation host; it still has none (interim Zed and JetBrains governance), which is recorded here and in notes"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1983,12 +1983,12 @@
     "displayName": "Bundu Conversation Interchange (BCI)",
     "category": "specification",
     "description": "How a person's conversations, messages, projects, saved answers (artifacts) and memory are written down so they can move between assistants. A message holds an Open Responses item unchanged; skills are named by Agent Skills `name`; times are RFC 3339, ids UUIDs, provenance C2PA. Shamwari is the first implementation. No portable standard for the stored record was found (the live wire shape, ACP sessions and A2A artifacts exist); the coordinator's gap analysis qualifies this claim.",
-    "versionCommitment": "0.1.0 draft (semver); nothing published until the owner approves its scope.",
+    "versionCommitment": "0.1.0 (semver).",
     "specificationUrl": "https://standards.bundu.org/conversation-interchange/",
     "documentationUrl": null,
     "stewardOrganisation": "Bundu Foundation",
-    "usageNotes": null,
-    "isActive": false,
+    "usageNotes": "First implementation built, not merged or deployed: export and import over the Servers API (nyuchi/nyuchi-servers-api#50, 2026-11-15). Its findings were questions 8 to 13 in the standard's README, decided on adoption (2026-11-15).",
+    "isActive": true,
     "bundu": {
       "isFoundational": false,
       "adoptionRationale": "A person's history belongs to the person, not to a product. If none exists we build one and publish it (AGENTS.md, the rule)."

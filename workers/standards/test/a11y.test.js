@@ -45,7 +45,7 @@ test("decorative brand images are hidden from screen readers", () => {
 
 test("status is text, never colour alone", () => {
   for (const page of [
-    "../src/pages/register/index.astro",
+    "../src/components/RegisterTab.astro",
     "../src/pages/register/[id].astro",
   ]) {
     assert.match(
@@ -57,8 +57,8 @@ test("status is text, never colour alone", () => {
 });
 
 test("the register has jump links to each group, and each group is a labelled region", () => {
-  const reg = read("../src/pages/register/index.astro");
-  assert.match(reg, /<nav aria-labelledby="on-this-page">/);
+  const reg = read("../src/components/RegisterTab.astro");
+  assert.match(reg, /<nav aria-labelledby="on-this-page" data-md-skip>/);
   assert.match(reg, /<section aria-labelledby=\{d\.key\}>/);
 });
 
@@ -128,4 +128,51 @@ test("every text colour pair meets the Bundu floor of 7:1 in both themes", () =>
       assert.ok(c >= 7, `${name}: --${fg} on --${bg} is ${c.toFixed(2)}:1`);
     }
   }
+});
+
+test("the register has Adopted and Proposed tabs, as links that mark the current one", () => {
+  const tab = read("../src/components/RegisterTab.astro");
+  assert.match(tab, /<nav class="tabs" aria-label="Standards by status"/);
+  assert.match(
+    tab,
+    /aria-current=\{t\.status === status \? "page" : undefined\}/,
+  );
+  for (const [file, status] of [
+    ["../src/pages/register/index.astro", "adopted"],
+    ["../src/pages/register/proposed.astro", "proposed"],
+  ]) {
+    assert.match(
+      read(file),
+      new RegExp(`<RegisterTab status="${status}" />`),
+      file,
+    );
+  }
+});
+
+test("every page offers to copy itself as Markdown or JSON, and the control is hidden until its script runs", () => {
+  assert.match(base, /<div class="copy" data-copy data-md-skip hidden>/);
+  assert.match(base, /<label for="copy-format">Copy this page as<\/label>/);
+  assert.match(base, /<option value="markdown">Markdown<\/option>/);
+  assert.match(base, /<option value="json">JSON<\/option>/);
+  assert.doesNotMatch(base, /value="html"/i, "Markdown, not HTML");
+  assert.match(base, /<button type="button">Copy<\/button>/);
+  assert.match(base, /role="status"/, "the result is announced");
+  assert.match(base, /<script is:inline src="\/copy\.js" defer><\/script>/);
+  const js = read("../public/copy.js");
+  assert.match(js, /root\.hidden = false/);
+  assert.match(js, /getElementById\("page-json"\)/);
+});
+
+test("the content security policy lets the site run its own script and nothing else", () => {
+  const headers = read("../public/_headers");
+  assert.match(headers, /default-src 'none'; script-src 'self';/);
+  assert.doesNotMatch(headers, /unsafe-inline|unsafe-eval/);
+});
+
+test("the tabs and the copy control meet the hit-region floor", () => {
+  assert.match(
+    css,
+    /\.copy select, \.copy button \{[^}]*min-height: var\(--hit\)/,
+  );
+  assert.match(css, /nav\.tabs a \{[^}]*min-height: var\(--hit\)/);
 });

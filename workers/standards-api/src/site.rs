@@ -12,7 +12,7 @@ const SECURITY: [(&str, &str); 5] = [
     ("permissions-policy", "geolocation=(), camera=(), microphone=()"),
     (
         "content-security-policy",
-        "default-src 'none'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
     ),
 ];
 

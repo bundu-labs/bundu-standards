@@ -322,7 +322,7 @@ pub const TERMS: &[Term] = &[
         label: "Family",
         comment: "A kinship group treated as a first-class entity: it holds a \
                   handle, a verification standing and members, exactly as an \
-                  organization does. In the Bundu model a person cannot exist \
+                  organisation does. In the Bundu model a person cannot exist \
                   without belonging to one.",
         sub_class_of: Some("schema:Organization"),
         domain_includes: None,
@@ -345,7 +345,7 @@ pub const TERMS: &[Term] = &[
         status: Status::Stable,
         label: "Community",
         comment: "A group organised around a shared place, practice or purpose \
-                  that is neither a family nor a registered organization. \
+                  that is neither a family nor a registered organisation. \
                   Savings groups, burial societies, cooperatives and \
                   neighbourhood associations.",
         sub_class_of: Some("schema:Organization"),
@@ -376,7 +376,7 @@ pub const TERMS: &[Term] = &[
         range: None,
         values: None,
         individual: None,
-        rationale: "schema.org models places and organizations, but not the \
+        rationale: "schema.org models places and organisations, but not the \
                     custodial relationship between them as a kind of entity. \
                     Custody matters here because it is what a verification \
                     claim attaches to when a place is claimed.",
@@ -441,7 +441,7 @@ pub const TERMS: &[Term] = &[
         domain: Domain::TrustAndRecognition,
         status: Status::Stable,
         label: "ubuntu score",
-        comment: "A standing derived from an entity's conduct toward others in \
+        comment: "A standing derived from an entity's conduct towards others in \
                   the ecosystem, rather than from customer satisfaction.",
         sub_class_of: None,
         domain_includes: Some("schema:Organization"),
@@ -1216,7 +1216,7 @@ pub const TERMS: &[Term] = &[
                   example in the system prompt, on the input before the \
                   model sees it, or on the output before a person sees \
                   it. Repeatable. The values are fixed by the Bundu AI \
-                  Guardrail Standard.",
+                  Guardrails Standard.",
         sub_class_of: None,
         domain_includes: Some("bundu:AIGuardrail"),
         range: Some("schema:Text"),

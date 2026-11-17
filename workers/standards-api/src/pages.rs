@@ -16,6 +16,36 @@ pub static REGISTER: LazyLock<Register> = LazyLock::new(|| {
         .expect("checked by build.rs")
 });
 
+/// Our own standards' documents and data, by slug: built by `build.rs` from
+/// `standards/<slug>/` for every register entry whose url is a page on this site.
+pub static DOCUMENTS: LazyLock<serde_json::Map<String, serde_json::Value>> = LazyLock::new(|| {
+    serde_json::from_str(include_str!(concat!(env!("OUT_DIR"), "/documents.json")))
+        .expect("written by build.rs")
+});
+
+/// The content type a standard's file is served with.
+fn file_type(name: &str) -> &'static str {
+    match name.rsplit('.').next() {
+        Some("json") => "application/json; charset=utf-8",
+        Some("jsonld") => "application/ld+json; charset=utf-8",
+        Some("ndjson") => "application/x-ndjson; charset=utf-8",
+        _ => "text/markdown; charset=utf-8",
+    }
+}
+
+/// The data a standard's page offers to copy as JSON: its main JSON file.
+fn primary_json(files: &serde_json::Map<String, serde_json::Value>) -> Option<serde_json::Value> {
+    let name = files
+        .keys()
+        .find(|k| k.ends_with(".schema.json"))
+        .or_else(|| {
+            files
+                .keys()
+                .find(|k| !k.contains('/') && k.ends_with(".json"))
+        })?;
+    serde_json::from_str(files[name].as_str()?).ok()
+}
+
 /// The stylesheet, served at [`CSS_PATH`]. One file for the Astro and the Rust builds.
 pub const CSS: &str = include_str!("../../standards/src/styles/site.css");
 pub const CSS_PATH: &str = "/styles/site.css";
@@ -73,6 +103,29 @@ pub fn render(path: &str) -> Option<Page> {
             None,
             None,
         )),
+        _ if !trimmed.starts_with("/register/") => {
+            let rest = trimmed.strip_prefix('/')?;
+            let (slug, file) = rest.split_once('/').unwrap_or((rest, ""));
+            let doc = DOCUMENTS.get(slug)?;
+            let files = doc["files"].as_object()?;
+            if !file.is_empty() {
+                return Some(Page {
+                    content_type: file_type(file),
+                    body: files.get(file)?.as_str()?.to_owned(),
+                });
+            }
+            let s = r.get(doc["id"].as_str()?)?;
+            html(document(
+                path,
+                rsx! { StandardDocument { slug: slug.to_owned() } },
+                (
+                    format!("{} · Bundu standards", s.name),
+                    register::one_line(&s.governs).replace('`', ""),
+                ),
+                None,
+                primary_json(files),
+            ))
+        }
         _ => {
             let id = trimmed.strip_prefix("/register/")?;
             let s = r.get(id)?;
@@ -394,6 +447,52 @@ fn StandardPage(id: String) -> Element {
     }
 }
 
+/// One of our own standards, published here: its README as the page, then its files.
+#[component]
+fn StandardDocument(slug: String) -> Element {
+    let Some(doc) = DOCUMENTS.get(&slug) else {
+        return rsx! {};
+    };
+    let Some(s) = doc["id"].as_str().and_then(|id| REGISTER.get(id)) else {
+        return rsx! {};
+    };
+    let files: Vec<String> = doc["files"]
+        .as_object()
+        .map(|f| {
+            f.keys()
+                .filter(|k| k.as_str() != "README.md")
+                .cloned()
+                .collect()
+        })
+        .unwrap_or_default();
+    let html = doc["html"].as_str().unwrap_or_default().to_owned();
+    rsx! {
+        nav { "aria-label": "Breadcrumb", "data-md-skip": "",
+            p {
+                a { href: "/register/{s.id}/", span { "aria-hidden": "true", "← " } "Register entry: {s.name}" }
+                " "
+                Status { status: s.status.clone() }
+            }
+        }
+        div { class: "document", dangerous_inner_html: "{html}" }
+        if !files.is_empty() {
+            section { "aria-labelledby": "files",
+                h2 { id: "files", "Files" }
+                ul { class: "files",
+                    for f in files.iter() {
+                        li { a { href: "/{slug}/{f}", code { "{f}" } } }
+                    }
+                }
+                p { class: "muted",
+                    "The source of these files, with their tests, is "
+                    a { href: "https://github.com/bundu-labs/bundu-standards/tree/main/standards/{slug}", "standards/{slug}/ on GitHub" }
+                    "."
+                }
+            }
+        }
+    }
+}
+
 #[component]
 fn Accessibility() -> Element {
     rsx! {
@@ -615,5 +714,54 @@ mod tests {
         let home = page("/");
         assert!(home.contains("accessibility statement</a> or <a"));
         assert!(home.contains(" adopted</a> and <a"));
+    }
+
+    #[test]
+    fn every_register_link_to_this_site_has_a_page() {
+        for s in &REGISTER.standards {
+            if let Some(path) = s.url.strip_prefix(SITE) {
+                let html = page(path);
+                assert_eq!(html.matches("<h1").count(), 1, "{path}: one h1");
+                assert!(
+                    html.contains(&format!(r#"href="/register/{}/""#, s.id)),
+                    "{path}"
+                );
+                assert!(html.contains(r#"<div class="copy" data-copy="""#), "{path}");
+            }
+        }
+        assert!(DOCUMENTS.contains_key("weather-colour-scales"));
+        assert!(DOCUMENTS.contains_key("conversation-interchange"));
+    }
+
+    #[test]
+    fn a_standards_files_are_served_with_their_types_and_nothing_else() {
+        let scales = render("/weather-colour-scales/scales.json").unwrap();
+        assert_eq!(scales.content_type, "application/json; charset=utf-8");
+        let v: serde_json::Value = serde_json::from_str(&scales.body).unwrap();
+        assert_eq!(v["version"], "1.0.0");
+        assert_eq!(
+            render("/conversation-interchange/context.jsonld")
+                .unwrap()
+                .content_type,
+            "application/ld+json; charset=utf-8"
+        );
+        assert!(render("/conversation-interchange/examples/minimal.ndjson").is_some());
+        assert!(render("/weather-colour-scales/results.md").is_some());
+        // Tools, tests and anything outside the folder are not published.
+        assert!(render("/weather-colour-scales/scales.py").is_none());
+        assert!(render("/weather-colour-scales/test_scales.py").is_none());
+        assert!(render("/weather-colour-scales/../register/register.yaml").is_none());
+        assert!(render("/not-a-standard/").is_none());
+    }
+
+    #[test]
+    fn a_standards_page_copies_its_data_as_json() {
+        let html = page("/weather-colour-scales/");
+        let start = html
+            .find(r#"<script type="application/json" id="page-json">"#)
+            .unwrap();
+        assert!(html[start..].contains(r#""uv_index""#));
+        assert!(page("/conversation-interchange/").contains(r#"id="page-json""#));
+        assert!(html.contains("<table>"), "Markdown tables render");
     }
 }

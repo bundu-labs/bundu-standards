@@ -39,7 +39,82 @@ fn main() {
         panic!("{e}");
     }
     let out = Path::new(&env::var("OUT_DIR").unwrap()).join("register.json");
-    fs::write(out, json).unwrap();
+    fs::write(&out, &json).unwrap();
+    documents(&json);
+}
+
+/// Our own standards, published beside the register: every entry whose `url` is a page on
+/// standards.bundu.org gets that page, built from `standards/<slug>/`. The README becomes the
+/// page (rendered here, so no Markdown parser ships in the wasm) and the data files are served
+/// as they are. A register URL with no folder behind it fails the build, so the register can
+/// never link to a page that does not exist.
+fn documents(register_json: &str) {
+    println!("cargo:rerun-if-changed={STANDARDS}");
+    let reg: serde_json::Value = serde_json::from_str(register_json).unwrap();
+    let mut docs = serde_json::Map::new();
+    for s in reg["standards"].as_array().unwrap() {
+        let url = s["url"].as_str().unwrap_or_default();
+        let Some(slug) = url
+            .strip_prefix("https://standards.bundu.org/")
+            .and_then(|r| r.strip_suffix('/'))
+        else {
+            continue;
+        };
+        if slug.starts_with("register") || slug.contains('/') {
+            continue;
+        }
+        let dir = Path::new(STANDARDS).join(slug);
+        let readme = fs::read_to_string(dir.join("README.md")).unwrap_or_else(|_| {
+            panic!(
+                "register {}: url {url} has no standards/{slug}/README.md behind it",
+                s["id"].as_str().unwrap_or("?")
+            )
+        });
+        let mut files = serde_json::Map::new();
+        collect(&dir, &dir, &mut files);
+        docs.insert(
+            slug.to_owned(),
+            serde_json::json!({ "id": s["id"], "html": markdown(&readme), "files": files }),
+        );
+    }
+    let out = Path::new(&env::var("OUT_DIR").unwrap()).join("documents.json");
+    fs::write(out, serde_json::Value::Object(docs).to_string()).unwrap();
+}
+
+const STANDARDS: &str = "../../standards";
+
+/// The published files of a standard's folder: documents and data, not its tools or tests.
+fn collect(root: &Path, dir: &Path, out: &mut serde_json::Map<String, serde_json::Value>) {
+    let mut entries: Vec<_> = fs::read_dir(dir).unwrap().flatten().collect();
+    entries.sort_by_key(|e| e.file_name());
+    for e in entries {
+        let path = e.path();
+        let name = e.file_name().to_string_lossy().into_owned();
+        if name.starts_with('.') || name.starts_with("__") {
+            continue;
+        }
+        if path.is_dir() {
+            collect(root, &path, out);
+        } else if matches!(
+            path.extension().and_then(|x| x.to_str()),
+            Some("md" | "json" | "jsonld" | "ndjson")
+        ) {
+            let rel = path
+                .strip_prefix(root)
+                .unwrap()
+                .to_string_lossy()
+                .replace('\\', "/");
+            out.insert(rel, fs::read_to_string(&path).unwrap().into());
+        }
+    }
+}
+
+fn markdown(text: &str) -> String {
+    use pulldown_cmark::{html, Options, Parser};
+    let mut out = String::new();
+    html::push_html(&mut out, Parser::new_ext(text, Options::ENABLE_TABLES));
+    // A code block can scroll sideways, so it has to take the keyboard focus (WCAG 2.1.1).
+    out.replace("<pre>", "<pre tabindex=\"0\">")
 }
 
 /// YAML to JSON, with every scalar as a string: the pages print values, they never count

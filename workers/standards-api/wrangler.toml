@@ -3,13 +3,13 @@
 # The pages are rendered with Dioxus and Mzizi Roots from the register built into the Worker;
 # the file endpoint reads a public repository. No bindings and no secrets.
 #
-# It has no route yet: the Astro Worker (workers/standards) still holds standards.bundu.org.
-# Deploying this Worker changes nothing until the custom domain moves to it (README, "Turning
-# it on").
+# It serves standards.bundu.org: the custom domain moved here from the Astro Worker
+# (workers/standards) on 2026-11-17. The route is declared here so every deploy keeps it.
 name = "bundu-standards-api"
 main = "build/worker/shim.mjs"
 compatibility_date = "2026-10-01"
 workers_dev = false
+routes = [{ pattern = "standards.bundu.org", custom_domain = true }]
 
 [build]
 command = "cargo install -q worker-build && worker-build --release"

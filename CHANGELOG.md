@@ -15,6 +15,11 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- standards.bundu.org is served by the Rust Worker (`workers/standards-api`,
+  Dioxus and Mzizi Roots). The custom domain moved from `bundu-standards`
+  (Astro) to `bundu-standards-api` on 2026-11-17. The route now sits only in
+  the Rust Worker's `wrangler.toml`; the Astro Worker's config no longer
+  declares it, so deploying the Astro Worker cannot take the domain back.
 - Weather colour scales 1.0.0, adopted. Every claim marked inferred in 0.1.0
   was checked at source on 2026-11-15:
   - UV colours now use WHO's own RGB from its UV index clipart notes (2002):
@@ -43,6 +48,17 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Both sites: every page has "Copy this page as" at the top, which copies the
+  page as Markdown or, where the page has data, as JSON (JSON-LD on
+  vocab.bundu.org). Markdown replaces HTML as the copyable text form. One
+  script, `copy.js`, serves both sites; a test keeps its two copies identical.
+  The control stays hidden without JavaScript, so it never shows a dead button,
+  and a screen reader announces the result. The standards site's content
+  security policy now allows `script-src 'self'` for it (no inline or
+  third-party script).
+- standards.bundu.org: the register has two tabs, Adopted and Proposed, as two
+  pages (`/register/` and `/register/proposed/`) with the current one marked
+  `aria-current="page"`. A standard's page links back to its own tab.
 - The file endpoint of standards.bundu.org in Rust: `workers/standards-api`, a `workers-rs`
   Worker with the same routes, problems, headers and edge cache as `src/lib/files.js`. Its 12
   tests are the JS test cases, run natively, and CI builds it for wasm32. The Astro pages
@@ -58,6 +74,19 @@ Versions released before then are not renumbered.
 
 ### Fixed
 
+- standards.bundu.org: missing spaces in "103 adopted,2 proposed" and in the
+  footer's "statement orreport a barrier", and between each standard's link and
+  its status, which some screen readers ran together.
+- vocab.bundu.org: a term's name and its type ran together ("Familyclass") for
+  screen readers; backticks in definitions show as code instead of literally;
+  long term names and URIs no longer push term pages off a 320px screen; the
+  example request block takes the keyboard focus.
+- Register text: long fields (38 of them) are split into paragraphs, and
+  backticks in any field render as code. 17 wording fixes from a proofreading
+  pass: missing full stops, subject-verb agreement ("The latest versions of the
+  three series are"), stray capitals, "translation keys", the OGC API names
+  written one way, and the Bundu AI Guardrails Standard's name on the
+  `enforcementLayer` term.
 - The home page reads "103 adopted, 2 proposed" in the Rust build, where Astro dropped the
   space after the comma.
 - Cloudflare Workers Builds deploys standards.bundu.org again. Its build command runs the

@@ -1,6 +1,7 @@
 ---
 import "../styles/site.css";
-const { title, description, jsonLd } = Astro.props;
+// pageJson is the data the copy control offers as JSON; pages without data offer Markdown only.
+const { title, description, jsonLd, pageJson } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // The current section, for aria-current: the register's pages count as the register.
 const path = Astro.url.pathname;
@@ -24,6 +25,8 @@ const current = (href) =>
     <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#141412" media="(prefers-color-scheme: dark)" />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, "\\u003c")} />}
+    {pageJson && <script type="application/json" id="page-json" set:html={JSON.stringify(pageJson).replace(/</g, "\\u003c")} />}
+    <script is:inline src="/copy.js" defer></script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to main content</a>
@@ -42,14 +45,25 @@ const current = (href) =>
         </ul>
       </nav>
     </header>
-    <main id="main" tabindex="-1"><slot /></main>
+    <main id="main" tabindex="-1">
+      <div class="copy" data-copy data-md-skip hidden>
+        <label for="copy-format">Copy this page as</label>
+        <select id="copy-format">
+          <option value="markdown">Markdown</option>
+          <option value="json">JSON</option>
+        </select>
+        <button type="button">Copy</button>
+        <span class="copy-status" role="status"></span>
+      </div>
+      <slot />
+    </main>
     <footer class="site">
       <p>
         Published by the <a href="https://www.bundu.org">Bundu Foundation</a>. The register is CC0.
       </p>
       <p>
         Every page works with a keyboard alone: <kbd>Tab</kbd> moves forward, <kbd>Shift</kbd>+<kbd>Tab</kbd> moves
-        back, <kbd>Enter</kbd> follows a link. Read the <a href="/accessibility/">accessibility statement</a> or
+        back, <kbd>Enter</kbd> follows a link. Read the <a href="/accessibility/">accessibility statement</a>{" or "}
         <a href="https://github.com/bundu-labs/bundu-standards/issues/new?title=Accessibility%3A%20">report a barrier</a>.
       </p>
     </footer>

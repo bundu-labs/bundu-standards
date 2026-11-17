@@ -42,6 +42,8 @@ pub struct Register {
     pub domains: Vec<Domain>,
     pub standards: Vec<Standard>,
     pub counts: Counts,
+    /// Each standard's whole record, every field as register.yaml has it, by position.
+    pub records: Vec<serde_json::Value>,
 }
 
 #[derive(Deserialize)]
@@ -55,6 +57,10 @@ impl Register {
     /// status of `adopted` or `proposed`.
     pub fn parse(json: &str) -> Result<Self, String> {
         let raw: Raw = serde_json::from_str(json).map_err(|e| format!("register.yaml: {e}"))?;
+        let records = serde_json::from_str::<serde_json::Value>(json)
+            .ok()
+            .and_then(|v| v.get("standards").and_then(|s| s.as_array()).cloned())
+            .unwrap_or_default();
         let mut seen = std::collections::HashSet::new();
         for s in &raw.standards {
             if s.id.is_empty() || !seen.insert(s.id.as_str()) {
@@ -95,12 +101,96 @@ impl Register {
             domains,
             standards: raw.standards,
             counts,
+            records,
         })
     }
 
     pub fn get(&self, id: &str) -> Option<&Standard> {
         self.standards.iter().find(|s| s.id == id)
     }
+
+    /// The domains, each with only its standards of one status; empty domains dropped.
+    pub fn domains_with(&self, status: &str) -> Vec<Domain> {
+        self.domains
+            .iter()
+            .map(|d| Domain {
+                key: d.key.clone(),
+                title: d.title.clone(),
+                standards: d
+                    .standards
+                    .iter()
+                    .filter(|s| s.status == status)
+                    .cloned()
+                    .collect(),
+            })
+            .filter(|d| !d.standards.is_empty())
+            .collect()
+    }
+
+    /// How many standards have a status.
+    pub fn count(&self, status: &str) -> usize {
+        match status {
+            "adopted" => self.counts.adopted,
+            "proposed" => self.counts.proposed,
+            _ => 0,
+        }
+    }
+}
+
+/// The register's two tabs, in order: status, label and page.
+pub const TABS: [(&str, &str, &str); 2] = [
+    ("adopted", "Adopted", "/register/"),
+    ("proposed", "Proposed", "/register/proposed/"),
+];
+
+/// The tab a status is listed under.
+pub fn tab_for(status: &str) -> (&'static str, &'static str, &'static str) {
+    TABS.into_iter().find(|t| t.0 == status).unwrap_or(TABS[0])
+}
+
+/// A field as paragraphs. In register.yaml a blank line inside a folded scalar starts a new
+/// paragraph; YAML turns it into one newline.
+pub fn paragraphs(text: &str) -> Vec<String> {
+    text.split('\n')
+        .map(one_line)
+        .filter(|p| !p.is_empty())
+        .collect()
+}
+
+/// A paragraph as runs of text and code: register fields mark code with backticks, as
+/// Markdown does. An unpaired backtick stays as text.
+pub fn code_spans(p: &str) -> Vec<(bool, String)> {
+    let parts: Vec<&str> = p.split('`').collect();
+    if parts.len() % 2 == 0 {
+        return vec![(false, p.to_owned())];
+    }
+    parts
+        .into_iter()
+        .enumerate()
+        .filter(|(_, t)| !t.is_empty())
+        .map(|(i, t)| (i % 2 == 1, t.to_owned()))
+        .collect()
+}
+
+/// The JSON a register tab offers to copy: index.json's shape, one status only.
+pub fn tab_json(register: &Register, status: &str, origin: &str) -> serde_json::Value {
+    let all: serde_json::Value = serde_json::from_str(&index_json(register, origin)).unwrap();
+    let standards: Vec<serde_json::Value> = all["standards"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter(|s| s["status"] == status)
+        .cloned()
+        .collect();
+    serde_json::json!({ "status": status, "count": standards.len(), "standards": standards })
+}
+
+/// The JSON a standard's page offers to copy: its whole register record and its page.
+pub fn standard_json(register: &Register, id: &str, origin: &str) -> Option<serde_json::Value> {
+    let mut v = register.records.iter().find(|r| r["id"] == id)?.clone();
+    v.as_object_mut()?
+        .insert("page".into(), format!("{origin}/register/{id}/").into());
+    Some(v)
 }
 
 /// Collapse runs of whitespace, as `governs.replace(/\s+/g, " ").trim()` did.

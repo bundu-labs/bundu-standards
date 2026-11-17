@@ -11,6 +11,7 @@ Worker in `workers/standards` once the custom domain moves here.
 | `/<40-hex commit>/register/<f>`                         | one of the four register files at that commit, immutable, open to any origin  |
 | `/register/latest`                                      | the head of `main` and the URLs of the four files (REST API, then git's refs) |
 | `/healthz`                                              | `{"status":"ok"}`                                                             |
+| `/openapi.json`, `/.well-known/openapi.json`            | the OpenAPI 3.0.3 description of every route here (`openapi.json`)            |
 | favicons, `robots.txt`                                  | static assets from `../standards/public`, with its `_headers`                 |
 | anything else                                           | an RFC 9457 problem: 404, or 405 for a method other than GET, HEAD or OPTIONS |
 
@@ -22,6 +23,13 @@ Worker in `workers/standards` once the custom domain moves here.
   no Tailwind, so the badge's own classes are inert and `.chip` styles it.
 - `src/core.rs` is the file endpoint. Its tests are the cases of
   `workers/standards/test/files.test.js`. `src/lib.rs` is the Worker glue (wasm32 only).
+
+- `openapi.json` describes every route above, GET and HEAD only, for API clients and Cloudflare
+  API Shield schema validation; every page links it (`rel="service-desc"`). `src/openapi.rs`
+  serves it and its tests hold it to the router: a route the Worker serves (from the register,
+  our standards' files, the assets, the path literals in the source, or a link on any page) that
+  it leaves out fails `cargo test`, and so does a path in it the Worker does not serve or serves
+  with another content type. Add a route, add it to `openapi.json`.
 
 All of it has no platform dependency apart from `lib.rs`, and is tested natively.
 

@@ -116,6 +116,12 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- **standards.bundu.org publishes an OpenAPI description** at `/openapi.json`
+  and `/.well-known/openapi.json` (OpenAPI 3.0.3, for Cloudflare API Shield
+  schema validation), linked from every page's `<head>` as `service-desc`. It
+  is `workers/standards-api/openapi.json`; `cargo test` fails when a route the
+  Worker serves is missing from it, or a path in it is not served.
+
 - **Nine vocabulary terms for the Bundu Conversation Interchange** (pending,
   published as `testing`), under a new subject area, "Conversations and
   assistants": the classes `Project` (extends `schema:CreativeWork`, since
@@ -195,6 +201,10 @@ Versions released before then are not renumbered.
   until the custom domain moves to `bundu-standards-api`; the steps are in the README.
 
 ### Fixed
+
+- **A broken link on /cell/**: the register entry linked
+  `../../register/register.yaml`, which is a repository path and a 404 on the
+  site. It now links the entry's page.
 
 - standards.bundu.org's content security policy allows `connect-src 'self'`.
   With the nonce live, Cloudflare's bot detection ran but its report to

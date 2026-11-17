@@ -106,9 +106,10 @@ standards:
       Live terms (CC0); additions by review in bundu-labs/bundu-standards;
       flat URIs (vocab.bundu.org/<term>); stable terms never change meaning
     current: >-
-      0.1.4, 39 terms (38 stable, 1 testing); 0.1.3 made the AI guardrail
-      terms stable, and 0.1.4 adds notificationPreference (testing). Live
-      once the bundu-vocab deploy runs.
+      48 terms (38 stable, 10 testing). 0.1.3 made the AI guardrail terms
+      stable, 0.1.4 added notificationPreference (testing), and the nine
+      Bundu Conversation Interchange terms follow in testing (next release).
+      Live once the bundu-vocab deploy runs.
     governs: >-
       Terms Schema.org lacks. Stable: Family, Community, PlaceOwner,
       PublishingHouse, NewsDesk, recognitionBasis, verificationTier,
@@ -121,7 +122,9 @@ standards:
       with BAGS-01 to BAGS-12.
 
       Testing: notificationPreference
-      (identity.persons.notificationPreferences).
+      (identity.persons.notificationPreferences), and the Bundu Conversation
+      Interchange terms Project, Artifact, MemoryEntry, scope, pinned,
+      instructions, skill, provenance and consent (until BCI is published).
 
       Proposed, not yet in the
       live index: trustScore (a cached schema.org Rating per trust context
@@ -805,6 +808,56 @@ standards:
     rationale: >-
       A portable session log exists, so we adopt it instead of writing a third
       format (AGENTS.md, the rule).
+
+  - id: opensandbox
+    name: OpenSandbox (sandbox lifecycle and execution APIs)
+    domain: agents
+    category: protocol
+    steward: >-
+      OpenSandbox a Series of LF Projects, LLC, under the Agentic AI Foundation
+      (AAIF); maintainers mainly Alibaba-affiliated
+    commitment: >-
+      Pin the OpenAPI files a harness builds against (Lifecycle API 0.1.0,
+      Execd API 1.0.0, Egress API 0.1.0); the Lifecycle API is pre-v1.
+    current: >-
+      specs/sandbox-lifecycle.yml (OpenAPI 3.1, info.version 0.1.0),
+      specs/execd-api.yaml (1.0.0) and specs/egress-api.yaml (0.1.0), read
+      2026-11-17 at github.com/opensandbox-group/OpenSandbox commit f1e4ac0
+      (2026-11-17). No tag marks a protocol release; tags are per component
+      (server/v0.2.3, sdks/sandbox/go/v1.2.1). Release notes reach 1.3.0-rc.1.
+    governs: >-
+      How a harness creates, pauses, resumes, snapshots and destroys a sandbox
+      (Lifecycle API, base path /v1: sandboxes, snapshots, templates, expiry,
+      endpoints, egress network policy, a write-only credential vault), and
+      how it runs code, commands and file operations inside one (Execd API:
+      code contexts, sessions, commands with logs, files and directories).
+    status: proposed
+    decided: >-
+      Proposed 2026-11-17 to close the sandbox row of the harness conformance
+      checklist (standards/harness-checklist/), on the owner's request "finish
+      the harness checklist". Adoption is the owner's decision.
+    url: https://github.com/opensandbox-group/OpenSandbox/tree/main/specs
+    docs: https://open-sandbox.ai/
+    notes: >-
+      Licence Apache-2.0 (repository LICENSE, measured 2026-11-17).
+
+      Foundation host: confirmed. The AAIF proposal
+      (aaif/project-proposals#26, opened 2026-05-05) is closed as completed
+      with the labels Approved, Sandbox and contribution-agreement/signed, and
+      CHARTER.md establishes "OpenSandbox a Series of LF Projects, LLC",
+      adopted 2026-10-20, with AAIF named as its foundation contact.
+
+      Caveats, measured in the same proposal thread: a reviewer noted that the
+      Lifecycle API is pre-v1 and that some behaviour is still defined by the
+      reference implementation; the proposers state that maintainers are
+      primarily Alibaba-affiliated and that governance is to broaden.
+
+      Bundu runs no sandbox today: Shamwari's data plane
+      (nyuchi/nyuchi-servers-api) executes no model-written code. The entry
+      matters when a Bundu harness runs code.
+    rationale: >-
+      A standard sandbox protocol exists under a foundation, so a harness uses it
+      rather than defining its own (AGENTS.md, the rule).
 
   - id: agent_client_protocol
     name: Agent Client Protocol (ACP)

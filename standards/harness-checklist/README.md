@@ -1,8 +1,9 @@
-# Harness conformance checklist (draft)
+# Harness conformance checklist
 
-**Status:** draft checklist. It is not a standard. It has no schema, no vocabulary terms and no
-register entry, and it is not published to standards.bundu.org. Nothing here merges without the
-owner's go. Tracked in [#50](https://github.com/bundu-labs/bundu-standards/issues/50).
+**Status:** complete as of 2026-11-17, on the owner's request "finish the harness checklist". It is
+a checklist, not a standard. It has no schema, no vocabulary terms and no register entry of its own,
+and it is not published to standards.bundu.org. Tracked in
+[#50](https://github.com/bundu-labs/bundu-standards/issues/50).
 
 A _harness_ is the loop around a model: it builds the context, calls the model, runs tools, asks
 for permission, keeps a log and may run code in a sandbox. Following `AGENTS.md` ("adopt the global
@@ -13,17 +14,23 @@ the gaps. Claims are labelled **measured** (read at source on the date and URL g
 
 ## 1. Parts that already have a standard: use it
 
-| Part                 | A conforming harness must…                                       | Use                                                                          | Version / licence (measured 2026-11-11)                                                     |
-| -------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Tools and context    | call tools and read context through the Model Context Protocol   | MCP (in the register)                                                        | version `2026-07-28` per the coordinator's register check                                   |
-| Instructions         | read project instructions from `AGENTS.md`                       | AGENTS.md (adopted)                                                          | unversioned; MIT                                                                            |
-| Skills               | load reusable skills as `SKILL.md` folders                       | Agent Skills (adopted)                                                       | unversioned (no tags); Apache-2.0 code, CC-BY-4.0 docs                                      |
-| Model wire shape     | exchange one request and response as Open Responses items        | Open Responses (adopted)                                                     | pin the dated OpenAPI file (latest 2026-04-24), not `openapi.json`; Apache-2.0              |
-| Agent to agent       | delegate to other agents through A2A                             | A2A (in the register)                                                        | 1.0.0 per the coordinator's register check                                                  |
-| Sandbox lifecycle    | create, run in and destroy a sandbox through a standard protocol | OpenSandbox (Agentic AI Foundation project; **not yet read at source here**) | not verified                                                                                |
-| Editor to agent      | if it talks to an editor, use ACP                                | Agent Client Protocol (`proposed`)                                           | protocol v1 stable; Apache-2.0; Zed-led, no foundation host found (coordinator, 2026-11-11) |
-| Stored conversations | export and import chats, projects, saved answers                 | Bundu Conversation Interchange (draft, #47)                                  | draft 0.1.0                                                                                 |
-| Session log          | write each session as an ordered trajectory                      | ATIF (adopted 2026-11-14)                                                    | ATIF-v1.8 (RFC 0001, Active, April 2026); Apache-2.0                                        |
+Every row below is a standard in the register (`register/register.yaml`). The version and licence are
+the register's, each read at source on the date it records.
+
+| Part                 | A conforming harness must…                                       | Use (register id, status)                                           | Version / licence                                                                                                     |
+| -------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Tools and context    | call tools and read context through the Model Context Protocol   | MCP (`mcp`, adopted)                                                | revision 2026-07-28                                                                                                   |
+| Instructions         | read project instructions from `AGENTS.md`                       | AGENTS.md (`agents_md`, adopted)                                    | unversioned; MIT                                                                                                      |
+| Skills               | load reusable skills as `SKILL.md` folders                       | Agent Skills (`agent_skills`, adopted)                              | unversioned (no tags); Apache-2.0 code, CC-BY-4.0 docs                                                                |
+| Model wire shape     | exchange one request and response as Open Responses items        | Open Responses (`open_responses`, adopted)                          | pin the dated OpenAPI file (2026-04-24), not `openapi.json`; Apache-2.0                                               |
+| Agent to agent       | delegate to other agents through A2A                             | A2A (`a2a`, adopted)                                                | 1.0.0                                                                                                                 |
+| Sandbox lifecycle    | create, run in and destroy a sandbox through a standard protocol | OpenSandbox (`opensandbox`, **proposed** 2026-11-17)                | Lifecycle API 0.1.0 (pre-v1), Execd API 1.0.0; Apache-2.0; an AAIF project. **Measured** 2026-11-17 at commit f1e4ac0 |
+| Editor to agent      | if it talks to an editor, use ACP                                | Agent Client Protocol (`agent_client_protocol`, adopted 2026-11-15) | protocol v1; Apache-2.0; interim Zed and JetBrains governance, no foundation host                                     |
+| Stored conversations | export and import chats, projects, saved answers                 | BCI (`bci`, adopted 2026-11-15)                                     | 0.1.0; first implementation nyuchi/nyuchi-servers-api#50; vocabulary terms pending in vocab.bundu.org                 |
+| Session log          | write each session as an ordered trajectory                      | ATIF (`atif`, adopted 2026-11-14)                                   | ATIF-v1.8 (RFC 0001, Active, April 2026); Apache-2.0                                                                  |
+
+ACP and BCI were adopted in #70 (merged 2026-11-17). OpenSandbox is the one row whose standard is not yet adopted; adopting it is the owner's
+decision. Bundu runs no sandbox today, so the row applies only once a Bundu harness runs code.
 
 ## 2. Parts a second gap check found partly covered
 
@@ -39,21 +46,74 @@ document status **Development**, no release cut).
 | **Telemetry**          | OTel GenAI defines spans for inference, embeddings, retrieval, `execute_tool`, `create_agent`, `invoke_agent`, memory operations (`gen_ai.memory.client`) and agent-skill loading, with `gen_ai.conversation.id`. **Measured.** Development status: names may change.               | `README.md`, `gen-ai-spans.md`, `execute-tool.md`, `gen-ai-agent-spans.md` |
 | **Permissions**        | ACP v1 has `session/request_permission` (coordinator, 2026-11-11). No permission field appears in the ATIF RFC or in six OTel GenAI documents searched by keyword (`permission`, `approval`). **Measured for those files only.**                                                    | keyword search of the files named                                          |
 
-## 3. Gaps, stated plainly
+## 3. Gaps, checked at source 2026-11-17
 
-1. **Context policy** (what a harness must keep, drop or summarise, and who may see it): ATIF records a
-   transformation after the fact and OTel does not cover it. **Inferred** gap.
-2. **Permission model** (what a person approves, remembered grants, scope): only ACP's request call
-   exists, and only between an editor and an agent. **Inferred** gap for harnesses generally.
-3. **Cross-harness tool-call dialects**: Open Responses gives one wire shape; harnesses still differ
-   in what they emit and accept. Not verified against DeepSeek, Qwen, GLM, Codex, Gemini CLI,
-   OpenHands or goose session schemas. **Not verified.**
+Each gap below was checked at source on 2026-11-17. Repositories were read at these commits: Codex
+05ae1b0, Gemini CLI 4fa64e7, OpenHands software-agent-sdk 06f643c, goose eb4f412, MCP 05aeb07, A2A
+b30ab16, OpenTelemetry semantic-conventions-genai e6658f1, Harbor 110c71b, Open Responses dce9ddb and
+LangGraph 02f2c2e.
+
+1. **Context policy: partly covered.** This is what a harness must keep, drop or summarise, and who
+   may see it.
+   - Open Responses 2026-04-24 has `truncation` ("auto": the server "MAY truncate earlier parts" and
+     "SHOULD apply sensible heuristics"), `previous_response_id` (the server "MUST preserve the
+     semantic order") and a `/responses/compact` endpoint. That is provider-side policy, not
+     harness policy.
+   - ATIF section VII reconstructs the context after the fact.
+   - OTel GenAI says instrumentations "SHOULD NOT capture" inputs and outputs by default, which
+     covers telemetry only.
+   - No rule for what a harness keeps, or for who may see it, was found in MCP. **Measured.**
+2. **Permission model: partly covered.**
+   - MCP 2026-07-28 (`server/tools.mdx`): "there **SHOULD** always be a human in the loop with the
+     ability to deny tool invocations".
+   - MCP elicitation (`client/elicitation.mdx`): clients **MUST** "provide clear decline and cancel
+     options".
+   - MCP tool annotations (`destructiveHint` and the others) are hints that clients **MUST** treat
+     as untrusted unless the server is trusted.
+   - A2A 1.0.0 section 7.6: an agent that needs human approval before a destructive action
+     **MUST** move to `TASK_STATE_AUTH_REQUIRED`. Section 7.6.4 leaves "scope, representation,
+     validity, or revocation" undefined.
+   - ACP has `session/request_permission`, between an editor and an agent only.
+   - **Measured.** No standard defines remembered grants, grant scope or how an approval is
+     recorded.
+3. **Cross-harness tool-call dialects: still a gap.** Four wire dialects are in use: Chat
+   Completions `tool_calls`, the Responses API's `function_call` items, Anthropic `tool_use` and
+   Gemini `functionCall`. None of the products below claims Open Responses conformance. The Codex
+   CLI accepts only the Responses wire, which Open Responses is based on. **Measured** for the
+   repositories and vendor pages named. The Qwen Responses page was read from search excerpts only.
+
+   | Product    | Tool-call wire                                                    | Sessions on disk                         | MCP | AGENTS.md     | Skills | ACP                |
+   | ---------- | ----------------------------------------------------------------- | ---------------------------------------- | --- | ------------- | ------ | ------------------ |
+   | DeepSeek   | Chat Completions; Anthropic Messages; Responses (no `store`)      | n/a                                      | n/a | n/a           | n/a    | n/a                |
+   | Qwen       | Chat Completions; Responses (OpenAI-compatible); DashScope native | n/a                                      | n/a | n/a           | n/a    | n/a                |
+   | GLM (z.ai) | Chat Completions; Anthropic Messages                              | n/a                                      | n/a | n/a           | n/a    | n/a                |
+   | Codex CLI  | Responses only (`wire_api = "chat"` is refused)                   | JSONL rollout files                      | yes | yes           | yes    | through an adapter |
+   | Gemini CLI | Gemini `functionCall`                                             | JSONL chat files                         | yes | if configured | yes    | yes, as an agent   |
+   | OpenHands  | Chat Completions or Responses, through LiteLLM                    | a state file and one JSON file per event | yes | yes           | yes    | yes, as a client   |
+   | goose      | its own message type, translated per provider                     | SQLite                                   | yes | yes           | yes    | yes, as an agent   |
+
+   So the harnesses agree on MCP, AGENTS.md, Agent Skills and, increasingly, ACP. They disagree on
+   the model wire and on how a session is stored. BCI (stored conversations) and ATIF (session log)
+   are the register's answer to the second disagreement. Nothing in the register answers the first
+   beyond adopting Open Responses.
+
 4. **Portable session log: decided.** The owner adopted ATIF on 2026-11-14 (register id `atif`).
    BCI's ordered `Message` stream maps onto ATIF steps rather than defining its own log; the mapping
    is an open item on #48. ATIF is Harbor-hosted and evaluation-oriented, with no foundation host,
    so the adoption is of the format, not an endorsement of its steward.
+   - ISO/IEC 24970 "AI system logging" (JTC 1/SC 42) is at stage 60.00, under publication. It is
+     the nearest formal standard and has not been read here. **Measured** status only.
 
-Not checked: ISO/IEC SC 42 and IEEE items, LangGraph checkpoints, any importer actually losing data.
+Checked and found not to be harness standards:
+
+- IEEE P3119 is about AI procurement. **Measured.**
+- IEEE P3394 "Large Language Model Agent Interface" is an active PAR from 2023-09-21, not
+  published, and its page does not mention tool calls, logs or context. **Measured.**
+- ISO/IEC 42105 (human oversight) and ISO/IEC 42001 (a management system) are not harness formats.
+  **Measured** for 42105's stage, **inferred** for the rest.
+- ISO/IEC AWI TR 27258 (multi-agent interactions) is an early technical report. **Measured.**
+- LangGraph checkpoints (`v: 1`) are a versioned internal persistence format, serialised as Python
+  types, not an interchange format. **Inferred** from the source.
 
 ## 4. Bundu's own rules (not an external standard)
 
@@ -68,5 +128,14 @@ not part of any standard above.
 ## 5. How to use this
 
 A harness passes when, for every row of section 1 that applies to it, it uses the named standard,
-and it satisfies section 4. Section 3 lists what it cannot yet be checked against. Open items are in
-the tracking issue (#50).
+and it satisfies section 4. Section 3 lists what it cannot yet be checked against. Where section 3
+names a partial standard (MCP's human-in-the-loop rules, A2A's `AUTH_REQUIRED`), a harness follows
+it.
+
+What is left is the owner's, not the checklist's:
+
+1. Adopt OpenSandbox, or leave it proposed (register id `opensandbox`).
+2. Whether to write a Bundu profile for the two partly covered gaps: context policy, and permission
+   grants. `AGENTS.md`'s rule says to write one where none exists. The checklist does not start one.
+3. Running this checklist against Shamwari's harness (`shamwari-ai/shamwari`). The data-plane audit
+   is nyuchi/nyuchi-servers-api#48.

@@ -86,6 +86,32 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- **Nine vocabulary terms for the Bundu Conversation Interchange** (pending,
+  published as `testing`), under a new subject area, "Conversations and
+  assistants": the classes `Project` (extends `schema:CreativeWork`, since
+  `schema:Project` is an Organization), `Artifact` (`schema:CreativeWork`;
+  its definition maps it to the A2A Artifact rather than renaming it) and
+  `MemoryEntry` (`schema:Statement`), and the properties `scope`
+  (`personal` · `community` · `platform`), `pinned`, `instructions`,
+  `skill`, `provenance` and `consent` (`stated` · `confirmed`). They are
+  exactly the `bundu:` terms BCI's `context.jsonld` names, and a test fails
+  if the two drift apart or the value sets stop matching `bci.schema.json`.
+  48 terms (38 stable, 10 testing). This answers BCI open question 2.
+- **OpenSandbox, proposed** (register id `opensandbox`): the sandbox lifecycle
+  and execution APIs of an Agentic AI Foundation project (Apache-2.0;
+  Lifecycle API 0.1.0, pre-v1; Execd API 1.0.0), read at source 2026-11-17.
+  Adoption is the owner's decision.
+- **The harness conformance checklist is complete** (`standards/harness-checklist/`).
+  Section 1 names each row's register entry and status. Section 3's gaps were
+  checked at source on 2026-11-17:
+  - context policy and permission grants are partly covered (Open Responses
+    truncation and compaction; MCP's human-in-the-loop rules; A2A
+    `TASK_STATE_AUTH_REQUIRED`);
+  - tool-call dialects remain a gap across DeepSeek, Qwen, GLM, Codex CLI,
+    Gemini CLI, OpenHands and goose;
+  - the session log stays decided (ATIF).
+    It is still a checklist, not a standard, and is not published.
+
 - The ecosystem record lists the platform tokens (MIT, MXT, NST, NHC) as a `proposed` term:
   a future build-out, not in development, none issued (owner, 2026-11-17). `proposed` is a
   new status for terms; products cannot carry it. The sites read the same status.

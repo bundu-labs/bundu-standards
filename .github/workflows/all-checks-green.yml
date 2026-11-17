@@ -1,0 +1,81 @@
+name: All checks green
+
+# The owner's merge rule (2026-11-17): a merge is blocked while anything is
+# red or orange. This job waits until every other check on the commit has
+# finished, then passes only if each one passed or was skipped. Failed,
+# cancelled, timed out, neutral, action required, stale or still pending all
+# block. Make this one check required on staging and main, for pull requests
+# and for the merge queue, and no merge can get past a red or unfinished check,
+# required or not.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  merge_group:
+
+permissions:
+  checks: read
+  statuses: read
+  contents: read
+
+concurrency:
+  group: all-checks-green-${{ github.event.merge_group.head_sha || github.event.pull_request.head.sha }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: All checks green
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Wait for every check, then require all of them green
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const sha = context.payload.merge_group?.head_sha ?? context.payload.pull_request.head.sha;
+            const { owner, repo } = context.repo;
+            const self = "All checks green";
+            const green = new Set(["success", "skipped"]);
+            const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+            const deadline = Date.now() + 55 * 60 * 1000;
+
+            // Give the other workflows and apps time to register their checks.
+            await sleep(60 * 1000);
+            let seen = -1;
+            for (;;) {
+              const runs = await github.paginate(github.rest.checks.listForRef, { owner, repo, ref: sha, per_page: 100 });
+              // The latest run of each check, so a re-run replaces the run it repeats.
+              const latest = new Map();
+              for (const r of runs) {
+                if (r.name === self) continue;
+                const prev = latest.get(r.name);
+                if (!prev || new Date(r.started_at ?? 0) > new Date(prev.started_at ?? 0)) latest.set(r.name, r);
+              }
+              const { data } = await github.rest.repos.getCombinedStatusForRef({ owner, repo, ref: sha });
+              const checks = [...latest.values()];
+              const pending = [
+                ...checks.filter((r) => r.status !== "completed").map((r) => r.name),
+                ...data.statuses.filter((s) => s.state === "pending").map((s) => s.context),
+              ];
+              const total = checks.length + data.statuses.length;
+              if (pending.length === 0 && total === seen) {
+                const bad = [
+                  ...checks.filter((r) => !green.has(r.conclusion)).map((r) => `${r.name}: ${r.conclusion}`),
+                  ...data.statuses.filter((s) => s.state !== "success").map((s) => `${s.context}: ${s.state}`),
+                ];
+                if (bad.length) {
+                  core.setFailed(`Not all checks are green, so this cannot merge:\n- ${bad.join("\n- ")}`);
+                } else {
+                  core.info(`All ${total} checks are green.`);
+                }
+                return;
+              }
+              if (Date.now() > deadline) {
+                core.setFailed(`Checks still running after 55 minutes: ${pending.join(", ") || "none"}`);
+                return;
+              }
+              // Judge only once no check is running and none has appeared since the last look.
+              seen = pending.length === 0 ? total : -1;
+              core.info(`Waiting on ${pending.length} check(s): ${pending.join(", ")}`);
+              await sleep(20 * 1000);
+            }

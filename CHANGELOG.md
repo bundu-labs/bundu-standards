@@ -15,6 +15,11 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- standards.bundu.org is served by the Rust Worker (`workers/standards-api`,
+  Dioxus and Mzizi Roots). The custom domain moved from `bundu-standards`
+  (Astro) to `bundu-standards-api` on 2026-11-17. The route now sits only in
+  the Rust Worker's `wrangler.toml`; the Astro Worker's config no longer
+  declares it, so deploying the Astro Worker cannot take the domain back.
 - Weather colour scales 1.0.0, adopted. Every claim marked inferred in 0.1.0
   was checked at source on 2026-11-15:
   - UV colours now use WHO's own RGB from its UV index clipart notes (2002):

@@ -36,7 +36,9 @@ npx wrangler deploy --dry-run                            # runs worker-build; ab
 
 ## Turning it on
 
-Until the custom domain moves, the Astro Worker serves standards.bundu.org and nothing changes.
+**Done on 2026-11-17.** This Worker serves standards.bundu.org, and only its `wrangler.toml`
+declares the route; the Astro Worker's was removed in the same change, so a deploy of it can no
+longer take the domain back. Step 4 remains. The steps, as they were followed:
 
 1. Deploy this Worker as `bundu-standards-api`. Either connect it in Workers Builds (root
    directory `workers/standards-api`, deploy command `npx wrangler deploy`; the build needs

@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "jsr:@std/assert@1.0.13";
-import { CONSTRAINTS, type Ecosystem, load, render, toJsonLd, validate } from "./ecosystem.ts";
+import { CONSTRAINTS, type Ecosystem, load, PRODUCT_STATUSES, render, toJsonLd, validate } from "./ecosystem.ts";
 
 const real = () => load(Deno.readTextFileSync(new URL("../ecosystem/ecosystem.yaml", import.meta.url)));
 
@@ -53,4 +53,10 @@ Deno.test("the served copy is the published JSON-LD", () => {
   const files = render(real());
   assertEquals(files.served, files.jsonld);
   assert(files.markdown.startsWith("# The Bundu ecosystem"));
+});
+
+Deno.test("the platform tokens are proposed, never more", () => {
+  const t = real().terms.find((x) => x.id === "platform-tokens")!;
+  assertEquals(t.status, "proposed");
+  assert(!PRODUCT_STATUSES.includes("proposed"), "proposed is not a product status");
 });

@@ -22,11 +22,12 @@ const SECURITY: [(&str, &str); 4] = [
 /// Cloudflare's bot detection: it injects an inline script into HTML responses, and it stamps
 /// that script with the nonce it reads from this header (Cloudflare docs, "JavaScript
 /// Detections", "If you have a Content Security Policy"). Without one, the injected script is
-/// blocked. The nonce must be unpredictable and never reused, so the Worker draws it from the
+/// blocked. That script then reports back to `/cdn-cgi/challenge-platform/` on this origin,
+/// so `connect-src 'self'` lets it connect here and nowhere else. The nonce must be unpredictable and never reused, so the Worker draws it from the
 /// platform's cryptographic random source for every request.
 pub fn csp(nonce: &str) -> String {
     format!(
-        "default-src 'none'; script-src 'self' 'nonce-{nonce}'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+        "default-src 'none'; script-src 'self' 'nonce-{nonce}'; connect-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
     )
 }
 
@@ -80,6 +81,10 @@ mod tests {
         let r = reply("GET", "/register/", NONCE).unwrap();
         let p = r.header("content-security-policy").unwrap();
         assert!(p.contains(&format!("script-src 'self' 'nonce-{NONCE}';")));
+        assert!(
+            p.contains("connect-src 'self';"),
+            "the bot check reports to this origin only"
+        );
         assert!(!p.contains("unsafe-inline") && !p.contains("unsafe-eval"));
         assert!(p.starts_with("default-src 'none';"));
         assert_eq!(

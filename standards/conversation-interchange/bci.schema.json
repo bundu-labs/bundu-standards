@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://standards.bundu.org/conversation-interchange/0.1.0/bci.schema.json",
-  "title": "Bundu Conversation Interchange (BCI) 0.1.0 (draft): one record",
+  "title": "Bundu Conversation Interchange (BCI) 0.1.0: one record",
   "description": "One line of a BCI stream. Each record has a `type`; the schema for that type applies. See README.md.",
   "type": "object",
   "required": ["type"],

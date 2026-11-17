@@ -1,0 +1,436 @@
+# The Bundu ecosystem, as data: the one place its identity, pillars, terms and products are
+# written down. Everything else is generated from this file or checked against it
+# (`deno task ecosystem`; see ecosystem/README.md). Edit here, never in the generated files.
+#
+# Approved by the owner on 2026-11-17 (#105). Every change needs the owner's approval, through
+# a pull request. The Ubuntu doctrine (pillars, principles) and the seven engineering
+# constraints are NOT restated here: they live in Mzizi and are referenced by id.
+#
+# Every record carries:
+#   id             stable, never reused
+#   name           the display name
+#   owner          the id of the organisation or pillar that owns it
+#   version        bumped on any change to its meaning (semver)
+#   status         canonical | live | beta | in-development | planned | retired
+#   last_reviewed  YYYY-MM-DD
+#   description    one paragraph; what it is, not what it might become
+
+meta:
+  id: bundu-ecosystem
+  name: The Bundu Ecosystem
+  version: 1.0.0
+  last_reviewed: 2026-11-17
+  approved_by: owner
+  governing_principle: One ecosystem. One doctrine. One source of truth. Many interfaces.
+
+organisations:
+  - id: bundu-foundation
+    name: Bundu Foundation
+    legal_form: Zimbabwe Company Limited by Guarantee
+    role: umbrella
+    owner: bundu-foundation
+    version: 1.0.0
+    status: canonical
+    last_reviewed: 2026-11-17
+    url: https://www.bundu.org
+    description: >-
+      The umbrella of the ecosystem. It governs the four pillars, holds their intellectual
+      property, and publishes the ecosystem's open standards. Bundu is Shona for wilderness.
+
+pillars:
+  - id: bundu-labs
+    name: Bundu Labs
+    role: Research, knowledge, standards and frameworks
+    audience: Researchers, standards bodies, educators, the public
+    parent: bundu-foundation
+    owner: bundu-foundation
+    version: 1.0.0
+    status: canonical
+    last_reviewed: 2026-11-17
+    url: https://www.bundu.org/research
+    description: >-
+      The research and standards arm of the Bundu Foundation. It investigates infrastructure
+      gaps across Africa and emerging markets, and publishes the standards, frameworks and
+      vocabulary the rest of the ecosystem builds on.
+
+  - id: nyuchi-africa
+    name: Nyuchi Africa
+    role: Platform and infrastructure
+    audience: >-
+      Developers and businesses building digital services; micro and small businesses and
+      informal traders; governments and institutions that extend access
+    parent: bundu-foundation
+    owner: nyuchi-africa
+    version: 1.0.0
+    status: canonical
+    last_reviewed: 2026-11-17
+    url: https://www.nyuchi.com
+    description: >-
+      The platform and infrastructure company of the ecosystem: the Nyuchi API, the console,
+      and its own tools and products. Nyuchi builds and sells Mukoko and Shamwari AI, and
+      builds Mzizi. It builds platforms others build on; it is not an outsourced IT
+      department or a managed service provider.
+
+  - id: mukoko
+    name: Mukoko
+    role: The consumer pillar
+    audience: Individuals, families and communities
+    parent: bundu-foundation
+    owner: mukoko
+    built_by: nyuchi-africa
+    sold_by: nyuchi-africa
+    version: 1.0.0
+    status: canonical
+    last_reviewed: 2026-11-17
+    url: https://www.mukoko.com
+    description: >-
+      One consumer platform with its apps inside, as Microsoft 365 or Google Workspace hold
+      theirs: a super app, with apps that also stand alone in their own domains. Built and
+      sold by Nyuchi, on the Nyuchi API.
+
+  - id: shamwari-ai
+    name: Shamwari AI
+    role: Community-facing AI and conversational experiences
+    audience: Communities and individuals, in Shona, Ndebele and English
+    parent: bundu-foundation
+    owner: shamwari-ai
+    built_by: nyuchi-africa
+    sold_by: nyuchi-africa
+    foundation_project: true
+    version: 1.0.0
+    status: canonical
+    last_reviewed: 2026-11-17
+    url: https://shamwari.ai
+    description: >-
+      An African AI companion that answers in Shona, Ndebele and English and cites its
+      sources. A pillar and a Bundu Foundation open-source project; it runs on Nyuchi's AI
+      layer and is sold by Nyuchi.
+
+foundations:
+  # Shared foundations enable and connect the pillars. They are not pillars.
+  - id: ubuntu
+    name: Ubuntu
+    role: The ethical and engineering doctrine
+    source: mzizi:doctrine/ubuntu-pillars, mzizi:doctrine/ubuntu-principles
+    owner: bundu-foundation
+    version: 1.0.0
+    status: canonical
+    last_reviewed: 2026-11-17
+    description: >-
+      Ubuntu is not a marketing claim; it is the specification. Its five pillars are the
+      spheres of belonging and its five principles the values practised in them; seven
+      engineering constraints make them testable. All three are served by Mzizi.
+
+  - id: mzizi
+    name: Mzizi
+    role: Shared design system and implementation foundations
+    owner: bundu-foundation
+    built_by: nyuchi-africa
+    version: 1.0.0
+    status: live
+    last_reviewed: 2026-11-17
+    url: https://mzizi.dev
+    description: >-
+      The open design system every surface in the ecosystem is built with: components,
+      tokens, a registry API and the Rust components (Mzizi Roots). Owned by the Bundu
+      Foundation, built by Nyuchi, shared by all four pillars.
+
+  - id: nyuchi-api
+    name: Nyuchi API
+    role: The common API and infrastructure
+    owner: nyuchi-africa
+    version: 1.0.0
+    status: live
+    last_reviewed: 2026-11-17
+    url: https://api.nyuchi.com
+    description: >-
+      The one API every Mukoko app and Nyuchi product reads and writes through: identity,
+      organisations, workspaces, places, events, news, weather and more.
+
+  - id: bundu-standards
+    name: Bundu standards
+    role: Data architecture and interoperability standards
+    owner: bundu-labs
+    version: 1.0.0
+    status: live
+    last_reviewed: 2026-11-17
+    url: https://standards.bundu.org
+    description: >-
+      The register of external standards the ecosystem adopts, the standards it publishes,
+      and this record. If a standard exists it is adopted; if none exists, Bundu Labs writes
+      one and publishes it here.
+
+engineering_constraints:
+  # Served by Mzizi (mzizi-dev/mzizi-registry#722); listed here by id only, so the names
+  # resolve. The definitions, principles and checks live in Mzizi.
+  - id: outdoor-readability
+  - id: connectivity-gradient-design
+    note: Offline-first is its enforced minimum, not a separate constraint.
+  - id: multilingual-parity
+  - id: shared-device-awareness
+  - id: personal-data-sovereignty
+  - id: no-surveillance-business-model
+  - id: bundu-floor
+
+terms:
+  - id: nyuchi-honeycomb
+    name: Nyuchi Honeycomb
+    owner: nyuchi-africa
+    version: 1.0.0
+    status: in-development
+    last_reviewed: 2026-11-17
+    description: >-
+      The distributed, decentralised platform Nyuchi is building. Like a honeycomb, it holds
+      cells: each person's data lives in their own pod. In development; never described as
+      live.
+
+  - id: pod
+    name: Pod
+    owner: nyuchi-africa
+    version: 1.0.0
+    status: in-development
+    last_reviewed: 2026-11-17
+    see: [cell, nyuchi-honeycomb]
+    description: >-
+      A person's own store of data in the Nyuchi Honeycomb, made of cells. Today personal data
+      lives on the device and syncs with cloud storage already isolated per person, so the
+      move to pods is a simple migration.
+
+  - id: cell
+    name: Cell (.cell)
+    owner: bundu-labs
+    version: 0.1.0
+    status: in-development
+    last_reviewed: 2026-11-17
+    see: [pod]
+    description: >-
+      The unit of data in a pod: one JSON-LD document with Markdown inside, stored as a .cell
+      file or as a database row with the same bytes, structured so its data and text cannot
+      diverge. Being scoped in bundu-labs/bundu-standards#107.
+
+  - id: mukoko-apps
+    name: Mukoko apps
+    owner: mukoko
+    version: 1.0.0
+    status: canonical
+    last_reviewed: 2026-11-17
+    description: >-
+      The apps inside the Mukoko platform, available in the super app and standalone in their
+      own domains. Nhimbe, bushtrade, lingo and the other single-purpose brands are Mukoko
+      apps.
+
+  - id: frontier-infrastructure
+    name: Frontier infrastructure
+    owner: nyuchi-africa
+    version: 1.0.0
+    status: canonical
+    last_reviewed: 2026-11-17
+    description: >-
+      Infrastructure engineered for places where bandwidth, devices and budgets are
+      constrained, held to the seven engineering constraints.
+
+  - id: pricing-principle
+    name: Pricing principle
+    owner: bundu-foundation
+    version: 1.0.0
+    status: canonical
+    last_reviewed: 2026-11-17
+    description: >-
+      Consumption is predominantly free. No forced upgrades, artificial usage limits or
+      constant upselling. Commercial value comes from API consumption, integrations,
+      partnerships, platform adoption, embedded services and data products, never from
+      excluding the people the ecosystem exists to serve.
+
+# Words that must not appear in any canonical description (checked by the tool).
+banned_terms:
+  - term: Web3
+    use_instead: pod, Nyuchi Honeycomb
+  - term: sister brand
+    use_instead: Mukoko app
+  - term: IT support
+    use_instead: platform and infrastructure
+
+products:
+  # Status as shown on nyuchi.com on 2026-11-17 (status_source). A product's status changes
+  # here first; the sites read it from here.
+  - id: nyuchi-console
+    name: Nyuchi console
+    owner: nyuchi-africa
+    audience: Organisations and developers
+    version: 1.0.0
+    status: live
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    url: https://platform.nyuchi.com
+    depends_on: [nyuchi-api]
+    description: Where organisations sign in, manage their workspaces and issue API keys.
+
+  - id: nyuchi-ai
+    name: Nyuchi AI
+    owner: nyuchi-africa
+    audience: Developers and organisations; Shamwari AI is its consumer face
+    version: 1.0.0
+    status: in-development
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    url: https://shamwari.ai
+    depends_on: [nyuchi-api]
+    description: The AI layer inside the platform, on which Shamwari AI runs.
+
+  - id: workspace-tools
+    name: Workspace Tools
+    owner: nyuchi-africa
+    audience: Teams on Google Workspace
+    version: 1.0.0
+    status: beta
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    url: https://tools.nyuchi.com
+    description: Google Workspace and Gmail add-ons that work inside a team's own workflows.
+
+  - id: mailsense
+    name: Mailsense
+    owner: nyuchi-africa
+    audience: Gmail users
+    version: 1.0.0
+    status: beta
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    description: Gmail management that keeps the inbox under control.
+
+  - id: campuspass
+    name: CampusPass
+    owner: nyuchi-africa
+    audience: Students and schools
+    version: 1.0.0
+    status: beta
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    description: A student ID in Apple Wallet, signed entirely on-device.
+
+  - id: masasa
+    name: Masasa
+    owner: nyuchi-africa
+    audience: Organisations running Linux fleets
+    version: 1.0.0
+    status: beta
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    description: Mobile device management for Linux fleets.
+
+  - id: nyuchi-logistics
+    name: Nyuchi Logistics
+    owner: nyuchi-africa
+    audience: Transport and logistics operators
+    version: 1.0.0
+    status: beta
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    description: Transport and logistics software, starting with car rentals.
+
+  - id: social-proof
+    name: Social Proof
+    owner: nyuchi-africa
+    audience: Small businesses with their own websites
+    version: 1.0.0
+    status: beta
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    description: An embeddable widget that surfaces social proof on a business's own website.
+
+  - id: seo-manager
+    name: SEO Manager for WordPress
+    owner: nyuchi-africa
+    audience: WordPress site owners
+    version: 1.0.0
+    status: beta
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    description: AI-assisted SEO fields plus database and media upkeep, for WordPress.
+
+  - id: trip-tools
+    name: Trip Tools for WP Travel
+    owner: nyuchi-africa
+    audience: Tour operators on WP Travel
+    version: 1.0.0
+    status: beta
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    description: Itinerary tools for tour operators running WP Travel.
+
+  - id: nyuchi-medical
+    name: Nyuchi Medical
+    owner: nyuchi-africa
+    audience: Healthcare providers
+    version: 1.0.0
+    status: planned
+    status_source: nyuchi.com ("Soon"), 2026-11-17
+    last_reviewed: 2026-11-17
+    description: Healthcare software, announced as coming soon.
+
+  - id: mukoko-events
+    name: Mukoko Events
+    owner: mukoko
+    built_by: nyuchi-africa
+    audience: Communities and event organisers
+    version: 1.0.0
+    status: live
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    url: https://events.mukoko.com
+    depends_on: [nyuchi-api]
+    description: Events and gatherings, as a Mukoko app.
+
+  - id: mukoko-weather
+    name: Mukoko Weather
+    owner: mukoko
+    built_by: nyuchi-africa
+    audience: Farmers, miners, travellers and everyone planning their day
+    version: 1.0.0
+    status: live
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    url: https://weather.mukoko.com
+    depends_on: [nyuchi-api]
+    description: >-
+      Weather for the developing world, as a Mukoko app: real-time forecasts and local
+      insight for farming, mining, travel and daily life.
+
+  - id: mukoko-news
+    name: Mukoko News
+    owner: mukoko
+    built_by: nyuchi-africa
+    audience: Readers across Africa
+    version: 1.0.0
+    status: live
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    url: https://news.mukoko.com
+    depends_on: [nyuchi-api]
+    description: News, as a Mukoko app.
+
+  - id: kweli
+    name: Kweli
+    owner: mukoko
+    built_by: nyuchi-africa
+    audience: Everyone looking up a place
+    version: 1.0.0
+    status: live
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    url: https://kweli.mukoko.com
+    depends_on: [nyuchi-api]
+    description: Places, as a Mukoko app, with an MCP server for agents.
+
+  - id: mukoko-lingo
+    name: Mukoko Lingo
+    owner: mukoko
+    built_by: nyuchi-africa
+    audience: Language learners
+    version: 1.0.0
+    status: live
+    status_source: nyuchi.com, 2026-11-17
+    last_reviewed: 2026-11-17
+    url: https://lingo.mukoko.com
+    depends_on: [nyuchi-api]
+    description: Language learning, as a Mukoko app.

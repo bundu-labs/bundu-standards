@@ -62,6 +62,13 @@ Versions released before then are not renumbered.
   and a CommonMark `text` that may name facts only as `{{field}}`, stored as the
   same bytes in a file or a database row keyed by `@id`, with a JCS hash, a Data
   Integrity proof and a version chain (#107).
+- The ecosystem record (#106, part of #105): `ecosystem/ecosystem.yaml` is now the one place
+  the Bundu ecosystem's identity, four pillars, shared foundations, terms and products are
+  written down. `tools/ecosystem.ts` checks it and generates `ecosystem/ECOSYSTEM.md` and the
+  schema.org JSON-LD served at `standards.bundu.org/ecosystem.jsonld`; CI fails when they are
+  stale or when a banned term, a dangling reference, a fifth pillar or a missing engineering
+  constraint appears. The Ubuntu doctrine and the seven constraints stay in Mzizi and are
+  referenced by id.
 
 - standards.bundu.org publishes our own standards. `/weather-colour-scales/`
   and `/conversation-interchange/` were linked from the register but answered

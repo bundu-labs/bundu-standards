@@ -70,17 +70,35 @@ pub fn reply(method: &str, path: &str, nonce: &str) -> Option<Reply> {
     })
 }
 
+/// A fresh nonce for a test, drawn like the Worker's: never a fixed value, so no test (and no
+/// code copied from one) ever hands the policy a nonce that is known in advance. The Worker
+/// itself uses `crypto.getRandomValues`, which only exists on the platform; here the standard
+/// library's randomly keyed hasher supplies 128 unpredictable bits, which is all a test needs.
+#[cfg(test)]
+pub(crate) fn test_nonce() -> String {
+    use std::collections::hash_map::RandomState;
+    use std::hash::{BuildHasher, Hasher};
+    let keys = RandomState::new();
+    let half = |n: u8| {
+        let mut h = keys.build_hasher();
+        h.write_u8(n);
+        h.finish()
+    };
+    format!("{:016x}{:016x}", half(0), half(1))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::LazyLock;
 
-    const NONCE: &str = "0123456789abcdef0123456789abcdef";
+    static NONCE: LazyLock<String> = LazyLock::new(test_nonce);
 
     #[test]
     fn the_policy_allows_our_scripts_and_the_nonce_and_nothing_inline() {
-        let r = reply("GET", "/register/", NONCE).unwrap();
+        let r = reply("GET", "/register/", &NONCE).unwrap();
         let p = r.header("content-security-policy").unwrap();
-        assert!(p.contains(&format!("script-src 'self' 'nonce-{NONCE}';")));
+        assert!(p.contains(&format!("script-src 'self' 'nonce-{}';", *NONCE)));
         assert!(
             p.contains("connect-src 'self';"),
             "the bot check reports to this origin only"
@@ -92,7 +110,7 @@ mod tests {
             Some("private, max-age=300"),
             "no shared cache keeps a nonce"
         );
-        let css = reply("GET", "/styles/site.css", NONCE).unwrap();
+        let css = reply("GET", "/styles/site.css", &NONCE).unwrap();
         assert_eq!(css.header("cache-control"), Some("public, max-age=300"));
         // The pages themselves carry no inline script that runs: their only inline scripts are
         // data (JSON-LD and the copy control's JSON), which a browser never executes.
@@ -112,7 +130,7 @@ mod tests {
 
     #[test]
     fn pages_carry_the_security_headers() {
-        let r = reply("GET", "/", NONCE).unwrap();
+        let r = reply("GET", "/", &NONCE).unwrap();
         assert_eq!(r.status, 200);
         assert_eq!(r.header("content-type"), Some("text/html; charset=utf-8"));
         assert!(r
@@ -125,27 +143,27 @@ mod tests {
 
     #[test]
     fn the_json_is_open_to_any_origin_and_head_has_no_body() {
-        let r = reply("HEAD", "/register/index.json", NONCE).unwrap();
+        let r = reply("HEAD", "/register/index.json", &NONCE).unwrap();
         assert_eq!(r.header("access-control-allow-origin"), Some("*"));
         assert!(r.body.is_none());
     }
 
     #[test]
     fn the_stylesheet_is_served() {
-        let r = reply("GET", "/styles/site.css", NONCE).unwrap();
+        let r = reply("GET", "/styles/site.css", &NONCE).unwrap();
         assert_eq!(r.header("content-type"), Some("text/css; charset=utf-8"));
         assert!(r.body.unwrap().starts_with(b"/* standards.bundu.org"));
     }
 
     #[test]
     fn everything_else_falls_through_to_the_file_endpoint() {
-        assert!(reply("GET", "/register/latest", NONCE).is_none());
-        assert!(reply("GET", "/healthz", NONCE).is_none());
-        assert!(reply("POST", "/", NONCE).is_none());
+        assert!(reply("GET", "/register/latest", &NONCE).is_none());
+        assert!(reply("GET", "/healthz", &NONCE).is_none());
+        assert!(reply("POST", "/", &NONCE).is_none());
         assert!(reply(
             "GET",
             "/0123456789abcdef0123456789abcdef01234567/register/register.yaml",
-            NONCE
+            &NONCE
         )
         .is_none());
     }

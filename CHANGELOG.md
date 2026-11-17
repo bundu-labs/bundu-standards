@@ -202,6 +202,13 @@ Versions released before then are not renumbered.
 
 ### Fixed
 
+- **The Worker's tests draw a fresh CSP nonce** instead of the fixed
+  `0123…cdef` value, which CodeQL reported as a hard-coded cryptographic value
+  (`rust/hard-coded-cryptographic-value`, critical) on the OpenAPI drift tests
+  and blocked the release. One test helper, `site::test_nonce`, now supplies a
+  random 128-bit nonce to both test modules. The deployed Worker was not
+  affected: it already draws every nonce from `crypto.getRandomValues`.
+
 - **A broken link on /cell/**: the register entry linked
   `../../register/register.yaml`, which is a repository path and a 404 on the
   site. It now links the entry's page.

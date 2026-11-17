@@ -43,13 +43,16 @@ The AAIF lists ten projects (aaif.io/projects, read 2026-11-17). **Measured.**
   with reinforcement learning, from Hugging Face, under BSD-3-Clause. Its environment spec (RFC 002)
   is still In Review, so a trainer pins the release. It becomes a harness row when Bundu trains
   agents.
-- **Implementations, not standards (3):**
-  - goose, an agent (see the dialect table in section 3);
-  - agentgateway, a gateway for agents, models and tools;
-  - Agent Router, a gateway on Envoy for models and MCP tools.
+- **Implementations, not standards (3), adopted into the build** (owner, 2026-11-17: "the software
+  we should be adopting as well … The agent router will [be] our routing"):
+  - Agent Router, a gateway on Envoy for models and MCP tools (v1.2.1, formerly Envoy AI Gateway):
+    Shamwari's model routing;
+  - agentgateway, a gateway for agents, models and tools (v1.7.0): MCP and A2A traffic;
+  - goose, an agent (see the dialect table in section 3): a client that can use Shamwari.
 
-  All three are Apache-2.0. A Bundu harness may use them, but the register lists standards, so they
-  are noted here and not there.
+  All three are Apache-2.0. The register lists standards, so they are noted here and not there.
+  Where each sits in Shamwari, always behind its own Rule 1 scope gate, is in
+  `shamwari-ai/shamwari` `docs/aaif-runtime.md` (shamwari-ai/shamwari#325).
 
 ## 2. Parts a second gap check found partly covered
 

@@ -106,9 +106,10 @@ standards:
       Live terms (CC0); additions by review in bundu-labs/bundu-standards;
       flat URIs (vocab.bundu.org/<term>); stable terms never change meaning
     current: >-
-      0.1.4, 39 terms (38 stable, 1 testing); 0.1.3 made the AI guardrail
-      terms stable, and 0.1.4 adds notificationPreference (testing). Live
-      once the bundu-vocab deploy runs.
+      48 terms (38 stable, 10 testing). 0.1.3 made the AI guardrail terms
+      stable, 0.1.4 added notificationPreference (testing), and the nine
+      Bundu Conversation Interchange terms follow in testing (next release).
+      Live once the bundu-vocab deploy runs.
     governs: >-
       Terms Schema.org lacks. Stable: Family, Community, PlaceOwner,
       PublishingHouse, NewsDesk, recognitionBasis, verificationTier,
@@ -121,7 +122,9 @@ standards:
       with BAGS-01 to BAGS-12.
 
       Testing: notificationPreference
-      (identity.persons.notificationPreferences).
+      (identity.persons.notificationPreferences), and the Bundu Conversation
+      Interchange terms Project, Artifact, MemoryEntry, scope, pinned,
+      instructions, skill, provenance and consent (until BCI is published).
 
       Proposed, not yet in the
       live index: trustScore (a cached schema.org Rating per trust context

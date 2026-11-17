@@ -149,6 +149,25 @@ category and its severity. The URI is the code, so
 published with the standard under CC BY 4.0 and is not copied into this CC0
 vocabulary.
 
+### Conversations and assistants
+
+Terms for the Bundu Conversation Interchange (BCI 0.1.0,
+`standards/conversation-interchange/`), the record of what a person keeps in
+an AI assistant. They are the `bundu:` terms its `context.jsonld` names. They
+are pending until BCI is published on standards.bundu.org.
+
+| Term           | Kind     | Extends or value                                                    | Status  |
+| -------------- | -------- | ------------------------------------------------------------------- | ------- |
+| `Project`      | class    | `schema:CreativeWork`                                               | pending |
+| `Artifact`     | class    | `schema:CreativeWork`; mapped to, not the same as, the A2A Artifact | pending |
+| `MemoryEntry`  | class    | `schema:Statement`                                                  | pending |
+| `scope`        | property | `personal` · `community` · `platform`                               | pending |
+| `pinned`       | property | boolean                                                             | pending |
+| `instructions` | property | text, Markdown in the AGENTS.md style (on a `Project`)              | pending |
+| `skill`        | property | text, an Agent Skills `name` (on a `Project`)                       | pending |
+| `provenance`   | property | `schema:StructuredValue`: `model`, `licenseClass`, `c2pa`           | pending |
+| `consent`      | property | `stated` · `confirmed` (on a `MemoryEntry`)                         | pending |
+
 ## Using it
 
 Fetch any term for its machine-readable definition:

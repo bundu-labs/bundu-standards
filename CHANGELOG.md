@@ -57,6 +57,18 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- **Nine vocabulary terms for the Bundu Conversation Interchange** (pending,
+  published as `testing`), under a new subject area, "Conversations and
+  assistants": the classes `Project` (extends `schema:CreativeWork`, since
+  `schema:Project` is an Organization), `Artifact` (`schema:CreativeWork`;
+  its definition maps it to the A2A Artifact rather than renaming it) and
+  `MemoryEntry` (`schema:Statement`), and the properties `scope`
+  (`personal` · `community` · `platform`), `pinned`, `instructions`,
+  `skill`, `provenance` and `consent` (`stated` · `confirmed`). They are
+  exactly the `bundu:` terms BCI's `context.jsonld` names, and a test fails
+  if the two drift apart or the value sets stop matching `bci.schema.json`.
+  48 terms (38 stable, 10 testing). This answers BCI open question 2.
+
 - The ecosystem record lists the platform tokens (MIT, MXT, NST, NHC) as a `proposed` term:
   a future build-out, not in development, none issued (owner, 2026-11-17). `proposed` is a
   new status for terms; products cannot carry it. The sites read the same status.

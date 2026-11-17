@@ -99,14 +99,15 @@ dropped and reported.
 
 1. **Name and home.** `bci` is a working name. Is the canonical URL
    `standards.bundu.org/conversation-interchange/`, and is the publisher of record the Bundu Foundation?
-2. **Vocabulary.** `context.jsonld` uses `schema:Conversation`, `schema:Message` and new terms
-   `bundu:Project`, `Artifact`, `MemoryEntry`, `scope`, `pinned`, `instructions`, `skill`,
-   `provenance`, `consent`. Those terms need adding to `vocab.bundu.org` (`src/terms.rs`) before 0.1.0 is
-   published; `schema:Project`, `schema:Conversation` and `schema:Message` are stable in the current schema.org
-   release, but `schema:Project` is an Organization subtype (an enterprise planned to achieve an
-   aim), so keeping `bundu:Project` may still be right. `bundu:Artifact` clashes in name with the A2A
-   Artifact (`artifactId`, `name`, `parts`, A2A section 4.1.7; A2A is in the register): rename it or
-   map it explicitly. A2A also has `contextId`.
+2. **Vocabulary. Answered 2026-11-17.** The nine `bundu:` terms `context.jsonld` names
+   (`Project`, `Artifact`, `MemoryEntry`, `scope`, `pinned`, `instructions`, `skill`, `provenance`,
+   `consent`) are in `vocab.bundu.org` (`src/terms.rs`), pending (`vs:term_status` testing) until
+   BCI is published, under the subject area "Conversations and assistants". `bundu:Project` is kept
+   and extends `schema:CreativeWork`, because `schema:Project` is an Organization subtype.
+   `bundu:Artifact` is kept, not renamed, so streams already written stay valid; its definition maps
+   it to the A2A Artifact (an A2A Artifact a person keeps becomes one, its parts as the text or file).
+   A2A's `contextId` is not mapped. A test in `src/terms.rs` fails if the context and the vocabulary
+   drift apart.
 3. **Versions of the standards it builds on** (read at source 2026-11-11). Agent Skills: unversioned,
    Apache-2.0 code, CC-BY-4.0 docs. Open Responses: pin the dated OpenAPI file (latest 2026-04-24),
    not `openapi.json`; Apache-2.0; it has no conversation, project, artifact or memory resource.

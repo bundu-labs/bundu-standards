@@ -65,7 +65,8 @@ pub enum Status {
     Stable,
     /// Its standard is still being written. The URI is permanent, but the
     /// definition may still be refined before the term becomes stable.
-    /// New terms start here (today: `notificationPreference`).
+    /// New terms start here (today: `notificationPreference` and the nine
+    /// Bundu Conversation Interchange terms).
     Pending,
 }
 
@@ -108,6 +109,10 @@ pub enum Domain {
     OpenData,
     /// Rules that constrain what an AI system may say or do.
     AiGuardrails,
+    /// What a person keeps in an AI assistant: conversations, projects,
+    /// saved answers and memory, written so they can move between
+    /// assistants (the Bundu Conversation Interchange).
+    ConversationsAndAssistants,
 }
 
 impl Domain {
@@ -119,6 +124,7 @@ impl Domain {
             Domain::NewsAndMedia => "News and media",
             Domain::OpenData => "Open data",
             Domain::AiGuardrails => "AI guardrails",
+            Domain::ConversationsAndAssistants => "Conversations and assistants",
         }
     }
 
@@ -130,6 +136,7 @@ impl Domain {
         Domain::NewsAndMedia,
         Domain::OpenData,
         Domain::AiGuardrails,
+        Domain::ConversationsAndAssistants,
     ];
 }
 
@@ -311,6 +318,34 @@ const BAGS_RULE_RATIONALE: &str = "A published rule needs a URI that never \
 
 /// Types every BAGS 1.0.0 rule carries.
 const BAGS_RULE_TYPES: &[&str] = &["schema:DefinedTerm", "bundu:PlatformGuardrail"];
+
+/// Permitted values for [`scope`](TERMS). The `scope` set of the Bundu
+/// Conversation Interchange 0.1.0 (`bci.schema.json`, `$defs/scope`), which
+/// is the set the Shamwari stores already validate.
+const SCOPE_VALUES: &[(&str, &str)] = &[
+    (
+        "personal",
+        "About the person themselves. Never sent to a third-party inference \
+         service, and never used to train a model.",
+    ),
+    (
+        "community",
+        "About a community the person belongs to, shared within it.",
+    ),
+    ("platform", "General knowledge, about no one in particular."),
+];
+
+/// Permitted values for [`consent`](TERMS). BCI 0.1.0 (`bci.schema.json`,
+/// `MemoryEntry.consent`). There is deliberately no value for an inference
+/// the person has not seen.
+const CONSENT_VALUES: &[(&str, &str)] = &[
+    ("stated", "The person said it themselves."),
+    (
+        "confirmed",
+        "The assistant inferred it, showed it to the person, and the person \
+         accepted it.",
+    ),
+];
 
 /// The full vocabulary.
 pub const TERMS: &[Term] = &[
@@ -1273,6 +1308,218 @@ pub const TERMS: &[Term] = &[
                     Named generically because every Bundu standard will \
                     need it, not only the guardrail standard.",
     },
+    // ── Conversations and assistants ───────────────────────────────────
+    // The terms the Bundu Conversation Interchange (BCI) 0.1.0 context
+    // (`standards/conversation-interchange/context.jsonld`) names. Pending
+    // until BCI is published on standards.bundu.org.
+    Term {
+        id: "Project",
+        kind: Kind::Class,
+        domain: Domain::ConversationsAndAssistants,
+        status: Status::Pending,
+        label: "Project",
+        comment: "A named group of a person's conversations with an AI \
+                  assistant, with standing instructions and the skills the \
+                  assistant uses in it. Deleting a project keeps its \
+                  conversations. A BCI `Project` record.",
+        sub_class_of: Some("schema:CreativeWork"),
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: None,
+        rationale: "schema:Project is a subtype of schema:Organization: an \
+                    enterprise planned to achieve an aim, with members and \
+                    funders. A folder of conversations is not an \
+                    organisation, and typing it as one would tell every \
+                    consumer that a person's chats have staff. \
+                    schema:Collection is in the bib extension, not core, and \
+                    says nothing about instructions or skills. So the class \
+                    extends schema:CreativeWork, which a consumer that does \
+                    not know this vocabulary still reads correctly.",
+    },
+    Term {
+        id: "Artifact",
+        kind: Kind::Class,
+        domain: Domain::ConversationsAndAssistants,
+        status: Status::Pending,
+        label: "Artifact",
+        comment: "An answer or file a person chose to keep from a \
+                  conversation with an AI assistant, with a stable id, its \
+                  version lineage (`schema:isBasedOn`), citations, a SHA-256 \
+                  digest and provenance. It outlives the conversation it came \
+                  from. A BCI `Artifact` record. It is not the A2A Artifact: \
+                  an A2A Artifact (`artifactId`, `name`, `parts`) is the \
+                  output of one task, with no version, lineage or citation. \
+                  An A2A Artifact a person keeps becomes one of these, with \
+                  its parts as the text or file.",
+        sub_class_of: Some("schema:CreativeWork"),
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: None,
+        rationale: "schema:CreativeWork describes any work, but cannot say \
+                    that this one was kept by a person out of a conversation \
+                    and must survive that conversation's deletion, which is \
+                    the rule an assistant has to follow. The A2A Artifact is \
+                    per task and has no version, lineage or citation. The \
+                    name is BCI's record type; the definition maps it to A2A \
+                    explicitly rather than renaming it, so BCI streams \
+                    already written stay valid.",
+    },
+    Term {
+        id: "MemoryEntry",
+        kind: Kind::Class,
+        domain: Domain::ConversationsAndAssistants,
+        status: Status::Pending,
+        label: "Memory Entry",
+        comment: "One thing an AI assistant remembers about a person, which \
+                  the person stated or confirmed (`consent`). An assistant \
+                  keeps no memory entry for an inference the person has not \
+                  seen. A BCI `MemoryEntry` record.",
+        sub_class_of: Some("schema:Statement"),
+        domain_includes: None,
+        range: None,
+        values: None,
+        individual: None,
+        rationale: "schema:Statement says that something is asserted, but \
+                    not that an assistant holds it about a person, or on \
+                    what consent. Memory proposals exist (MacPaw Portable \
+                    Memory, Letta .af, a W3C community group) but none has \
+                    independent adopters, so BCI keeps a thin record whose \
+                    one rule is consent. The class exists so that rule has \
+                    a type to attach to.",
+    },
+    Term {
+        id: "scope",
+        kind: Kind::Property,
+        domain: Domain::ConversationsAndAssistants,
+        status: Status::Pending,
+        label: "scope",
+        comment: "Whose knowledge a message or memory entry is about. \
+                  `personal` content is never sent to a third-party \
+                  inference service and never trains a model; the product \
+                  routes by it, and a stream with personal content moves \
+                  only by the person's own action.",
+        sub_class_of: None,
+        domain_includes: Some("schema:CreativeWork"),
+        range: Some("schema:Text"),
+        values: Some(SCOPE_VALUES),
+        individual: None,
+        rationale: "schema.org has no property for whose knowledge a work is \
+                    about. schema:audience says who a work is for, and \
+                    schema:conditionsOfAccess is free text about access, so \
+                    neither can carry a closed set that a router enforces. \
+                    The values are the ones the Shamwari stores already \
+                    validate.",
+    },
+    Term {
+        id: "pinned",
+        kind: Kind::Property,
+        domain: Domain::ConversationsAndAssistants,
+        status: Status::Pending,
+        label: "pinned",
+        comment: "True when the person pinned a conversation or project so \
+                  it stays at the top of their list. A choice of the person, \
+                  not a ranking by the product. False when absent.",
+        sub_class_of: None,
+        domain_includes: Some("schema:CreativeWork"),
+        range: Some("schema:Boolean"),
+        values: None,
+        individual: None,
+        rationale: "schema.org has no property for a person's own ordering \
+                    of their things. schema:position is a rank inside a \
+                    list the publisher made, and an interaction counter \
+                    counts actions rather than recording a standing choice. \
+                    Without the term, a pin is lost every time a person \
+                    moves assistant.",
+    },
+    Term {
+        id: "instructions",
+        kind: Kind::Property,
+        domain: Domain::ConversationsAndAssistants,
+        status: Status::Pending,
+        label: "instructions",
+        comment: "Standing instructions an AI assistant follows in every \
+                  conversation of a project, as plain Markdown in the \
+                  AGENTS.md style.",
+        sub_class_of: None,
+        domain_includes: Some("bundu:Project"),
+        range: Some("schema:Text"),
+        values: None,
+        individual: None,
+        rationale: "schema.org has no instructions property; the nearest are \
+                    schema:recipeInstructions (recipes only) and \
+                    schema:description, which says what something is, not \
+                    what an agent must do. AGENTS.md defines the content \
+                    (plain Markdown) but not a property to hold it in a \
+                    record, so the property names AGENTS.md as its form.",
+    },
+    Term {
+        id: "skill",
+        kind: Kind::Property,
+        domain: Domain::ConversationsAndAssistants,
+        status: Status::Pending,
+        label: "skill",
+        comment: "An Agent Skill a project uses, named by the Agent Skills \
+                  `name` field. The skill itself (its `SKILL.md` folder) is \
+                  not embedded. Repeats, one value per skill.",
+        sub_class_of: None,
+        domain_includes: Some("bundu:Project"),
+        range: Some("schema:Text"),
+        values: None,
+        individual: None,
+        rationale: "schema:skills is a competency claimed by a person or an \
+                    organisation, or required by a job, not a package of \
+                    instructions an agent loads. Using it would tell a \
+                    consumer that a project has abilities. Agent Skills \
+                    names the skill but has no property for a record to \
+                    point at one.",
+    },
+    Term {
+        id: "provenance",
+        kind: Kind::Property,
+        domain: Domain::ConversationsAndAssistants,
+        status: Status::Pending,
+        label: "provenance",
+        comment: "Where an AI-generated message or saved answer came from: \
+                  the model as its provider names it, the model's licence \
+                  class (`licenseClass`; only `open_weight` output may train \
+                  a model, and null when there is no honest class) and, when \
+                  there is one, a C2PA manifest (`c2pa`). The value is a \
+                  schema:StructuredValue with those three members.",
+        sub_class_of: None,
+        domain_includes: Some("schema:CreativeWork"),
+        range: Some("schema:StructuredValue"),
+        values: None,
+        individual: None,
+        rationale: "schema:sdPublisher names who published the markup and \
+                    schema:creator names an author, but neither can carry \
+                    the model's licence class, which decides whether the \
+                    output may train a model. C2PA is the standard for \
+                    content provenance and is referenced, not repeated; it \
+                    has no licence-class field.",
+    },
+    Term {
+        id: "consent",
+        kind: Kind::Property,
+        domain: Domain::ConversationsAndAssistants,
+        status: Status::Pending,
+        label: "consent",
+        comment: "How a memory entry came to be held: the person stated it, \
+                  or confirmed it after the assistant showed it to them. \
+                  There is no value for an inference the person has not \
+                  seen, so such an entry cannot be written.",
+        sub_class_of: None,
+        domain_includes: Some("bundu:MemoryEntry"),
+        range: Some("schema:Text"),
+        values: Some(CONSENT_VALUES),
+        individual: None,
+        rationale: "schema.org has no consent property. schema:ConsumeAction \
+                    and schema:AgreeAction describe acts, not the standing \
+                    basis on which a fact is held. The closed set is the \
+                    point: an assistant that cannot spell \"inferred\" cannot \
+                    store an unseen inference.",
+    },
 ];
 
 /// Look a term up by its exact id.
@@ -1613,6 +1860,59 @@ mod tests {
             .map(|(v, _)| *v)
             .collect();
         assert_eq!(values, ["critical", "high", "medium", "low"]);
+    }
+
+    /// The terms BCI 0.1.0's `context.jsonld` names in the `bundu:`
+    /// namespace. If the context gains or loses one, this list moves with it.
+    const BCI_TERMS: [&str; 9] = [
+        "Project",
+        "Artifact",
+        "MemoryEntry",
+        "scope",
+        "pinned",
+        "instructions",
+        "skill",
+        "provenance",
+        "consent",
+    ];
+
+    #[test]
+    fn every_bundu_term_in_the_bci_context_is_defined_and_pending() {
+        let context = include_str!("../standards/conversation-interchange/context.jsonld");
+        let named: HashSet<&str> = context
+            .match_indices("\"bundu:")
+            .map(|(i, _)| {
+                let rest = &context[i + 7..];
+                &rest[..rest.find('"').unwrap()]
+            })
+            .collect();
+        assert_eq!(named, BCI_TERMS.into_iter().collect::<HashSet<_>>());
+        for id in BCI_TERMS {
+            let t = find(id).unwrap_or_else(|| panic!("missing BCI term: {id}"));
+            assert_eq!(t.domain, Domain::ConversationsAndAssistants, "{id}");
+            // Pending until BCI is published on standards.bundu.org.
+            assert_eq!(t.status, Status::Pending, "{id}");
+        }
+    }
+
+    /// Both sets must match `bci.schema.json` exactly. A value the schema
+    /// refuses would be a spelling no stream can carry, and `consent` must
+    /// never gain a value for an unseen inference.
+    #[test]
+    fn bci_value_sets_match_the_schema() {
+        let values = |id: &str| -> Vec<&str> {
+            find(id)
+                .and_then(|t| t.values)
+                .expect("enumerated")
+                .iter()
+                .map(|(v, _)| *v)
+                .collect()
+        };
+        assert_eq!(values("scope"), ["personal", "community", "platform"]);
+        assert_eq!(values("consent"), ["stated", "confirmed"]);
+        let schema = include_str!("../standards/conversation-interchange/bci.schema.json");
+        assert!(schema.contains(r#""enum": ["personal", "community", "platform"]"#));
+        assert!(schema.contains(r#""enum": ["stated", "confirmed"]"#));
     }
 
     #[test]

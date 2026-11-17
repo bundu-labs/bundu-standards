@@ -48,6 +48,17 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- standards.bundu.org publishes our own standards. `/weather-colour-scales/`
+  and `/conversation-interchange/` were linked from the register but answered
+  404; each now serves its README as a page, with its status, a link to its
+  register entry and the copy control (JSON copies the standard's data file),
+  and its files beside it (`scales.json`, `results.md`, `bci.schema.json`,
+  `context.jsonld`, `examples/minimal.ndjson`) with their own content types,
+  open to any origin. The README is rendered when the Worker is built, so no
+  Markdown parser ships to it. Scripts and tests in a standard's folder are
+  not published. A register entry whose URL is a page on this site with no
+  `standards/<slug>/README.md` behind it now fails the build, so the register
+  cannot link to a missing page again.
 - Both sites: every page has "Copy this page as" at the top, which copies the
   page as Markdown or, where the page has data, as JSON (JSON-LD on
   vocab.bundu.org). Markdown replaces HTML as the copyable text form. One

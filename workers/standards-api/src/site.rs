@@ -25,7 +25,8 @@ pub fn reply(method: &str, path: &str) -> Option<Reply> {
         ("text/css; charset=utf-8", CSS.to_owned(), false)
     } else {
         let page = pages::render(path)?;
-        let cors = page.content_type.starts_with("application/json");
+        // Data is open to any origin: the JSON index and our standards' files.
+        let cors = !page.content_type.starts_with("text/html");
         (page.content_type, page.body, cors)
     };
     let mut headers: Vec<(&'static str, String)> = SECURITY

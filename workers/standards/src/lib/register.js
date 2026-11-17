@@ -82,3 +82,57 @@ export function indexJson(register, origin = SITE) {
     })),
   };
 }
+
+/** The register's two tabs, in order. */
+export const TABS = [
+  { status: "adopted", label: "Adopted", href: "/register/" },
+  { status: "proposed", label: "Proposed", href: "/register/proposed/" },
+];
+
+/** The domains, each with only its standards of one status; empty domains dropped. */
+export function domainsWith(register, status) {
+  return register.domains
+    .map((d) => ({ ...d, standards: d.standards.filter((s) => s.status === status) }))
+    .filter((d) => d.standards.length > 0);
+}
+
+/** The tab a standard is listed under. */
+export function tabFor(s) {
+  return TABS.find((t) => t.status === s.status) ?? TABS[0];
+}
+
+/**
+ * A field as paragraphs. In register.yaml a blank line inside a folded scalar starts a new
+ * paragraph; YAML turns it into one newline.
+ * @param {string | undefined} text
+ */
+export function paragraphs(text) {
+  return (text ?? "")
+    .split("\n")
+    .map((p) => p.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+}
+
+/** The JSON a register tab offers to copy: the same shape as index.json, one status only. */
+export function tabJson(register, status, origin = SITE) {
+  const all = indexJson(register, origin);
+  const standards = all.standards.filter((s) => s.status === status);
+  return { status, count: standards.length, standards };
+}
+
+/** The JSON a standard's page offers to copy: its whole register record and its page. */
+export function standardJson(s, origin = SITE) {
+  return { ...s, page: `${origin}/register/${s.id}/` };
+}
+
+/**
+ * A paragraph as runs of text and `code`: register fields mark code with backticks, as
+ * Markdown does. An unpaired backtick stays as text.
+ * @param {string} p
+ * @returns {{ code: boolean, text: string }[]}
+ */
+export function codeSpans(p) {
+  const parts = p.split("`");
+  if (parts.length % 2 === 0) return [{ code: false, text: p }];
+  return parts.map((text, i) => ({ code: i % 2 === 1, text })).filter((r) => r.text);
+}

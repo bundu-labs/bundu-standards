@@ -11,6 +11,7 @@ If a fact about a standard is written anywhere else by hand, that is drift.
 | Standards we **adopt** (external: WMO, CF, GeoJSON, …) | `register/register.yaml`                                    | `register/REGISTER.md`, `register/seed/integrations.standards.json`, the MongoDB `integrations.standards` collection |
 | Standards we **publish** (BAGS, the Bundu vocabulary)  | `standards/`, `src/terms.rs`                                | `vocab.bundu.org`, docs.bundu.org                                                                                    |
 | How the data is **structured** (the canonical model)   | `nyuchi/data-infra` `schemas/` today; moves here in phase 2 | validators, indexes, JSON-LD context, Doris/Postgres/Cassandra DDL                                                   |
+| The **ecosystem** (identity, pillars, terms, products) | `ecosystem/ecosystem.yaml`                                  | `ecosystem/ECOSYSTEM.md`, `standards.bundu.org/ecosystem.jsonld`, the sites, the Nyuchi API                          |
 
 ## Why a database copy exists, and why it drifts
 

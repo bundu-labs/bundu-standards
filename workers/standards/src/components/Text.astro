@@ -1,0 +1,9 @@
+---
+// A register field as paragraphs, with `code` in backticks shown as code.
+import { paragraphs, codeSpans } from "../lib/register.js";
+const { text, inline = false } = Astro.props;
+const paras = paragraphs(text);
+---
+{inline
+  ? paras.map((p, i) => (<>{i > 0 && " "}{codeSpans(p).map((r) => (r.code ? <code>{r.text}</code> : r.text))}</>))
+  : paras.map((p) => <p>{codeSpans(p).map((r) => (r.code ? <code>{r.text}</code> : r.text))}</p>)}

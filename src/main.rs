@@ -43,18 +43,7 @@ async fn main() {
         )
         .init();
 
-    let app = Router::new()
-        .route("/", get(index))
-        .route("/health", get(|| async { "ok" }))
-        .route("/context.jsonld", get(context))
-        .route("/favicon-32x32.png", get(|| icon(FAVICON_32)))
-        .route("/favicon-16x16.png", get(|| icon(FAVICON_16)))
-        .route("/favicon-32x32-dark.png", get(|| icon(FAVICON_32_DARK)))
-        .route("/favicon-16x16-dark.png", get(|| icon(FAVICON_16_DARK)))
-        .route("/apple-touch-icon.png", get(|| icon(APPLE_TOUCH_ICON)))
-        .route("/:term", get(term))
-        .layer(CompressionLayer::new())
-        .layer(TraceLayer::new_for_http());
+    let app = app();
 
     let addr: SocketAddr = std::env::var("LISTEN_ADDR")
         .unwrap_or_else(|_| "0.0.0.0:8080".to_string())
@@ -66,6 +55,24 @@ async fn main() {
         .expect("cannot bind");
     tracing::info!("bundu-vocab listening on {addr}");
     axum::serve(listener, app).await.expect("server failed");
+}
+
+/// The routes. axum 0.8 writes a path parameter as `{term}`; the old `:term` form panics
+/// when the router is built, which only a test that builds this router catches.
+fn app() -> Router {
+    Router::new()
+        .route("/", get(index))
+        .route("/health", get(|| async { "ok" }))
+        .route("/context.jsonld", get(context))
+        .route("/favicon-32x32.png", get(|| icon(FAVICON_32)))
+        .route("/favicon-16x16.png", get(|| icon(FAVICON_16)))
+        .route("/favicon-32x32-dark.png", get(|| icon(FAVICON_32_DARK)))
+        .route("/favicon-16x16-dark.png", get(|| icon(FAVICON_16_DARK)))
+        .route("/apple-touch-icon.png", get(|| icon(APPLE_TOUCH_ICON)))
+        .route("/copy.js", get(copy_js))
+        .route("/{term}", get(term))
+        .layer(CompressionLayer::new())
+        .layer(TraceLayer::new_for_http())
 }
 
 /// Does the caller want HTML?
@@ -217,9 +224,24 @@ async fn icon(bytes: &'static [u8]) -> Response {
 
 // ── Handlers ─────────────────────────────────────────────────────────────
 
-async fn index(headers: HeaderMap) -> Response {
-    if !wants_html(&headers) {
-        return jsonld(json!({
+/// The script behind "Copy this page as": the same file standards.bundu.org serves from
+/// workers/standards/public/copy.js. A test keeps the two identical.
+const COPY_JS: &str = include_str!("copy.js");
+
+async fn copy_js() -> Response {
+    (
+        [
+            (header::CONTENT_TYPE, "text/javascript; charset=utf-8"),
+            (header::CACHE_CONTROL, "public, max-age=3600"),
+        ],
+        COPY_JS,
+    )
+        .into_response()
+}
+
+/// The vocabulary as JSON-LD: what `/` answers to RDF tooling, and what its page copies.
+fn index_jsonld() -> Value {
+    json!({
             "@context": {
                 "bundu": NAMESPACE,
                 "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
@@ -237,7 +259,12 @@ async fn index(headers: HeaderMap) -> Response {
                     "vs:term_status": t.status.vs_term_status(),
                 }))
                 .collect::<Vec<_>>(),
-        }));
+    })
+}
+
+async fn index(headers: HeaderMap) -> Response {
+    if !wants_html(&headers) {
+        return jsonld(index_jsonld());
     }
 
     // Grouped by subject area rather than by class/property: someone
@@ -249,14 +276,14 @@ async fn index(headers: HeaderMap) -> Response {
             let items = terms::in_domain(*d)
                 .map(|t| {
                     format!(
-                        r#"<li><a href="/{id}"><code>{id}</code></a><span>{kind}{pending}</span><p>{comment}</p></li>"#,
+                        r#"<li><a href="/{id}"><code>{id}</code></a> <span>{kind}{pending}</span><p>{comment}</p></li>"#,
                         id = t.id,
                         kind = t.kind.label().to_lowercase(),
                         pending = match t.status {
                             Status::Pending => format!(" · {}", t.status.label()),
                             Status::Stable => String::new(),
                         },
-                        comment = esc(t.comment),
+                        comment = prose(t.comment),
                     )
                 })
                 .collect::<Vec<_>>()
@@ -268,13 +295,15 @@ async fn index(headers: HeaderMap) -> Response {
 
     html(page(
         "The Bundu vocabulary",
+        Some("/"),
+        Some(index_jsonld()),
         &format!(
             r#"<header>
   <p class="eyebrow">vocab.bundu.org</p>
   <h1>The Bundu vocabulary</h1>
   <p class="lede">RDF terms for concepts schema.org has no word for, published
   for every Bundu standard across every domain. Each term had to earn its
-  place: if schema.org could express it, we use schema.org and add nothing.</p>
+  place: if schema.org can express it, we use schema.org and add nothing.</p>
 </header>
 {sections}
 <section>
@@ -356,7 +385,7 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
     let values_section = t.values.map_or_else(String::new, |values| {
         let rows = values
             .iter()
-            .map(|(v, desc)| format!(r#"<tr><th scope="row"><code>{v}</code></th><td>{}</td></tr>"#, esc(desc)))
+            .map(|(v, desc)| format!(r#"<tr><th scope="row"><code>{v}</code></th><td>{}</td></tr>"#, prose(desc)))
             .collect::<Vec<_>>()
             .join("\n");
         format!("<section>\n  <h2>Permitted values</h2>\n  <table><caption class=\"sr-only\">Permitted values</caption>{rows}</table>\n</section>")
@@ -364,6 +393,8 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
 
     html(page(
         t.label,
+        Some(&format!("/{}", t.id)),
+        Some(term_jsonld(t)),
         &format!(
             r#"<header>
   <p class="eyebrow"><a href="/">vocab.bundu.org</a> / {kind}</p>
@@ -378,13 +409,13 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
 </section>
 <section>
   <h2>Machine-readable</h2>
-  <pre><code>curl -H 'Accept: application/ld+json' \
+  <pre tabindex="0" role="region" aria-label="Example request"><code>curl -H 'Accept: application/ld+json' \
   {ns}{id}</code></pre>
 </section>"#,
             kind = t.kind.label(),
             id = t.id,
-            comment = esc(t.comment),
-            rationale = esc(t.rationale),
+            comment = prose(t.comment),
+            rationale = prose(t.rationale),
             table = table,
             values_section = values_section,
             ns = NAMESPACE,
@@ -417,6 +448,8 @@ fn not_found(name: &str, as_html: bool) -> Response {
             StatusCode::NOT_FOUND,
             html(page(
                 "Not a term",
+                None,
+                None,
                 &format!(
                     r#"<header>
   <p class="eyebrow"><a href="/">vocab.bundu.org</a></p>
@@ -452,7 +485,47 @@ fn esc(s: &str) -> String {
         .replace('>', "&gt;")
 }
 
-fn page(title: &str, body: &str) -> String {
+/// Text as HTML, with `code` in backticks shown as code, as Markdown does. An unpaired
+/// backtick stays as text.
+fn prose(s: &str) -> String {
+    let parts: Vec<&str> = s.split('`').collect();
+    if parts.len() % 2 == 0 {
+        return esc(s);
+    }
+    parts
+        .iter()
+        .enumerate()
+        .map(|(i, p)| {
+            if i % 2 == 1 {
+                format!("<code>{}</code>", esc(p))
+            } else {
+                esc(p)
+            }
+        })
+        .collect()
+}
+
+/// A page. `path` gives the canonical link; `data` is what "Copy this page as" offers as
+/// JSON-LD (a page without it offers Markdown only).
+fn page(title: &str, path: Option<&str>, data: Option<Value>, body: &str) -> String {
+    let canonical = path
+        .map(|p| {
+            format!(
+                "<link rel=\"canonical\" href=\"{}{}\">\n",
+                NAMESPACE.trim_end_matches('/'),
+                p
+            )
+        })
+        .unwrap_or_default();
+    // `</script>` cannot appear inside the JSON: every `<` is written as \u003c.
+    let data = data
+        .map(|v| {
+            format!(
+                "<script type=\"application/ld+json\" id=\"page-json\">{}</script>\n",
+                v.to_string().replace('<', "\\u003c")
+            )
+        })
+        .unwrap_or_default();
     format!(
         r##"<!doctype html>
 <html lang="en">
@@ -460,6 +533,7 @@ fn page(title: &str, body: &str) -> String {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} — Bundu vocabulary</title>
+{canonical}{data}<script src="/copy.js" defer></script>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" media="(prefers-color-scheme: light)">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" media="(prefers-color-scheme: light)">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32-dark.png" media="(prefers-color-scheme: dark)">
@@ -515,7 +589,7 @@ kbd {{ font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: m
       border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 .3em; background: var(--surface); }}
 @media (prefers-reduced-motion: reduce) {{ * {{ scroll-behavior: auto !important; transition: none !important; animation: none !important; }} }}
 @media (forced-colors: active) {{ :focus-visible {{ outline-color: Highlight; }} }}
-main {{ max-width: 680px; margin: 0 auto; }}
+main {{ max-width: 680px; margin: 0 auto; overflow-wrap: anywhere; }}
 header {{ padding: 72px 0 8px; }}
 h1 {{ font-size: 2.2rem; line-height: 1.1; letter-spacing: -.03em; margin: .2em 0; }}
 h2 {{ font-size: 1.05rem; letter-spacing: -.01em; margin: 2.4rem 0 .6rem; }}
@@ -542,8 +616,16 @@ th, td {{ text-align: left; padding: .55rem .2rem; border-bottom: 1px solid var(
 th {{ width: 9rem; font-weight: 600; color: var(--muted); font-size: max(.88rem, var(--caption)); }}
 ul.terms {{ list-style: none; padding: 0; margin: 0; }}
 ul.terms li {{ padding: 1rem 0; border-bottom: 1px solid var(--line); }}
-ul.terms li span {{ color: var(--muted); font-size: max(.88rem, var(--caption)); margin-left: .6rem; }}
+ul.terms li span {{ color: var(--muted); font-size: max(.88rem, var(--caption)); margin-left: .35rem; }}
 ul.terms li p {{ margin: .35em 0 0; color: var(--muted); font-size: max(.93rem, var(--caption)); }}
+/* Copy this page as Markdown or JSON-LD (copy.js). Hidden until the script runs. */
+.copy {{ display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 7px;
+        margin: 0 0 14px; font-size: max(.9rem, var(--caption)); }}
+.copy[hidden] {{ display: none; }}
+.copy select, .copy button {{ min-height: var(--hit); font: inherit; color: var(--text); background: var(--surface);
+        border: 1px solid var(--muted); border-radius: 8px; padding: 0 .75rem; }}
+.copy button {{ color: var(--accent); border-color: var(--accent); font-weight: 600; cursor: pointer; }}
+.copy-status {{ color: var(--muted); }}
 </style>
 </head>
 <body>
@@ -558,6 +640,12 @@ ul.terms li p {{ margin: .35em 0 0; color: var(--muted); font-size: max(.93rem, 
 </ul></nav>
 </header>
 <main id="main" tabindex="-1">
+<div class="copy" data-copy data-md-skip hidden>
+<label for="copy-format">Copy this page as</label>
+<select id="copy-format"><option value="markdown">Markdown</option><option value="json">JSON-LD</option></select>
+<button type="button">Copy</button>
+<span class="copy-status" role="status"></span>
+</div>
 {body}
 </main>
 <footer class="site"><p>Every page works with a keyboard alone: <kbd>Tab</kbd> moves forward, <kbd>Shift</kbd>+<kbd>Tab</kbd> moves back, <kbd>Enter</kbd> follows a link. <a href="https://github.com/bundu-labs/bundu-standards/issues/new?title=Accessibility%3A%20">Report a barrier</a>.</p></footer>
@@ -604,7 +692,7 @@ mod tests {
     /// Keyboard and screen-reader aids every page must keep.
     #[test]
     fn every_page_has_a_skip_link_landmarks_and_keyboard_help() {
-        let html = page("t", "<p>b</p>");
+        let html = page("t", None, None, "<p>b</p>");
         let body = html.find("<body>").unwrap();
         let skip = html
             .find(r##"<a class="skip" href="#main">Skip to main content</a>"##)
@@ -677,7 +765,7 @@ mod tests {
     /// The Bundu floor: every text colour pair at 7:1 or more, in both themes.
     #[test]
     fn text_colours_meet_the_bundu_floor_in_both_themes() {
-        let html = page("t", "");
+        let html = page("t", None, None, "");
         let light = &html[html.find(":root {").unwrap()..];
         let dark = &html[html.find("@media (prefers-color-scheme: dark)").unwrap()..];
         for block in [light, dark] {
@@ -691,7 +779,7 @@ mod tests {
 
     #[test]
     fn every_page_links_a_light_and_a_dark_icon() {
-        let html = page("t", "<p>b</p>");
+        let html = page("t", None, None, "<p>b</p>");
         assert!(html.contains(r#"href="/favicon-32x32.png" media="(prefers-color-scheme: light)""#));
         assert!(
             html.contains(r#"href="/favicon-32x32-dark.png" media="(prefers-color-scheme: dark)""#)
@@ -961,5 +1049,86 @@ mod tests {
         // Term URIs are built by concatenation; without it every published
         // URI would be wrong.
         assert!(NAMESPACE.ends_with('/'));
+    }
+
+    #[tokio::test]
+    async fn every_page_offers_to_copy_itself_as_markdown_or_json_ld() {
+        let html = body(index(accept("text/html")).await).await;
+        assert!(html.contains(r#"<div class="copy" data-copy data-md-skip hidden>"#));
+        assert!(html.contains(
+            r#"<option value="markdown">Markdown</option><option value="json">JSON-LD</option>"#
+        ));
+        assert!(!html.contains(r#"value="html""#), "Markdown, not HTML");
+        assert!(html.contains(r#"<script src="/copy.js" defer></script>"#));
+        assert!(html.contains(r#"<link rel="canonical" href="https://vocab.bundu.org/">"#));
+        let t = &terms::TERMS[0];
+        let term_page = body(term(Path(t.id.to_string()), accept("text/html")).await).await;
+        let start = term_page
+            .find(r#"<script type="application/ld+json" id="page-json">"#)
+            .unwrap();
+        let data = &term_page[start..start + term_page[start..].find("</script>").unwrap()];
+        assert!(data.contains(&format!(r#""@id":"bundu:{}""#, t.id)));
+    }
+
+    #[test]
+    fn the_copy_script_is_the_same_file_on_both_sites() {
+        assert_eq!(
+            COPY_JS,
+            include_str!("../workers/standards/public/copy.js"),
+            "src/copy.js and workers/standards/public/copy.js must stay identical"
+        );
+    }
+
+    #[test]
+    fn backticks_in_definitions_render_as_code() {
+        assert_eq!(
+            prose("one boolean per channel (today `email`)"),
+            "one boolean per channel (today <code>email</code>)"
+        );
+        assert_eq!(prose("a ` b <c>"), "a ` b &lt;c&gt;");
+        for t in terms::TERMS.iter() {
+            assert!(
+                !prose(t.comment).contains('`'),
+                "{}: unpaired backtick",
+                t.id
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn term_pages_reflow_on_a_narrow_screen() {
+        let html =
+            body(term(Path("notificationPreference".into()), accept("text/html")).await).await;
+        assert!(
+            html.contains("overflow-wrap: anywhere"),
+            "long term names and URIs wrap"
+        );
+        assert!(
+            html.contains(r#"<pre tabindex="0" role="region" aria-label="Example request">"#),
+            "the example block takes the focus, so it can scroll with the keyboard"
+        );
+    }
+
+    /// The real router, as `main` serves it: building it would panic on a path syntax the
+    /// axum version rejects, and every route must answer.
+    #[tokio::test]
+    async fn the_router_builds_and_every_route_answers() {
+        use tower::ServiceExt;
+        for (path, status) in [
+            ("/", StatusCode::OK),
+            ("/health", StatusCode::OK),
+            ("/context.jsonld", StatusCode::OK),
+            ("/copy.js", StatusCode::OK),
+            ("/favicon-32x32.png", StatusCode::OK),
+            ("/Family", StatusCode::OK),
+            ("/notATerm", StatusCode::NOT_FOUND),
+        ] {
+            let req = axum::http::Request::builder()
+                .uri(path)
+                .body(axum::body::Body::empty())
+                .unwrap();
+            let res = app().oneshot(req).await.unwrap();
+            assert_eq!(res.status(), status, "{path}");
+        }
     }
 }

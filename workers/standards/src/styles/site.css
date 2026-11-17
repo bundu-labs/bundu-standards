@@ -69,6 +69,8 @@ ul.list { list-style: none; padding: 0; }
 ul.list li { padding: 0.5rem 0; border-bottom: 1px solid var(--line); }
 dl dt { font-weight: 600; margin-top: 1rem; }
 dl dd { margin: 0; color: var(--muted); }
+dl dd p { margin: 0 0 0.75rem; }
+dl dd p:last-child { margin-bottom: 0; }
 footer.site { color: var(--muted); font-size: max(0.85rem, var(--caption)); border-top: 1px solid var(--line); margin-top: 3rem; }
 
 /* Keyboard and assistive-technology aids. */
@@ -89,4 +91,21 @@ caption { text-align: left; font-weight: 600; padding-bottom: var(--gap-floor); 
 th, td { text-align: left; vertical-align: top; padding: var(--gap-floor) var(--inset-floor) var(--gap-floor) 0; border-bottom: 1px solid var(--line); }
 footer.site p { margin: 0.5rem 0; }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
-@media (forced-colors: active) { .chip { border: 1px solid CanvasText; } :focus-visible { outline-color: Highlight; } }
+
+/* Copy this page as Markdown or JSON (public/copy.js). Hidden until the script runs. */
+.copy { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--gap-floor); margin: 0 0 var(--inset-floor); font-size: max(0.9rem, var(--caption)); }
+.copy[hidden] { display: none; }
+.copy select, .copy button { min-height: var(--hit); font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--muted); border-radius: 0.5rem; padding: 0 0.75rem; }
+.copy button { background: var(--copper-container); color: var(--on-copper-container); border-color: var(--on-copper-container); font-weight: 600; cursor: pointer; }
+.copy-status { color: var(--muted); }
+
+/* A standard's files, on its own page: each link a full hit region. */
+ul.files { list-style: none; padding: 0; }
+ul.files a { display: inline-flex; align-items: center; min-height: var(--hit); }
+
+/* Adopted and Proposed tabs on the register: two pages, so they work without a script. */
+nav.tabs ul { display: flex; flex-wrap: wrap; gap: var(--gap-floor); list-style: none; margin: 1rem 0 0; padding: 0; border-bottom: 1px solid var(--line); }
+nav.tabs a { display: inline-flex; align-items: center; min-height: var(--hit); padding: 0 var(--inset-floor); margin-bottom: -1px; border: 1px solid transparent; border-radius: 0.5rem 0.5rem 0 0; font-weight: 600; }
+nav.tabs a[aria-current="page"] { color: var(--fg); background: var(--bg); border-color: var(--line); border-bottom-color: var(--bg); text-decoration: none; }
+
+@media (forced-colors: active) { .chip { border: 1px solid CanvasText; } :focus-visible { outline-color: Highlight; } nav.tabs a[aria-current="page"] { border-color: CanvasText; } }

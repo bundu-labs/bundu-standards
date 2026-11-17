@@ -5,7 +5,7 @@
     "displayName": "Schema.org",
     "category": "vocabulary",
     "description": "The vocabulary of every record: every table and collection maps to a type (Person, Organization, NewsArticle, Event, Place, Product, Offer, JobPosting, Course, ClaimReview, Review, Action types).",
-    "versionCommitment": "Current release (30.1 on 2026-10-02); track releases",
+    "versionCommitment": "Current release (30.1, released 2026-09-16); track releases",
     "specificationUrl": "https://schema.org/docs/releases.html",
     "documentationUrl": null,
     "stewardOrganisation": "Schema.org Community Group (W3C)",
@@ -211,7 +211,7 @@
     "_schemaVersion": "v3.1",
     "displayName": "BCP 47 language tags",
     "category": "identifier_scheme",
-    "description": "Language tags on content and people (`inLanguage`, `locale`, translations keys).",
+    "description": "Language tags on content and people (`inLanguage`, `locale`, translation keys).",
     "versionCommitment": "RFC 5646 + RFC 4647",
     "specificationUrl": "https://www.rfc-editor.org/info/bcp47",
     "documentationUrl": null,
@@ -795,7 +795,7 @@
     "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -818,7 +818,7 @@
     "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -841,7 +841,7 @@
     "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1660,7 +1660,7 @@
     "_schemaVersion": "v3.1",
     "displayName": "LTI",
     "category": "protocol",
-    "description": "Launching Learning tools inside an LMS such as Toddle.",
+    "description": "Launching learning tools inside an LMS such as Toddle.",
     "versionCommitment": "LTI 1.3 + LTI Advantage",
     "specificationUrl": "https://www.1edtech.org/standards/lti",
     "documentationUrl": null,
@@ -1987,11 +1987,34 @@
     "specificationUrl": "https://standards.bundu.org/conversation-interchange/",
     "documentationUrl": null,
     "stewardOrganisation": "Bundu Foundation",
-    "usageNotes": "First implementation built, not merged or deployed: export and import over the Servers API (nyuchi/nyuchi-servers-api#50, 2026-11-15). Its findings are open questions 8 to 13 in the standard's README.",
+    "usageNotes": "First implementation built, not merged or deployed: export and import over the Servers API (nyuchi/nyuchi-servers-api#50, 2026-11-15). Its findings were questions 8 to 13 in the standard's README, decided on adoption (2026-11-15).",
     "isActive": true,
     "bundu": {
       "isFoundational": false,
       "adoptionRationale": "A person's history belongs to the person, not to a product. If none exists we build one and publish it (AGENTS.md, the rule)."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_cell",
+    "_schemaVersion": "v3.1",
+    "displayName": "Bundu Cell (.cell), the personal data store format",
+    "category": "data_format",
+    "description": "How one record a person owns (a cell) is written so it is the same bytes in a .cell file or a database row keyed by its @id: JSON-LD 1.1 with schema.org types and a CommonMark text field that may name facts only as {{field}}. Each cell carries an RFC 8785 (JCS) hash, a VC Data Integrity proof and a version chain. A pod is one person's cells; the Nyuchi Honeycomb holds pods and adopts the Solid Protocol for them. Maps directly to SiafuDB: on the device and at the edge a cell is a SiafuDB node keyed by its @id, and the SiafuDB Graph Sync Protocol (siafudb_graph_sync) carries cells from device to cloud to pod without reshaping them. The spec and the prototype live in siafuDB/cell (owner, 2026-11-17).",
+    "versionCommitment": "0.1.0 draft (semver); nothing is final until the owner approves its scope.",
+    "specificationUrl": "https://standards.bundu.org/cell/",
+    "documentationUrl": null,
+    "stewardOrganisation": "Bundu Foundation",
+    "usageNotes": null,
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Personal data stays on the device and in the person's isolated cloud space, and moves to Honeycomb pods without being reshaped. No standard defines a portable record whose facts and prose cannot diverge, so we write one (AGENTS.md, the rule)."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -2213,7 +2236,7 @@
     "displayName": "OGC API - Features",
     "category": "protocol",
     "description": "The API shape of a collection of geographic features (items, paging, filtering), which WIS2 nodes use.",
-    "versionCommitment": "Feature collections are served and read as OGC API Features",
+    "versionCommitment": "Feature collections are served and read as OGC API - Features",
     "specificationUrl": "https://ogcapi.ogc.org/features/",
     "documentationUrl": null,
     "stewardOrganisation": "Open Geospatial Consortium (ISO 19168-1)",
@@ -2236,7 +2259,7 @@
     "displayName": "OGC API - Tiles",
     "category": "protocol",
     "description": "The API shape of tiled map data: the landing page, the list of tilesets, a tile by tile matrix, and the conformance classes a server declares. The successor to WMTS.",
-    "versionCommitment": "Tile sets (the base map, weather and places layers) are served and read as OGC API Tiles",
+    "versionCommitment": "Tile sets (the base map, weather and places layers) are served and read as OGC API - Tiles",
     "specificationUrl": "https://www.ogc.org/standards/ogcapi-tiles/",
     "documentationUrl": "https://docs.ogc.org/is/20-057/20-057.html",
     "stewardOrganisation": "Open Geospatial Consortium",
@@ -2332,7 +2355,7 @@
     "specificationUrl": "https://github.com/mapbox/tilejson-spec",
     "documentationUrl": null,
     "stewardOrganisation": "Mapbox (published openly, no standards body)",
-    "usageNotes": "Not a standards-body specification. It sits beside OGC API Tiles for clients (MapLibre) that read a style and not an OGC landing page. OGC API - Tiles (ogc_api_tiles) is the canonical description of a tile set: a TileJSON document is derived from it and never states a bound, zoom range or tile URL that the OGC tileset metadata does not.",
+    "usageNotes": "Not a standards-body specification. It sits beside OGC API - Tiles for clients (MapLibre) that read a style and not an OGC landing page. OGC API - Tiles (ogc_api_tiles) is the canonical description of a tile set: a TileJSON document is derived from it and never states a bound, zoom range or tile URL that the OGC tileset metadata does not.",
     "isActive": true,
     "bundu": {
       "isFoundational": false,

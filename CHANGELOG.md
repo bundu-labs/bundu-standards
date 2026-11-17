@@ -17,7 +17,9 @@ Versions released before then are not renumbered.
 
 - **Adopted, by the owner's decision of 2026-11-15** ("We should be adopting all standards
   immediately before people start using our app"): BCI and ACP. The third proposed standard, the
-  weather colour scales, was adopted at 1.0.0 in #85 (below), so with this all 105 are adopted.
+  weather colour scales, was adopted at 1.0.0 in #85 (below), so with this every standard proposed
+  by 2026-11-15 is adopted. Bundu Cell, proposed on 2026-11-17 (#109), stays proposed: its scope
+  awaits the owner's approval.
   - BCI 0.1.0, with open questions 8 and 9 resolved in the text. Every reference resolves inside the
     stream, and the `Header` names no omitted records. A reader refuses a valid stream only for a
     limit it states in advance, and reports what it cannot keep. Questions 10 to 13 became a
@@ -34,6 +36,20 @@ Versions released before then are not renumbered.
   the `Header` has no member for omitted records, a reader with stated limits, record order, items a
   reader cannot hold, importing twice and someone else's ids, and `Header.owner` as informative only.
   No schema change; the register entry notes the implementation.
+- Dependencies, all ten open Dependabot updates (#73 to #82) in one change:
+  axum 0.7.9 to 0.8.9, tower-http 0.6 to 0.7.1, serde_json 1.0.154,
+  `@astrojs/cloudflare` 14.4.6, wrangler 4.158.0, `actions/checkout` 7,
+  `actions/github-script` 9, `actions/setup-python` 7.1.0, and the org's
+  `reusable-staging-release.yml` and `next-version` at v0.11.1 (same inputs
+  and outputs as 0.2.0). axum 0.8 writes path parameters as `{term}`; the old
+  `/:term` route panicked when the server started, which the unit tests did
+  not catch. The router is now built by a function, and a test drives every
+  route through it.
+- standards.bundu.org is served by the Rust Worker (`workers/standards-api`,
+  Dioxus and Mzizi Roots). The custom domain moved from `bundu-standards`
+  (Astro) to `bundu-standards-api` on 2026-11-17. The route now sits only in
+  the Rust Worker's `wrangler.toml`; the Astro Worker's config no longer
+  declares it, so deploying the Astro Worker cannot take the domain back.
 - Weather colour scales 1.0.0, adopted. Every claim marked inferred in 0.1.0
   was checked at source on 2026-11-15:
   - UV colours now use WHO's own RGB from its UV index clipart notes (2002):
@@ -48,6 +64,100 @@ Versions released before then are not renumbered.
     obscured) takes no band.
 - Register: `weather_colour_scales` is adopted at 1.0.0, and the
   `who_global_solar_uvi` notes name WHO's RGB source.
+
+### CI
+
+- CI moves from Node and inline Python to Deno, the first repository in the owner's
+  Deno-CI pilot (2026-11-16). The standards endpoint job installs, tests and builds
+  `workers/standards` with Deno (`deno install`, `deno task test`, `deno task build`); its
+  25 tests run unchanged on Deno's `node:test` support. The vocabulary contract check is
+  one script, `tools/contract.ts`, in place of the inline Python and curl. It checks the
+  same things: every term as JSON-LD and HTML, JSON-LD by default, and 404 for an unknown
+  term. `package-lock.json` stays, because Cloudflare Workers Builds deploys the site from it.
+  The register tools are still Python for now.
+
+### Added
+
+- The ecosystem record lists the platform tokens (MIT, MXT, NST, NHC) as a `proposed` term:
+  a future build-out, not in development, none issued (owner, 2026-11-17). `proposed` is a
+  new status for terms; products cannot carry it. The sites read the same status.
+
+- Bundu Cell (`.cell`) 0.1.0 draft (`standards/cell/`, register id `cell`,
+  proposed): the personal data store format. A cell is JSON-LD with schema.org types
+  and a CommonMark `text` that may name facts only as `{{field}}`, stored as the
+  same bytes in a file or a database row keyed by `@id`, with a JCS hash, a Data
+  Integrity proof and a version chain (#107).
+- The ecosystem record (#106, part of #105): `ecosystem/ecosystem.yaml` is now the one place
+  the Bundu ecosystem's identity, four pillars, shared foundations, terms and products are
+  written down. `tools/ecosystem.ts` checks it and generates `ecosystem/ECOSYSTEM.md` and the
+  schema.org JSON-LD served at `standards.bundu.org/ecosystem.jsonld`; CI fails when they are
+  stale or when a banned term, a dangling reference, a fifth pillar or a missing engineering
+  constraint appears. The Ubuntu doctrine and the seven constraints stay in Mzizi and are
+  referenced by id.
+
+- standards.bundu.org publishes our own standards. `/weather-colour-scales/`
+  and `/conversation-interchange/` were linked from the register but answered
+  404; each now serves its README as a page, with its status, a link to its
+  register entry and the copy control (JSON copies the standard's data file),
+  and its files beside it (`scales.json`, `results.md`, `bci.schema.json`,
+  `context.jsonld`, `examples/minimal.ndjson`) with their own content types,
+  open to any origin. The README is rendered when the Worker is built, so no
+  Markdown parser ships to it. Scripts and tests in a standard's folder are
+  not published. A register entry whose URL is a page on this site with no
+  `standards/<slug>/README.md` behind it now fails the build, so the register
+  cannot link to a missing page again.
+- Both sites: every page has "Copy this page as" at the top, which copies the
+  page as Markdown or, where the page has data, as JSON (JSON-LD on
+  vocab.bundu.org). Markdown replaces HTML as the copyable text form. One
+  script, `copy.js`, serves both sites; a test keeps its two copies identical.
+  The control stays hidden without JavaScript, so it never shows a dead button,
+  and a screen reader announces the result. The standards site's content
+  security policy now allows `script-src 'self'` for it (no inline or
+  third-party script).
+- standards.bundu.org: the register has two tabs, Adopted and Proposed, as two
+  pages (`/register/` and `/register/proposed/`) with the current one marked
+  `aria-current="page"`. A standard's page links back to its own tab.
+- The file endpoint of standards.bundu.org in Rust: `workers/standards-api`, a `workers-rs`
+  Worker with the same routes, problems, headers and edge cache as `src/lib/files.js`. Its 12
+  tests are the JS test cases, run natively, and CI builds it for wasm32. The Astro pages
+  hand requests to it through a `STANDARDS_API` service binding, and fall back to the JS when
+  the binding is absent, so nothing changes until the Worker is deployed and bound
+  (`workers/standards-api/README.md`; #87).
+- The pages of standards.bundu.org in Rust, in the same Worker: the home page, the register,
+  each standard's page, the accessibility statement and `/register/index.json`, rendered on
+  the server with Dioxus and Mzizi Roots (`mzizi-ui`'s `Badge` for each status). `build.rs`
+  reads and checks `register/register.yaml` at build time. All 108 pages match the Astro
+  build in elements, attributes and text, and the JSON matches byte for byte. Nothing changes
+  until the custom domain moves to `bundu-standards-api`; the steps are in the README.
+
+### Fixed
+
+- Two contradictions in published text. The register's `schema_org`
+  commitment said 30.1 was released on 2026-10-02; schema.org's release notes
+  give 2026-09-16, which its `current` field already said. The
+  `enforcementLayer` term said its values "are fixed by" the Guardrails
+  Standard, while its rationale said they are left open until the standard
+  publishes them. It now says the standard sets the values and the vocabulary
+  lists them once they are published. The meaning of the term is unchanged.
+- standards.bundu.org: missing spaces in "103 adopted,2 proposed" and in the
+  footer's "statement orreport a barrier", and between each standard's link and
+  its status, which some screen readers ran together.
+- vocab.bundu.org: a term's name and its type ran together ("Familyclass") for
+  screen readers; backticks in definitions show as code instead of literally;
+  long term names and URIs no longer push term pages off a 320px screen; the
+  example request block takes the keyboard focus.
+- Register text: long fields (38 of them) are split into paragraphs, and
+  backticks in any field render as code. 17 wording fixes from a proofreading
+  pass: missing full stops, subject-verb agreement ("The latest versions of the
+  three series are"), stray capitals, "translation keys", the OGC API names
+  written one way, and the Bundu AI Guardrails Standard's name on the
+  `enforcementLayer` term.
+- The home page reads "103 adopted, 2 proposed" in the Rust build, where Astro dropped the
+  space after the comma.
+- Cloudflare Workers Builds deploys standards.bundu.org again. Its build command runs the
+  `test` script, which #88 had pointed at Deno; the build image has no Deno, so every build
+  since failed and the live site stayed on the deploy from before #88. The `test` script runs
+  the 25 tests on Node again, and CI runs them on Deno through `test:deno`.
 
 ## 0.7.0 - 2026-11-15
 

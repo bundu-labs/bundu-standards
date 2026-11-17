@@ -1,0 +1,586 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://standards.bundu.org/ecosystem#bundu-ecosystem",
+  "@type": "Dataset",
+  "name": "The Bundu Ecosystem",
+  "version": "1.0.0",
+  "dateModified": "2026-11-17",
+  "description": "One ecosystem. One doctrine. One source of truth. Many interfaces.",
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://standards.bundu.org/ecosystem.jsonld",
+  "publisher": {
+    "@id": "https://standards.bundu.org/ecosystem#bundu-foundation"
+  },
+  "hasPart": [
+    {
+      "@type": "NGO",
+      "@id": "https://standards.bundu.org/ecosystem#bundu-foundation",
+      "identifier": "bundu-foundation",
+      "name": "Bundu Foundation",
+      "description": "The umbrella of the ecosystem. It governs the four pillars, holds their intellectual property, and publishes the ecosystem's open standards. Bundu is Shona for wilderness.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://www.bundu.org",
+      "slogan": "umbrella",
+      "subOrganization": [
+        {
+          "@id": "https://standards.bundu.org/ecosystem#bundu-labs"
+        },
+        {
+          "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+        },
+        {
+          "@id": "https://standards.bundu.org/ecosystem#mukoko"
+        },
+        {
+          "@id": "https://standards.bundu.org/ecosystem#shamwari-ai"
+        }
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://standards.bundu.org/ecosystem#bundu-labs",
+      "identifier": "bundu-labs",
+      "name": "Bundu Labs",
+      "description": "The research and standards arm of the Bundu Foundation. It investigates infrastructure gaps across Africa and emerging markets, and publishes the standards, frameworks and vocabulary the rest of the ecosystem builds on.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://www.bundu.org/research",
+      "slogan": "Research, knowledge, standards and frameworks",
+      "parentOrganization": {
+        "@id": "https://standards.bundu.org/ecosystem#bundu-foundation"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Researchers, standards bodies, educators, the public"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa",
+      "identifier": "nyuchi-africa",
+      "name": "Nyuchi Africa",
+      "description": "The platform and infrastructure company of the ecosystem: the Nyuchi API, the console, and its own tools and products. Nyuchi builds and sells Mukoko and Shamwari AI, and builds Mzizi. It builds platforms others build on; it is not an outsourced IT department or a managed service provider.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://www.nyuchi.com",
+      "slogan": "Platform and infrastructure",
+      "parentOrganization": {
+        "@id": "https://standards.bundu.org/ecosystem#bundu-foundation"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Developers and businesses building digital services; micro and small businesses and informal traders; governments and institutions that extend access"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://standards.bundu.org/ecosystem#mukoko",
+      "identifier": "mukoko",
+      "name": "Mukoko",
+      "description": "One consumer platform with its apps inside, as Microsoft 365 or Google Workspace hold theirs: a super app, with apps that also stand alone in their own domains. Built and sold by Nyuchi, on the Nyuchi API.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://www.mukoko.com",
+      "slogan": "The consumer pillar",
+      "parentOrganization": {
+        "@id": "https://standards.bundu.org/ecosystem#bundu-foundation"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Individuals, families and communities"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://standards.bundu.org/ecosystem#shamwari-ai",
+      "identifier": "shamwari-ai",
+      "name": "Shamwari AI",
+      "description": "An African AI companion that answers in Shona, Ndebele and English and cites its sources. A pillar and a Bundu Foundation open-source project; it runs on Nyuchi's AI layer and is sold by Nyuchi.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://shamwari.ai",
+      "slogan": "Community-facing AI and conversational experiences",
+      "parentOrganization": {
+        "@id": "https://standards.bundu.org/ecosystem#bundu-foundation"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Communities and individuals, in Shona, Ndebele and English"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://standards.bundu.org/ecosystem#ubuntu",
+      "identifier": "ubuntu",
+      "name": "Ubuntu",
+      "description": "Ubuntu is not a marketing claim; it is the specification. Its five pillars are the spheres of belonging and its five principles the values practised in them; seven engineering constraints make them testable. All three are served by Mzizi.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "creativeWorkStatus": "Canonical",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#bundu-foundation"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://standards.bundu.org/ecosystem#mzizi",
+      "identifier": "mzizi",
+      "name": "Mzizi",
+      "description": "The open design system every surface in the ecosystem is built with: components, tokens, a registry API and the Rust components (Mzizi Roots). Owned by the Bundu Foundation, built by Nyuchi, shared by all four pillars.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://mzizi.dev",
+      "creativeWorkStatus": "Live",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#bundu-foundation"
+      },
+      "creator": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://standards.bundu.org/ecosystem#cell",
+      "identifier": "cell",
+      "name": ".cell",
+      "description": "The data store for one entity (a person, a household or a business): one JSON-LD document with Markdown inside, stored as a .cell file or as a database row with the same bytes, structured so its data and text cannot diverge. A Foundation project like Mzizi; it maps directly to SiafuDB: on the device and at the edge a cell is a SiafuDB node, and SiafuDB sync carries it to the cloud and the honeycomb. Its reference implementation is being written in Rust. Proposed, not adopted (bundu-labs/bundu-standards#107).",
+      "version": "0.1.0",
+      "dateModified": "2026-11-17",
+      "url": "https://github.com/siafuDB/cell",
+      "creativeWorkStatus": "Proposed",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#bundu-labs"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://standards.bundu.org/ecosystem#nyuchi-api",
+      "identifier": "nyuchi-api",
+      "name": "Nyuchi API",
+      "description": "The one API every Mukoko app and Nyuchi product reads and writes through: identity, organisations, workspaces, places, events, news, weather and more.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://api.nyuchi.com",
+      "creativeWorkStatus": "Live",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://standards.bundu.org/ecosystem#bundu-standards",
+      "identifier": "bundu-standards",
+      "name": "Bundu standards",
+      "description": "The register of external standards the ecosystem adopts, the standards it publishes, and this record. If a standard exists it is adopted; if none exists, Bundu Labs writes one and publishes it here.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://standards.bundu.org",
+      "creativeWorkStatus": "Live",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#bundu-labs"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#nyuchi-console",
+      "identifier": "nyuchi-console",
+      "name": "Nyuchi console",
+      "description": "Where organisations sign in, manage their workspaces and issue API keys.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://platform.nyuchi.com",
+      "creativeWorkStatus": "Live",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Organisations and developers"
+      },
+      "softwareRequirements": [
+        "https://standards.bundu.org/ecosystem#nyuchi-api"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#nyuchi-ai",
+      "identifier": "nyuchi-ai",
+      "name": "Nyuchi AI",
+      "description": "The AI layer inside the platform, on which Shamwari AI runs.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://shamwari.ai",
+      "creativeWorkStatus": "In development",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Developers and organisations; Shamwari AI is its consumer face"
+      },
+      "softwareRequirements": [
+        "https://standards.bundu.org/ecosystem#nyuchi-api"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#workspace-tools",
+      "identifier": "workspace-tools",
+      "name": "Workspace Tools",
+      "description": "Google Workspace and Gmail add-ons that work inside a team's own workflows.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://tools.nyuchi.com",
+      "creativeWorkStatus": "Beta",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Teams on Google Workspace"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#mailsense",
+      "identifier": "mailsense",
+      "name": "Mailsense",
+      "description": "Gmail management that keeps the inbox under control.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "creativeWorkStatus": "Beta",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Gmail users"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#campuspass",
+      "identifier": "campuspass",
+      "name": "CampusPass",
+      "description": "A student ID in Apple Wallet, signed entirely on-device.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "creativeWorkStatus": "Beta",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Students and schools"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#masasa",
+      "identifier": "masasa",
+      "name": "Masasa",
+      "description": "Mobile device management for Linux fleets.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "creativeWorkStatus": "Beta",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Organisations running Linux fleets"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#nyuchi-logistics",
+      "identifier": "nyuchi-logistics",
+      "name": "Nyuchi Logistics",
+      "description": "Transport and logistics software, starting with car rentals.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "creativeWorkStatus": "Beta",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Transport and logistics operators"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#social-proof",
+      "identifier": "social-proof",
+      "name": "Social Proof",
+      "description": "An embeddable widget that surfaces social proof on a business's own website.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "creativeWorkStatus": "Beta",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Small businesses with their own websites"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#seo-manager",
+      "identifier": "seo-manager",
+      "name": "SEO Manager for WordPress",
+      "description": "AI-assisted SEO fields plus database and media upkeep, for WordPress.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "creativeWorkStatus": "Beta",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "WordPress site owners"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#trip-tools",
+      "identifier": "trip-tools",
+      "name": "Trip Tools for WP Travel",
+      "description": "Itinerary tools for tour operators running WP Travel.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "creativeWorkStatus": "Beta",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Tour operators on WP Travel"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#nyuchi-medical",
+      "identifier": "nyuchi-medical",
+      "name": "Nyuchi Medical",
+      "description": "Healthcare software, announced as coming soon.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "creativeWorkStatus": "Planned",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Healthcare providers"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#mukoko-events",
+      "identifier": "mukoko-events",
+      "name": "Mukoko Events",
+      "description": "Events and gatherings, as a Mukoko app.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://events.mukoko.com",
+      "creativeWorkStatus": "Live",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#mukoko"
+      },
+      "creator": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Communities and event organisers"
+      },
+      "softwareRequirements": [
+        "https://standards.bundu.org/ecosystem#nyuchi-api"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#mukoko-weather",
+      "identifier": "mukoko-weather",
+      "name": "Mukoko Weather",
+      "description": "Weather for the developing world, as a Mukoko app: real-time forecasts and local insight for farming, mining, travel and daily life.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://weather.mukoko.com",
+      "creativeWorkStatus": "Live",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#mukoko"
+      },
+      "creator": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Farmers, miners, travellers and everyone planning their day"
+      },
+      "softwareRequirements": [
+        "https://standards.bundu.org/ecosystem#nyuchi-api"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#mukoko-news",
+      "identifier": "mukoko-news",
+      "name": "Mukoko News",
+      "description": "News, as a Mukoko app.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://news.mukoko.com",
+      "creativeWorkStatus": "Live",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#mukoko"
+      },
+      "creator": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Readers across Africa"
+      },
+      "softwareRequirements": [
+        "https://standards.bundu.org/ecosystem#nyuchi-api"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#kweli",
+      "identifier": "kweli",
+      "name": "Kweli",
+      "description": "Places, as a Mukoko app, with an MCP server for agents.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://kweli.mukoko.com",
+      "creativeWorkStatus": "Live",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#mukoko"
+      },
+      "creator": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Everyone looking up a place"
+      },
+      "softwareRequirements": [
+        "https://standards.bundu.org/ecosystem#nyuchi-api"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://standards.bundu.org/ecosystem#mukoko-lingo",
+      "identifier": "mukoko-lingo",
+      "name": "Mukoko Lingo",
+      "description": "Language learning, as a Mukoko app.",
+      "version": "1.0.0",
+      "dateModified": "2026-11-17",
+      "url": "https://lingo.mukoko.com",
+      "creativeWorkStatus": "Live",
+      "maintainer": {
+        "@id": "https://standards.bundu.org/ecosystem#mukoko"
+      },
+      "creator": {
+        "@id": "https://standards.bundu.org/ecosystem#nyuchi-africa"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Language learners"
+      },
+      "softwareRequirements": [
+        "https://standards.bundu.org/ecosystem#nyuchi-api"
+      ]
+    },
+    {
+      "@type": "DefinedTermSet",
+      "@id": "https://standards.bundu.org/ecosystem#terms",
+      "name": "Bundu ecosystem terms",
+      "hasDefinedTerm": [
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://standards.bundu.org/ecosystem#platform-tokens",
+          "identifier": "platform-tokens",
+          "name": "Platform tokens (MIT, MXT, NST, NHC)",
+          "description": "A proposed Mukoko project and a future build-out, not on the current roadmap (owner, 2026-11-17). Four tokens are proposed: MIT (identity, soulbound) and MXT (exchange) for Mukoko, NST and NHC for the Nyuchi Honeycomb. Not in development, none issued, none on sale. Never described as live, scheduled or governed today.",
+          "version": "0.1.0",
+          "dateModified": "2026-11-17",
+          "termCode": "platform-tokens",
+          "inDefinedTermSet": {
+            "@id": "https://standards.bundu.org/ecosystem#terms"
+          }
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://standards.bundu.org/ecosystem#nyuchi-honeycomb",
+          "identifier": "nyuchi-honeycomb",
+          "name": "Nyuchi Honeycomb",
+          "description": "The distributed, decentralised platform Nyuchi is building. Like a honeycomb, it holds cells: each person's data lives in their own pod. In development; never described as live.",
+          "version": "1.0.0",
+          "dateModified": "2026-11-17",
+          "termCode": "nyuchi-honeycomb",
+          "inDefinedTermSet": {
+            "@id": "https://standards.bundu.org/ecosystem#terms"
+          }
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://standards.bundu.org/ecosystem#pod",
+          "identifier": "pod",
+          "name": "Pod",
+          "description": "A person's own store of data in the Nyuchi Honeycomb, made of cells. Today personal data lives on the device and syncs with cloud storage already isolated per person, so the move to pods is a simple migration.",
+          "version": "1.0.0",
+          "dateModified": "2026-11-17",
+          "termCode": "pod",
+          "inDefinedTermSet": {
+            "@id": "https://standards.bundu.org/ecosystem#terms"
+          }
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://standards.bundu.org/ecosystem#mukoko-apps",
+          "identifier": "mukoko-apps",
+          "name": "Mukoko apps",
+          "description": "The apps inside the Mukoko platform, available in the super app and standalone in their own domains. Nhimbe, bushtrade, lingo and the other single-purpose brands are Mukoko apps.",
+          "version": "1.0.0",
+          "dateModified": "2026-11-17",
+          "termCode": "mukoko-apps",
+          "inDefinedTermSet": {
+            "@id": "https://standards.bundu.org/ecosystem#terms"
+          }
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://standards.bundu.org/ecosystem#frontier-infrastructure",
+          "identifier": "frontier-infrastructure",
+          "name": "Frontier infrastructure",
+          "description": "Infrastructure engineered for places where bandwidth, devices and budgets are constrained, held to the seven engineering constraints.",
+          "version": "1.0.0",
+          "dateModified": "2026-11-17",
+          "termCode": "frontier-infrastructure",
+          "inDefinedTermSet": {
+            "@id": "https://standards.bundu.org/ecosystem#terms"
+          }
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://standards.bundu.org/ecosystem#pricing-principle",
+          "identifier": "pricing-principle",
+          "name": "Pricing principle",
+          "description": "Consumption is predominantly free. No forced upgrades, artificial usage limits or constant upselling. Commercial value comes from API consumption, integrations, partnerships, platform adoption, embedded services and data products, never from excluding the people the ecosystem exists to serve.",
+          "version": "1.0.0",
+          "dateModified": "2026-11-17",
+          "termCode": "pricing-principle",
+          "inDefinedTermSet": {
+            "@id": "https://standards.bundu.org/ecosystem#terms"
+          }
+        }
+      ]
+    }
+  ]
+}

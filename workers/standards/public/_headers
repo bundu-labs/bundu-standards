@@ -3,6 +3,9 @@
   Referrer-Policy: no-referrer
   X-Frame-Options: DENY
   Permissions-Policy: geolocation=(), camera=(), microphone=()
-  Content-Security-Policy: default-src 'none'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
 /register/index.json
+  Access-Control-Allow-Origin: *
+/ecosystem.jsonld
+  Content-Type: application/ld+json; charset=utf-8
   Access-Control-Allow-Origin: *

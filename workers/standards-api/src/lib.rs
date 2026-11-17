@@ -49,6 +49,17 @@ mod worker_glue {
         Ok(res.with_status(reply.status).with_headers(headers))
     }
 
+    /// A fresh nonce for the content security policy: 128 bits from the platform's
+    /// cryptographic random source (`crypto.getRandomValues`), as hex.
+    fn nonce() -> Result<String> {
+        use worker::js_sys::{global, Function, Reflect, Uint8Array};
+        let crypto = Reflect::get(&global(), &"crypto".into())?;
+        let get_random_values = Function::from(Reflect::get(&crypto, &"getRandomValues".into())?);
+        let bytes = Uint8Array::new_with_length(16);
+        get_random_values.call1(&crypto, &bytes)?;
+        Ok(bytes.to_vec().iter().map(|b| format!("{b:02x}")).collect())
+    }
+
     #[event(fetch)]
     async fn fetch(req: Request, _env: Env, _ctx: Context) -> Result<Response> {
         let url = req.url()?;
@@ -58,7 +69,7 @@ mod worker_glue {
 
         // The pages, the JSON and the stylesheet are rendered here, from the register built
         // into the Worker: no upstream and no cache needed.
-        if let Some(reply) = crate::site::reply(&method, &path) {
+        if let Some(reply) = crate::site::reply(&method, &path, &nonce()?) {
             return to_response(reply);
         }
 

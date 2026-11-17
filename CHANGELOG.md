@@ -86,6 +86,17 @@ Versions released before then are not renumbered.
 
 ### CI
 
+- Main releases take their version from the tags, not `Cargo.toml` (#131).
+  The Release workflow read the root `Cargo.toml` version, which is the
+  `bundu-vocab` crate's own (0.7.0 on `main`, 0.2.0 on `staging`); the staging
+  patch tags had passed it, so every release to `main` failed the org's
+  version check ("Version 0.7.0 is not allowed after 0.22.1 on main: the
+  policy allows 0.23.0"), and the org's `auto-release.yml` tagged the release
+  instead. The workflow now computes the next minor above the highest tag with
+  the org's `next-version` action, skips a commit that is already tagged, and
+  takes its notes from the version's section here or from `## Unreleased`. It
+  is renamed `main-release.yml`, the name `auto-release.yml` looks for, so a
+  release is tagged once, here.
 - A merge is blocked while anything is red or orange (owner, 2026-11-17).
   A new check, "All checks green", waits until every other check on the commit
   has finished, then passes only if each passed or was skipped; failed,

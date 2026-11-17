@@ -70,7 +70,7 @@ Versions released before then are not renumbered.
   - tool-call dialects remain a gap across DeepSeek, Qwen, GLM, Codex CLI,
     Gemini CLI, OpenHands and goose;
   - the session log stays decided (ATIF).
-  It is still a checklist, not a standard, and is not published.
+    It is still a checklist, not a standard, and is not published.
 
 - The ecosystem record lists the platform tokens (MIT, MXT, NST, NHC) as a `proposed` term:
   a future build-out, not in development, none issued (owner, 2026-11-17). `proposed` is a

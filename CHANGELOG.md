@@ -74,6 +74,13 @@ Versions released before then are not renumbered.
 
 ### Fixed
 
+- Two contradictions in published text. The register's `schema_org`
+  commitment said 30.1 was released on 2026-10-02; schema.org's release notes
+  give 2026-09-16, which its `current` field already said. The
+  `enforcementLayer` term said its values "are fixed by" the Guardrails
+  Standard, while its rationale said they are left open until the standard
+  publishes them. It now says the standard sets the values and the vocabulary
+  lists them once they are published. The meaning of the term is unchanged.
 - standards.bundu.org: missing spaces in "103 adopted,2 proposed" and in the
   footer's "statement orreport a barrier", and between each standard's link and
   its status, which some screen readers ran together.

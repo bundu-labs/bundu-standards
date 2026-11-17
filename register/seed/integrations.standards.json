@@ -5,7 +5,7 @@
     "displayName": "Schema.org",
     "category": "vocabulary",
     "description": "The vocabulary of every record: every table and collection maps to a type (Person, Organization, NewsArticle, Event, Place, Product, Offer, JobPosting, Course, ClaimReview, Review, Action types).",
-    "versionCommitment": "Current release (30.1 on 2026-10-02); track releases",
+    "versionCommitment": "Current release (30.1, released 2026-09-16); track releases",
     "specificationUrl": "https://schema.org/docs/releases.html",
     "documentationUrl": null,
     "stewardOrganisation": "Schema.org Community Group (W3C)",

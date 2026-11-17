@@ -38,15 +38,29 @@ pub fn render(path: &str) -> Option<Page> {
         })
     };
     match trimmed {
-        "" => html(document(path, rsx! { Index {} }, home_meta(), None)),
+        "" => html(document(
+            path,
+            rsx! { Index {} },
+            home_meta(),
+            None,
+            serde_json::from_str(&register::index_json(r, SITE)).ok(),
+        )),
         "/register" => html(document(
             path,
-            rsx! { RegisterIndex {} },
-            (
-                "Register · Bundu standards".into(),
-                "Every external standard the platform adopts, and its status.".into(),
-            ),
+            rsx! { RegisterTab { status: "adopted" } },
+            ("Register · Bundu standards".into(), TAB_DESCRIPTION.into()),
             Some(register::defined_term_set(r, SITE)),
+            Some(register::tab_json(r, "adopted", SITE)),
+        )),
+        "/register/proposed" => html(document(
+            path,
+            rsx! { RegisterTab { status: "proposed" } },
+            (
+                "Proposed · Register · Bundu standards".into(),
+                TAB_DESCRIPTION.into(),
+            ),
+            None,
+            Some(register::tab_json(r, "proposed", SITE)),
         )),
         "/register/index.json" => Some(Page {
             content_type: "application/json; charset=utf-8",
@@ -57,6 +71,7 @@ pub fn render(path: &str) -> Option<Page> {
             rsx! { Accessibility {} },
             accessibility_meta(),
             None,
+            None,
         )),
         _ => {
             let id = trimmed.strip_prefix("/register/")?;
@@ -66,13 +81,17 @@ pub fn render(path: &str) -> Option<Page> {
                 rsx! { StandardPage { id: s.id.clone() } },
                 (
                     format!("{} · Bundu standards", s.name),
-                    register::one_line(&s.governs),
+                    register::one_line(&s.governs).replace('`', ""),
                 ),
                 Some(register::defined_term_page(s, SITE)),
+                register::standard_json(r, id, SITE),
             ))
         }
     }
 }
+
+const TAB_DESCRIPTION: &str =
+    "Every external standard the platform adopts or proposes, and its status.";
 
 fn home_meta() -> (String, String) {
     (
@@ -94,11 +113,14 @@ fn document(
     main: Element,
     (title, description): (String, String),
     json_ld: Option<serde_json::Value>,
+    page_json: Option<serde_json::Value>,
 ) -> String {
     // `</script>` cannot appear inside the JSON: every `<` is written as <.
-    let json_ld = json_ld.map(|v| v.to_string().replace('<', "\\u003c"));
+    let script = |v: serde_json::Value| v.to_string().replace('<', "\\u003c");
+    let json_ld = json_ld.map(script);
+    let page_json = page_json.map(script);
     let body = dioxus_ssr::render_element(rsx! {
-        Base { path: path.to_owned(), title, description, json_ld, {main} }
+        Base { path: path.to_owned(), title, description, json_ld, page_json, {main} }
     });
     // Dioxus has no `html` element, so the root is written here.
     format!("<!doctype html><html lang=\"en\">{body}</html>")
@@ -125,6 +147,7 @@ fn Base(
     title: String,
     description: String,
     json_ld: Option<String>,
+    page_json: Option<String>,
     children: Element,
 ) -> Element {
     let canonical = format!("{SITE}{path}");
@@ -148,6 +171,11 @@ fn Base(
                 if let Some(ld) = json_ld {
                     script { r#type: "application/ld+json", dangerous_inner_html: "{ld}" }
                 }
+                // The data the copy control offers as JSON; pages without it offer Markdown only.
+                if let Some(data) = page_json {
+                    script { r#type: "application/json", id: "page-json", dangerous_inner_html: "{data}" }
+                }
+                script { src: "/copy.js", defer: "defer" }
             }
             body {
                 a { class: "skip", href: "#main", "Skip to main content" }
@@ -166,7 +194,20 @@ fn Base(
                         }
                     }
                 }
-                main { id: "main", tabindex: "-1", {children} }
+                main { id: "main", tabindex: "-1",
+                    // Copy this page as Markdown or JSON (public/copy.js). Hidden until the
+                    // script runs, so no reader meets a button that does nothing.
+                    div { class: "copy", "data-copy": "", "data-md-skip": "", hidden: "hidden",
+                        label { r#for: "copy-format", "Copy this page as" }
+                        select { id: "copy-format",
+                            option { value: "markdown", "Markdown" }
+                            option { value: "json", "JSON" }
+                        }
+                        button { r#type: "button", "Copy" }
+                        span { class: "copy-status", role: "status" }
+                    }
+                    {children}
+                }
                 footer { class: "site",
                     p {
                         "Published by the "
@@ -202,7 +243,7 @@ fn Status(status: String) -> Element {
         BadgeVariant::Secondary
     };
     rsx! {
-        Badge { variant, class: "chip {status}",
+        Badge { variant, class: "chip {status}", "data-md": " ({status})",
             span { class: "sr-only", "Status: " }
             "{status}"
         }
@@ -214,13 +255,18 @@ fn Index() -> Element {
     let c = REGISTER.counts;
     rsx! {
         h1 { "Bundu standards" }
+        p { "If a standard exists, we adopt it. If none exists, we build one and publish it." }
         p {
-            "If a standard exists we adopt it. If none exists we build one and publish it. Data from a source that does not match is converted at the edge, and only the standard form is stored or served."
+            "Data from a source that does not match a standard is converted at the edge, and only the standard form is stored or served."
         }
         p {
             "The "
             a { href: "/register/", "register" }
-            " lists {c.total} standards: {c.adopted} adopted, {c.proposed} proposed."
+            " lists {c.total} standards: "
+            a { href: "/register/", "{c.adopted} adopted" }
+            " and "
+            a { href: "/register/proposed/", "{c.proposed} proposed" }
+            "."
         }
         h2 { "For other repositories" }
         p { "Read the register at a commit, with no credential. Pin the sha256 of each file." }
@@ -230,29 +276,79 @@ fn Index() -> Element {
     }
 }
 
+/// A register field as paragraphs, with `code` in backticks shown as code. Inline, the
+/// paragraphs run on in one line, for the register's lists.
 #[component]
-fn RegisterIndex() -> Element {
-    let r = &*REGISTER;
-    rsx! {
-        h1 { "Register" }
-        p { "{r.counts.adopted} adopted, {r.counts.proposed} proposed." }
-        nav { "aria-labelledby": "on-this-page",
-            h2 { id: "on-this-page", "On this page" }
-            ul { class: "toc",
-                for d in r.domains.iter() {
-                    li { a { href: "#{d.key}", "{d.title}" } }
+fn Text(text: String, inline: bool) -> Element {
+    let paras = register::paragraphs(&text);
+    if inline {
+        rsx! {
+            for (i, para) in paras.iter().enumerate() {
+                if i > 0 { " " }
+                for (is_code, run) in register::code_spans(para) {
+                    if is_code { code { "{run}" } } else { "{run}" }
                 }
             }
         }
-        for d in r.domains.iter() {
+    } else {
+        rsx! {
+            for para in paras.iter() {
+                p {
+                    for (is_code, run) in register::code_spans(para) {
+                        if is_code { code { "{run}" } } else { "{run}" }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// One tab of the register: the tabs, then the standards of one status, grouped by domain.
+#[component]
+fn RegisterTab(status: String) -> Element {
+    let r = &*REGISTER;
+    let domains = r.domains_with(&status);
+    let n = r.count(&status);
+    let lead = if status == "adopted" {
+        format!("{n} adopted standards. The platform builds on these.")
+    } else {
+        let noun = if n == 1 { "standard" } else { "standards" };
+        format!("{n} proposed {noun}, waiting for the owner's decision to adopt.")
+    };
+    rsx! {
+        h1 { "Register" }
+        nav { class: "tabs", "aria-label": "Standards by status", "data-md-skip": "",
+            ul {
+                for (s, label, href) in register::TABS {
+                    li {
+                        a { href, "aria-current": (s == status).then_some("page"),
+                            "{label} ({r.count(s)})"
+                        }
+                    }
+                }
+            }
+        }
+        p { "{lead}" }
+        if domains.len() > 1 {
+            nav { "aria-labelledby": "on-this-page", "data-md-skip": "",
+                h2 { id: "on-this-page", "On this page" }
+                ul { class: "toc",
+                    for d in domains.iter() {
+                        li { a { href: "#{d.key}", "{d.title}" } }
+                    }
+                }
+            }
+        }
+        for d in domains.iter() {
             section { "aria-labelledby": "{d.key}",
                 h2 { id: "{d.key}", tabindex: "-1", "{d.title}" }
                 ul { class: "list",
                     for s in d.standards.iter() {
                         li {
                             a { href: "/register/{s.id}/", "{s.name}" }
+                            " "
                             Status { status: s.status.clone() }
-                            div { class: "muted", "{s.current}" }
+                            div { class: "muted", Text { text: s.current.clone(), inline: true } }
                         }
                     }
                 }
@@ -266,25 +362,33 @@ fn StandardPage(id: String) -> Element {
     let Some(s): Option<&Standard> = REGISTER.get(&id) else {
         return rsx! {};
     };
+    let (_, tab_label, tab_href) = register::tab_for(&s.status);
+    let tab = tab_label.to_lowercase();
+    let text: Vec<(&str, String)> = [
+        ("Governs", Some(s.governs.clone())),
+        ("Current", Some(s.current.clone())),
+        ("Commitment", Some(s.commitment.clone())),
+        ("Steward", s.steward.clone()),
+        ("Decided", Some(s.decided.clone())),
+    ]
+    .into_iter()
+    .filter_map(|(k, v)| Some((k, v?)))
+    .collect();
     rsx! {
-        nav { "aria-label": "Breadcrumb",
-            p { a { href: "/register/", span { "aria-hidden": "true", "← " } "Register" } }
+        nav { "aria-label": "Breadcrumb", "data-md-skip": "",
+            p { a { href: tab_href, span { "aria-hidden": "true", "← " } "Register: {tab}" } }
         }
         h1 { "{s.name} " Status { status: s.status.clone() } }
         dl {
-            dt { "Governs" } dd { "{s.governs}" }
-            dt { "Current" } dd { "{s.current}" }
-            dt { "Commitment" } dd { "{s.commitment}" }
-            if let Some(steward) = &s.steward {
-                dt { "Steward" } dd { "{steward}" }
+            for (k, v) in text {
+                dt { "{k}" } dd { Text { text: v, inline: false } }
             }
-            dt { "Decided" } dd { "{s.decided}" }
-            dt { "Specification" } dd { a { href: "{s.url}", "{s.url}" } }
+            dt { "Specification" } dd { p { a { href: "{s.url}", "{s.url}" } } }
             if let Some(docs) = &s.docs {
-                dt { "Documentation" } dd { a { href: "{docs}", "{docs}" } }
+                dt { "Documentation" } dd { p { a { href: "{docs}", "{docs}" } } }
             }
             if let Some(notes) = &s.notes {
-                dt { "Notes" } dd { "{notes}" }
+                dt { "Notes" } dd { Text { text: notes.clone(), inline: false } }
             }
         }
     }
@@ -307,15 +411,27 @@ fn Accessibility() -> Element {
             tbody {
                 tr { td { kbd { "Tab" } } td { "Moves to the next link or control. The first stop on every page is " em { "Skip to main content" } "." } }
                 tr { td { kbd { "Shift" } " + " kbd { "Tab" } } td { "Moves back to the previous link or control." } }
-                tr { td { kbd { "Enter" } } td { "Follows the focused link." } }
+                tr { td { kbd { "Enter" } } td { "Follows the focused link or presses the focused button." } }
                 tr { td { kbd { "Space" } " or " kbd { "Page Down" } } td { "Scrolls the page down; " kbd { "Shift" } " + " kbd { "Space" } " or " kbd { "Page Up" } " scrolls up." } }
-                tr { td { "Arrow keys" } td { "Scroll an example block sideways once it has the focus." } }
+                tr { td { "Arrow keys" } td { "Choose a format in " em { "Copy this page as" } ", or scroll an example block sideways once it has the focus." } }
             }
         }
+        p { "The focused item always shows a visible outline in copper." }
         p {
-            "The focused item always shows a visible outline in copper. On the register, "
+            "The register has two tabs, "
+            em { "Adopted" }
+            " and "
+            em { "Proposed" }
+            ". Each tab is a link, and the one you are on is announced as the current page. Within a tab, "
             em { "On this page" }
             " jumps straight to each group of standards."
+        }
+        p {
+            "At the top of every page, "
+            em { "Copy this page as" }
+            " copies the page as Markdown or, where the page has data, as JSON. Choose the format, then press "
+            em { "Copy" }
+            "; a screen reader announces the result."
         }
         h2 { id: "screen-readers", "Using a screen reader" }
         ul {
@@ -338,6 +454,9 @@ fn Accessibility() -> Element {
             "Everything on these pages is also available as data: the register as "
             a { href: "/register/index.json", "JSON" }
             " and each vocabulary term as JSON-LD. Assistive tools and scripts can read it directly."
+        }
+        p {
+            "Any page can also be copied as Markdown, which keeps its headings, lists, tables and links as plain text. Markdown is offered rather than HTML because it reads cleanly anywhere you paste it."
         }
         h2 { id: "checked", "How this is checked" }
         p {
@@ -367,6 +486,7 @@ mod tests {
         let mut paths = vec![
             "/".to_owned(),
             "/register/".into(),
+            "/register/proposed/".into(),
             "/accessibility/".into(),
         ];
         paths.extend(
@@ -385,6 +505,12 @@ mod tests {
             assert!(html.contains(r#"<nav aria-label="Main">"#), "{p}");
             assert!(html.contains(r#"<main id="main" tabindex="-1">"#), "{p}");
             assert_eq!(html.matches("<h1").count(), 1, "{p}: one h1");
+            assert!(
+                html.contains(r#"<div class="copy" data-copy="" data-md-skip="" hidden="hidden">"#),
+                "{p}: the copy control, hidden until its script runs"
+            );
+            assert!(html.contains(r#"<script src="/copy.js" defer"#), "{p}");
+            assert!(!html.contains(r#"value="html""#), "{p}: Markdown, not HTML");
             assert!(
                 html.contains(&format!(r#"<link rel="canonical" href="{SITE}{p}"/>"#)),
                 "{p}"
@@ -408,11 +534,8 @@ mod tests {
         assert!(html.contains(r#"data-slot="badge""#));
         assert!(html.contains(r#"<span class="sr-only">Status: </span>adopted</span>"#));
         let c = REGISTER.counts;
-        assert_eq!(html.matches(r#"data-slot="badge""#).count(), c.total);
-        assert!(html.contains(&format!(
-            "<p>{} adopted, {} proposed.</p>",
-            c.adopted, c.proposed
-        )));
+        assert_eq!(html.matches(r#"data-slot="badge""#).count(), c.adopted);
+        assert!(html.contains(&format!("<p>{} adopted standards.", c.adopted)));
     }
 
     #[test]
@@ -442,5 +565,55 @@ mod tests {
             v["standards"].as_array().unwrap().len(),
             REGISTER.counts.total
         );
+    }
+
+    #[test]
+    fn the_register_has_adopted_and_proposed_tabs() {
+        let c = REGISTER.counts;
+        let adopted = page("/register/");
+        let proposed = page("/register/proposed/");
+        assert!(adopted.contains(&format!(
+            r#"<a href="/register/" aria-current="page">Adopted ({})</a>"#,
+            c.adopted
+        )));
+        assert!(adopted.contains(&format!(
+            r#"<a href="/register/proposed/">Proposed ({})</a>"#,
+            c.proposed
+        )));
+        assert!(proposed.contains(&format!(
+            r#"<a href="/register/proposed/" aria-current="page">Proposed ({})</a>"#,
+            c.proposed
+        )));
+        assert_eq!(proposed.matches(r#"data-slot="badge""#).count(), c.proposed);
+        assert!(REGISTER.get("proposed").is_none(), "the tab's path is free");
+    }
+
+    #[test]
+    fn every_page_with_data_carries_it_for_the_copy_control() {
+        let id = &REGISTER.standards[0].id;
+        let html = page(&format!("/register/{id}/"));
+        let start = html
+            .find(r#"<script type="application/json" id="page-json">"#)
+            .unwrap();
+        let end = html[start..].find("</script>").unwrap() + start;
+        let json = &html[start..end];
+        assert!(json.contains(&format!(r#""id":"{id}""#)));
+        assert!(json.contains(r#""decided":"#), "the whole record");
+        assert!(!page("/accessibility/").contains(r#"id="page-json""#));
+    }
+
+    #[test]
+    fn long_fields_are_paragraphs_and_backticks_are_code() {
+        let html = page("/register/h3/");
+        assert!(html.contains("<code>*_by_cell_*</code>"));
+        let notes = &html[html.find("<dt>Notes</dt>").unwrap()..];
+        assert!(notes.matches("<p>").count() > 1);
+    }
+
+    #[test]
+    fn the_footer_and_home_page_keep_their_spaces() {
+        let home = page("/");
+        assert!(home.contains("accessibility statement</a> or <a"));
+        assert!(home.contains(" adopted</a> and <a"));
     }
 }

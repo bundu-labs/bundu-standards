@@ -211,7 +211,7 @@
     "_schemaVersion": "v3.1",
     "displayName": "BCP 47 language tags",
     "category": "identifier_scheme",
-    "description": "Language tags on content and people (`inLanguage`, `locale`, translations keys).",
+    "description": "Language tags on content and people (`inLanguage`, `locale`, translation keys).",
     "versionCommitment": "RFC 5646 + RFC 4647",
     "specificationUrl": "https://www.rfc-editor.org/info/bcp47",
     "documentationUrl": null,
@@ -795,7 +795,7 @@
     "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -818,7 +818,7 @@
     "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -841,7 +841,7 @@
     "isActive": true,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session"
+      "adoptionRationale": "Adopted: Owner instruction 2026-11-11, in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Proposed earlier the same day on the owner's request relayed via the Shamwari session."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -887,7 +887,7 @@
     "isActive": false,
     "bundu": {
       "isFoundational": false,
-      "adoptionRationale": "Proposed: Proposed 2026-11-11 on the owner's request relayed via the Shamwari session. Left proposed on the owner's instruction the same day in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Its governance is interim (Zed and JetBrains jointly) and no foundation host is confirmed, so adoption awaits a foundation host"
+      "adoptionRationale": "Proposed: Proposed 2026-11-11 on the owner's request relayed via the Shamwari session. Left proposed on the owner's instruction the same day in the coordinator's chat: \"Adopt the three AAIF projects, ACP stays proposed\". Its governance is interim (Zed and JetBrains jointly) and no foundation host is confirmed, so adoption awaits a foundation host."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1660,7 +1660,7 @@
     "_schemaVersion": "v3.1",
     "displayName": "LTI",
     "category": "protocol",
-    "description": "Launching Learning tools inside an LMS such as Toddle.",
+    "description": "Launching learning tools inside an LMS such as Toddle.",
     "versionCommitment": "LTI 1.3 + LTI Advantage",
     "specificationUrl": "https://www.1edtech.org/standards/lti",
     "documentationUrl": null,
@@ -2213,7 +2213,7 @@
     "displayName": "OGC API - Features",
     "category": "protocol",
     "description": "The API shape of a collection of geographic features (items, paging, filtering), which WIS2 nodes use.",
-    "versionCommitment": "Feature collections are served and read as OGC API Features",
+    "versionCommitment": "Feature collections are served and read as OGC API - Features",
     "specificationUrl": "https://ogcapi.ogc.org/features/",
     "documentationUrl": null,
     "stewardOrganisation": "Open Geospatial Consortium (ISO 19168-1)",
@@ -2236,7 +2236,7 @@
     "displayName": "OGC API - Tiles",
     "category": "protocol",
     "description": "The API shape of tiled map data: the landing page, the list of tilesets, a tile by tile matrix, and the conformance classes a server declares. The successor to WMTS.",
-    "versionCommitment": "Tile sets (the base map, weather and places layers) are served and read as OGC API Tiles",
+    "versionCommitment": "Tile sets (the base map, weather and places layers) are served and read as OGC API - Tiles",
     "specificationUrl": "https://www.ogc.org/standards/ogcapi-tiles/",
     "documentationUrl": "https://docs.ogc.org/is/20-057/20-057.html",
     "stewardOrganisation": "Open Geospatial Consortium",
@@ -2332,7 +2332,7 @@
     "specificationUrl": "https://github.com/mapbox/tilejson-spec",
     "documentationUrl": null,
     "stewardOrganisation": "Mapbox (published openly, no standards body)",
-    "usageNotes": "Not a standards-body specification. It sits beside OGC API Tiles for clients (MapLibre) that read a style and not an OGC landing page. OGC API - Tiles (ogc_api_tiles) is the canonical description of a tile set: a TileJSON document is derived from it and never states a bound, zoom range or tile URL that the OGC tileset metadata does not.",
+    "usageNotes": "Not a standards-body specification. It sits beside OGC API - Tiles for clients (MapLibre) that read a style and not an OGC landing page. OGC API - Tiles (ogc_api_tiles) is the canonical description of a tile set: a TileJSON document is derived from it and never states a bound, zoom range or tile URL that the OGC tileset metadata does not.",
     "isActive": true,
     "bundu": {
       "isFoundational": false,

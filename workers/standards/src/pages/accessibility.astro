@@ -20,14 +20,21 @@ import Base from "../layouts/Base.astro";
     <tbody>
       <tr><td><kbd>Tab</kbd></td><td>Moves to the next link or control. The first stop on every page is <em>Skip to main content</em>.</td></tr>
       <tr><td><kbd>Shift</kbd> + <kbd>Tab</kbd></td><td>Moves back to the previous link or control.</td></tr>
-      <tr><td><kbd>Enter</kbd></td><td>Follows the focused link.</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>Follows the focused link or presses the focused button.</td></tr>
       <tr><td><kbd>Space</kbd> or <kbd>Page Down</kbd></td><td>Scrolls the page down; <kbd>Shift</kbd> + <kbd>Space</kbd> or <kbd>Page Up</kbd> scrolls up.</td></tr>
-      <tr><td>Arrow keys</td><td>Scroll an example block sideways once it has the focus.</td></tr>
+      <tr><td>Arrow keys</td><td>Choose a format in <em>Copy this page as</em>, or scroll an example block sideways once it has the focus.</td></tr>
     </tbody>
   </table>
   <p>
-    The focused item always shows a visible outline in copper. On the register, <em>On this page</em> jumps straight
-    to each group of standards.
+    The focused item always shows a visible outline in copper.
+  </p>
+  <p>
+    The register has two tabs, <em>Adopted</em> and <em>Proposed</em>. Each tab is a link, and the one you are on is
+    announced as the current page. Within a tab, <em>On this page</em> jumps straight to each group of standards.
+  </p>
+  <p>
+    At the top of every page, <em>Copy this page as</em> copies the page as Markdown or, where the page has data, as
+    JSON. Choose the format, then press <em>Copy</em>; a screen reader announces the result.
   </p>
 
   <h2 id="screen-readers">Using a screen reader</h2>
@@ -55,6 +62,10 @@ import Base from "../layouts/Base.astro";
   <p>
     Everything on these pages is also available as data: the register as <a href="/register/index.json">JSON</a> and
     each vocabulary term as JSON-LD. Assistive tools and scripts can read it directly.
+  </p>
+  <p>
+    Any page can also be copied as Markdown, which keeps its headings, lists, tables and links as plain text. Markdown is
+    offered rather than HTML because it reads cleanly anywhere you paste it.
   </p>
 
   <h2 id="checked">How this is checked</h2>

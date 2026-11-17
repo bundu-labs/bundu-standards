@@ -1,0 +1,2649 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Bundu standards",
+    "version": "0.1.0",
+    "description": "standards.bundu.org: the register of the open standards the Bundu, Mukoko and Nyuchi platform builds on, our own published standards, and the register's files at any commit. Read-only: every route answers GET and HEAD (and an OPTIONS preflight); any other method is a 405. Pages accept their path with or without the trailing slash; the canonical form is listed. No route takes a query parameter; the query string is ignored. Errors are RFC 9457 problem details. Nothing needs authentication. The routes are checked against the Worker's router by `cargo test` (workers/standards-api/src/openapi.rs).",
+    "contact": {
+      "name": "Bundu Labs",
+      "url": "https://github.com/bundu-labs/bundu-standards"
+    },
+    "license": {
+      "name": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://standards.bundu.org"
+    }
+  ],
+  "security": [],
+  "tags": [
+    {
+      "name": "pages",
+      "description": "HTML pages."
+    },
+    {
+      "name": "register",
+      "description": "The register and the ecosystem as data."
+    },
+    {
+      "name": "documents",
+      "description": "Our own standards: their pages and files."
+    },
+    {
+      "name": "files",
+      "description": "The register's files at a commit of the public repository."
+    },
+    {
+      "name": "meta",
+      "description": "Health and this description."
+    },
+    {
+      "name": "assets",
+      "description": "The stylesheet, script, icons and robots.txt."
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Home page",
+        "description": "The home page: what the register is and how many standards it holds.",
+        "operationId": "getHome",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            },
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Home page (headers only)",
+        "operationId": "headHome",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register/": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Register: adopted standards",
+        "description": "Every adopted standard, by domain. Carries the register as schema.org DefinedTermSet JSON-LD.",
+        "operationId": "getRegister",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            },
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Register: adopted standards (headers only)",
+        "operationId": "headRegister",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register/proposed/": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Register: proposed standards",
+        "description": "Every proposed standard, by domain.",
+        "operationId": "getRegisterProposed",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            },
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Register: proposed standards (headers only)",
+        "operationId": "headRegisterProposed",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register/{id}/": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/StandardId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "One standard's register entry",
+        "description": "A standard's page, with its schema.org DefinedTerm JSON-LD. 404 when the register has no such id.",
+        "operationId": "getRegisterId",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            },
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "One standard's register entry (headers only)",
+        "operationId": "headRegisterId",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundHead"
+          }
+        }
+      }
+    },
+    "/accessibility/": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Accessibility statement",
+        "description": "How standards.bundu.org and vocab.bundu.org work for everyone, and how to report a barrier.",
+        "operationId": "getAccessibility",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            },
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Accessibility statement (headers only)",
+        "operationId": "headAccessibility",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversation-interchange/": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Bundu Conversation Interchange (BCI): the standard",
+        "description": "The page of the standard Bundu Conversation Interchange (BCI), published here, rendered from standards/conversation-interchange/README.md.",
+        "operationId": "getConversationInterchange",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            },
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Bundu Conversation Interchange (BCI): the standard (headers only)",
+        "operationId": "headConversationInterchange",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversation-interchange/README.md": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Bundu Conversation Interchange (BCI): README.md",
+        "description": "The standard's text, as Markdown.",
+        "operationId": "getConversationInterchangeREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "text/markdown; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Bundu Conversation Interchange (BCI): README.md (headers only)",
+        "operationId": "headConversationInterchangeREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversation-interchange/bci.schema.json": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Bundu Conversation Interchange (BCI): bci.schema.json",
+        "description": "The BCI record schema (JSON Schema 2020-12).",
+        "operationId": "getConversationInterchangeBciSchemaJson",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonSchemaDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Bundu Conversation Interchange (BCI): bci.schema.json (headers only)",
+        "operationId": "headConversationInterchangeBciSchemaJson",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversation-interchange/context.jsonld": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Bundu Conversation Interchange (BCI): context.jsonld",
+        "description": "The BCI JSON-LD context.",
+        "operationId": "getConversationInterchangeContextJsonld",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/ld+json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonLdContext"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Bundu Conversation Interchange (BCI): context.jsonld (headers only)",
+        "operationId": "headConversationInterchangeContextJsonld",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversation-interchange/examples/minimal.ndjson": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Bundu Conversation Interchange (BCI): examples/minimal.ndjson",
+        "description": "A minimal BCI export: one JSON record per line.",
+        "operationId": "getConversationInterchangeExamplesMinimalNdjson",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/x-ndjson; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Bundu Conversation Interchange (BCI): examples/minimal.ndjson (headers only)",
+        "operationId": "headConversationInterchangeExamplesMinimalNdjson",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cell/": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Cell: the standard",
+        "description": "The page of the standard Cell, published here, rendered from standards/cell/README.md.",
+        "operationId": "getCell",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            },
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Cell: the standard (headers only)",
+        "operationId": "headCell",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cell/README.md": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Cell: README.md",
+        "description": "The standard's text, as Markdown.",
+        "operationId": "getCellREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "text/markdown; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Cell: README.md (headers only)",
+        "operationId": "headCellREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/weather-colour-scales/": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Weather colour scales: the standard",
+        "description": "The page of the standard Weather colour scales, published here, rendered from standards/weather-colour-scales/README.md.",
+        "operationId": "getWeatherColourScales",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            },
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Weather colour scales: the standard (headers only)",
+        "operationId": "headWeatherColourScales",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/weather-colour-scales/README.md": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Weather colour scales: README.md",
+        "description": "The standard's text, as Markdown.",
+        "operationId": "getWeatherColourScalesREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "text/markdown; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Weather colour scales: README.md (headers only)",
+        "operationId": "headWeatherColourScalesREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/weather-colour-scales/results.md": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Weather colour scales: results.md",
+        "description": "The contrast results for every scale, as Markdown.",
+        "operationId": "getWeatherColourScalesResultsMd",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "text/markdown; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Weather colour scales: results.md (headers only)",
+        "operationId": "headWeatherColourScalesResultsMd",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/weather-colour-scales/scales.json": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Weather colour scales: scales.json",
+        "description": "The colour scales as data.",
+        "operationId": "getWeatherColourScalesScalesJson",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherColourScales"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Weather colour scales: scales.json (headers only)",
+        "operationId": "headWeatherColourScalesScalesJson",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register/index.json": {
+      "get": {
+        "tags": [
+          "register"
+        ],
+        "summary": "The register as JSON",
+        "description": "Every standard in the register with its status, commitment, current version, steward and page.",
+        "operationId": "getRegisterIndexJson",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterIndex"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "register"
+        ],
+        "summary": "The register as JSON (headers only)",
+        "operationId": "headRegisterIndexJson",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ecosystem.jsonld": {
+      "get": {
+        "tags": [
+          "register"
+        ],
+        "summary": "The Bundu ecosystem as JSON-LD",
+        "description": "The organisations, products and works of the Bundu ecosystem: a schema.org Dataset. A static file.",
+        "operationId": "getEcosystemJsonld",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/ld+json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ecosystem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "register"
+        ],
+        "summary": "The Bundu ecosystem as JSON-LD (headers only)",
+        "operationId": "headEcosystemJsonld",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register/latest": {
+      "get": {
+        "tags": [
+          "files"
+        ],
+        "summary": "The head of main",
+        "description": "The commit at the head of `main` and the URLs of the register's four files at that commit. 502 when GitHub cannot be reached.",
+        "operationId": "getRegisterLatest",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Latest"
+                }
+              }
+            }
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "files"
+        ],
+        "summary": "The head of main (headers only)",
+        "operationId": "headRegisterLatest",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGatewayHead"
+          }
+        }
+      }
+    },
+    "/{commit}/register/register.yaml": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Commit"
+        }
+      ],
+      "get": {
+        "tags": [
+          "files"
+        ],
+        "summary": "register/register.yaml at a commit",
+        "description": "The register's source, as YAML. Read from the public repository at that commit; immutable. 404 when the commit does not exist, 502 when GitHub cannot be reached.",
+        "operationId": "getCommitRegisterRegisterYaml",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/Immutable"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/yaml; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "files"
+        ],
+        "summary": "register/register.yaml at a commit (headers only)",
+        "operationId": "headCommitRegisterRegisterYaml",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/Immutable"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundHead"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGatewayHead"
+          }
+        }
+      }
+    },
+    "/{commit}/register/REGISTER.md": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Commit"
+        }
+      ],
+      "get": {
+        "tags": [
+          "files"
+        ],
+        "summary": "register/REGISTER.md at a commit",
+        "description": "The register as a Markdown table. Read from the public repository at that commit; immutable. 404 when the commit does not exist, 502 when GitHub cannot be reached.",
+        "operationId": "getCommitRegisterREGISTERMd",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/Immutable"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "text/markdown; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "files"
+        ],
+        "summary": "register/REGISTER.md at a commit (headers only)",
+        "operationId": "headCommitRegisterREGISTERMd",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/Immutable"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundHead"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGatewayHead"
+          }
+        }
+      }
+    },
+    "/{commit}/register/seed/integrations.standards.json": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Commit"
+        }
+      ],
+      "get": {
+        "tags": [
+          "files"
+        ],
+        "summary": "register/seed/integrations.standards.json at a commit",
+        "description": "The register as database seed records. Read from the public repository at that commit; immutable. 404 when the commit does not exist, 502 when GitHub cannot be reached.",
+        "operationId": "getCommitRegisterSeedIntegrationsStandardsJson",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/Immutable"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Seed"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "files"
+        ],
+        "summary": "register/seed/integrations.standards.json at a commit (headers only)",
+        "operationId": "headCommitRegisterSeedIntegrationsStandardsJson",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/Immutable"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundHead"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGatewayHead"
+          }
+        }
+      }
+    },
+    "/{commit}/register/tools/register.py": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/Commit"
+        }
+      ],
+      "get": {
+        "tags": [
+          "files"
+        ],
+        "summary": "register/tools/register.py at a commit",
+        "description": "The register's tool, as Python source. Read from the public repository at that commit; immutable. 404 when the commit does not exist, 502 when GitHub cannot be reached.",
+        "operationId": "getCommitRegisterToolsRegisterPy",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/Immutable"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "text/x-python; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "files"
+        ],
+        "summary": "register/tools/register.py at a commit (headers only)",
+        "operationId": "headCommitRegisterToolsRegisterPy",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/Immutable"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundHead"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGatewayHead"
+          }
+        }
+      }
+    },
+    "/healthz": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Health",
+        "description": "Always ok while the Worker runs.",
+        "operationId": "getHealthz",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Health (headers only)",
+        "operationId": "headHealthz",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "This OpenAPI document",
+        "description": "The OpenAPI 3.0 description of every route on this host.",
+        "operationId": "getOpenapiJson",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "openapi",
+                    "info",
+                    "paths"
+                  ],
+                  "properties": {
+                    "openapi": {
+                      "type": "string",
+                      "pattern": "^3\\.0\\.\\d+$"
+                    },
+                    "info": {
+                      "type": "object"
+                    },
+                    "paths": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "This OpenAPI document (headers only)",
+        "operationId": "headOpenapiJson",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/openapi.json": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "This OpenAPI document, at its well-known path",
+        "description": "The OpenAPI 3.0 description of every route on this host.",
+        "operationId": "getWellKnownOpenapiJson",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "openapi",
+                    "info",
+                    "paths"
+                  ],
+                  "properties": {
+                    "openapi": {
+                      "type": "string",
+                      "pattern": "^3\\.0\\.\\d+$"
+                    },
+                    "info": {
+                      "type": "object"
+                    },
+                    "paths": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "This OpenAPI document, at its well-known path (headers only)",
+        "operationId": "headWellKnownOpenapiJson",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/styles/site.css": {
+      "get": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "The stylesheet",
+        "description": "The site's one stylesheet.",
+        "operationId": "getStylesSiteCss",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              }
+            },
+            "content": {
+              "text/css; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "The stylesheet (headers only)",
+        "operationId": "headStylesSiteCss",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/robots.txt": {
+      "get": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "robots.txt",
+        "description": "A static file.",
+        "operationId": "getRobotsTxt",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            },
+            "content": {
+              "text/plain; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "robots.txt (headers only)",
+        "operationId": "headRobotsTxt",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/copy.js": {
+      "get": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "The copy-as-JSON control's script",
+        "description": "A static file.",
+        "operationId": "getCopyJs",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            },
+            "content": {
+              "text/javascript": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "The copy-as-JSON control's script (headers only)",
+        "operationId": "headCopyJs",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favicon-16x16.png": {
+      "get": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "Favicon, 16 px, light",
+        "description": "A static file.",
+        "operationId": "getFavicon16x16Png",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            },
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "Favicon, 16 px, light (headers only)",
+        "operationId": "headFavicon16x16Png",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favicon-32x32.png": {
+      "get": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "Favicon, 32 px, light",
+        "description": "A static file.",
+        "operationId": "getFavicon32x32Png",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            },
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "Favicon, 32 px, light (headers only)",
+        "operationId": "headFavicon32x32Png",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favicon-16x16-dark.png": {
+      "get": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "Favicon, 16 px, dark",
+        "description": "A static file.",
+        "operationId": "getFavicon16x16DarkPng",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            },
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "Favicon, 16 px, dark (headers only)",
+        "operationId": "headFavicon16x16DarkPng",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favicon-32x32-dark.png": {
+      "get": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "Favicon, 32 px, dark",
+        "description": "A static file.",
+        "operationId": "getFavicon32x32DarkPng",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            },
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "Favicon, 32 px, dark (headers only)",
+        "operationId": "headFavicon32x32DarkPng",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apple-touch-icon.png": {
+      "get": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "Apple touch icon, 180 px",
+        "description": "A static file.",
+        "operationId": "getAppleTouchIconPng",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            },
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "assets"
+        ],
+        "summary": "Apple touch icon, 180 px (headers only)",
+        "operationId": "headAppleTouchIconPng",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "StandardId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "A standard's id in the register.",
+        "schema": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_]*$"
+        },
+        "example": "schema_org"
+      },
+      "Commit": {
+        "name": "commit",
+        "in": "path",
+        "required": true,
+        "description": "A full commit id of bundu-labs/bundu-standards.",
+        "schema": {
+          "$ref": "#/components/schemas/Commit"
+        }
+      }
+    },
+    "headers": {
+      "PrivateCache": {
+        "description": "Only the visitor's browser may keep a page: it carries a one-time nonce.",
+        "schema": {
+          "type": "string",
+          "example": "private, max-age=300"
+        }
+      },
+      "PublicCache": {
+        "description": "Shared caches may keep it for five minutes.",
+        "schema": {
+          "type": "string",
+          "example": "public, max-age=300"
+        }
+      },
+      "Immutable": {
+        "description": "A commit's file never changes.",
+        "schema": {
+          "type": "string",
+          "example": "public, max-age=31536000, immutable"
+        }
+      },
+      "NoStore": {
+        "description": "Never cached.",
+        "schema": {
+          "type": "string",
+          "example": "no-store"
+        }
+      },
+      "AssetCache": {
+        "description": "A static file: revalidated on every use.",
+        "schema": {
+          "type": "string",
+          "example": "public, max-age=0, must-revalidate"
+        }
+      },
+      "ETag": {
+        "description": "The commit and the file.",
+        "schema": {
+          "type": "string",
+          "example": "\"<commit>:<file>\""
+        }
+      },
+      "AnyOrigin": {
+        "description": "Open to any origin.",
+        "schema": {
+          "type": "string",
+          "example": "*"
+        }
+      },
+      "ContentSecurityPolicy": {
+        "description": "The page's policy, with a fresh nonce.",
+        "schema": {
+          "type": "string",
+          "example": "default-src 'none'; script-src 'self' 'nonce-…'"
+        }
+      }
+    },
+    "responses": {
+      "NotFound": {
+        "description": "Not found.",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          }
+        },
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "BadGateway": {
+        "description": "The repository could not be reached, or answered with an error.",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          }
+        },
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "NotFoundHead": {
+        "description": "Not found (headers only)."
+      },
+      "BadGatewayHead": {
+        "description": "Bad gateway (headers only)."
+      }
+    },
+    "schemas": {
+      "Problem": {
+        "type": "object",
+        "description": "RFC 9457 problem details.",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "detail",
+          "instance"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "about:blank"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "minimum": 400,
+            "maximum": 599
+          },
+          "detail": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string",
+            "description": "The request path."
+          }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok"
+            ]
+          }
+        }
+      },
+      "Commit": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{40}$",
+        "description": "A full, lower-case git commit id."
+      },
+      "Latest": {
+        "type": "object",
+        "required": [
+          "ref",
+          "branch",
+          "files"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "$ref": "#/components/schemas/Commit"
+          },
+          "branch": {
+            "type": "string",
+            "enum": [
+              "main"
+            ]
+          },
+          "files": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "required": [
+                "path",
+                "url"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "enum": [
+                    "register.yaml",
+                    "REGISTER.md",
+                    "seed/integrations.standards.json",
+                    "tools/register.py"
+                  ]
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Counts": {
+        "type": "object",
+        "required": [
+          "total",
+          "adopted",
+          "proposed"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "adopted": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "proposed": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "RegisterEntry": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "domain",
+          "status",
+          "commitment",
+          "current",
+          "steward",
+          "url",
+          "page"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string",
+            "description": "A domain key of register.yaml, such as core or weather."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "adopted",
+              "proposed"
+            ]
+          },
+          "commitment": {
+            "type": "string"
+          },
+          "current": {
+            "type": "string"
+          },
+          "steward": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "page": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "RegisterIndex": {
+        "type": "object",
+        "required": [
+          "count",
+          "standards"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "$ref": "#/components/schemas/Counts"
+          },
+          "standards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegisterEntry"
+            }
+          }
+        }
+      },
+      "SeedRecord": {
+        "type": "object",
+        "description": "One register entry as a database seed record. Its shape is that of the commit asked for.",
+        "required": [
+          "_id",
+          "displayName"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "_schemaVersion": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "versionCommitment": {
+            "type": "string"
+          },
+          "specificationUrl": {
+            "type": "string"
+          },
+          "documentationUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "stewardOrganisation": {
+            "type": "string",
+            "nullable": true
+          },
+          "usageNotes": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "bundu": {
+            "type": "object"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          }
+        }
+      },
+      "Seed": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SeedRecord"
+        }
+      },
+      "EcosystemOrganization": {
+        "type": "object",
+        "required": [
+          "@type",
+          "@id",
+          "identifier",
+          "name",
+          "description",
+          "url"
+        ],
+        "properties": {
+          "@type": {
+            "type": "string",
+            "enum": [
+              "NGO",
+              "Organization"
+            ]
+          },
+          "@id": {
+            "type": "string",
+            "format": "uri"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "dateModified": {
+            "type": "string",
+            "format": "date"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "slogan": {
+            "type": "string"
+          },
+          "audience": {
+            "type": "object",
+            "required": [
+              "@type",
+              "audienceType"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "enum": [
+                  "Audience"
+                ]
+              },
+              "audienceType": {
+                "type": "string"
+              }
+            }
+          },
+          "parentOrganization": {
+            "type": "object",
+            "required": [
+              "@id"
+            ],
+            "properties": {
+              "@id": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "subOrganization": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "@id"
+              ],
+              "properties": {
+                "@id": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          }
+        }
+      },
+      "EcosystemWork": {
+        "type": "object",
+        "required": [
+          "@type",
+          "@id",
+          "identifier",
+          "name",
+          "description",
+          "creativeWorkStatus",
+          "maintainer"
+        ],
+        "properties": {
+          "@type": {
+            "type": "string",
+            "enum": [
+              "SoftwareApplication",
+              "CreativeWork"
+            ]
+          },
+          "@id": {
+            "type": "string",
+            "format": "uri"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "dateModified": {
+            "type": "string",
+            "format": "date"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "creativeWorkStatus": {
+            "type": "string"
+          },
+          "maintainer": {
+            "type": "object",
+            "required": [
+              "@id"
+            ],
+            "properties": {
+              "@id": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "creator": {
+            "type": "object",
+            "required": [
+              "@id"
+            ],
+            "properties": {
+              "@id": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "audience": {
+            "type": "object",
+            "required": [
+              "@type",
+              "audienceType"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "enum": [
+                  "Audience"
+                ]
+              },
+              "audienceType": {
+                "type": "string"
+              }
+            }
+          },
+          "softwareRequirements": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      },
+      "EcosystemTermSet": {
+        "type": "object",
+        "required": [
+          "@type",
+          "@id",
+          "name",
+          "hasDefinedTerm"
+        ],
+        "properties": {
+          "@type": {
+            "type": "string",
+            "enum": [
+              "DefinedTermSet"
+            ]
+          },
+          "@id": {
+            "type": "string",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string"
+          },
+          "hasDefinedTerm": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "@type",
+                "@id",
+                "name",
+                "termCode"
+              ],
+              "properties": {
+                "@type": {
+                  "type": "string",
+                  "enum": [
+                    "DefinedTerm"
+                  ]
+                },
+                "@id": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "identifier": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string",
+                  "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                },
+                "dateModified": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "termCode": {
+                  "type": "string"
+                },
+                "inDefinedTermSet": {
+                  "type": "object",
+                  "required": [
+                    "@id"
+                  ],
+                  "properties": {
+                    "@id": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Ecosystem": {
+        "type": "object",
+        "description": "A schema.org Dataset of the ecosystem's parts.",
+        "required": [
+          "@context",
+          "@id",
+          "@type",
+          "name",
+          "version",
+          "dateModified",
+          "license",
+          "url",
+          "publisher",
+          "hasPart"
+        ],
+        "properties": {
+          "@context": {
+            "type": "string",
+            "enum": [
+              "https://schema.org"
+            ]
+          },
+          "@id": {
+            "type": "string",
+            "format": "uri"
+          },
+          "@type": {
+            "type": "string",
+            "enum": [
+              "Dataset"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "dateModified": {
+            "type": "string",
+            "format": "date"
+          },
+          "description": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string",
+            "format": "uri"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "publisher": {
+            "type": "object",
+            "required": [
+              "@id"
+            ],
+            "properties": {
+              "@id": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          },
+          "hasPart": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/EcosystemOrganization"
+                },
+                {
+                  "$ref": "#/components/schemas/EcosystemWork"
+                },
+                {
+                  "$ref": "#/components/schemas/EcosystemTermSet"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "JsonLdContext": {
+        "type": "object",
+        "required": [
+          "@context"
+        ],
+        "properties": {
+          "@context": {
+            "type": "object"
+          }
+        }
+      },
+      "JsonSchemaDocument": {
+        "type": "object",
+        "required": [
+          "$schema",
+          "$id"
+        ],
+        "properties": {
+          "$schema": {
+            "type": "string",
+            "format": "uri"
+          },
+          "$id": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "WeatherColourScales": {
+        "type": "object",
+        "required": [
+          "version",
+          "status",
+          "rules",
+          "scales"
+        ],
+        "properties": {
+          "$comment": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "adopted",
+              "proposed"
+            ]
+          },
+          "rules": {
+            "type": "array",
+            "items": {}
+          },
+          "scales": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}

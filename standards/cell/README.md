@@ -15,7 +15,7 @@ to SiafuDB: on the device and at the edge a cell is a SiafuDB node keyed by its 
 SiafuDB Graph Sync Protocol carries cells from device to cloud to pod without reshaping them.
 
 - Spec: [SPEC.md](https://github.com/siafuDB/cell/blob/main/SPEC.md)
-- Register entry: `cell` in [register/register.yaml](../../register/register.yaml)
+- Register entry: [`cell`](https://standards.bundu.org/register/cell/) in the register
 - How the Foundation proposes a standard:
   [Open standards playbook](https://docs.bundu.org/bundu/playbooks/open-standards/)
 

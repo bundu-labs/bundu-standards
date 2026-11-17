@@ -49,6 +49,8 @@ fn primary_json(files: &serde_json::Map<String, serde_json::Value>) -> Option<se
 /// The stylesheet, served at [`CSS_PATH`]. One file for the Astro and the Rust builds.
 pub const CSS: &str = include_str!("../../standards/src/styles/site.css");
 pub const CSS_PATH: &str = "/styles/site.css";
+/// Where the OpenAPI description is served; also at `/.well-known/openapi.json`.
+pub const OPENAPI_PATH: &str = "/openapi.json";
 
 /// A rendered page or document.
 pub struct Page {
@@ -95,6 +97,11 @@ pub fn render(path: &str) -> Option<Page> {
         "/register/index.json" => Some(Page {
             content_type: "application/json; charset=utf-8",
             body: register::index_json(r, SITE),
+        }),
+        // This host's OpenAPI description, for API clients and Cloudflare's schema validation.
+        OPENAPI_PATH | "/.well-known/openapi.json" => Some(Page {
+            content_type: "application/json",
+            body: crate::openapi::OPENAPI.to_owned(),
         }),
         "/accessibility" => html(document(
             path,
@@ -221,6 +228,8 @@ fn Base(
                 meta { name: "theme-color", content: "#fbfaf7", "media": "(prefers-color-scheme: light)" }
                 meta { name: "theme-color", content: "#141412", "media": "(prefers-color-scheme: dark)" }
                 link { rel: "stylesheet", href: CSS_PATH }
+                // The OpenAPI description of every route here (RFC 8631 service-desc).
+                link { rel: "service-desc", r#type: "application/openapi+json", href: OPENAPI_PATH }
                 if let Some(ld) = json_ld {
                     script { r#type: "application/ld+json", dangerous_inner_html: "{ld}" }
                 }

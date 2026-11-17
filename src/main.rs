@@ -43,19 +43,7 @@ async fn main() {
         )
         .init();
 
-    let app = Router::new()
-        .route("/", get(index))
-        .route("/health", get(|| async { "ok" }))
-        .route("/context.jsonld", get(context))
-        .route("/favicon-32x32.png", get(|| icon(FAVICON_32)))
-        .route("/favicon-16x16.png", get(|| icon(FAVICON_16)))
-        .route("/favicon-32x32-dark.png", get(|| icon(FAVICON_32_DARK)))
-        .route("/favicon-16x16-dark.png", get(|| icon(FAVICON_16_DARK)))
-        .route("/apple-touch-icon.png", get(|| icon(APPLE_TOUCH_ICON)))
-        .route("/copy.js", get(copy_js))
-        .route("/:term", get(term))
-        .layer(CompressionLayer::new())
-        .layer(TraceLayer::new_for_http());
+    let app = app();
 
     let addr: SocketAddr = std::env::var("LISTEN_ADDR")
         .unwrap_or_else(|_| "0.0.0.0:8080".to_string())
@@ -67,6 +55,24 @@ async fn main() {
         .expect("cannot bind");
     tracing::info!("bundu-vocab listening on {addr}");
     axum::serve(listener, app).await.expect("server failed");
+}
+
+/// The routes. axum 0.8 writes a path parameter as `{term}`; the old `:term` form panics
+/// when the router is built, which only a test that builds this router catches.
+fn app() -> Router {
+    Router::new()
+        .route("/", get(index))
+        .route("/health", get(|| async { "ok" }))
+        .route("/context.jsonld", get(context))
+        .route("/favicon-32x32.png", get(|| icon(FAVICON_32)))
+        .route("/favicon-16x16.png", get(|| icon(FAVICON_16)))
+        .route("/favicon-32x32-dark.png", get(|| icon(FAVICON_32_DARK)))
+        .route("/favicon-16x16-dark.png", get(|| icon(FAVICON_16_DARK)))
+        .route("/apple-touch-icon.png", get(|| icon(APPLE_TOUCH_ICON)))
+        .route("/copy.js", get(copy_js))
+        .route("/{term}", get(term))
+        .layer(CompressionLayer::new())
+        .layer(TraceLayer::new_for_http())
 }
 
 /// Does the caller want HTML?
@@ -1101,5 +1107,28 @@ mod tests {
             html.contains(r#"<pre tabindex="0" role="region" aria-label="Example request">"#),
             "the example block takes the focus, so it can scroll with the keyboard"
         );
+    }
+
+    /// The real router, as `main` serves it: building it would panic on a path syntax the
+    /// axum version rejects, and every route must answer.
+    #[tokio::test]
+    async fn the_router_builds_and_every_route_answers() {
+        use tower::ServiceExt;
+        for (path, status) in [
+            ("/", StatusCode::OK),
+            ("/health", StatusCode::OK),
+            ("/context.jsonld", StatusCode::OK),
+            ("/copy.js", StatusCode::OK),
+            ("/favicon-32x32.png", StatusCode::OK),
+            ("/Family", StatusCode::OK),
+            ("/notATerm", StatusCode::NOT_FOUND),
+        ] {
+            let req = axum::http::Request::builder()
+                .uri(path)
+                .body(axum::body::Body::empty())
+                .unwrap();
+            let res = app().oneshot(req).await.unwrap();
+            assert_eq!(res.status(), status, "{path}");
+        }
     }
 }

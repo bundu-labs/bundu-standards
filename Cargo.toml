@@ -11,12 +11,16 @@ description = "The Bundu vocabulary — RDF terms for concepts schema.org has no
 
 [dependencies]
 tokio = { version = "1.40", features = ["macros", "rt-multi-thread", "signal"] }
-axum = "0.7"
-tower-http = { version = "0.6", features = ["trace", "compression-br"] }
+axum = "0.8"
+tower-http = { version = "0.7", features = ["trace", "compression-br"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+# Drives the real router in tests (ServiceExt::oneshot).
+tower = { version = "0.5", features = ["util"] }
 
 [profile.release]
 opt-level = 3

@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Test & Build
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -73,14 +73,14 @@ jobs:
       contents: write
     steps:
       # This job pushes the tag, so its checkout keeps GITHUB_TOKEN.
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Read the version
         id: read
         run: echo "version=$(grep -m1 '^version = ' Cargo.toml | cut -d'"' -f2)" >> "$GITHUB_OUTPUT"
 
       - name: Check it against the versioning policy
-        uses: nyuchi/.github/.github/actions/next-version@c2be05a22aeb6a98a80a9301f6b3e33bb88b20b0  # v0.2.0
+        uses: nyuchi/.github/.github/actions/next-version@925d067322defd676dacd90f2c2b0540cb10f644  # v0.11.1
         with:
           channel: main
           bump: ${{ inputs.bump || '' }}

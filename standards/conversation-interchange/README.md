@@ -123,8 +123,8 @@ dropped and reported.
    `standards.bundu.org/conversation-interchange/`, and is the publisher of record the Bundu Foundation?
 2. **Vocabulary. Answered 2026-11-17.** The nine `bundu:` terms `context.jsonld` names
    (`Project`, `Artifact`, `MemoryEntry`, `scope`, `pinned`, `instructions`, `skill`, `provenance`,
-   `consent`) are in `vocab.bundu.org` (`src/terms.rs`), pending (`vs:term_status` testing) until
-   BCI is published, under the subject area "Conversations and assistants". `bundu:Project` is kept
+   `consent`) are in `vocab.bundu.org` (`src/terms.rs`), stable since 2026-11-17 (BCI is adopted and
+   published), under the subject area "Conversations and assistants". `bundu:Project` is kept
    and extends `schema:CreativeWork`, because `schema:Project` is an Organization subtype.
    `bundu:Artifact` is kept, not renamed, so streams already written stay valid; its definition maps
    it to the A2A Artifact (an A2A Artifact a person keeps becomes one, its parts as the text or file).

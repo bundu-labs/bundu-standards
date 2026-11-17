@@ -24,13 +24,31 @@ the register's, each read at source on the date it records.
 | Skills               | load reusable skills as `SKILL.md` folders                       | Agent Skills (`agent_skills`, adopted)                              | unversioned (no tags); Apache-2.0 code, CC-BY-4.0 docs                                                                |
 | Model wire shape     | exchange one request and response as Open Responses items        | Open Responses (`open_responses`, adopted)                          | pin the dated OpenAPI file (2026-04-24), not `openapi.json`; Apache-2.0                                               |
 | Agent to agent       | delegate to other agents through A2A                             | A2A (`a2a`, adopted)                                                | 1.0.0                                                                                                                 |
-| Sandbox lifecycle    | create, run in and destroy a sandbox through a standard protocol | OpenSandbox (`opensandbox`, **proposed** 2026-11-17)                | Lifecycle API 0.1.0 (pre-v1), Execd API 1.0.0; Apache-2.0; an AAIF project. **Measured** 2026-11-17 at commit f1e4ac0 |
+| Sandbox lifecycle    | create, run in and destroy a sandbox through a standard protocol | OpenSandbox (`opensandbox`, adopted 2026-11-17)                     | Lifecycle API 0.1.0 (pre-v1), Execd API 1.0.0; Apache-2.0; an AAIF project. **Measured** 2026-11-17 at commit f1e4ac0 |
 | Editor to agent      | if it talks to an editor, use ACP                                | Agent Client Protocol (`agent_client_protocol`, adopted 2026-11-15) | protocol v1; Apache-2.0; interim Zed and JetBrains governance, no foundation host                                     |
-| Stored conversations | export and import chats, projects, saved answers                 | BCI (`bci`, adopted 2026-11-15)                                     | 0.1.0; first implementation nyuchi/nyuchi-servers-api#50; vocabulary terms pending in vocab.bundu.org                 |
+| Stored conversations | export and import chats, projects, saved answers                 | BCI (`bci`, adopted 2026-11-15)                                     | 0.1.0; first implementation nyuchi/nyuchi-servers-api#50; vocabulary terms stable in vocab.bundu.org                  |
 | Session log          | write each session as an ordered trajectory                      | ATIF (`atif`, adopted 2026-11-14)                                   | ATIF-v1.8 (RFC 0001, Active, April 2026); Apache-2.0                                                                  |
 
-ACP and BCI were adopted in #70 (merged 2026-11-17). OpenSandbox is the one row whose standard is not yet adopted; adopting it is the owner's
-decision. Bundu runs no sandbox today, so the row applies only once a Bundu harness runs code.
+ACP and BCI were adopted in #70 (merged 2026-11-17), and OpenSandbox by the owner on 2026-11-17.
+Every row's standard is now adopted. OpenSandbox's Lifecycle API is pre-v1, so a harness pins the
+OpenAPI files it builds against. Bundu runs no sandbox today, so that row applies only once a Bundu
+harness runs code.
+
+### The Agentic AI Foundation's projects
+
+The AAIF lists ten projects (aaif.io/projects, read 2026-11-17). **Measured.**
+
+- **In the table above (6):** MCP, AGENTS.md, Agent Skills, Open Responses, A2A and OpenSandbox.
+- **OpenEnv: proposed** (`openenv`). These are environments for training agents with
+  reinforcement learning, from Hugging Face, under BSD-3-Clause. Its environment spec (RFC 002) is
+  still In Review, and Bundu trains no agents that way today, so it is not a harness row yet.
+- **Implementations, not standards (3):**
+  - goose, an agent (see the dialect table in section 3);
+  - agentgateway, a gateway for agents, models and tools;
+  - Agent Router, a gateway on Envoy for models and MCP tools.
+
+  All three are Apache-2.0. A Bundu harness may use them, but the register lists standards, so they
+  are noted here and not there.
 
 ## 2. Parts a second gap check found partly covered
 
@@ -134,7 +152,8 @@ it.
 
 What is left is the owner's, not the checklist's:
 
-1. Adopt OpenSandbox, or leave it proposed (register id `opensandbox`).
+1. Adopt OpenEnv once its spec is accepted and Bundu trains agents, or leave it proposed (register
+   id `openenv`).
 2. Whether to write a Bundu profile for the two partly covered gaps: context policy, and permission
    grants. `AGENTS.md`'s rule says to write one where none exists. The checklist does not start one.
 3. Running this checklist against Shamwari's harness (`shamwari-ai/shamwari`). The data-plane audit

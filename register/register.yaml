@@ -106,10 +106,11 @@ standards:
       Live terms (CC0); additions by review in bundu-labs/bundu-standards;
       flat URIs (vocab.bundu.org/<term>); stable terms never change meaning
     current: >-
-      48 terms (38 stable, 10 testing). 0.1.3 made the AI guardrail terms
+      48 terms (47 stable, 1 testing). 0.1.3 made the AI guardrail terms
       stable, 0.1.4 added notificationPreference (testing), and the nine
-      Bundu Conversation Interchange terms follow in testing (next release).
-      Live once the bundu-vocab deploy runs.
+      Bundu Conversation Interchange terms were added in testing and made
+      stable on 2026-11-17, once BCI was adopted and published. Live once
+      the bundu-vocab deploy runs.
     governs: >-
       Terms Schema.org lacks. Stable: Family, Community, PlaceOwner,
       PublishingHouse, NewsDesk, recognitionBasis, verificationTier,
@@ -122,9 +123,11 @@ standards:
       with BAGS-01 to BAGS-12.
 
       Testing: notificationPreference
-      (identity.persons.notificationPreferences), and the Bundu Conversation
-      Interchange terms Project, Artifact, MemoryEntry, scope, pinned,
-      instructions, skill, provenance and consent (until BCI is published).
+      (identity.persons.notificationPreferences).
+
+      Stable since 2026-11-17, for the Bundu Conversation Interchange:
+      Project, Artifact, MemoryEntry, scope, pinned, instructions, skill,
+      provenance and consent.
 
       Proposed, not yet in the
       live index: trustScore (a cached schema.org Rating per trust context
@@ -831,11 +834,12 @@ standards:
       endpoints, egress network policy, a write-only credential vault), and
       how it runs code, commands and file operations inside one (Execd API:
       code contexts, sessions, commands with logs, files and directories).
-    status: proposed
+    status: adopted
     decided: >-
-      Proposed 2026-11-17 to close the sandbox row of the harness conformance
-      checklist (standards/harness-checklist/), on the owner's request "finish
-      the harness checklist". Adoption is the owner's decision.
+      Owner adopted 2026-11-17: "Yes to open sandbox". Proposed the same day to
+      close the sandbox row of the harness conformance checklist
+      (standards/harness-checklist/). Adopted with its Lifecycle API pre-v1:
+      pin the OpenAPI files, and re-read them when it reaches 1.0.
     url: https://github.com/opensandbox-group/OpenSandbox/tree/main/specs
     docs: https://open-sandbox.ai/
     notes: >-
@@ -858,6 +862,48 @@ standards:
     rationale: >-
       A standard sandbox protocol exists under a foundation, so a harness uses it
       rather than defining its own (AGENTS.md, the rule).
+
+  - id: openenv
+    name: OpenEnv (environments for training AI agents)
+    domain: agents
+    category: specification
+    steward: >-
+      OpenEnv a Series of LF Projects, LLC, under the Agentic AI Foundation
+      (AAIF); contributed by Hugging Face
+    commitment: >-
+      Pin the release a trainer or environment builds against; the
+      environment spec is an RFC still in review.
+    current: >-
+      Release v0.13.0 (git tag; pyproject 0.13.1.dev0 on main). The
+      environment spec is RFC 002 "OpenEnv Framework Spec for agent execution
+      environments", status In Review (created 2025-10-14, amended
+      2025-11-12); RFC 005 "Agentic Harness Integration" is also In Review.
+      Read 2026-11-17 at github.com/huggingface/OpenEnv commit 1ee1751.
+    governs: >-
+      How a reinforcement-learning environment for an agent is packaged and
+      called: a containerised service that exposes a Gym-style training
+      interface and MCP to the agent, so environments are interchangeable
+      between training libraries.
+    status: proposed
+    decided: >-
+      Proposed 2026-11-17 on the owner's request to note the other AAIF
+      projects ("the env one and others"). Not adopted: its spec is not yet
+      accepted, and Bundu trains no agents with reinforcement learning today.
+    url: https://github.com/huggingface/OpenEnv/blob/main/rfcs/002-env-spec.md
+    docs: https://huggingface.co/docs/openenv/index
+    notes: >-
+      Licence BSD-3-Clause (repository LICENSE, measured 2026-11-17).
+
+      Foundation host: confirmed. TECHNICAL_CHARTER.md establishes "OpenEnv a
+      Series of LF Projects, LLC", adopted 2026-10-22, and AAIF announced it
+      as a project that day (aaif.io/news/agentic-ai-foundation-announces-four-new-projects).
+
+      The other AAIF projects not in this register are implementations, not
+      standards, so they are noted in the harness checklist instead: goose
+      (an agent), agentgateway and Agent Router (gateways), all Apache-2.0.
+    rationale: >-
+      If Bundu trains agents, environments follow the foundation-hosted format
+      rather than a private one (AGENTS.md, the rule).
 
   - id: agent_client_protocol
     name: Agent Client Protocol (ACP)

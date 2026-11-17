@@ -166,6 +166,11 @@ Versions released before then are not renumbered.
 
 ### Fixed
 
+- standards.bundu.org's content security policy allows `connect-src 'self'`.
+  With the nonce live, Cloudflare's bot detection ran but its report to
+  `/cdn-cgi/challenge-platform/` on the same origin was blocked, because the
+  policy allowed no connections at all. It may now connect to this origin and
+  nowhere else.
 - standards.bundu.org's content security policy now carries a fresh nonce on
   every page (128 bits from the Worker's cryptographic random source). Cloudflare
   reads it and stamps it on the inline script its bot detection injects, so Bot

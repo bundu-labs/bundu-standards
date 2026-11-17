@@ -1,8 +1,9 @@
-# Harness conformance checklist (draft)
+# Harness conformance checklist
 
-**Status:** draft checklist. It is not a standard. It has no schema, no vocabulary terms and no
-register entry, and it is not published to standards.bundu.org. Nothing here merges without the
-owner's go. Tracked in [#50](https://github.com/bundu-labs/bundu-standards/issues/50).
+**Status:** complete as of 2026-11-17, on the owner's request "finish the harness checklist". It is
+a checklist, not a standard. It has no schema, no vocabulary terms and no register entry of its own,
+and it is not published to standards.bundu.org. Tracked in
+[#50](https://github.com/bundu-labs/bundu-standards/issues/50).
 
 A _harness_ is the loop around a model: it builds the context, calls the model, runs tools, asks
 for permission, keeps a log and may run code in a sandbox. Following `AGENTS.md` ("adopt the global
@@ -13,17 +14,24 @@ the gaps. Claims are labelled **measured** (read at source on the date and URL g
 
 ## 1. Parts that already have a standard: use it
 
-| Part                 | A conforming harness must…                                       | Use                                                                          | Version / licence (measured 2026-11-11)                                                     |
-| -------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Tools and context    | call tools and read context through the Model Context Protocol   | MCP (in the register)                                                        | version `2026-07-28` per the coordinator's register check                                   |
-| Instructions         | read project instructions from `AGENTS.md`                       | AGENTS.md (adopted)                                                          | unversioned; MIT                                                                            |
-| Skills               | load reusable skills as `SKILL.md` folders                       | Agent Skills (adopted)                                                       | unversioned (no tags); Apache-2.0 code, CC-BY-4.0 docs                                      |
-| Model wire shape     | exchange one request and response as Open Responses items        | Open Responses (adopted)                                                     | pin the dated OpenAPI file (latest 2026-04-24), not `openapi.json`; Apache-2.0              |
-| Agent to agent       | delegate to other agents through A2A                             | A2A (in the register)                                                        | 1.0.0 per the coordinator's register check                                                  |
-| Sandbox lifecycle    | create, run in and destroy a sandbox through a standard protocol | OpenSandbox (Agentic AI Foundation project; **not yet read at source here**) | not verified                                                                                |
-| Editor to agent      | if it talks to an editor, use ACP                                | Agent Client Protocol (`proposed`)                                           | protocol v1 stable; Apache-2.0; Zed-led, no foundation host found (coordinator, 2026-11-11) |
-| Stored conversations | export and import chats, projects, saved answers                 | Bundu Conversation Interchange (draft, #47)                                  | draft 0.1.0                                                                                 |
-| Session log          | write each session as an ordered trajectory                      | ATIF (adopted 2026-11-14)                                                    | ATIF-v1.8 (RFC 0001, Active, April 2026); Apache-2.0                                        |
+Every row below is a standard in the register (`register/register.yaml`). The version and licence are
+the register's, each read at source on the date it records.
+
+| Part                 | A conforming harness must…                                       | Use (register id, status)                                           | Version / licence                                                                                                     |
+| -------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Tools and context    | call tools and read context through the Model Context Protocol   | MCP (`mcp`, adopted)                                                | revision 2026-07-28                                                                                                   |
+| Instructions         | read project instructions from `AGENTS.md`                       | AGENTS.md (`agents_md`, adopted)                                    | unversioned; MIT                                                                                                      |
+| Skills               | load reusable skills as `SKILL.md` folders                       | Agent Skills (`agent_skills`, adopted)                              | unversioned (no tags); Apache-2.0 code, CC-BY-4.0 docs                                                                |
+| Model wire shape     | exchange one request and response as Open Responses items        | Open Responses (`open_responses`, adopted)                          | pin the dated OpenAPI file (2026-04-24), not `openapi.json`; Apache-2.0                                               |
+| Agent to agent       | delegate to other agents through A2A                             | A2A (`a2a`, adopted)                                                | 1.0.0                                                                                                                 |
+| Sandbox lifecycle    | create, run in and destroy a sandbox through a standard protocol | OpenSandbox (`opensandbox`, **proposed** 2026-11-17)                | Lifecycle API 0.1.0 (pre-v1), Execd API 1.0.0; Apache-2.0; an AAIF project. **Measured** 2026-11-17 at commit f1e4ac0 |
+| Editor to agent      | if it talks to an editor, use ACP                                | Agent Client Protocol (`agent_client_protocol`, adopted 2026-11-15) | protocol v1; Apache-2.0; interim Zed and JetBrains governance, no foundation host                                     |
+| Stored conversations | export and import chats, projects, saved answers                 | BCI (`bci`, adopted 2026-11-15)                                     | 0.1.0; first implementation nyuchi/nyuchi-servers-api#50; vocabulary terms pending in vocab.bundu.org                 |
+| Session log          | write each session as an ordered trajectory                      | ATIF (`atif`, adopted 2026-11-14)                                   | ATIF-v1.8 (RFC 0001, Active, April 2026); Apache-2.0                                                                  |
+
+ACP's and BCI's adoption is in #70; until it merges, the register on `staging` still shows them
+proposed. OpenSandbox is the one row whose standard is not yet adopted; adopting it is the owner's
+decision. Bundu runs no sandbox today, so the row applies only once a Bundu harness runs code.
 
 ## 2. Parts a second gap check found partly covered
 

@@ -874,6 +874,29 @@
     }
   },
   {
+    "_id": "standard_opensandbox",
+    "_schemaVersion": "v3.1",
+    "displayName": "OpenSandbox (sandbox lifecycle and execution APIs)",
+    "category": "protocol",
+    "description": "How a harness creates, pauses, resumes, snapshots and destroys a sandbox (Lifecycle API, base path /v1: sandboxes, snapshots, templates, expiry, endpoints, egress network policy, a write-only credential vault), and how it runs code, commands and file operations inside one (Execd API: code contexts, sessions, commands with logs, files and directories).",
+    "versionCommitment": "Pin the OpenAPI files a harness builds against (Lifecycle API 0.1.0, Execd API 1.0.0, Egress API 0.1.0); the Lifecycle API is pre-v1.",
+    "specificationUrl": "https://github.com/opensandbox-group/OpenSandbox/tree/main/specs",
+    "documentationUrl": "https://open-sandbox.ai/",
+    "stewardOrganisation": "OpenSandbox a Series of LF Projects, LLC, under the Agentic AI Foundation (AAIF); maintainers mainly Alibaba-affiliated",
+    "usageNotes": "Licence Apache-2.0 (repository LICENSE, measured 2026-11-17). Foundation host: confirmed. The AAIF proposal (aaif/project-proposals#26, opened 2026-05-05) is closed as completed with the labels Approved, Sandbox and contribution-agreement/signed, and CHARTER.md establishes \"OpenSandbox a Series of LF Projects, LLC\", adopted 2026-10-20, with AAIF named as its foundation contact. Caveats, measured in the same proposal thread: a reviewer noted that the Lifecycle API is pre-v1 and that some behaviour is still defined by the reference implementation; the proposers state that maintainers are primarily Alibaba-affiliated and that governance is to broaden. Bundu runs no sandbox today: Shamwari's data plane (nyuchi/nyuchi-servers-api) executes no model-written code. The entry matters when a Bundu harness runs code.",
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "A standard sandbox protocol exists under a foundation, so a harness uses it rather than defining its own (AGENTS.md, the rule)."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_agent_client_protocol",
     "_schemaVersion": "v3.1",
     "displayName": "Agent Client Protocol (ACP)",

@@ -2001,6 +2001,29 @@
     }
   },
   {
+    "_id": "standard_cell",
+    "_schemaVersion": "v3.1",
+    "displayName": "Bundu Cell (.cell), the personal data store format",
+    "category": "data_format",
+    "description": "How one record a person owns (a cell) is written so it is the same bytes in a .cell file or a database row keyed by its @id: JSON-LD 1.1 with schema.org types and a CommonMark text field that may name facts only as {{field}}. Each cell carries an RFC 8785 (JCS) hash, a VC Data Integrity proof and a version chain. A pod is one person's cells; the Nyuchi Honeycomb holds pods and adopts the Solid Protocol for them.",
+    "versionCommitment": "0.1.0 draft (semver); nothing is final until the owner approves its scope.",
+    "specificationUrl": "https://standards.bundu.org/cell/",
+    "documentationUrl": null,
+    "stewardOrganisation": "Bundu Foundation",
+    "usageNotes": null,
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "Personal data stays on the device and in the person's isolated cloud space, and moves to Honeycomb pods without being reshaped. No standard defines a portable record whose facts and prose cannot diverge, so we write one (AGENTS.md, the rule)."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
     "_id": "standard_us_epa_aqi",
     "_schemaVersion": "v3.1",
     "displayName": "US Air Quality Index (AQI) categories and colours",

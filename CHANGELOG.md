@@ -57,6 +57,12 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- Bundu Cell (`.cell`) 0.1.0 draft (`standards/cell/`, register id `cell`,
+  proposed): the personal data store format. A cell is JSON-LD with schema.org types
+  and a CommonMark `text` that may name facts only as `{{field}}`, stored as the
+  same bytes in a file or a database row keyed by `@id`, with a JCS hash, a Data
+  Integrity proof and a version chain (#107).
+
 - standards.bundu.org publishes our own standards. `/weather-colour-scales/`
   and `/conversation-interchange/` were linked from the register but answered
   404; each now serves its README as a page, with its status, a link to its

@@ -101,6 +101,9 @@ jobs:
           python3 standards/weather-colour-scales/scales.py check
           python3 -m unittest standards/weather-colour-scales/test_scales.py
 
+      - name: Bundu Cell prototype stress tests
+        run: node --test standards/cell/tools/cell.test.mjs
+
   # standards.bundu.org: the Worker that serves the register at a commit.
   endpoint:
     runs-on: ubuntu-latest

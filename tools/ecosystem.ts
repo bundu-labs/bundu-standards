@@ -19,7 +19,8 @@ const OUTPUTS = {
   served: "workers/standards/public/ecosystem.jsonld",
 };
 
-export const STATUSES = ["canonical", "live", "beta", "in-development", "planned", "retired"];
+// "proposed": designed, not being built yet (a future build-out). Terms only, never a product.
+export const STATUSES = ["canonical", "live", "beta", "in-development", "planned", "proposed", "retired"];
 export const PRODUCT_STATUSES = ["live", "beta", "in-development", "planned", "retired"];
 export const CONSTRAINTS = [
   "outdoor-readability",
@@ -121,6 +122,7 @@ const STATUS_LABEL: Record<string, string> = {
   beta: "Beta",
   "in-development": "In development",
   planned: "Planned",
+  proposed: "Proposed",
   retired: "Retired",
 };
 

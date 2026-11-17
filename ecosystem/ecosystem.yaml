@@ -173,6 +173,18 @@ engineering_constraints:
   - id: bundu-floor
 
 terms:
+  - id: platform-tokens
+    name: Platform tokens (MIT, MXT, NST, NHC)
+    owner: mukoko
+    version: 0.1.0
+    status: proposed
+    last_reviewed: 2026-11-17
+    description: >-
+      A proposed Mukoko project and a future build-out, not on the current roadmap (owner,
+      2026-11-17). Four tokens are proposed: MIT (identity, soulbound) and MXT (exchange) for
+      Mukoko, NST and NHC for the Nyuchi Honeycomb. Not in development, none issued, none on
+      sale. Never described as live, scheduled or governed today.
+
   - id: nyuchi-honeycomb
     name: Nyuchi Honeycomb
     owner: nyuchi-africa

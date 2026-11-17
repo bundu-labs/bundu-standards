@@ -490,6 +490,19 @@
       "hasDefinedTerm": [
         {
           "@type": "DefinedTerm",
+          "@id": "https://standards.bundu.org/ecosystem#platform-tokens",
+          "identifier": "platform-tokens",
+          "name": "Platform tokens (MIT, MXT, NST, NHC)",
+          "description": "A proposed Mukoko project and a future build-out, not on the current roadmap (owner, 2026-11-17). Four tokens are proposed: MIT (identity, soulbound) and MXT (exchange) for Mukoko, NST and NHC for the Nyuchi Honeycomb. Not in development, none issued, none on sale. Never described as live, scheduled or governed today.",
+          "version": "0.1.0",
+          "dateModified": "2026-11-17",
+          "termCode": "platform-tokens",
+          "inDefinedTermSet": {
+            "@id": "https://standards.bundu.org/ecosystem#terms"
+          }
+        },
+        {
+          "@type": "DefinedTerm",
           "@id": "https://standards.bundu.org/ecosystem#nyuchi-honeycomb",
           "identifier": "nyuchi-honeycomb",
           "name": "Nyuchi Honeycomb",

@@ -57,6 +57,10 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- The ecosystem record lists the platform tokens (MIT, MXT, NST, NHC) as a `proposed` term:
+  a future build-out, not in development, none issued (owner, 2026-11-17). `proposed` is a
+  new status for terms; products cannot carry it. The sites read the same status.
+
 - Bundu Cell (`.cell`) 0.1.0 draft (`standards/cell/`, register id `cell`,
   proposed): the personal data store format. A cell is JSON-LD with schema.org types
   and a CommonMark `text` that may name facts only as `{{field}}`, stored as the

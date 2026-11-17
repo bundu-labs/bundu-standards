@@ -166,6 +166,11 @@ Versions released before then are not renumbered.
 
 ### Fixed
 
+- standards.bundu.org's content security policy now carries a fresh nonce on
+  every page (128 bits from the Worker's cryptographic random source). Cloudflare
+  reads it and stamps it on the inline script its bot detection injects, so Bot
+  Fight Mode can run without being blocked by the policy, and without allowing
+  inline scripts. Pages are sent `private` so no shared cache reuses a nonce.
 - Two contradictions in published text. The register's `schema_org`
   commitment said 30.1 was released on 2026-10-02; schema.org's release notes
   give 2026-09-16, which its `current` field already said. The

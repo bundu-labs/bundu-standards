@@ -32,7 +32,7 @@ Foundations enable and connect the pillars. They are not pillars.
 | ------------------- | --------------------------------------------------- | ---------------- | --------- |
 | **Ubuntu**          | The ethical and engineering doctrine                | Bundu Foundation | Canonical |
 | **Mzizi**           | Shared design system and implementation foundations | Bundu Foundation | Live      |
-| **.cell**           | The data store for one entity, stored in SiafuDB    | Bundu Foundation | Proposed  |
+| **.cell**           | The data store for one entity, stored in SiafuDB    | Bundu Labs       | Proposed  |
 | **Nyuchi API**      | The common API and infrastructure                   | Nyuchi Africa    | Live      |
 | **Bundu standards** | Data architecture and interoperability standards    | Bundu Labs       | Live      |
 

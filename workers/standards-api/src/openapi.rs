@@ -21,9 +21,11 @@ mod tests {
     use serde_json::Value;
     use std::collections::{BTreeSet, VecDeque};
     use std::path::Path;
+    use std::sync::LazyLock;
 
     const SHA: &str = "e15535a4fbaab894167cc87644baa4168b5f8150";
-    const NONCE: &str = "0123456789abcdef0123456789abcdef";
+    /// A fresh nonce for this run, never a fixed value (see [`site::test_nonce`]).
+    static NONCE: LazyLock<String> = LazyLock::new(site::test_nonce);
     /// The static files the platform serves before the Worker runs (`[assets]` in
     /// wrangler.toml).
     const ASSETS: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../standards/public");
@@ -64,7 +66,7 @@ mod tests {
         if asset(path) {
             return Some("(static asset)".to_owned());
         }
-        if let Some(r) = site::reply("GET", path, NONCE) {
+        if let Some(r) = site::reply("GET", path, &NONCE) {
             return (r.status == 200).then(|| r.header("content-type").unwrap().to_owned());
         }
         let r = block_on(core::route("GET", SITE, path, &GitHub));
@@ -202,7 +204,7 @@ mod tests {
             };
             seen.insert(path.clone());
             if ty.starts_with("text/html") {
-                let html = site::reply("GET", &path, NONCE).unwrap().body.unwrap();
+                let html = site::reply("GET", &path, &NONCE).unwrap().body.unwrap();
                 for l in links(&String::from_utf8(html).unwrap(), &path) {
                     queue.push_back((l, true));
                 }
@@ -294,7 +296,7 @@ mod tests {
     fn the_routers_json_has_exactly_the_described_fields() {
         let doc = doc();
         let body = |path: &str| -> Value {
-            let r = match site::reply("GET", path, NONCE) {
+            let r = match site::reply("GET", path, &NONCE) {
                 Some(r) => r,
                 None => block_on(core::route("GET", SITE, path, &GitHub)),
             };
@@ -393,7 +395,7 @@ mod tests {
     #[test]
     fn the_document_is_served_at_both_paths_as_json() {
         for path in ["/openapi.json", "/.well-known/openapi.json"] {
-            let r = site::reply("GET", path, NONCE).unwrap();
+            let r = site::reply("GET", path, &NONCE).unwrap();
             assert_eq!(r.status, 200, "{path}");
             assert_eq!(r.header("content-type"), Some("application/json"), "{path}");
             assert_eq!(
@@ -409,7 +411,7 @@ mod tests {
     #[test]
     fn every_page_links_the_document_as_its_service_description() {
         let html =
-            String::from_utf8(site::reply("GET", "/", NONCE).unwrap().body.unwrap()).unwrap();
+            String::from_utf8(site::reply("GET", "/", &NONCE).unwrap().body.unwrap()).unwrap();
         assert!(html.contains(
             r#"<link rel="service-desc" type="application/openapi+json" href="/openapi.json"/>"#
         ));

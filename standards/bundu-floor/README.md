@@ -1,6 +1,6 @@
 # The Bundu floor
 
-**Version 1.0.0, adopted.** The owner set these values on 2026-11-19. Licence: CC BY 4.0 for the
+**Version 1.1.0, adopted.** The owner set these values on 2026-11-19. Licence: CC BY 4.0 for the
 text, CC0 for [`floor.json`](floor.json), which holds every value below as data.
 
 The Bundu floor is the set of minimums no screen in the ecosystem can go under: how large a
@@ -33,8 +33,7 @@ Every length in the floor is a multiple of 3, a multiple of 7, or a prime.
 2. Take the nearest allowed value at or above it, never below it. So WCAG's 44 becomes 45
    (3 × 15), and Material's 8 becomes 9 (3 × 3).
 3. Cards, containers and page layout step on the seven: 7, 14, 21, 28, 49. The one exception is
-   the page edge on phones, which takes the general rule: 17, the next allowed value at or above
-   16.
+   the page edge on phones, which takes the general rule: 17, the next allowed value at or above 16.
 
 ## Hit area
 
@@ -88,9 +87,11 @@ scan.
 | Controls   | Field side padding                | 17      | 12    | 16 / 12                       | Material 3 text field                             |
 | Controls   | Icon to label                     | 9       | 7     | 8 / 6                         | Material 3 icon to label                          |
 | Controls   | Between controls                  | 9       | 9     | 8 / 8                         | Material 3 spacing between targets                |
+| Controls   | Label to field                    | 7       | 5     | 4 / 4                         | Material 3 label to field                         |
 | Cards      | Padding                           | 21      | 14    | 16 / 12                       | Material 3 card (12dp list item)                  |
 | Cards      | Title to body                     | 7       | 7     | 4 / 4                         | The Material 3 4dp step                           |
 | Cards      | Between cards                     | 14      | 7     | 8 / 4                         | Material 3 space between cards                    |
+| Lists      | Between list items                | 14      | 7     | 8 / 4                         | Material 3 list items; the card gap               |
 | Containers | Padding (dialogs, sheets, panels) | 28      | 21    | 24 / 16                       | Material 3 dialog (16dp sheet)                    |
 | Containers | Gap between their parts           | 21      | 14    | 16 / 12                       | Material 3 dialog content spacing                 |
 | Page       | Edge on phones                    | 17      | 17    | 16                            | Apple layout margin 16pt; Material 3 compact 16dp |

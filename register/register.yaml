@@ -1730,14 +1730,14 @@ standards:
     steward: Bundu Foundation
     commitment: 1.0.0 (semver); lowering any value is a major.
     current: >-
-      1.0.0, standards/bundu-floor/. The owner's canonical values of
-      2026-11-19.
+      1.1.0, standards/bundu-floor/. The owner's canonical values of
+      2026-11-19, with the label-to-field and list-item gaps confirmed.
     governs: >-
       The minimums no screen in the ecosystem can go under: hit areas (45px on
       touch, 24px with a fine pointer), control heights (33 and 41), text (17px
       body on touch, 15px on a fine pointer, 14px captions, 1.5 leading),
       contrast (7:1 body, 4.5:1 other text, 3:1 interface parts), and a spacing
-      floor for each layer (pills, chips, controls, cards, containers, page), at
+      floor for each layer (pills, chips, controls, cards, lists, containers, page), at
       default and dense density.
 
       Every length is a multiple of 3, a multiple of 7, or a prime: the nearest

@@ -1,9 +1,10 @@
 /* standards.bundu.org follows the Bundu pattern: copper, the stewardship
    mineral (Mzizi seven-minerals; tokens from mzizi_get_tokens minerals), on
-   neutral grounds, within the Bundu floor (7:1 body contrast, 17px body on
-   touch and 15px on a fine pointer, 1.5 leading, 14px inset, 14px captions,
-   49px / 28px hit regions). Copper text sits on the page ground only; the
-   adopted chip uses copper's container pair. */
+   neutral grounds, within the Bundu floor (standards.bundu.org/bundu-floor/:
+   7:1 body contrast, 17px body on touch and 15px on a fine pointer, 1.5
+   leading, 14px captions, 17px control padding and phone page edge, 9px
+   between controls, 45px / 24px hit regions). Copper text sits on the page
+   ground only; the adopted chip uses copper's container pair. */
 :root {
   color-scheme: light dark;
   --bg: #fbfaf7;
@@ -14,10 +15,10 @@
   --chip: #eceae3;
   --copper-container: #fbe4da;
   --on-copper-container: #5c2410;
-  --inset-floor: 14px;
-  --gap-floor: 7px;
+  --inset-floor: 17px;
+  --gap-floor: 9px;
   --leading-floor: 1.5;
-  --hit: 49px;
+  --hit: 45px;
   --body: 17px;
   --caption: 14px;
 }
@@ -36,7 +37,7 @@
 /* Desktop tier: a fine pointer with hover, 64rem and up, and no coarse pointer. */
 @media (pointer: fine) and (hover: hover) and (min-width: 64rem) and (not (any-pointer: coarse)) {
   :root {
-    --hit: 28px;
+    --hit: 24px;
     --body: 15px;
   }
 }

@@ -15,6 +15,32 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- **standards.bundu.org is the only place each standard's text is published**
+  (owner, 2026-11-19). Three pages that answered 404 now render from
+  `standards/<slug>/`:
+  - `/ai-guardrails/`: BAGS 1.0.0, with every rule, its intent, explanation and
+    published guidance, the enforcement layers, the commitments and the
+    changelog, as bundu.org showed them. `bags-1.0.0.json` is served beside it
+    at a URL that never changes. The register's `bags` entry now points here,
+    and bundu.org's copy is retired.
+  - `/harness-checklist/`: the harness conformance checklist, with a register
+    entry of its own (`harness_checklist`, proposed).
+  - `/bundu-floor/`: the new standard below.
+- **The Bundu floor is a published standard** (register `bundu_floor`, adopted
+  at 1.0.0; the owner's canonical values of 2026-11-19). Every length is a
+  multiple of 3, a multiple of 7, or a prime, at or above the WCAG, Apple or
+  Material value. Hit areas are 45px on touch and 24px with a fine pointer
+  (they were 49 and 28); control heights 33 and 41 (were 32 and 40); and each
+  layer (pills, chips, controls, cards, containers, page) has a default and a
+  dense spacing floor. `floor.json` holds the values, and a test holds each one
+  to the number rule. The engineering constraint `bundu-floor` links to it.
+- **Hit areas follow the floor everywhere in this repository.** The register's
+  WCAG entry no longer says "48px minimum touch targets"; standards.bundu.org
+  and vocab.bundu.org use 45px and 24px hit regions, and standards.bundu.org's
+  control padding and gaps take the floor's 17px and 9px.
+- `openapi.json` describes the eight new routes, with schemas for the BAGS
+  and floor data.
+
 - **The AAIF software is adopted into the build** (owner, 2026-11-17): Agent
   Router (Shamwari's model routing), agentgateway (MCP and A2A) and goose (a
   client). They are implementations, so the harness checklist records them and

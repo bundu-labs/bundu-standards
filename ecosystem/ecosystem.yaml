@@ -190,6 +190,7 @@ engineering_constraints:
   - id: personal-data-sovereignty
   - id: no-surveillance-business-model
   - id: bundu-floor
+    note: Published as a standard at [standards.bundu.org/bundu-floor](https://standards.bundu.org/bundu-floor/) (register `bundu_floor`).
 
 terms:
   - id: platform-tokens

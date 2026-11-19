@@ -124,8 +124,8 @@ published as `testing`, the W3C value for that state.
 ### AI guardrails
 
 Terms for the Bundu AI Guardrails Standard (BAGS). The standard was published
-on [bundu.org](https://www.bundu.org/research/standards/ai-guardrails) on
-2026-10-04, so they are stable.
+on 2026-10-04, so they are stable. Its text is published at
+[standards.bundu.org/ai-guardrails/](https://standards.bundu.org/ai-guardrails/).
 
 | Term                | Kind     | Extends or value                                         | Status |
 | ------------------- | -------- | -------------------------------------------------------- | ------ |

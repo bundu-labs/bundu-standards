@@ -46,7 +46,7 @@ Defined, with their Ubuntu principles and checks, in Mzizi (`get_doctrine`). By 
 4. `shared-device-awareness`
 5. `personal-data-sovereignty`
 6. `no-surveillance-business-model`
-7. `bundu-floor`
+7. `bundu-floor`: Published as a standard at [standards.bundu.org/bundu-floor](https://standards.bundu.org/bundu-floor/) (register `bundu_floor`).
 
 ## Terms
 

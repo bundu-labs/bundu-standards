@@ -544,12 +544,13 @@ fn page(title: &str, path: Option<&str>, data: Option<Value>, body: &str) -> Str
 <style>
 /* The Bundu pattern: copper, the stewardship mineral (Mzizi seven-minerals),
    on neutral grounds, within the Bundu floor (7:1 body contrast, 17px body on
-   touch and 15px on a fine pointer, 1.5 leading, 14px captions). */
+   touch and 15px on a fine pointer, 1.5 leading, 14px captions, 45px / 24px
+   hit regions). */
 :root {{
   color-scheme: light dark;
   --ground: #FAF9F5; --surface: #fff; --line: #E2DFD6;
   --text: #17161A; --muted: #4D4A45; --accent: #7E3B24;
-  --body: 17px; --caption: 14px; --leading: 1.5; --hit: 49px;
+  --body: 17px; --caption: 14px; --leading: 1.5; --hit: 45px;
 }}
 @media (prefers-color-scheme: dark) {{
   :root {{
@@ -558,7 +559,7 @@ fn page(title: &str, path: Option<&str>, data: Option<Value>, body: &str) -> Str
   }}
 }}
 @media (pointer: fine) and (hover: hover) and (min-width: 64rem) and (not (any-pointer: coarse)) {{
-  :root {{ --body: 15px; --hit: 28px; }}
+  :root {{ --body: 15px; --hit: 24px; }}
 }}
 * {{ box-sizing: border-box; }}
 body {{

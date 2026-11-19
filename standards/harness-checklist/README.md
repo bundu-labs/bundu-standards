@@ -1,9 +1,10 @@
 # Harness conformance checklist
 
 **Status:** complete as of 2026-11-17, on the owner's request "finish the harness checklist". It is
-a checklist, not a standard. It has no schema, no vocabulary terms and no register entry of its own,
-and it is not published to standards.bundu.org. Tracked in
-[#50](https://github.com/bundu-labs/bundu-standards/issues/50).
+a checklist, not a standard: it has no schema and no vocabulary terms. It is published at
+[standards.bundu.org/harness-checklist/](https://standards.bundu.org/harness-checklist/) (owner,
+2026-11-19), so its register entry (`harness_checklist`) is proposed, awaiting the owner's
+adoption. Tracked in [#50](https://github.com/bundu-labs/bundu-standards/issues/50).
 
 A _harness_ is the loop around a model: it builds the context, calls the model, runs tools, asks
 for permission, keeps a log and may run code in a sandbox. Following `AGENTS.md` ("adopt the global

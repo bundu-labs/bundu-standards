@@ -949,14 +949,37 @@
     "category": "specification",
     "description": "The core, public platform guardrails every AI surface applies, BAGS-01 to BAGS-12, and the categories they belong to (shamwari.guardrails, shamwari.guardrailStandard).",
     "versionCommitment": "1.0.0 (semver; a change to a published rule bumps the version)",
-    "specificationUrl": "https://www.bundu.org/research/standards/ai-guardrails",
+    "specificationUrl": "https://standards.bundu.org/ai-guardrails/",
     "documentationUrl": null,
     "stewardOrganisation": "Bundu Foundation",
-    "usageNotes": "Licence CC BY 4.0 (cc_by_4). Publisher of record: the Bundu Foundation; maintainer and operator: Nyuchi Africa (owner decision 2026-10-04). Source of truth is the api-gateway seed; the live API body is https://api.nyuchi.com/v1/ai/guardrails/standard and the canonical URL is bundu.org. The vocab.bundu.org guardrail terms are promoted from testing to stable with this publication. BAGS-08 (prompt injection) withholds its prompt guidance from publication. Cited by: bundu.org /research/standards/ai-guardrails (and .json).",
+    "usageNotes": "Licence CC BY 4.0 (cc_by_4). Publisher of record: the Bundu Foundation; maintainer and operator: Nyuchi Africa (owner decision 2026-10-04). Source of truth is the api-gateway seed; the live API body is https://api.nyuchi.com/v1/ai/guardrails/standard. Its text is published only at standards.bundu.org/ai-guardrails/ (owner, 2026-11-19); the copy bundu.org rendered from 2026-10-04 is retired. The vocab.bundu.org guardrail terms are promoted from testing to stable with this publication. BAGS-08 (prompt injection) withholds its prompt guidance from publication. Cited by: standards.bundu.org /ai-guardrails/ (and bags-1.0.0.json).",
     "isActive": true,
     "bundu": {
       "isFoundational": false,
       "adoptionRationale": "One published, versioned rule set means every app, and every entity that layers its own rules on top, starts from the same floor."
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_harness_checklist",
+    "_schemaVersion": "v3.1",
+    "displayName": "Harness conformance checklist",
+    "category": "specification",
+    "description": "What a conforming Bundu agent harness must expose: the adopted standard to use for each part (tools, instructions, skills, model wire shape, agent to agent, sandbox, editor, stored conversations, session log), Bundu's own rules for personal data, training and memory, and the gaps no standard covers yet.",
+    "versionCommitment": "Unversioned; a row changes when the register adopts or drops a standard.",
+    "specificationUrl": "https://standards.bundu.org/harness-checklist/",
+    "documentationUrl": null,
+    "stewardOrganisation": "Bundu Foundation",
+    "usageNotes": null,
+    "isActive": false,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "A harness conforms by using the standards that exist and saying where none does; one published checklist lets every harness be checked the same way."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1730,15 +1753,15 @@
     "displayName": "WCAG",
     "category": "specification",
     "description": "Every surface.",
-    "versionCommitment": "WCAG 2.2, level AAA; 48px minimum touch targets (beyond 2.5.5's 44px)",
+    "versionCommitment": "WCAG 2.2, level AAA; hit areas by the Bundu floor (bundu_floor): 45px on touch (above 2.5.5's 44px) and 24px with a fine pointer (2.5.8)",
     "specificationUrl": "https://www.w3.org/TR/WCAG22/",
     "documentationUrl": null,
     "stewardOrganisation": "W3C",
-    "usageNotes": "The architecture names no version and Mzizi computes WCAG 2.1 ratios; 2.2 is the pin (gap G-3).",
+    "usageNotes": "The architecture names no version and Mzizi computes WCAG 2.1 ratios; 2.2 is the pin (gap G-3). A§8.1 also names 48px touch targets; the Bundu floor (owner, 2026-11-19) replaces that with 45px on touch and 24px with a fine pointer.",
     "isActive": true,
     "bundu": {
       "isFoundational": true,
-      "adoptionRationale": "Adopted: A§8.1 (\"WCAG AAA / APCA targets; 48px minimum touch targets\"); MZ N2"
+      "adoptionRationale": "Adopted: A§8.1 (\"WCAG AAA / APCA targets\"); hit areas set by the owner on 2026-11-19 (bundu_floor); MZ N2"
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"
@@ -1785,6 +1808,29 @@
     "bundu": {
       "isFoundational": false,
       "adoptionRationale": "Adopted: OD (register P-17)"
+    },
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00Z"
+    }
+  },
+  {
+    "_id": "standard_bundu_floor",
+    "_schemaVersion": "v3.1",
+    "displayName": "The Bundu floor",
+    "category": "specification",
+    "description": "The minimums no screen in the ecosystem can go under: hit areas (45px on touch, 24px with a fine pointer), control heights (33 and 41), text (17px body on touch, 15px on a fine pointer, 14px captions, 1.5 leading), contrast (7:1 body, 4.5:1 other text, 3:1 interface parts), and a spacing floor for each layer (pills, chips, controls, cards, containers, page), at default and dense density. Every length is a multiple of 3, a multiple of 7, or a prime: the nearest one at or above the WCAG, Apple or Material value, never below it. It is the engineering constraint `bundu-floor`, and Mzizi implements it.",
+    "versionCommitment": "1.0.0 (semver); lowering any value is a major.",
+    "specificationUrl": "https://standards.bundu.org/bundu-floor/",
+    "documentationUrl": null,
+    "stewardOrganisation": "Bundu Foundation",
+    "usageNotes": null,
+    "isActive": true,
+    "bundu": {
+      "isFoundational": false,
+      "adoptionRationale": "WCAG, Apple and Material recommend minimums; none sets spacing floors or enforces them. A screen that is readable in the sun and usable with one thumb needs a floor no app can lower, so we write one (AGENTS.md, the rule)."
     },
     "createdAt": {
       "$date": "2026-10-02T00:00:00Z"

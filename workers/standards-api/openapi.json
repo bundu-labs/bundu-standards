@@ -793,6 +793,374 @@
         }
       }
     },
+    "/ai-guardrails/": {
+      "get": {
+        "tags": ["documents"],
+        "summary": "Bundu AI Guardrails Standard (BAGS): the standard",
+        "description": "The page of the standard Bundu AI Guardrails Standard (BAGS), published here, rendered from standards/ai-guardrails/README.md.",
+        "operationId": "getAiGuardrails",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            },
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": ["documents"],
+        "summary": "Bundu AI Guardrails Standard (BAGS): the standard (headers only)",
+        "operationId": "headAiGuardrails",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ai-guardrails/README.md": {
+      "get": {
+        "tags": ["documents"],
+        "summary": "Bundu AI Guardrails Standard (BAGS): README.md",
+        "description": "The standard's text, as Markdown.",
+        "operationId": "getAiGuardrailsREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "text/markdown; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": ["documents"],
+        "summary": "Bundu AI Guardrails Standard (BAGS): README.md (headers only)",
+        "operationId": "headAiGuardrailsREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ai-guardrails/bags-1.0.0.json": {
+      "get": {
+        "tags": ["documents"],
+        "summary": "Bundu AI Guardrails Standard (BAGS): bags-1.0.0.json",
+        "description": "BAGS 1.0.0 as data (JSON-LD), CC BY 4.0. A version's file never changes.",
+        "operationId": "getAiGuardrailsBags100Json",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiGuardrailsStandard"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": ["documents"],
+        "summary": "Bundu AI Guardrails Standard (BAGS): bags-1.0.0.json (headers only)",
+        "operationId": "headAiGuardrailsBags100Json",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bundu-floor/": {
+      "get": {
+        "tags": ["documents"],
+        "summary": "The Bundu floor: the standard",
+        "description": "The page of the standard The Bundu floor, published here, rendered from standards/bundu-floor/README.md.",
+        "operationId": "getBunduFloor",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            },
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": ["documents"],
+        "summary": "The Bundu floor: the standard (headers only)",
+        "operationId": "headBunduFloor",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bundu-floor/README.md": {
+      "get": {
+        "tags": ["documents"],
+        "summary": "The Bundu floor: README.md",
+        "description": "The standard's text, as Markdown.",
+        "operationId": "getBunduFloorREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "text/markdown; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": ["documents"],
+        "summary": "The Bundu floor: README.md (headers only)",
+        "operationId": "headBunduFloorREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bundu-floor/floor.json": {
+      "get": {
+        "tags": ["documents"],
+        "summary": "The Bundu floor: floor.json",
+        "description": "The floor's values as data, CC0.",
+        "operationId": "getBunduFloorFloorJson",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/BunduFloor"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": ["documents"],
+        "summary": "The Bundu floor: floor.json (headers only)",
+        "operationId": "headBunduFloorFloorJson",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/harness-checklist/": {
+      "get": {
+        "tags": ["documents"],
+        "summary": "Harness conformance checklist: the standard",
+        "description": "The page of the standard Harness conformance checklist, published here, rendered from standards/harness-checklist/README.md.",
+        "operationId": "getHarnessChecklist",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            },
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": ["documents"],
+        "summary": "Harness conformance checklist: the standard (headers only)",
+        "operationId": "headHarnessChecklist",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PrivateCache"
+              },
+              "Content-Security-Policy": {
+                "$ref": "#/components/headers/ContentSecurityPolicy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/harness-checklist/README.md": {
+      "get": {
+        "tags": ["documents"],
+        "summary": "Harness conformance checklist: README.md",
+        "description": "The standard's text, as Markdown.",
+        "operationId": "getHarnessChecklistREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "text/markdown; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": ["documents"],
+        "summary": "Harness conformance checklist: README.md (headers only)",
+        "operationId": "headHarnessChecklistREADMEMd",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
     "/register/index.json": {
       "get": {
         "tags": ["register"],
@@ -2404,6 +2772,188 @@
             "items": {
               "type": "object"
             }
+          }
+        }
+      },
+      "AiGuardrailsStandard": {
+        "type": "object",
+        "required": [
+          "@context",
+          "standard",
+          "code",
+          "version",
+          "publishedAt",
+          "publisher",
+          "licence",
+          "untrustedContentPreamble",
+          "refusalStyle",
+          "rules",
+          "changelog"
+        ],
+        "properties": {
+          "@context": {
+            "type": "object"
+          },
+          "standard": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "maintainer": {
+            "type": "string"
+          },
+          "licence": {
+            "type": "object",
+            "required": ["name", "url"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          },
+          "compiledFormat": {
+            "type": "string"
+          },
+          "untrustedContentPreamble": {
+            "type": "string"
+          },
+          "refusalStyle": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "ruleCode",
+                "name",
+                "category",
+                "severity",
+                "intent",
+                "explanation",
+                "isCore",
+                "guidancePublished"
+              ],
+              "properties": {
+                "ruleCode": {
+                  "type": "string",
+                  "pattern": "^BAGS-\\d{2,3}$"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "severity": {
+                  "type": "string",
+                  "enum": ["critical", "high", "medium", "low"]
+                },
+                "intent": {
+                  "type": "string"
+                },
+                "explanation": {
+                  "type": "string"
+                },
+                "appliesTo": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "isCore": {
+                  "type": "boolean"
+                },
+                "promptGuidance": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "guidancePublished": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "changelog": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "BunduFloor": {
+        "type": "object",
+        "required": [
+          "name",
+          "version",
+          "status",
+          "numberRule",
+          "hitArea",
+          "controlHeight",
+          "text",
+          "contrast",
+          "spacing"
+        ],
+        "properties": {
+          "$comment": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["adopted", "proposed"]
+          },
+          "decided": {
+            "type": "string"
+          },
+          "licence": {
+            "type": "string"
+          },
+          "numberRule": {
+            "type": "object"
+          },
+          "tiers": {
+            "type": "object"
+          },
+          "density": {
+            "type": "object"
+          },
+          "hitArea": {
+            "type": "object"
+          },
+          "controlHeight": {
+            "type": "object"
+          },
+          "text": {
+            "type": "object"
+          },
+          "contrast": {
+            "type": "object"
+          },
+          "spacing": {
+            "type": "object"
           }
         }
       }

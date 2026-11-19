@@ -740,6 +740,123 @@ mod tests {
         }
         assert!(DOCUMENTS.contains_key("weather-colour-scales"));
         assert!(DOCUMENTS.contains_key("conversation-interchange"));
+        for slug in ["ai-guardrails", "harness-checklist", "bundu-floor"] {
+            assert!(DOCUMENTS.contains_key(slug), "{slug}");
+        }
+    }
+
+    /// The text of a standard's file, as published.
+    fn file(slug: &str, name: &str) -> String {
+        render(&format!("/{slug}/{name}")).unwrap().body
+    }
+
+    #[test]
+    fn bags_is_published_here_with_every_rule_of_its_data() {
+        let json = file("ai-guardrails", "bags-1.0.0.json");
+        assert_eq!(
+            json,
+            include_str!("../../../standards/ai-guardrails/bags-1.0.0.json"),
+            "the data is served as it is"
+        );
+        assert_eq!(
+            render("/ai-guardrails/bags-1.0.0.json")
+                .unwrap()
+                .content_type,
+            "application/json; charset=utf-8"
+        );
+        let v: serde_json::Value = serde_json::from_str(&json).unwrap();
+        // The page is written from the data; this holds the two together, word for word.
+        let readme = file("ai-guardrails", "README.md");
+        for key in ["untrustedContentPreamble", "refusalStyle"] {
+            assert!(readme.contains(v[key].as_str().unwrap()), "{key}");
+        }
+        let rules = v["rules"].as_array().unwrap();
+        assert_eq!(rules.len(), 12);
+        for r in rules {
+            let code = r["ruleCode"].as_str().unwrap();
+            for key in ["name", "intent", "explanation", "category"] {
+                assert!(
+                    readme.contains(r[key].as_str().unwrap()),
+                    "{code} {key} differs from the data"
+                );
+            }
+            match (
+                r["guidancePublished"].as_bool(),
+                r["promptGuidance"].as_str(),
+            ) {
+                (Some(true), Some(g)) => assert!(readme.contains(g), "{code} guidance"),
+                _ => assert!(
+                    readme.contains(&format!("### {code}:")),
+                    "{code} is listed, its wording withheld"
+                ),
+            }
+        }
+        let html = page("/ai-guardrails/");
+        assert!(html.contains(r#"href="/register/bags/""#));
+        assert!(html.contains(r#"href="bags-1.0.0.json""#));
+        assert!(
+            html.contains(r#""ruleCode":"BAGS-12""#),
+            "the copy control offers the data"
+        );
+    }
+
+    /// The number rule of the Bundu floor: a multiple of 3, a multiple of 7, or a prime.
+    fn allowed(n: u64) -> bool {
+        n % 3 == 0 || n % 7 == 0 || (n > 1 && (2..n).take_while(|i| i * i <= n).all(|i| n % i != 0))
+    }
+
+    #[test]
+    fn every_length_in_the_bundu_floor_keeps_the_number_rule() {
+        let v: serde_json::Value =
+            serde_json::from_str(&file("bundu-floor", "floor.json")).unwrap();
+        let sevens: Vec<String> = v["numberRule"]["multipleOf7"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|s| s.as_str().unwrap().to_owned())
+            .collect();
+        fn walk(v: &serde_json::Value, at: &str, sevens: &[String], seen: &mut Vec<u64>) {
+            let Some(m) = v.as_object() else { return };
+            if let Some(px) = m.get("px").and_then(|p| p.as_u64()) {
+                assert!(
+                    allowed(px),
+                    "{at}: {px} is not a multiple of 3 or 7, or a prime"
+                );
+                if let Some(r) = m.get("recommended").and_then(|r| r.as_u64()) {
+                    assert!(px >= r, "{at}: {px} is below the recommended {r}");
+                }
+                if sevens.iter().any(|s| at.starts_with(s.as_str())) {
+                    assert_eq!(px % 7, 0, "{at}: this layer steps on the seven");
+                }
+                seen.push(px);
+            }
+            for (k, x) in m {
+                let path = if at.is_empty() {
+                    k.clone()
+                } else {
+                    format!("{at}.{k}")
+                };
+                walk(x, &path, sevens, seen);
+            }
+        }
+        let mut seen = Vec::new();
+        walk(&v, "", &sevens, &mut seen);
+        assert!(seen.len() > 30, "the walk found the values");
+        // The owner's values of 2026-11-19.
+        assert_eq!(v["hitArea"]["touch"]["px"], 45);
+        assert_eq!(v["hitArea"]["finePointer"]["px"], 24);
+        assert_eq!(v["controlHeight"]["small"]["px"], 33);
+        assert_eq!(v["controlHeight"]["large"]["px"], 41);
+        assert_eq!(v["spacing"]["page"]["edge"]["default"]["px"], 17);
+        assert_eq!(v["spacing"]["control"]["between"]["dense"]["px"], 9);
+        assert!(!allowed(44) && !allowed(16) && allowed(45) && allowed(17));
+    }
+
+    #[test]
+    fn the_site_keeps_the_hit_areas_of_the_floor() {
+        assert!(CSS.contains("--hit: 45px;"));
+        assert!(CSS.contains("--hit: 24px;"));
+        assert!(!CSS.contains("--hit: 49px") && !CSS.contains("--hit: 28px"));
     }
 
     #[test]

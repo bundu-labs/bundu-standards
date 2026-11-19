@@ -1,0 +1,260 @@
+{
+  "$comment": "The Bundu floor as data: https://standards.bundu.org/bundu-floor/. Every length is in CSS pixels. Each entry gives its value, the recommended value it was taken from, and where that recommendation comes from. A spacing entry has a default value (the floor at default density) and, where it has one, a dense value (the absolute floor). A component may go larger than a value, never smaller. Owner's canonical values, 2026-11-19. CC0.",
+  "name": "The Bundu floor",
+  "version": "1.0.0",
+  "status": "adopted",
+  "decided": "2026-11-19",
+  "licence": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "numberRule": {
+    "allowed": "Every length is a multiple of 3, a multiple of 7, or a prime.",
+    "direction": "Take the nearest allowed value at or above the recommended value, never below it.",
+    "multipleOf7": [
+      "spacing.card",
+      "spacing.container",
+      "spacing.page.edgeWide",
+      "spacing.page.betweenSections"
+    ],
+    "exceptions": "The phone page edge takes the general rule, not the seven: 17, the next allowed value at or above 16 (owner, 2026-11-19)."
+  },
+  "tiers": {
+    "touch": "Every screen that is not the fine-pointer tier: a coarse pointer, or a window under 64rem.",
+    "finePointer": "(pointer: fine) and (hover: hover) and (min-width: 64rem) and (not (any-pointer: coarse))"
+  },
+  "hitArea": {
+    "touch": {
+      "px": 45,
+      "recommended": 44,
+      "source": "WCAG 2.2 SC 2.5.5 Target Size (Enhanced), AAA; Apple HIG 44 pt"
+    },
+    "finePointer": {
+      "px": 24,
+      "recommended": 24,
+      "source": "WCAG 2.2 SC 2.5.8 Target Size (Minimum), AA"
+    }
+  },
+  "controlHeight": {
+    "small": {
+      "px": 33,
+      "replaces": 32,
+      "source": "Mzizi spacing-control-sm, 32 before 2026-11-19"
+    },
+    "large": {
+      "px": 41,
+      "replaces": 40,
+      "source": "Mzizi spacing-control-lg and touch-target-sm, 40 before 2026-11-19; 41 is prime, the nearest allowed value at or above 40"
+    }
+  },
+  "text": {
+    "bodyTouch": {
+      "px": 17,
+      "recommended": 17,
+      "source": "Apple HIG default body size, 17 pt"
+    },
+    "bodyFinePointer": {
+      "px": 15,
+      "source": "The Bundu floor, unchanged on 2026-11-19"
+    },
+    "caption": {
+      "px": 14,
+      "source": "The Bundu floor, unchanged on 2026-11-19; the minimum for captions and secondary labels"
+    },
+    "bodyLeading": {
+      "ratio": 1.5,
+      "source": "WCAG 2.2 SC 1.4.12 Text Spacing, AA"
+    }
+  },
+  "contrast": {
+    "body": {
+      "ratio": 7,
+      "source": "WCAG 2.2 SC 1.4.6 Contrast (Enhanced), AAA"
+    },
+    "nonBodyText": {
+      "ratio": 4.5,
+      "source": "WCAG 2.2 SC 1.4.3 Contrast (Minimum), AA"
+    },
+    "ui": {
+      "ratio": 3,
+      "source": "WCAG 2.2 SC 1.4.11 Non-text Contrast, AA"
+    }
+  },
+  "spacing": {
+    "pill": {
+      "padding": {
+        "default": {
+          "px": 9,
+          "recommended": 8
+        },
+        "dense": {
+          "px": 5,
+          "recommended": 4
+        },
+        "source": "A compact status pill; Material 3 large badge 4 dp"
+      },
+      "gap": {
+        "default": {
+          "px": 5,
+          "recommended": 4
+        },
+        "dense": {
+          "px": 3,
+          "recommended": 2
+        },
+        "source": "Dot or icon to label"
+      }
+    },
+    "chip": {
+      "padding": {
+        "default": {
+          "px": 12,
+          "recommended": 12
+        },
+        "dense": {
+          "px": 9,
+          "recommended": 8
+        },
+        "source": "Material 3 chip side padding (8 dp compact)"
+      }
+    },
+    "control": {
+      "padding": {
+        "default": {
+          "px": 17,
+          "recommended": 16
+        },
+        "dense": {
+          "px": 12,
+          "recommended": 12
+        },
+        "source": "Material 3 button side padding (12 dp dense); buttons"
+      },
+      "fieldPadding": {
+        "default": {
+          "px": 17,
+          "recommended": 16
+        },
+        "dense": {
+          "px": 12,
+          "recommended": 12
+        },
+        "source": "Material 3 text field side padding"
+      },
+      "iconLabelGap": {
+        "default": {
+          "px": 9,
+          "recommended": 8
+        },
+        "dense": {
+          "px": 7,
+          "recommended": 6
+        },
+        "source": "Material 3 icon to label"
+      },
+      "between": {
+        "default": {
+          "px": 9,
+          "recommended": 8
+        },
+        "dense": {
+          "px": 9,
+          "recommended": 8
+        },
+        "source": "Material 3 spacing between targets; the same in both modes"
+      }
+    },
+    "card": {
+      "padding": {
+        "default": {
+          "px": 21,
+          "recommended": 16
+        },
+        "dense": {
+          "px": 14,
+          "recommended": 12
+        },
+        "source": "Material 3 card padding (12 dp list item)"
+      },
+      "titleToBody": {
+        "default": {
+          "px": 7,
+          "recommended": 4
+        },
+        "dense": {
+          "px": 7,
+          "recommended": 4
+        },
+        "source": "Title to body, the Material 3 4 dp step; the same in both modes"
+      },
+      "between": {
+        "default": {
+          "px": 14,
+          "recommended": 8
+        },
+        "dense": {
+          "px": 7,
+          "recommended": 4
+        },
+        "source": "Material 3 space between cards"
+      }
+    },
+    "container": {
+      "padding": {
+        "default": {
+          "px": 28,
+          "recommended": 24
+        },
+        "dense": {
+          "px": 21,
+          "recommended": 16
+        },
+        "source": "Material 3 dialog padding (16 dp sheet)"
+      },
+      "gap": {
+        "default": {
+          "px": 21,
+          "recommended": 16
+        },
+        "dense": {
+          "px": 14,
+          "recommended": 12
+        },
+        "source": "Material 3 dialog content spacing"
+      }
+    },
+    "page": {
+      "edge": {
+        "default": {
+          "px": 17,
+          "recommended": 16
+        },
+        "source": "Apple layout margin 16 pt; Material 3 compact window margin 16 dp. No dense step."
+      },
+      "edgeWide": {
+        "default": {
+          "px": 28,
+          "recommended": 24
+        },
+        "dense": {
+          "px": 21,
+          "recommended": 16
+        },
+        "source": "Material 3 medium and expanded window margins, 24 dp; dense from the 16 to 24 dp range"
+      },
+      "betweenSections": {
+        "default": {
+          "px": 49,
+          "recommended": 48
+        },
+        "dense": {
+          "px": 28,
+          "recommended": 24
+        },
+        "source": "The common 48 px section rhythm"
+      }
+    }
+  },
+  "density": {
+    "default": "Reading, forms, onboarding, payments, and anything someone does once and must get right.",
+    "dense": "Tables, data views, toolbars, filter rows, status pills, and lists people scan.",
+    "hitArea": "Dense controls keep the full hit area: 45 px on touch and 24 px on a fine pointer."
+  }
+}

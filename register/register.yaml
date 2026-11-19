@@ -974,17 +974,18 @@ standards:
     evidence:
       - api-gateway db/seeds/bags-1.0.0.json (the seed)
       - api-gateway GET /v1/ai/guardrails/standard (public, CC BY 4.0)
-      - bundu.org /research/standards/ai-guardrails (and .json)
       - bundu-standards standards/ai-guardrails/bags-1.0.0.json (snapshot)
-    url: https://www.bundu.org/research/standards/ai-guardrails
+      - standards.bundu.org /ai-guardrails/ (and bags-1.0.0.json)
+    url: https://standards.bundu.org/ai-guardrails/
     notes: >-
       Licence CC BY 4.0 (cc_by_4). Publisher of record: the Bundu
       Foundation; maintainer and operator: Nyuchi Africa (owner decision
       2026-10-04).
 
       Source of truth is the api-gateway seed; the live API
-      body is https://api.nyuchi.com/v1/ai/guardrails/standard and the
-      canonical URL is bundu.org.
+      body is https://api.nyuchi.com/v1/ai/guardrails/standard. Its text is
+      published only at standards.bundu.org/ai-guardrails/ (owner, 2026-11-19);
+      the copy bundu.org rendered from 2026-10-04 is retired.
 
       The vocab.bundu.org guardrail terms are
       promoted from testing to stable with this publication. BAGS-08 (prompt injection) withholds its
@@ -992,6 +993,32 @@ standards:
     rationale: >-
       One published, versioned rule set means every app, and every entity
       that layers its own rules on top, starts from the same floor.
+
+  - id: harness_checklist
+    name: Harness conformance checklist
+    domain: agents
+    category: specification
+    steward: Bundu Foundation
+    commitment: Unversioned; a row changes when the register adopts or drops a standard.
+    current: >-
+      Complete as of 2026-11-17, standards/harness-checklist/. Every row of its
+      first section names an adopted standard.
+    governs: >-
+      What a conforming Bundu agent harness must expose: the adopted standard to
+      use for each part (tools, instructions, skills, model wire shape, agent to
+      agent, sandbox, editor, stored conversations, session log), Bundu's own
+      rules for personal data, training and memory, and the gaps no standard
+      covers yet.
+    status: proposed
+    decided: >-
+      Finished on the owner's request 2026-11-17 (#50); published on
+      standards.bundu.org on the owner's instruction 2026-11-19. A checklist,
+      not a standard: adoption is the owner's
+    url: https://standards.bundu.org/harness-checklist/
+    rationale: >-
+      A harness conforms by using the standards that exist and saying where
+      none does; one published checklist lets every harness be checked the same
+      way.
 
   # --- communication ----------------------------------------------------------
   - id: mls
@@ -1657,13 +1684,21 @@ standards:
     domain: accessibility
     category: specification
     steward: W3C
-    commitment: WCAG 2.2, level AAA; 48px minimum touch targets (beyond 2.5.5's 44px)
+    commitment: >-
+      WCAG 2.2, level AAA; hit areas by the Bundu floor (bundu_floor): 45px on
+      touch (above 2.5.5's 44px) and 24px with a fine pointer (2.5.8)
     current: 2.2, W3C Rec (current edition 2024-12-12); WCAG 3 Working Draft
     governs: Every surface.
     status: adopted
-    decided: A§8.1 ("WCAG AAA / APCA targets; 48px minimum touch targets"); MZ N2
+    decided: >-
+      A§8.1 ("WCAG AAA / APCA targets"); hit areas set by the owner on
+      2026-11-19 (bundu_floor); MZ N2
     url: https://www.w3.org/TR/WCAG22/
-    notes: The architecture names no version and Mzizi computes WCAG 2.1 ratios; 2.2 is the pin (gap G-3).
+    notes: >-
+      The architecture names no version and Mzizi computes WCAG 2.1 ratios; 2.2
+      is the pin (gap G-3). A§8.1 also names 48px touch targets; the Bundu floor
+      (owner, 2026-11-19) replaces that with 45px on touch and 24px with a fine
+      pointer.
     foundational: true
   - id: apca
     name: APCA
@@ -1688,6 +1723,37 @@ standards:
     status: adopted
     decided: OD (register P-17)
     url: https://www.w3.org/TR/wai-aria/
+  - id: bundu_floor
+    name: The Bundu floor
+    domain: accessibility
+    category: specification
+    steward: Bundu Foundation
+    commitment: 1.0.0 (semver); lowering any value is a major.
+    current: >-
+      1.0.0, standards/bundu-floor/. The owner's canonical values of
+      2026-11-19.
+    governs: >-
+      The minimums no screen in the ecosystem can go under: hit areas (45px on
+      touch, 24px with a fine pointer), control heights (33 and 41), text (17px
+      body on touch, 15px on a fine pointer, 14px captions, 1.5 leading),
+      contrast (7:1 body, 4.5:1 other text, 3:1 interface parts), and a spacing
+      floor for each layer (pills, chips, controls, cards, containers, page), at
+      default and dense density.
+
+      Every length is a multiple of 3, a multiple of 7, or a prime: the nearest
+      one at or above the WCAG, Apple or Material value, never below it. It is
+      the engineering constraint `bundu-floor`, and Mzizi implements it.
+    status: adopted
+    decided: >-
+      Owner's canonical values 2026-11-19: the number rule, hit areas 45 and 24
+      (replacing 49 and 28), control heights 33 and 41, and the spacing layers
+      with their dense floors
+    url: https://standards.bundu.org/bundu-floor/
+    rationale: >-
+      WCAG, Apple and Material recommend minimums; none sets spacing floors or
+      enforces them. A screen that is readable in the sun and usable with one
+      thumb needs a floor no app can lower, so we write one (AGENTS.md, the
+      rule).
 
   # --- open data --------------------------------------------------------------
   - id: cc_by_4

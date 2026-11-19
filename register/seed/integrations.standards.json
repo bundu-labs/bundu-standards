@@ -1821,7 +1821,7 @@
     "_schemaVersion": "v3.1",
     "displayName": "The Bundu floor",
     "category": "specification",
-    "description": "The minimums no screen in the ecosystem can go under: hit areas (45px on touch, 24px with a fine pointer), control heights (33 and 41), text (17px body on touch, 15px on a fine pointer, 14px captions, 1.5 leading), contrast (7:1 body, 4.5:1 other text, 3:1 interface parts), and a spacing floor for each layer (pills, chips, controls, cards, containers, page), at default and dense density. Every length is a multiple of 3, a multiple of 7, or a prime: the nearest one at or above the WCAG, Apple or Material value, never below it. It is the engineering constraint `bundu-floor`, and Mzizi implements it.",
+    "description": "The minimums no screen in the ecosystem can go under: hit areas (45px on touch, 24px with a fine pointer), control heights (33 and 41), text (17px body on touch, 15px on a fine pointer, 14px captions, 1.5 leading), contrast (7:1 body, 4.5:1 other text, 3:1 interface parts), and a spacing floor for each layer (pills, chips, controls, cards, lists, containers, page), at default and dense density. Every length is a multiple of 3, a multiple of 7, or a prime: the nearest one at or above the WCAG, Apple or Material value, never below it. It is the engineering constraint `bundu-floor`, and Mzizi implements it.",
     "versionCommitment": "1.0.0 (semver); lowering any value is a major.",
     "specificationUrl": "https://standards.bundu.org/bundu-floor/",
     "documentationUrl": null,

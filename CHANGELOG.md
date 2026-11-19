@@ -15,6 +15,9 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- **Bundu floor 1.1.0**: the owner confirmed two derived gaps (2026-11-19).
+  Label to field is 7px (dense 5px), and the gap between list items is 14px
+  (dense 7px), the card gap. Both are in `floor.json` and the page.
 - **standards.bundu.org is the only place each standard's text is published**
   (owner, 2026-11-19). Three pages that answered 404 now render from
   `standards/<slug>/`:

@@ -84,12 +84,14 @@ refuses a download that does not match. The endpoint is a convenience and an
 address that survives a repository move; it is never what a consumer has to
 trust. This matters most for `tools/register.py`, which a consumer runs.
 
-The site is `workers/standards/`, an Astro project on Cloudflare Workers with
-no database, no bindings and no secrets. Its pages (`/register/`, one per
-standard, `/register/index.json`) are built from `register/register.yaml`, so
-they cannot drift from it. Cloudflare Workers Builds deploys it: the
-`bundu-standards` Worker is connected to this repository in the Cloudflare
-dashboard, with `workers/standards` as its root directory. A push to `main`
-deploys standards.bundu.org; a push to any other branch, `staging` included,
-uploads a preview version and leaves the live site alone. The repository holds
-no Cloudflare secrets. CI still tests and builds the site on every pull request.
+The site is `workers/standards-api/`, a Rust Worker (workers-rs) that has served
+standards.bundu.org since 2026-11-17, and the only Worker that declares that route.
+Its pages (`/register/`, one per standard, `/register/index.json`) are rendered from
+`register/register.yaml` at build time, so they cannot drift from it. Its stylesheet
+and favicons are still read from `workers/standards/public/`.
+
+The Astro Worker in `workers/standards/` (`bundu-standards`) is retired as the site.
+Its route was removed when the domain moved, and the directory stays only until its
+`public/` and `site.css` move to the Rust Worker (step 4 in
+`workers/standards-api/README.md`). The repository holds no Cloudflare secrets. CI
+tests and builds both Workers on every pull request.

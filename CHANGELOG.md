@@ -15,6 +15,12 @@ Versions released before then are not renumbered.
 
 ### Changed
 
+- **docs: the site is the Rust Worker.** `docs/where-things-live.md` said the Astro
+  Worker in `workers/standards/` serves standards.bundu.org. Since 2026-11-17 the
+  Rust Worker in `workers/standards-api/` serves it, and the Astro Worker is
+  retired as the site. The Bundu floor (1.1.0) supersedes the 48px touch target
+  that the WCAG entry in the register quotes from A§8.1, as its notes already say.
+
 - **Bundu floor 1.1.0**: the owner confirmed two derived gaps (2026-11-19).
   Label to field is 7px (dense 5px), and the gap between list items is 14px
   (dense 7px), the card gap. Both are in `floor.json` and the page.

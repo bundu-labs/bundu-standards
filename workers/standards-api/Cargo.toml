@@ -22,6 +22,7 @@ serde_json = { version = "1", features = ["preserve_order"] }
 dioxus = { version = "0.7", default-features = false, features = ["macro", "html"] }
 dioxus-ssr = "0.7"
 mzizi-ui = "0.7"
+bundu-site = { path = "../../site" }
 # The server: axum on tokio, and a small HTTPS client (rustls, no OpenSSL) for the file
 # endpoint's reads of GitHub.
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal", "time"] }

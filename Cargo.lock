@@ -194,10 +194,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "87a0cf66fd1eb2fb7b822cb78370d82303750809bc6ba855f3f58e517d3238db"
 
 [[package]]
+name = "bundu-site"
+version = "0.1.0"
+dependencies = [
+ "dioxus",
+ "dioxus-ssr",
+]
+
+[[package]]
 name = "bundu-standards-api"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "bundu-site",
  "dioxus",
  "dioxus-ssr",
  "mzizi-ui",
@@ -215,6 +224,7 @@ name = "bundu-vocab"
 version = "0.7.0"
 dependencies = [
  "axum",
+ "bundu-site",
  "serde",
  "serde_json",
  "tokio",

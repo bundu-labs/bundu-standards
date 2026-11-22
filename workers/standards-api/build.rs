@@ -115,7 +115,15 @@ fn markdown(text: &str) -> String {
     let mut out = String::new();
     html::push_html(&mut out, Parser::new_ext(text, Options::ENABLE_TABLES));
     // A code block can scroll sideways, so it has to take the keyboard focus (WCAG 2.1.1).
+    // A table's header cells name their column (WCAG 1.3.1). pulldown-cmark writes a plain
+    // `<th>` for an unaligned column and a `style` attribute for an aligned one, which the
+    // content security policy forbids; the tables in our READMEs are all unaligned.
+    assert!(
+        !out.contains("<th style"),
+        "an aligned Markdown table column: use none"
+    );
     out.replace("<pre>", "<pre tabindex=\"0\">")
+        .replace("<th>", "<th scope=\"col\">")
 }
 
 /// YAML to JSON, with every scalar as a string: the pages print values, they never count

@@ -1,0 +1,13 @@
+[package]
+name = "bundu-site"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+license = "Apache-2.0"
+description = "The shared page shell, stylesheet and accessibility audit of standards.bundu.org and vocab.bundu.org"
+publish = false
+
+[dependencies]
+# Mzizi Roots: the shell is Dioxus components rendered on the server, like the pages.
+dioxus = { version = "0.7", default-features = false, features = ["macro", "html", "signals", "hooks"] }
+dioxus-ssr = "0.7"

@@ -10,9 +10,10 @@ homepage = "https://vocab.bundu.org"
 description = "The Bundu vocabulary — RDF terms for concepts schema.org has no word for"
 
 [workspace]
-members = [".", "workers/standards-api"]
+members = [".", "site", "workers/standards-api"]
 
 [dependencies]
+bundu-site = { path = "site" }
 tokio = { version = "1.40", features = ["macros", "rt-multi-thread", "signal"] }
 axum = "0.8"
 tower-http = { version = "0.7", features = ["trace", "compression-br"] }

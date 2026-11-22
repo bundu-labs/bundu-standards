@@ -319,6 +319,19 @@ Versions released before then are not renumbered.
   since failed and the live site stayed on the deploy from before #88. The `test` script runs
   the 25 tests on Node again, and CI runs them on Deno through `test:deno`.
 
+### Added
+
+- **One look for both sites: `site/` (`bundu-site`).** standards.bundu.org and vocab.bundu.org
+  render in the same Mzizi-style shell (skip link, header, labelled nav, copy control, footer)
+  and serve the same `/styles/site.css`; vocab no longer has its own inline CSS. vocab also now
+  sends the same security headers and CSP as standards.
+- **Accessibility tests ported from JavaScript to Rust, for both sites.** `bundu-site` has
+  `audit` (markup) and `css_audit` (stylesheet, with APCA-W3 Lc computed from the CSS tokens and
+  WCAG 7:1 as well, hit regions, spacing floors, focus, reduced motion), run over every page of
+  each site in `cargo test`. They found two real defects, fixed: Markdown tables in the
+  standards' pages had `th` without `scope`, and dark-theme `--muted` was only APCA Lc 56
+  (now `#d6d2c8`, Lc 77).
+
 ### Removed
 
 - The retired Astro site `workers/standards` (its `wrangler.jsonc`, `package.json`, lockfile and

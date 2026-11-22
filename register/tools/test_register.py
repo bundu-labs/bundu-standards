@@ -59,9 +59,9 @@ class RegisterTests(unittest.TestCase):
     def test_the_endpoint_serves_exactly_the_published_files(self):
         import re
 
-        worker = (register.ROOT / "workers" / "standards" / "src" / "lib" / "files.js").read_text()
-        block = re.search(r"export const FILES = \{(.*?)\n\};", worker, re.S).group(1)
-        served = tuple(re.findall(r'^\s*"([^"]+)":', block, re.M))
+        core = (register.ROOT / "workers" / "standards-api" / "src" / "core.rs").read_text()
+        block = re.search(r"pub const FILES: \[[^\n]*\] = \[(.*?)\n\];", core, re.S).group(1)
+        served = tuple(re.findall(r'\(\s*"([^"]+)",\s*"[a-z]+/[^"]+"\s*,?\s*\)', block))
         self.assertEqual(set(served), set(register.PUBLISHED))
 
     def test_lock_prints_a_sha256_for_every_published_file(self):

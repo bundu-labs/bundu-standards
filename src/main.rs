@@ -62,8 +62,20 @@ async fn main() {
 fn app() -> Router {
     Router::new()
         .route("/", get(index))
-        .route("/health", get(|| async { "ok" }))
+        .route(
+            "/healthz",
+            get(|| async {
+                (
+                    [
+                        (axum::http::header::CONTENT_TYPE, "application/json"),
+                        (axum::http::header::CACHE_CONTROL, "no-store"),
+                    ],
+                    r#"{"status":"ok"}"#,
+                )
+            }),
+        )
         .route("/context.jsonld", get(context))
+        .route(bundu_site::CSS_PATH, get(site_css))
         .route("/favicon-32x32.png", get(|| icon(FAVICON_32)))
         .route("/favicon-16x16.png", get(|| icon(FAVICON_16)))
         .route("/favicon-32x32-dark.png", get(|| icon(FAVICON_32_DARK)))
@@ -71,6 +83,7 @@ fn app() -> Router {
         .route("/apple-touch-icon.png", get(|| icon(APPLE_TOUCH_ICON)))
         .route("/copy.js", get(copy_js))
         .route("/{term}", get(term))
+        .layer(axum::middleware::map_response(security_headers))
         .layer(CompressionLayer::new())
         .layer(TraceLayer::new_for_http())
 }
@@ -203,7 +216,7 @@ async fn context() -> Response {
 
 // The official Bundu mark (copper), as shipped by www.bundu.org: a
 // light-surface and a dark-surface pair, picked by the browser's colour
-// scheme, never redrawn. The same files are in workers/standards/public; a
+// scheme, never redrawn. The same files are in workers/standards-api/public; a
 // test keeps the two copies identical.
 const FAVICON_32: &[u8] = include_bytes!("brand/favicon-32x32.png");
 const FAVICON_16: &[u8] = include_bytes!("brand/favicon-16x16.png");
@@ -225,7 +238,7 @@ async fn icon(bytes: &'static [u8]) -> Response {
 // ── Handlers ─────────────────────────────────────────────────────────────
 
 /// The script behind "Copy this page as": the same file standards.bundu.org serves from
-/// workers/standards/public/copy.js. A test keeps the two identical.
+/// workers/standards-api/public/copy.js. A test keeps the two identical.
 const COPY_JS: &str = include_str!("copy.js");
 
 async fn copy_js() -> Response {
@@ -299,7 +312,6 @@ async fn index(headers: HeaderMap) -> Response {
         Some(index_jsonld()),
         &format!(
             r#"<header>
-  <p class="eyebrow">vocab.bundu.org</p>
   <h1>The Bundu vocabulary</h1>
   <p class="lede">RDF terms for concepts schema.org has no word for, published
   for every Bundu standard across every domain. Each term had to earn its
@@ -397,7 +409,7 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
         Some(term_jsonld(t)),
         &format!(
             r#"<header>
-  <p class="eyebrow"><a href="/">vocab.bundu.org</a> / {kind}</p>
+  <p class="eyebrow">{kind}</p>
   <h1><code class="term">{id}</code></h1>
   <p class="lede">{comment}</p>
 </header>
@@ -452,7 +464,6 @@ fn not_found(name: &str, as_html: bool) -> Response {
                 None,
                 &format!(
                     r#"<header>
-  <p class="eyebrow"><a href="/">vocab.bundu.org</a></p>
   <h1>Not a term</h1>
   <p class="lede">This vocabulary defines no term called
   <code>{}</code>. See <a href="/">the index</a> for what it does define.</p>
@@ -505,154 +516,82 @@ fn prose(s: &str) -> String {
         .collect()
 }
 
-/// A page. `path` gives the canonical link; `data` is what "Copy this page as" offers as
-/// JSON-LD (a page without it offers Markdown only).
+/// A page, in the shell that standards.bundu.org shares (`bundu-site`). `path` gives the
+/// canonical link; `data` is what "Copy this page as" offers as JSON-LD (a page without it
+/// offers Markdown only).
 fn page(title: &str, path: Option<&str>, data: Option<Value>, body: &str) -> String {
-    let canonical = path
-        .map(|p| {
-            format!(
-                "<link rel=\"canonical\" href=\"{}{}\">\n",
-                NAMESPACE.trim_end_matches('/'),
-                p
+    let site = bundu_site::Page {
+        path: path.unwrap_or("/").to_owned(),
+        canonical: path.is_some(),
+        origin: NAMESPACE.trim_end_matches('/').to_owned(),
+        // The home page is the site, so its title is the site name; every other page is
+        // "<page> — <site>", with no word in both halves.
+        title: if path == Some("/") {
+            "Bundu vocabulary".to_owned()
+        } else {
+            format!("{title} — Bundu vocabulary")
+        },
+        description: "The Bundu vocabulary: RDF terms for concepts schema.org has no word for."
+            .into(),
+        brand: "Bundu vocabulary".into(),
+        links: vec![
+            bundu_site::NavLink::new("All terms", "/"),
+            bundu_site::NavLink::new("JSON-LD context", "/context.jsonld"),
+            bundu_site::NavLink::new(
+                "Standards register",
+                "https://standards.bundu.org/register/",
+            ),
+            bundu_site::NavLink::new(
+                "Accessibility",
+                "https://standards.bundu.org/accessibility/",
+            ),
+        ],
+        json_label: "JSON-LD".into(),
+        json_ld: None,
+        // `</script>` cannot appear inside the JSON: every `<` is written as \u003c.
+        page_json: data.map(|v| {
+            (
+                "application/ld+json".to_owned(),
+                v.to_string().replace('<', "\\u003c"),
             )
-        })
-        .unwrap_or_default();
-    // `</script>` cannot appear inside the JSON: every `<` is written as \u003c.
-    let data = data
-        .map(|v| {
-            format!(
-                "<script type=\"application/ld+json\" id=\"page-json\">{}</script>\n",
-                v.to_string().replace('<', "\\u003c")
-            )
-        })
-        .unwrap_or_default();
-    format!(
-        r##"<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} — Bundu vocabulary</title>
-{canonical}{data}<script src="/copy.js" defer></script>
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32-dark.png" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16-dark.png" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<meta name="theme-color" content="#FAF9F5" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0B0B0D" media="(prefers-color-scheme: dark)">
-<style>
-/* The Bundu pattern: copper, the stewardship mineral (Mzizi seven-minerals),
-   on neutral grounds, within the Bundu floor (7:1 body contrast, 17px body on
-   touch and 15px on a fine pointer, 1.5 leading, 14px captions, 45px / 24px
-   hit regions). */
-:root {{
-  color-scheme: light dark;
-  --ground: #FAF9F5; --surface: #fff; --line: #E2DFD6;
-  --text: #17161A; --muted: #4D4A45; --accent: #7E3B24;
-  --body: 17px; --caption: 14px; --leading: 1.5; --hit: 45px;
-}}
-@media (prefers-color-scheme: dark) {{
-  :root {{
-    --ground: #0B0B0D; --surface: #131317; --line: #2B2B34;
-    --text: #F2F1EE; --muted: #B0ACA2; --accent: #FFC3B0;
-  }}
-}}
-@media (pointer: fine) and (hover: hover) and (min-width: 64rem) and (not (any-pointer: coarse)) {{
-  :root {{ --body: 15px; --hit: 24px; }}
-}}
-* {{ box-sizing: border-box; }}
-body {{
-  background: var(--ground); color: var(--text);
-  font: var(--body)/var(--leading) -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  margin: 0; padding: 0 24px 96px;
-}}
-.mark {{ display: block; }}
-.mark-dark {{ display: none; }}
-@media (prefers-color-scheme: dark) {{
-  .mark-light {{ display: none; }}
-  .mark-dark {{ display: block; }}
-}}
-header.site, footer.site {{ max-width: 680px; margin: 0 auto; }}
-header.site {{ display: flex; flex-wrap: wrap; align-items: center; column-gap: 20px; row-gap: 7px; padding-top: 14px; }}
-header.site a {{ display: inline-flex; align-items: center; gap: 7px; min-height: var(--hit); }}
-header.site a.home {{ color: var(--text); font-weight: 700; text-decoration: none; }}
-header.site ul {{ display: flex; flex-wrap: wrap; column-gap: 20px; row-gap: 7px; list-style: none; margin: 0; padding: 0; }}
-footer.site {{ color: var(--muted); font-size: max(.88rem, var(--caption)); border-top: 1px solid var(--line); margin-top: 48px; padding-top: 14px; }}
-.skip {{ position: absolute; left: 14px; top: -100vh; z-index: 10; padding: 14px; background: var(--ground);
-        color: var(--accent); border: 2px solid var(--accent); border-radius: 8px; font-weight: 600; }}
-.skip:focus {{ top: 14px; }}
-:focus-visible {{ outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 3px; }}
-main:focus {{ outline: none; }}
-.sr-only {{ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
-            clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }}
-kbd {{ font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: max(.88em, var(--caption));
-      border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 .3em; background: var(--surface); }}
-@media (prefers-reduced-motion: reduce) {{ * {{ scroll-behavior: auto !important; transition: none !important; animation: none !important; }} }}
-@media (forced-colors: active) {{ :focus-visible {{ outline-color: Highlight; }} }}
-main {{ max-width: 680px; margin: 0 auto; overflow-wrap: anywhere; }}
-header {{ padding: 72px 0 8px; }}
-h1 {{ font-size: 2.2rem; line-height: 1.1; letter-spacing: -.03em; margin: .2em 0; }}
-h2 {{ font-size: 1.05rem; letter-spacing: -.01em; margin: 2.4rem 0 .6rem; }}
-p {{ margin: .7em 0; }}
-.eyebrow {{
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: var(--caption); letter-spacing: .14em; text-transform: uppercase;
-  color: var(--muted); margin: 0;
-}}
-.lede {{ font-size: 1.05rem; color: var(--muted); }}
-a {{ color: var(--accent); text-underline-offset: 2px; }}
-code {{
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: max(.88em, var(--caption)); background: var(--surface);
-  border: 1px solid var(--line); border-radius: 4px; padding: .08em .34em;
-}}
-code.term {{ font-size: max(.8em, var(--caption)); background: none; border: none; padding: 0; }}
-pre {{ overflow-x: auto; background: var(--surface); border: 1px solid var(--line);
-      border-radius: 8px; padding: 1rem; }}
-pre code {{ background: none; border: none; padding: 0; }}
-table {{ border-collapse: collapse; width: 100%; margin: 1.6rem 0; }}
-th, td {{ text-align: left; padding: .55rem .2rem; border-bottom: 1px solid var(--line);
-         vertical-align: top; }}
-th {{ width: 9rem; font-weight: 600; color: var(--muted); font-size: max(.88rem, var(--caption)); }}
-ul.terms {{ list-style: none; padding: 0; margin: 0; }}
-ul.terms li {{ padding: 1rem 0; border-bottom: 1px solid var(--line); }}
-ul.terms li span {{ color: var(--muted); font-size: max(.88rem, var(--caption)); margin-left: .35rem; }}
-ul.terms li p {{ margin: .35em 0 0; color: var(--muted); font-size: max(.93rem, var(--caption)); }}
-/* Copy this page as Markdown or JSON-LD (copy.js). Hidden until the script runs. */
-.copy {{ display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 7px;
-        margin: 0 0 14px; font-size: max(.9rem, var(--caption)); }}
-.copy[hidden] {{ display: none; }}
-.copy select, .copy button {{ min-height: var(--hit); font: inherit; color: var(--text); background: var(--surface);
-        border: 1px solid var(--muted); border-radius: 8px; padding: 0 .75rem; }}
-.copy button {{ color: var(--accent); border-color: var(--accent); font-weight: 600; cursor: pointer; }}
-.copy-status {{ color: var(--muted); }}
-</style>
-</head>
-<body>
-<a class="skip" href="#main">Skip to main content</a>
-<header class="site">
-<a class="home" href="/"><img class="mark mark-light" src="/favicon-32x32.png" alt="" width="28" height="28"><img class="mark mark-dark" src="/favicon-32x32-dark.png" alt="" width="28" height="28"><span>Bundu vocabulary</span></a>
-<nav aria-label="Main"><ul>
-<li><a href="/">All terms</a></li>
-<li><a href="/context.jsonld">JSON-LD context</a></li>
-<li><a href="https://standards.bundu.org/register/">Standards register</a></li>
-<li><a href="https://standards.bundu.org/accessibility/">Accessibility</a></li>
-</ul></nav>
-</header>
-<main id="main" tabindex="-1">
-<div class="copy" data-copy data-md-skip hidden>
-<label for="copy-format">Copy this page as</label>
-<select id="copy-format"><option value="markdown">Markdown</option><option value="json">JSON-LD</option></select>
-<button type="button">Copy</button>
-<span class="copy-status" role="status"></span>
-</div>
-{body}
-</main>
-<footer class="site"><p>Every page works with a keyboard alone: <kbd>Tab</kbd> moves forward, <kbd>Shift</kbd>+<kbd>Tab</kbd> moves back, <kbd>Enter</kbd> follows a link. <a href="https://github.com/bundu-labs/bundu-standards/issues/new?title=Accessibility%3A%20">Report a barrier</a>.</p></footer>
-</body>
-</html>"##
+        }),
+    };
+    let footer = r##"<p>Every page works with a keyboard alone: <kbd>Tab</kbd> moves forward, <kbd>Shift</kbd>+<kbd>Tab</kbd> moves back, <kbd>Enter</kbd> follows a link. Read the <a href="https://standards.bundu.org/accessibility/">accessibility statement</a> or <a href="https://github.com/bundu-labs/bundu-standards/issues/new?title=Accessibility%3A%20">report a barrier</a>.</p>"##;
+    bundu_site::render_html(site, "", footer, body)
+}
+
+/// The shared stylesheet, the one standards.bundu.org serves.
+async fn site_css() -> Response {
+    (
+        [
+            (header::CONTENT_TYPE, "text/css; charset=utf-8"),
+            (header::CACHE_CONTROL, "public, max-age=300"),
+        ],
+        bundu_site::CSS,
     )
+        .into_response()
+}
+
+/// The security headers and content security policy standards.bundu.org sends: nothing inline,
+/// scripts and styles from this origin only.
+async fn security_headers(mut res: Response) -> Response {
+    let h = res.headers_mut();
+    for (k, v) in [
+        ("x-content-type-options", "nosniff"),
+        ("referrer-policy", "no-referrer"),
+        ("x-frame-options", "DENY"),
+        ("permissions-policy", "geolocation=(), camera=(), microphone=()"),
+        (
+            "content-security-policy",
+            "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        ),
+    ] {
+        h.insert(
+            header::HeaderName::from_static(k),
+            header::HeaderValue::from_static(v),
+        );
+    }
+    res
 }
 
 #[cfg(test)]
@@ -673,7 +612,7 @@ mod tests {
     #[test]
     fn brand_icons_match_the_standards_site() {
         let site =
-            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("workers/standards/public");
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("workers/standards-api/public");
         for (name, bytes) in [
             ("favicon-32x32.png", FAVICON_32),
             ("favicon-16x16.png", FAVICON_16),
@@ -705,7 +644,7 @@ mod tests {
         assert!(html.contains(r#"<nav aria-label="Main">"#));
         assert!(html.contains(r#"<main id="main" tabindex="-1">"#));
         assert!(html.contains("<footer") && html.contains("<kbd>Tab</kbd>"));
-        assert!(html.contains("Report a barrier"));
+        assert!(html.contains("report a barrier"));
         assert!(html.contains(r#"<html lang="en">"#));
         for img in html
             .match_indices("<img ")
@@ -737,44 +676,40 @@ mod tests {
         }
     }
 
-    fn luminance(hex: &str) -> f64 {
-        let c: Vec<f64> = (0..3)
-            .map(|i| u8::from_str_radix(&hex[1 + 2 * i..3 + 2 * i], 16).unwrap() as f64 / 255.0)
-            .map(|v| {
-                if v <= 0.04045 {
-                    v / 12.92
-                } else {
-                    ((v + 0.055) / 1.055).powf(2.4)
-                }
-            })
-            .collect();
-        0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
-    }
-
-    fn contrast(a: &str, b: &str) -> f64 {
-        let (x, y) = (luminance(a), luminance(b));
-        (x.max(y) + 0.05) / (x.min(y) + 0.05)
-    }
-
-    fn token(block: &str, name: &str) -> String {
-        let at = block
-            .find(&format!("--{name}: "))
-            .unwrap_or_else(|| panic!("--{name} missing"));
-        block[at + name.len() + 4..at + name.len() + 11].to_string()
-    }
-
-    /// The Bundu floor: every text colour pair at 7:1 or more, in both themes.
+    /// The stylesheet is the one standards.bundu.org serves, and it keeps the Bundu floor:
+    /// APCA and WCAG contrast from its own tokens in both themes, focus, hit regions, spacing
+    /// floors, reduced motion (see `bundu-site`'s `css_audit`).
     #[test]
-    fn text_colours_meet_the_bundu_floor_in_both_themes() {
-        let html = page("t", None, None, "");
-        let light = &html[html.find(":root {").unwrap()..];
-        let dark = &html[html.find("@media (prefers-color-scheme: dark)").unwrap()..];
-        for block in [light, dark] {
-            let ground = token(block, "ground");
-            for fg in ["text", "muted", "accent"] {
-                let c = contrast(&token(block, fg), &ground);
-                assert!(c >= 7.0, "--{fg} on --ground is {c:.2}:1");
-            }
+    fn the_stylesheet_keeps_the_bundu_floor() {
+        assert_eq!(
+            bundu_site::css_audit::audit(bundu_site::CSS),
+            Vec::<String>::new()
+        );
+    }
+
+    /// Every page the vocabulary renders passes the shared accessibility audit: the index, every
+    /// term (those with permitted values too) and the not-found page.
+    #[tokio::test]
+    async fn every_page_passes_the_shared_accessibility_audit() {
+        async fn page_html(path: &str) -> String {
+            use tower::ServiceExt;
+            let req = axum::http::Request::builder()
+                .uri(path)
+                .header(header::ACCEPT, "text/html")
+                .body(axum::body::Body::empty())
+                .unwrap();
+            body(app().oneshot(req).await.unwrap()).await
+        }
+        let mut pages = vec![("/".to_owned(), page_html("/").await)];
+        for t in terms::TERMS {
+            let p = format!("/{}", t.id);
+            let html = page_html(&p).await;
+            pages.push((p, html));
+        }
+        pages.push(("/notATerm".into(), page_html("/notATerm").await));
+        for (p, html) in pages {
+            let problems = bundu_site::audit::audit(&html);
+            assert!(problems.is_empty(), "{p}: {problems:#?}");
         }
     }
 
@@ -1055,13 +990,13 @@ mod tests {
     #[tokio::test]
     async fn every_page_offers_to_copy_itself_as_markdown_or_json_ld() {
         let html = body(index(accept("text/html")).await).await;
-        assert!(html.contains(r#"<div class="copy" data-copy data-md-skip hidden>"#));
+        assert!(html.contains(r#"<div class="copy" data-copy="" data-md-skip="" hidden="hidden">"#));
         assert!(html.contains(
             r#"<option value="markdown">Markdown</option><option value="json">JSON-LD</option>"#
         ));
         assert!(!html.contains(r#"value="html""#), "Markdown, not HTML");
-        assert!(html.contains(r#"<script src="/copy.js" defer></script>"#));
-        assert!(html.contains(r#"<link rel="canonical" href="https://vocab.bundu.org/">"#));
+        assert!(html.contains(r#"<script src="/copy.js" defer="defer">"#));
+        assert!(html.contains(r#"<link rel="canonical" href="https://vocab.bundu.org/"/>"#));
         let t = &terms::TERMS[0];
         let term_page = body(term(Path(t.id.to_string()), accept("text/html")).await).await;
         let start = term_page
@@ -1075,8 +1010,8 @@ mod tests {
     fn the_copy_script_is_the_same_file_on_both_sites() {
         assert_eq!(
             COPY_JS,
-            include_str!("../workers/standards/public/copy.js"),
-            "src/copy.js and workers/standards/public/copy.js must stay identical"
+            include_str!("../workers/standards-api/public/copy.js"),
+            "src/copy.js and workers/standards-api/public/copy.js must stay identical"
         );
     }
 
@@ -1101,8 +1036,8 @@ mod tests {
         let html =
             body(term(Path("notificationPreference".into()), accept("text/html")).await).await;
         assert!(
-            html.contains("overflow-wrap: anywhere"),
-            "long term names and URIs wrap"
+            bundu_site::CSS.contains("overflow-wrap: anywhere"),
+            "long term names and URIs wrap (the shared stylesheet)"
         );
         assert!(
             html.contains(r#"<pre tabindex="0" role="region" aria-label="Example request">"#),
@@ -1117,7 +1052,7 @@ mod tests {
         use tower::ServiceExt;
         for (path, status) in [
             ("/", StatusCode::OK),
-            ("/health", StatusCode::OK),
+            ("/healthz", StatusCode::OK),
             ("/context.jsonld", StatusCode::OK),
             ("/copy.js", StatusCode::OK),
             ("/favicon-32x32.png", StatusCode::OK),

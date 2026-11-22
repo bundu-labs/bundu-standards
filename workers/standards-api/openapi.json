@@ -3,7 +3,7 @@
   "info": {
     "title": "Bundu standards",
     "version": "0.1.0",
-    "description": "standards.bundu.org: the register of the open standards the Bundu, Mukoko and Nyuchi platform builds on, our own published standards, and the register's files at any commit. Read-only: every route answers GET and HEAD (and an OPTIONS preflight); any other method is a 405. Pages accept their path with or without the trailing slash; the canonical form is listed. No route takes a query parameter; the query string is ignored. Errors are RFC 9457 problem details. Nothing needs authentication. The routes are checked against the Worker's router by `cargo test` (workers/standards-api/src/openapi.rs).",
+    "description": "standards.bundu.org: the register of the open standards the Bundu, Mukoko and Nyuchi platform builds on, our own published standards, and the register's files at any commit. Read-only: every route answers GET and HEAD (and an OPTIONS preflight); any other method is a 405. Pages accept their path with or without the trailing slash; the canonical form is listed. No route takes a query parameter; the query string is ignored. Errors are RFC 9457 problem details. Nothing needs authentication. The routes are checked against the server's router by `cargo test` (workers/standards-api/src/openapi.rs).",
     "contact": {
       "name": "Bundu Labs",
       "url": "https://github.com/bundu-labs/bundu-standards"
@@ -1585,7 +1585,7 @@
       "get": {
         "tags": ["meta"],
         "summary": "Health",
-        "description": "Always ok while the Worker runs.",
+        "description": "Always ok while the server runs.",
         "operationId": "getHealthz",
         "responses": {
           "200": {

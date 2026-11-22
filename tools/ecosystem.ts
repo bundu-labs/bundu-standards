@@ -7,7 +7,7 @@
 // Generated:
 //   ecosystem/ECOSYSTEM.md                 the record as tables, for people
 //   ecosystem/ecosystem.jsonld             the record as schema.org JSON-LD, for machines
-//   workers/standards/public/ecosystem.jsonld   the same file, served at standards.bundu.org
+//   workers/standards-api/public/ecosystem.jsonld   the same file, served at standards.bundu.org
 import { parse } from "jsr:@std/yaml@1.0.9";
 
 export const SITE = "https://standards.bundu.org";
@@ -16,7 +16,7 @@ const SOURCE = "ecosystem/ecosystem.yaml";
 const OUTPUTS = {
   markdown: "ecosystem/ECOSYSTEM.md",
   jsonld: "ecosystem/ecosystem.jsonld",
-  served: "workers/standards/public/ecosystem.jsonld",
+  served: "workers/standards-api/public/ecosystem.jsonld",
 };
 
 // "proposed": designed, not being built yet (a future build-out). Terms only, never a product.

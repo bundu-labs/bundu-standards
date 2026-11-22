@@ -26,7 +26,7 @@
   :root {
     --bg: #141412;
     --fg: #ece9e1;
-    --muted: #b0aca2;
+    --muted: #d6d2c8; /* APCA Lc 77 on bg, 77 on chip (was 57 and 55) */
     --line: #2f2d29;
     --accent: #ffc3b0; /* copper textDark */
     --chip: #23221f;
@@ -110,3 +110,16 @@ nav.tabs a { display: inline-flex; align-items: center; min-height: var(--hit); 
 nav.tabs a[aria-current="page"] { color: var(--fg); background: var(--bg); border-color: var(--line); border-bottom-color: var(--bg); text-decoration: none; }
 
 @media (forced-colors: active) { .chip { border: 1px solid CanvasText; } :focus-visible { outline-color: Highlight; } nav.tabs a[aria-current="page"] { border-color: CanvasText; } }
+
+/* The vocabulary's pages (vocab.bundu.org): a term's header, the term list and the
+   definition table. Same tokens as the register's pages; nothing here has a colour of its own. */
+main > header { padding: 1.5rem 0 0; }
+.eyebrow { font-family: ui-monospace, "JetBrains Mono", monospace; font-size: var(--caption); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.lede { font-size: 1.05rem; color: var(--muted); }
+code.term { background: none; border: none; padding: 0; }
+ul.terms { list-style: none; padding: 0; margin: 0; }
+ul.terms li { padding: 0.5rem 0; border-bottom: 1px solid var(--line); }
+ul.terms li span { color: var(--muted); font-size: max(0.88rem, var(--caption)); margin-left: var(--gap-floor); }
+ul.terms li p { margin: 0.25rem 0 0; color: var(--muted); }
+table th[scope="row"] { width: 9rem; color: var(--muted); font-weight: 600; }
+ul.terms a, main > header .eyebrow a { display: inline-flex; align-items: center; min-height: var(--hit); }

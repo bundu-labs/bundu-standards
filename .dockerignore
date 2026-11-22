@@ -1,11 +1,14 @@
-# The build happens inside the image — shipping the host's build output makes
-# the context hundreds of megabytes and slows every deploy.
-target/
+# The build happens inside the image; shipping the host's build output makes the context
+# hundreds of megabytes and slows every deploy.
+**/target/
 .git/
 .github/
+**/node_modules/
 
-# Docs and local files the binary does not need.
-*.md
-!README.md
+# Local files the images do not need. (Not *.md: the standards' READMEs and register/REGISTER.md
+# are inputs to the standards build. The Dockerfile builds either site from the root.)
 .env
 .env.*
+docs/
+ecosystem/
+tools/

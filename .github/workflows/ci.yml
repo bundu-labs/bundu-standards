@@ -6,7 +6,7 @@ on:
   # The merge queue tests the exact commit it is about to merge.
   merge_group:
   push:
-    branches: [main, staging]
+    branches: [main]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -16,32 +16,65 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  # Both sites are built and tested the same way: one Cargo workspace, one lockfile, one
+  # Dockerfile with a BIN build argument. The matrix is the only difference between them.
   test:
     runs-on: ubuntu-latest
-    name: Test & Build
+    name: Test & Build (${{ matrix.bin }})
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - bin: vocab
+            package: bundu-vocab
+          - bin: standards
+            package: bundu-standards-api
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@89b12181fb390509a0842a86cc55eeb8eb928c1d # stable
         with:
           components: rustfmt, clippy
 
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
 
       - name: Format
-        run: cargo fmt --all -- --check
+        run: cargo fmt --package ${{ matrix.package }} --package bundu-site -- --check
 
       - name: Clippy
-        run: cargo clippy --all-targets -- -D warnings
+        run: cargo clippy --package ${{ matrix.package }} --package bundu-site --all-targets --locked -- -D warnings
 
       - name: Test
-        run: cargo test --all-targets
+        run: cargo test --package ${{ matrix.package }} --package bundu-site --all-targets --locked
 
       - name: Build release
-        run: cargo build --release
+        run: cargo build --package ${{ matrix.package }} --release --locked
+
+      # The image Coolify builds: the root Dockerfile from the repository root, with BIN set to
+      # this site. Start it as the container runs (non-root, port 8080) and ask it the same
+      # question a health check asks.
+      - name: Build the image
+        run: docker build --build-arg BIN=${{ matrix.bin }} --tag ${{ matrix.bin }}:ci .
+
+      - name: Start it and ask it
+        run: |
+          set -euo pipefail
+          docker run --detach --name site --publish 8080:8080 ${{ matrix.bin }}:ci
+          trap 'docker logs site; docker rm --force site' EXIT
+          for _ in $(seq 1 30); do
+            curl -sf http://127.0.0.1:8080/healthz && break
+            sleep 1
+          done
+          test "$(curl -sf http://127.0.0.1:8080/healthz)" = '{"status":"ok"}'
+          curl -sf -H 'Accept: text/html' http://127.0.0.1:8080/ | grep -q '<html'
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H 'Accept: text/html' http://127.0.0.1:8080/no-such-page-here)" = 404
+          if [ "${{ matrix.bin }}" = standards ]; then
+            curl -sf http://127.0.0.1:8080/register/index.json | grep -q '"standards"'
+            test "$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:8080/)" = 405
+          fi
 
   # The published URIs are a permanent contract. This catches the failure
   # mode that matters most: a term that stops resolving, or one whose
@@ -56,9 +89,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@89b12181fb390509a0842a86cc55eeb8eb928c1d # stable
 
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
 
       - name: Build
         run: cargo build --release
@@ -67,7 +100,7 @@ jobs:
         run: |
           LISTEN_ADDR=127.0.0.1:8080 ./target/release/bundu-vocab &
           for _ in $(seq 1 30); do
-            curl -sf http://127.0.0.1:8080/health && break
+            curl -sf http://127.0.0.1:8080/healthz && break
             sleep 1
           done
 
@@ -113,64 +146,9 @@ jobs:
       - name: Ecosystem tool tests
         run: deno test --allow-read tools/ecosystem_test.ts
 
-  # standards.bundu.org: the Worker that serves the register at a commit.
-  endpoint:
-    runs-on: ubuntu-latest
-    name: Standards endpoint
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
-        with:
-          deno-version: v2.x
-      - name: Install
-        working-directory: workers/standards
-        # Deno resolves the packages from package.json; package-lock.json stays as the lock
-        # Cloudflare Workers Builds deploys from. esbuild and workerd need their install scripts.
-        run: deno install --allow-scripts=npm:esbuild,npm:workerd
-
-      - name: Tests
-        working-directory: workers/standards
-        run: deno task test:deno
-
-      - name: Build
-        working-directory: workers/standards
-        run: deno task build
-
-  standards-api:
-    runs-on: ubuntu-latest
-    name: Standards API (Rust Worker)
-    permissions:
-      contents: read
-    defaults:
-      run:
-        working-directory: workers/standards-api
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-          components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: workers/standards-api
-      - name: Format
-        run: cargo fmt --check
-      - name: Clippy (native and wasm32)
-        run: |
-          cargo clippy --all-targets -- -D warnings
-          cargo clippy --release --target wasm32-unknown-unknown -- -D warnings
-      - name: Tests (the cases of workers/standards/test/files.test.js)
-        run: cargo test
-      - name: Build for Workers
-        run: cargo build --release --target wasm32-unknown-unknown
-
   comment:
-    needs: [test, contract, register, endpoint, standards-api]
-    # Push runs (main, staging) have no pull request to comment on.
+    needs: [test, contract, register]
+    # Push runs (main) have no pull request to comment on.
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     name: PR Status Comment
@@ -188,9 +166,8 @@ jobs:
             if (baseBranch === 'main') {
               deployInfo = `
             ### 🚀 Deployment
-            When merged, this deploys to **production**:
-            - **URL:** https://vocab.bundu.org
-            - **Fly app:** bundu-vocab (jnb)
+            When merged, standards.bundu.org rebuilds on Coolify from the root \
+            Dockerfile (BIN=standards), and vocab.bundu.org with BIN=vocab.
 
             ⚠️ Term URIs are a permanent contract. A term that has been \
             published and embedded in someone's data must never change meaning or \
@@ -201,9 +178,8 @@ jobs:
 
             | Check | Status |
             |-------|--------|
-            | Format & Clippy | ✅ Pass |
-            | Tests | ✅ Pass |
             | Vocabulary Contract | ✅ Pass |
+            | Both sites: format, clippy, tests, image | ✅ Pass |
             ${deployInfo}
 
             ---

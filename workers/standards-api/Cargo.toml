@@ -4,14 +4,16 @@ version = "0.1.0"
 edition = "2021"
 rust-version = "1.85"
 license = "Apache-2.0"
-description = "standards.bundu.org, its pages and its file endpoint, as a Rust Cloudflare Worker"
+description = "standards.bundu.org: its pages and its file endpoint, as a small native Rust server"
 publish = false
 
-# Its own package, not part of the vocab server's: it builds for wasm32 and has its own deps.
-[workspace]
-
 [lib]
-crate-type = ["cdylib", "rlib"]
+name = "bundu_standards_api"
+path = "src/lib.rs"
+
+[[bin]]
+name = "bundu-standards"
+path = "src/main.rs"
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
@@ -20,8 +22,14 @@ serde_json = { version = "1", features = ["preserve_order"] }
 dioxus = { version = "0.7", default-features = false, features = ["macro", "html"] }
 dioxus-ssr = "0.7"
 mzizi-ui = "0.7"
+bundu-site = { path = "../../site" }
+# The server: axum on tokio, and a small HTTPS client (rustls, no OpenSSL) for the file
+# endpoint's reads of GitHub.
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal", "time"] }
+axum = { version = "0.8", default-features = false, features = ["http1", "tokio"] }
+reqwest = { version = "0.13", default-features = false, features = ["rustls", "http2"] }
 
-# build.rs turns register/register.yaml into JSON, so no YAML parser goes into the wasm.
+# build.rs turns register/register.yaml into JSON, so no YAML parser goes into the binary.
 [build-dependencies]
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }
@@ -29,13 +37,5 @@ serde_yaml = "0.9"
 # Renders our own standards' READMEs to HTML at build time, so no Markdown parser ships.
 pulldown-cmark = { version = "0.13", default-features = false, features = ["html"] }
 
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-worker = "0.9"
-
 [dev-dependencies]
 pollster = "0.4"
-
-[profile.release]
-opt-level = "s"
-lto = true
-codegen-units = 1

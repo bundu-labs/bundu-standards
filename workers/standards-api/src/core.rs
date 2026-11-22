@@ -1,4 +1,4 @@
-//! The file endpoint of standards.bundu.org, without the platform.
+//! The file endpoint of standards.bundu.org, without the HTTP server or client.
 //!
 //! It holds no data and no secret. It serves four files of `register/` from the public
 //! repository `bundu-labs/bundu-standards` at a commit the caller names:
@@ -12,7 +12,7 @@
 //! /healthz
 //! ```
 //!
-//! The same behaviour as `workers/standards/src/lib/files.js`, which it replaces: the path after
+//! The same behaviour as the JavaScript endpoint it replaced: the path after
 //! the host is the one raw.githubusercontent.com uses, a commit's files are cached for a year,
 //! and nothing outside the four files is fetched (this is not an open proxy).
 
@@ -22,7 +22,7 @@ pub const REPO: &str = "bundu-labs/bundu-standards";
 pub const RAW: &str = "https://raw.githubusercontent.com/bundu-labs/bundu-standards";
 pub const LATEST_URL: &str = "https://api.github.com/repos/bundu-labs/bundu-standards/commits/main";
 /// Git's own ref advertisement. Not the REST API, so not held to its limit of 60
-/// unauthenticated requests an hour per IP, which Cloudflare's shared egress runs out of.
+/// unauthenticated requests an hour per IP, which a shared egress address can run out of.
 pub const REFS_URL: &str =
     "https://github.com/bundu-labs/bundu-standards.git/info/refs?service=git-upload-pack";
 pub const USER_AGENT: &str = "standards.bundu.org";
@@ -50,14 +50,14 @@ pub struct Upstream {
     pub body: Vec<u8>,
 }
 
-/// How the endpoint reaches GitHub. The Worker uses `fetch`; the tests use a fake.
+/// How the endpoint reaches GitHub. The server uses [`crate::github::GitHub`]; the tests use a fake.
 #[allow(async_fn_in_trait)]
 pub trait Fetch {
     async fn get(&self, url: &str, accept: Option<&str>) -> Result<Upstream, ()>;
 }
 
-/// A response, independent of the platform.
-#[derive(Debug)]
+/// A response, independent of the HTTP server.
+#[derive(Debug, Clone)]
 pub struct Reply {
     pub status: u16,
     pub headers: Vec<(&'static str, String)>,
@@ -286,7 +286,7 @@ async fn latest(origin: &str, path: &str, fetch: &impl Fetch) -> Reply {
 
 #[cfg(test)]
 mod tests {
-    //! The same cases as workers/standards/test/files.test.js.
+    //! The cases of the endpoint's contract, from its JavaScript tests.
     use super::*;
     use pollster::block_on;
     use std::cell::RefCell;
@@ -470,7 +470,7 @@ mod tests {
             "001e# service=git-upload-pack\n0000\
              0155{a} HEAD\0multi_ack symref=HEAD:refs/heads/main\n\
              003f{SHA} refs/heads/main\n\
-             0044{b} refs/heads/staging\n0000"
+             0044{b} refs/heads/release\n0000"
         );
         let f = fake(move |u| {
             if u == LATEST_URL {
@@ -506,7 +506,7 @@ mod tests {
 
     #[test]
     fn the_cache_key_ignores_the_query_string() {
-        // The Worker passes only the path, so `?a=1` and `?a=2` share one key.
+        // The server passes only the path, so `?a=1` and `?a=2` share one key.
         let key = cache_key(ORIGIN, "/register/latest");
         assert_eq!(key, "https://standards.bundu.org/register/latest");
         assert!(!key.contains('?'));

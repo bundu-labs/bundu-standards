@@ -1,6 +1,6 @@
-//! The register, for the pages: the Rust port of `workers/standards/src/lib/register.js`.
+//! The register, for the pages: its model and the checks on it.
 //!
-//! Pure, with no platform dependency. `build.rs` turns `register/register.yaml` into JSON;
+//! Pure, with no network or server dependency. `build.rs` turns `register/register.yaml` into JSON;
 //! [`Register::parse`] reads that JSON and checks it the way `parseRegister` did.
 
 use serde::{Deserialize, Serialize};

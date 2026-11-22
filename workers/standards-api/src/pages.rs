@@ -1,11 +1,11 @@
 //! The pages of standards.bundu.org, rendered on the server with Dioxus (Mzizi Roots).
 //!
-//! The Rust port of `workers/standards/src/layouts/Base.astro` and its four pages. Same
-//! markup, same classes, same text: `site.css` styles both. A standard's status is the Mzizi
+//! The pages: the layout and its page kinds, styled by `styles/site.css`. A standard's status is the Mzizi
 //! [`Badge`] (`mzizi-ui`), which carries the registry's `data-slot` and `data-portal`; the
 //! site ships no Tailwind, so its `.chip` rules give the badge its look.
 
 use crate::register::{self, Register, Standard, SITE};
+use bundu_site::NavLink;
 use dioxus::prelude::*;
 use mzizi_ui::{Badge, BadgeVariant};
 use std::sync::LazyLock;
@@ -46,9 +46,8 @@ fn primary_json(files: &serde_json::Map<String, serde_json::Value>) -> Option<se
     serde_json::from_str(files[name].as_str()?).ok()
 }
 
-/// The stylesheet, served at [`CSS_PATH`]. One file for the Astro and the Rust builds.
-pub const CSS: &str = include_str!("../../standards/src/styles/site.css");
-pub const CSS_PATH: &str = "/styles/site.css";
+/// The stylesheet (`styles/site.css`), served at [`CSS_PATH`].
+pub use bundu_site::{CSS, CSS_PATH};
 /// Where the OpenAPI description is served; also at `/.well-known/openapi.json`.
 pub const OPENAPI_PATH: &str = "/openapi.json";
 
@@ -59,7 +58,7 @@ pub struct Page {
 }
 
 /// The page for `path`, or `None` when this module has no page there. Trailing slashes are
-/// optional, as with Astro's `trailingSlash: "ignore"`.
+/// optional, as the site always did.
 pub fn render(path: &str) -> Option<Page> {
     let trimmed = path.trim_end_matches('/');
     let r = &*REGISTER;
@@ -80,7 +79,7 @@ pub fn render(path: &str) -> Option<Page> {
         "/register" => html(document(
             path,
             rsx! { RegisterTab { status: "adopted" } },
-            ("Register · Bundu standards".into(), TAB_DESCRIPTION.into()),
+            ("Register — Bundu standards".into(), TAB_DESCRIPTION.into()),
             Some(register::defined_term_set(r, SITE)),
             Some(register::tab_json(r, "adopted", SITE)),
         )),
@@ -88,7 +87,7 @@ pub fn render(path: &str) -> Option<Page> {
             path,
             rsx! { RegisterTab { status: "proposed" } },
             (
-                "Proposed · Register · Bundu standards".into(),
+                "Proposed register — Bundu standards".into(),
                 TAB_DESCRIPTION.into(),
             ),
             None,
@@ -98,7 +97,7 @@ pub fn render(path: &str) -> Option<Page> {
             content_type: "application/json; charset=utf-8",
             body: register::index_json(r, SITE),
         }),
-        // This host's OpenAPI description, for API clients and Cloudflare's schema validation.
+        // This host's OpenAPI description, for API clients and schema validators.
         OPENAPI_PATH | "/.well-known/openapi.json" => Some(Page {
             content_type: "application/json",
             body: crate::openapi::OPENAPI.to_owned(),
@@ -126,7 +125,7 @@ pub fn render(path: &str) -> Option<Page> {
                 path,
                 rsx! { StandardDocument { slug: slug.to_owned() } },
                 (
-                    format!("{} · Bundu standards", s.name),
+                    format!("{} — Bundu standards", s.name),
                     register::one_line(&s.governs).replace('`', ""),
                 ),
                 None,
@@ -140,7 +139,7 @@ pub fn render(path: &str) -> Option<Page> {
                 path,
                 rsx! { StandardPage { id: s.id.clone() } },
                 (
-                    format!("{} · Bundu standards", s.name),
+                    format!("{} — Bundu standards", s.name),
                     register::one_line(&s.governs).replace('`', ""),
                 ),
                 Some(register::defined_term_page(s, SITE)),
@@ -162,12 +161,12 @@ fn home_meta() -> (String, String) {
 
 fn accessibility_meta() -> (String, String) {
     (
-        "Accessibility · Bundu standards".into(),
+        "Accessibility — Bundu standards".into(),
         "How standards.bundu.org and vocab.bundu.org work for everyone, with a keyboard, a screen reader, zoom or colour-blind vision, and how to report a barrier.".into(),
     )
 }
 
-/// The whole document: `<!doctype html>` and the [`Base`] layout around `main`.
+/// The whole document: the shared shell (`bundu-site`) around `main`.
 fn document(
     path: &str,
     main: Element,
@@ -177,123 +176,51 @@ fn document(
 ) -> String {
     // `</script>` cannot appear inside the JSON: every `<` is written as <.
     let script = |v: serde_json::Value| v.to_string().replace('<', "\\u003c");
-    let json_ld = json_ld.map(script);
-    let page_json = page_json.map(script);
-    let body = dioxus_ssr::render_element(rsx! {
-        Base { path: path.to_owned(), title, description, json_ld, page_json, {main} }
-    });
-    // Dioxus has no `html` element, so the root is written here.
-    format!("<!doctype html><html lang=\"en\">{body}</html>")
-}
-
-/// aria-current for a main navigation link, as Base.astro worked it out: the register's
-/// pages count as the register.
-fn current(path: &str, href: &str) -> Option<&'static str> {
-    if href == "/" {
-        return (path == "/").then_some("page");
-    }
-    if path == href {
-        Some("page")
-    } else if path.starts_with(href) {
-        Some("location")
-    } else {
-        None
-    }
-}
-
-#[component]
-fn Base(
-    path: String,
-    title: String,
-    description: String,
-    json_ld: Option<String>,
-    page_json: Option<String>,
-    children: Element,
-) -> Element {
-    let canonical = format!("{SITE}{path}");
-    rsx! {
-        head {
-                meta { charset: "utf-8" }
-                meta { name: "viewport", content: "width=device-width, initial-scale=1" }
-                title { "{title}" }
-                meta { name: "description", content: "{description}" }
-                link { rel: "canonical", href: "{canonical}" }
-                // The official Bundu mark (copper), as shipped by www.bundu.org: a light-surface
-                // and a dark-surface pair, picked by the browser's colour scheme. Never redrawn.
-                link { rel: "icon", r#type: "image/png", sizes: "32x32", href: "/favicon-32x32.png", media: "(prefers-color-scheme: light)" }
-                link { rel: "icon", r#type: "image/png", sizes: "16x16", href: "/favicon-16x16.png", media: "(prefers-color-scheme: light)" }
-                link { rel: "icon", r#type: "image/png", sizes: "32x32", href: "/favicon-32x32-dark.png", media: "(prefers-color-scheme: dark)" }
-                link { rel: "icon", r#type: "image/png", sizes: "16x16", href: "/favicon-16x16-dark.png", media: "(prefers-color-scheme: dark)" }
-                link { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" }
-                meta { name: "theme-color", content: "#fbfaf7", "media": "(prefers-color-scheme: light)" }
-                meta { name: "theme-color", content: "#141412", "media": "(prefers-color-scheme: dark)" }
-                link { rel: "stylesheet", href: CSS_PATH }
-                // The OpenAPI description of every route here (RFC 8631 service-desc).
-                link { rel: "service-desc", r#type: "application/openapi+json", href: OPENAPI_PATH }
-                if let Some(ld) = json_ld {
-                    script { r#type: "application/ld+json", dangerous_inner_html: "{ld}" }
-                }
-                // The data the copy control offers as JSON; pages without it offer Markdown only.
-                if let Some(data) = page_json {
-                    script { r#type: "application/json", id: "page-json", dangerous_inner_html: "{data}" }
-                }
-                script { src: "/copy.js", defer: "defer" }
-            }
-            body {
-                a { class: "skip", href: "#main", "Skip to main content" }
-                header { class: "site",
-                    a { class: "brand", href: "/", "aria-current": current(&path, "/"),
-                        img { class: "mark-light", src: "/favicon-32x32.png", alt: "", width: "24", height: "24" }
-                        img { class: "mark-dark", src: "/favicon-32x32-dark.png", alt: "", width: "24", height: "24" }
-                        "Bundu standards"
-                    }
-                    nav { "aria-label": "Main",
-                        ul {
-                            li { a { href: "/register/", "aria-current": current(&path, "/register/"), "Register" } }
-                            li { a { href: "/register/index.json", "JSON", span { class: "sr-only", " (the register as JSON data)" } } }
-                            li { a { href: "https://github.com/bundu-labs/bundu-standards", "Source", span { class: "sr-only", " code on GitHub" } } }
-                            li { a { href: "/accessibility/", "aria-current": current(&path, "/accessibility/"), "Accessibility" } }
-                        }
-                    }
-                }
-                main { id: "main", tabindex: "-1",
-                    // Copy this page as Markdown or JSON (public/copy.js). Hidden until the
-                    // script runs, so no reader meets a button that does nothing.
-                    div { class: "copy", "data-copy": "", "data-md-skip": "", hidden: "hidden",
-                        label { r#for: "copy-format", "Copy this page as" }
-                        select { id: "copy-format",
-                            option { value: "markdown", "Markdown" }
-                            option { value: "json", "JSON" }
-                        }
-                        button { r#type: "button", "Copy" }
-                        span { class: "copy-status", role: "status" }
-                    }
-                    {children}
-                }
-                footer { class: "site",
-                    p {
-                        "Published by the "
-                        a { href: "https://www.bundu.org", "Bundu Foundation" }
-                        ". The register is CC0."
-                    }
-                    p {
-                        "Every page works with a keyboard alone: "
-                        kbd { "Tab" }
-                        " moves forward, "
-                        kbd { "Shift" }
-                        "+"
-                        kbd { "Tab" }
-                        " moves back, "
-                        kbd { "Enter" }
-                        " follows a link. Read the "
-                        a { href: "/accessibility/", "accessibility statement" }
-                        " or "
-                        a { href: "https://github.com/bundu-labs/bundu-standards/issues/new?title=Accessibility%3A%20", "report a barrier" }
-                        "."
-                    }
-                }
-            }
-    }
+    let page = bundu_site::Page {
+        path: path.to_owned(),
+        canonical: true,
+        origin: SITE.to_owned(),
+        title,
+        description,
+        brand: "Bundu standards".into(),
+        links: vec![
+            NavLink::new("Register", "/register/"),
+            NavLink::new("JSON", "/register/index.json").hint("the register as JSON data"),
+            NavLink::new("Source", "https://github.com/bundu-labs/bundu-standards")
+                .hint("code on GitHub"),
+            NavLink::new("Accessibility", "/accessibility/"),
+        ],
+        json_label: "JSON".into(),
+        json_ld: json_ld.map(script),
+        page_json: page_json.map(|v| ("application/json".to_owned(), script(v))),
+    };
+    let head = rsx! {
+        // The OpenAPI description of every route here (RFC 8631 service-desc).
+        link { rel: "service-desc", r#type: "application/openapi+json", href: OPENAPI_PATH }
+    };
+    let footer = rsx! {
+        p {
+            "Published by the "
+            a { href: "https://www.bundu.org", "Bundu Foundation" }
+            ". The register is CC0."
+        }
+        p {
+            "Every page works with a keyboard alone: "
+            kbd { "Tab" }
+            " moves forward, "
+            kbd { "Shift" }
+            "+"
+            kbd { "Tab" }
+            " moves back, "
+            kbd { "Enter" }
+            " follows a link. Read the "
+            a { href: "/accessibility/", "accessibility statement" }
+            " or "
+            a { href: "https://github.com/bundu-labs/bundu-standards/issues/new?title=Accessibility%3A%20", "report a barrier" }
+            "."
+        }
+    };
+    bundu_site::render(page, head, footer, main)
 }
 
 /// A standard's status: the Mzizi badge, read as "Status: adopted" by a screen reader.
@@ -587,6 +514,91 @@ mod tests {
         render(path)
             .unwrap_or_else(|| panic!("no page at {path}"))
             .body
+    }
+
+    /// Every page the site renders, register entries and our own standards included.
+    fn all_paths() -> Vec<String> {
+        let mut paths = vec![
+            "/".to_owned(),
+            "/register/".into(),
+            "/register/proposed/".into(),
+            "/accessibility/".into(),
+        ];
+        paths.extend(
+            REGISTER
+                .standards
+                .iter()
+                .map(|s| format!("/register/{}/", s.id)),
+        );
+        paths.extend(DOCUMENTS.keys().map(|slug| format!("/{slug}/")));
+        paths
+    }
+
+    /// The shared accessibility audit (`bundu-site`): lang, skip link first, landmarks,
+    /// labelled navigation, heading order, names for links and fields, alt text, captions,
+    /// unique ids, no inline style or script (the CSP), no zoom lock.
+    #[test]
+    fn every_page_passes_the_shared_accessibility_audit() {
+        for p in all_paths() {
+            let problems = bundu_site::audit::audit(&page(&p));
+            assert!(problems.is_empty(), "{p}: {problems:#?}");
+        }
+    }
+
+    /// The stylesheet both sites serve: APCA and WCAG contrast from its own tokens in both
+    /// themes, focus, hit regions, spacing floors, reduced motion.
+    #[test]
+    fn the_stylesheet_passes_the_shared_accessibility_audit() {
+        assert_eq!(bundu_site::css_audit::audit(CSS), Vec::<String>::new());
+    }
+
+    /// Status is text, never colour alone: every badge carries "Status: " for a screen reader.
+    #[test]
+    fn status_is_text_never_colour_alone() {
+        for p in ["/register/", "/register/proposed/"] {
+            let html = page(p);
+            assert!(
+                html.contains(r#"<span class="sr-only">Status: </span>"#),
+                "{p}"
+            );
+        }
+        let s = &REGISTER.standards[0];
+        assert!(page(&format!("/register/{}/", s.id))
+            .contains(r#"<span class="sr-only">Status: </span>"#));
+    }
+
+    /// The copy control: Markdown and JSON (never HTML), hidden until its script runs, with a
+    /// status announced; and the script that shows it is the one served.
+    #[test]
+    fn the_copy_control_is_hidden_until_its_script_runs_and_announces() {
+        let html = page("/");
+        assert!(html.contains(r#"<div class="copy" data-copy="" data-md-skip="" hidden="hidden">"#));
+        assert!(html.contains(r#"<label for="copy-format">Copy this page as</label>"#));
+        assert!(html.contains(r#"<option value="markdown">Markdown</option>"#));
+        assert!(html.contains(r#"<option value="json">JSON</option>"#));
+        assert!(!html.to_lowercase().contains(r#"value="html""#));
+        assert!(html.contains(r#"role="status""#));
+        assert!(html.contains(r#"<script src="/copy.js" defer="defer">"#));
+        let js = String::from_utf8(crate::assets::find("/copy.js").unwrap().to_vec()).unwrap();
+        assert!(js.contains("root.hidden = false"));
+        assert!(js.contains(r#"getElementById("page-json")"#));
+    }
+
+    /// The accessibility statement: keyboard help, a way to report a barrier, captioned tables,
+    /// and a link to it from every page's footer.
+    #[test]
+    fn the_accessibility_statement_has_keyboard_help_and_a_way_to_report() {
+        let html = page("/accessibility/");
+        for s in [
+            "<kbd>Tab</kbd>",
+            "<kbd>Shift</kbd>",
+            "<kbd>Enter</kbd>",
+            "report a barrier",
+            "<caption",
+        ] {
+            assert!(html.contains(s), "{s}");
+        }
+        assert!(page("/").contains(r#"href="/accessibility/""#));
     }
 
     #[test]

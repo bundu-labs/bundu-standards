@@ -8,12 +8,46 @@ stable term's meaning.
 From 2026-10-04 releases follow the org versioning policy
 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): a release
 to `main` is the next minor above the highest tag (so the next is 0.2.0),
-merges into `staging` are patches, and a major is only released by hand.
+and a major is only released by hand. Work is trunk-based on `main`.
 Versions released before then are not renumbered.
 
 ## Unreleased
 
 ### Changed
+
+- **standards.bundu.org is a plain container, and Cloudflare is gone from the repository.**
+  `workers/standards-api` is now a small native Rust server (axum on tokio, no JavaScript
+  runtime) instead of a `workers-rs` Worker. The pages, the file endpoint, the OpenAPI
+  document and their tests are the same code; what is new is the listener
+  (`LISTEN_ADDR`, default `0.0.0.0:8080`), a rustls HTTPS client with timeouts for the
+  reads of GitHub, an in-process cache in place of the edge cache, and `src/assets.rs`, which
+  serves `public/` and applies its `_headers` rules. Responses were compared with the live site
+  for `/`, `/register/`, `/register/index.json`, `/healthz`, `/openapi.json`, a 404 and a 405:
+  the bodies are identical (the live pages carry an extra script that Cloudflare injects), and so
+  are the headers except the content security policy and the pages' `cache-control`, below.
+  - The content security policy no longer carries a per-request nonce and `connect-src 'self'`.
+    They existed only for Cloudflare's bot detection script. It is now the policy of
+    `public/_headers`, and a test holds the two equal. Pages are `public, max-age=300`
+    (they were `private`, because of the nonce).
+  - `/register/latest` names itself by `PUBLIC_ORIGIN` (default `https://standards.bundu.org`)
+    instead of the request's host.
+- **One `Dockerfile` builds both sites** (owner, 2026-11-22): `BIN=standards` (default) or
+  `BIN=vocab`; multi-stage, `--locked`, one dependency-cache layer pattern, distroless
+  `cc-debian12:nonroot`, port 8080, no `HEALTHCHECK` (check `/healthz` from outside). The vocab
+  crate and `workers/standards-api` are now one Cargo workspace with one `Cargo.lock`, and the
+  old vocab `Dockerfile` is replaced by this one. **The vocab liveness path is renamed `/health`
+  to `/healthz`** and answers `{"status":"ok"}` like the standards server (Fly, which used
+  `/health`, is removed). `.dockerignore` keeps `register/` and `standards/` in
+  the context, which the build reads. CI builds the image and asks it `/healthz`, `/`,
+  `/register/index.json`, a 404 and a 405.
+- `public/` (favicons, `robots.txt`, `copy.js`, `ecosystem.jsonld`, `_headers`) and `site.css` moved
+  from `workers/standards` into `workers/standards-api` (`public/`, `styles/site.css`).
+  `tools/ecosystem.ts` now writes `ecosystem.jsonld` there.
+- CI: the "Standards endpoint" job (Deno, Astro) and "Standards API (Rust Worker)" are removed.
+  "Test & Build" is now one matrix over both sites ("Test & Build (vocab)" and "(standards)"):
+  fmt, clippy `-D warnings`, tests, release build, then the Docker image built with `BIN` and
+  asked `/healthz`. The Rust and cache actions are pinned to commit SHAs. Dependabot
+  drops npm and watches `workers/standards-api`.
 
 - **docs: the site is the Rust Worker.** `docs/where-things-live.md` said the Astro
   Worker in `workers/standards/` serves standards.bundu.org. Since 2026-11-17 the
@@ -284,6 +318,41 @@ Versions released before then are not renumbered.
   `test` script, which #88 had pointed at Deno; the build image has no Deno, so every build
   since failed and the live site stayed on the deploy from before #88. The `test` script runs
   the 25 tests on Node again, and CI runs them on Deno through `test:deno`.
+
+### Shared UI and accessibility
+
+- **One look for both sites: `site/` (`bundu-site`).** standards.bundu.org and vocab.bundu.org
+  render in the same Mzizi-style shell (skip link, header, labelled nav, copy control, footer)
+  and serve the same `/styles/site.css`; vocab no longer has its own inline CSS. vocab also now
+  sends the same security headers and CSP as standards.
+- **Accessibility tests ported from JavaScript to Rust, for both sites.** `bundu-site` has
+  `audit` (markup) and `css_audit` (stylesheet, with APCA-W3 Lc computed from the CSS tokens and
+  WCAG 7:1 as well, hit regions, spacing floors, focus, reduced motion), run over every page of
+  each site in `cargo test`. They found two real defects, fixed: Markdown tables in the
+  standards' pages had `th` without `scope`, and dark-theme `--muted` was only APCA Lc 56
+  (now `#d6d2c8`, Lc 77).
+
+- **No repeated words in titles and headings.** A page's title is `<page> — <site>` (the site
+  name alone on the home page), with no word in both halves; the `h1` does not repeat the
+  site name; a heading does not restate its parent. vocab's index was "The Bundu vocabulary
+  — Bundu vocabulary" and is now "Bundu vocabulary"; vocab's "vocab.bundu.org /" crumb above each
+  heading is gone (the header already names the site); standards' titles use "—" like vocab's,
+  and the proposed register is "Proposed register — Bundu standards". The rule is checked on
+  every page of both sites by `bundu-site`'s audit (the org name "Bundu", which starts every
+  site name, is not counted as a repeat).
+
+### Removed
+
+- Every reference to a `staging` branch: `staging-version.yml` (it only tagged merges into
+  `staging`), the `staging` target in Dependabot, CI and the docs. Work is trunk-based on `main`
+  and every merge to `main` is a minor release. vocab's register entry now says it is served
+  from a Docker build on self-hosted Coolify, not Fly (register and seed regenerated).
+- The retired Astro site `workers/standards` (its `wrangler.jsonc`, `package.json`, lockfile and
+  JavaScript tests), `workers/standards-api/wrangler.toml`, the `worker` dependency and the
+  wasm32 build. Its accessibility checks on the CSS colour pairs, focus styles and hit regions
+  were JavaScript and are not ported yet.
+- Fly.io deployment wiring: `fly.toml` and `.github/workflows/fly-deploy.yml`. The vocab server
+  and its tests stay; it deploys to Coolify too (cutover of vocab.bundu.org from Fly pending).
 
 ## 0.7.0 - 2026-11-15
 

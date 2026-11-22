@@ -218,15 +218,14 @@ That rises to 1 when a second engineer with merge rights joins.
 Every release follows the org policy
 ([#80](https://github.com/nyuchi/.github/issues/80)):
 
-- **A merge into `staging` is a PATCH** (x.y.z → x.y.z+1). It is tagged
-  automatically and deployed to the repo's live beta.
-- **Releasing `staging` to `main` is a MINOR** (x.y.z → x.y+1.0).
+- **Every merge into `main` is a MINOR** (x.y.z → x.y+1.0), tagged
+  automatically. Work is trunk-based: there is no other long-lived branch.
 - **A MAJOR is manual only**: the owner runs the release workflow with
   `bump: major`. Automation never makes one.
-- Minor and patch have no upper limit: patch 999 is followed by patch
-  1000, minor 999 by minor 1000. Only a major is manual.
+- A minor has no upper limit: minor 999 is followed by minor 1000. Only a
+  major is manual.
 - `workflow_dispatch` on a release workflow takes
-  `bump: patch|minor|major` as a manual override.
+  `bump: minor|major` as a manual override.
 
 There are no version labels. Released versions are never renumbered.
 The calculator is

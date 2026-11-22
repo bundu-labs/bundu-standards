@@ -143,7 +143,7 @@ standards:
     url: https://vocab.bundu.org
     docs: https://github.com/bundu-labs/bundu-standards
     notes: >-
-      Served by the Fly app bundu-vocab (jnb) from bundu-labs/bundu-standards.
+      Served from a Docker build of bundu-labs/bundu-standards on self-hosted Coolify.
       Every term dereferences to JSON-LD, or HTML when asked for it. A term
       the platform emits under vocab.bundu.org must be in the live index.
     foundational: true

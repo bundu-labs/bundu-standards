@@ -1,11 +1,11 @@
 //! The site's own routes: the pages, `/register/index.json` and the stylesheet, with the
-//! headers `workers/standards/public/_headers` gave them. Platform-free, like [`crate::core`].
+//! headers `public/_headers` gives the static files. Server-free, like [`crate::core`].
 
 use crate::core::Reply;
 use crate::pages::{self, CSS, CSS_PATH};
 
-/// The security headers every page carries (from `public/_headers`), besides the content
-/// security policy, which [`csp`] writes per request.
+/// The security headers every page carries (the same as `public/_headers`), besides the
+/// content security policy, which is [`CSP`].
 const SECURITY: [(&str, &str); 4] = [
     ("x-content-type-options", "nosniff"),
     ("referrer-policy", "no-referrer"),
@@ -16,23 +16,12 @@ const SECURITY: [(&str, &str); 4] = [
     ),
 ];
 
-/// The content security policy, with a fresh `nonce` for each response.
-///
-/// Our own scripts load from this origin (`'self'`) and need no nonce. The nonce is there for
-/// Cloudflare's bot detection: it injects an inline script into HTML responses, and it stamps
-/// that script with the nonce it reads from this header (Cloudflare docs, "JavaScript
-/// Detections", "If you have a Content Security Policy"). Without one, the injected script is
-/// blocked. That script then reports back to `/cdn-cgi/challenge-platform/` on this origin,
-/// so `connect-src 'self'` lets it connect here and nowhere else. The nonce must be unpredictable and never reused, so the Worker draws it from the
-/// platform's cryptographic random source for every request.
-pub fn csp(nonce: &str) -> String {
-    format!(
-        "default-src 'none'; script-src 'self' 'nonce-{nonce}'; connect-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
-    )
-}
+/// The content security policy, the same as the `/*` rule of `public/_headers`: our own
+/// scripts and styles load from this origin and nothing is inline. A test holds the two equal.
+pub const CSP: &str = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'";
 
 /// The answer for a site route, or `None` to hand the request to [`crate::core::route`].
-pub fn reply(method: &str, path: &str, nonce: &str) -> Option<Reply> {
+pub fn reply(method: &str, path: &str) -> Option<Reply> {
     if method != "GET" && method != "HEAD" {
         return None;
     }
@@ -48,17 +37,10 @@ pub fn reply(method: &str, path: &str, nonce: &str) -> Option<Reply> {
         .iter()
         .map(|(k, v)| (*k, (*v).to_owned()))
         .collect();
-    headers.push(("content-security-policy", csp(nonce)));
+    headers.push(("content-security-policy", CSP.to_owned()));
     headers.push(("content-type", content_type.to_owned()));
-    // The pages change only on a release, which redeploys the Worker. A page carries a
-    // one-time nonce, so only the visitor's own browser may keep it; data and the stylesheet
-    // may sit in shared caches.
-    let scope = if content_type.starts_with("text/html") {
-        "private"
-    } else {
-        "public"
-    };
-    headers.push(("cache-control", format!("{scope}, max-age=300")));
+    // The pages change only on a release, which redeploys the server.
+    headers.push(("cache-control", "public, max-age=300".to_owned()));
     if cors {
         headers.push(("access-control-allow-origin", "*".to_owned()));
     }
@@ -70,47 +52,26 @@ pub fn reply(method: &str, path: &str, nonce: &str) -> Option<Reply> {
     })
 }
 
-/// A fresh nonce for a test, drawn like the Worker's: never a fixed value, so no test (and no
-/// code copied from one) ever hands the policy a nonce that is known in advance. The Worker
-/// itself uses `crypto.getRandomValues`, which only exists on the platform; here the standard
-/// library's randomly keyed hasher supplies 128 unpredictable bits, which is all a test needs.
-#[cfg(test)]
-pub(crate) fn test_nonce() -> String {
-    use std::collections::hash_map::RandomState;
-    use std::hash::{BuildHasher, Hasher};
-    let keys = RandomState::new();
-    let half = |n: u8| {
-        let mut h = keys.build_hasher();
-        h.write_u8(n);
-        h.finish()
-    };
-    format!("{:016x}{:016x}", half(0), half(1))
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::LazyLock;
-
-    static NONCE: LazyLock<String> = LazyLock::new(test_nonce);
 
     #[test]
-    fn the_policy_allows_our_scripts_and_the_nonce_and_nothing_inline() {
-        let r = reply("GET", "/register/", &NONCE).unwrap();
+    fn the_policy_is_the_one_in_the_headers_file_and_allows_nothing_inline() {
+        let r = reply("GET", "/register/").unwrap();
         let p = r.header("content-security-policy").unwrap();
-        assert!(p.contains(&format!("script-src 'self' 'nonce-{}';", *NONCE)));
-        assert!(
-            p.contains("connect-src 'self';"),
-            "the bot check reports to this origin only"
-        );
+        let headers = crate::assets::rules();
+        let all = headers.iter().find(|r| r.pattern == "/*").unwrap();
+        let file = all
+            .headers
+            .iter()
+            .find(|(k, _)| *k == "content-security-policy")
+            .unwrap();
+        assert_eq!(p, file.1, "public/_headers and CSP must agree");
         assert!(!p.contains("unsafe-inline") && !p.contains("unsafe-eval"));
         assert!(p.starts_with("default-src 'none';"));
-        assert_eq!(
-            r.header("cache-control"),
-            Some("private, max-age=300"),
-            "no shared cache keeps a nonce"
-        );
-        let css = reply("GET", "/styles/site.css", &NONCE).unwrap();
+        assert_eq!(r.header("cache-control"), Some("public, max-age=300"));
+        let css = reply("GET", "/styles/site.css").unwrap();
         assert_eq!(css.header("cache-control"), Some("public, max-age=300"));
         // The pages themselves carry no inline script that runs: their only inline scripts are
         // data (JSON-LD and the copy control's JSON), which a browser never executes.
@@ -130,7 +91,7 @@ mod tests {
 
     #[test]
     fn pages_carry_the_security_headers() {
-        let r = reply("GET", "/", &NONCE).unwrap();
+        let r = reply("GET", "/").unwrap();
         assert_eq!(r.status, 200);
         assert_eq!(r.header("content-type"), Some("text/html; charset=utf-8"));
         assert!(r
@@ -143,27 +104,26 @@ mod tests {
 
     #[test]
     fn the_json_is_open_to_any_origin_and_head_has_no_body() {
-        let r = reply("HEAD", "/register/index.json", &NONCE).unwrap();
+        let r = reply("HEAD", "/register/index.json").unwrap();
         assert_eq!(r.header("access-control-allow-origin"), Some("*"));
         assert!(r.body.is_none());
     }
 
     #[test]
     fn the_stylesheet_is_served() {
-        let r = reply("GET", "/styles/site.css", &NONCE).unwrap();
+        let r = reply("GET", "/styles/site.css").unwrap();
         assert_eq!(r.header("content-type"), Some("text/css; charset=utf-8"));
         assert!(r.body.unwrap().starts_with(b"/* standards.bundu.org"));
     }
 
     #[test]
     fn everything_else_falls_through_to_the_file_endpoint() {
-        assert!(reply("GET", "/register/latest", &NONCE).is_none());
-        assert!(reply("GET", "/healthz", &NONCE).is_none());
-        assert!(reply("POST", "/", &NONCE).is_none());
+        assert!(reply("GET", "/register/latest").is_none());
+        assert!(reply("GET", "/healthz").is_none());
+        assert!(reply("POST", "/").is_none());
         assert!(reply(
             "GET",
-            "/0123456789abcdef0123456789abcdef01234567/register/register.yaml",
-            &NONCE
+            "/0123456789abcdef0123456789abcdef01234567/register/register.yaml"
         )
         .is_none());
     }

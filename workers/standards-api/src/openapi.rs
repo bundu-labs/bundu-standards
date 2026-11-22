@@ -2,10 +2,10 @@
 //! `/.well-known/openapi.json`.
 //!
 //! The document is the committed file `workers/standards-api/openapi.json`, built into the
-//! Worker. It is what goes to Cloudflare API Shield (schema validation), so it must name every
-//! route the Worker answers and nothing it does not. The tests below hold it to the router:
-//! a route the Worker serves that the document leaves out fails them, and so does a path in the
-//! document that the Worker does not serve.
+//! server. It is what API clients and schema validators read, so it must name every
+//! route the server answers and nothing it does not. The tests below hold it to the router:
+//! a route the server serves that the document leaves out fails them, and so does a path in the
+//! document that the server does not serve.
 
 /// The OpenAPI document, as committed.
 pub const OPENAPI: &str = include_str!("../openapi.json");
@@ -20,16 +20,11 @@ mod tests {
     use pollster::block_on;
     use serde_json::Value;
     use std::collections::{BTreeSet, VecDeque};
-    use std::path::Path;
-    use std::sync::LazyLock;
 
     const SHA: &str = "e15535a4fbaab894167cc87644baa4168b5f8150";
-    /// A fresh nonce for this run, never a fixed value (see [`site::test_nonce`]).
-    static NONCE: LazyLock<String> = LazyLock::new(site::test_nonce);
-    /// The static files the platform serves before the Worker runs (`[assets]` in
-    /// wrangler.toml).
-    const ASSETS: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../standards/public");
-    /// The router's source: every path literal in it that the Worker serves must be in the
+    /// The static files the server answers before anything else (`public/`).
+    const ASSETS: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/public");
+    /// The router's source: every path literal in it that the server serves must be in the
     /// document, linked from a page or not.
     const SOURCES: [&str; 3] = [
         include_str!("core.rs"),
@@ -52,21 +47,13 @@ mod tests {
         serde_json::from_str(OPENAPI).expect("openapi.json is JSON")
     }
 
-    fn asset(path: &str) -> bool {
-        let rel = path.trim_start_matches('/');
-        !rel.is_empty()
-            && !rel.contains("..")
-            && !rel.starts_with('_')
-            && Path::new(ASSETS).join(rel).is_file()
-    }
-
-    /// How the deployed Worker answers a GET for `path`: the content type of a 200, or `None`.
-    /// Static assets first, as the platform does; then the site; then the file endpoint.
+    /// How the deployed server answers a GET for `path`: the content type of a 200, or `None`.
+    /// Static assets first, as the server does; then the site; then the file endpoint.
     fn serves(path: &str) -> Option<String> {
-        if asset(path) {
+        if crate::assets::find(path).is_some() {
             return Some("(static asset)".to_owned());
         }
-        if let Some(r) = site::reply("GET", path, &NONCE) {
+        if let Some(r) = site::reply("GET", path) {
             return (r.status == 200).then(|| r.header("content-type").unwrap().to_owned());
         }
         let r = block_on(core::route("GET", SITE, path, &GitHub));
@@ -83,7 +70,7 @@ mod tests {
                 .all(|(t, p)| *t == *p || (t.starts_with('{') && t.ends_with('}') && !p.is_empty()))
     }
 
-    /// The document's path covering `path`. The Worker treats a trailing slash as optional,
+    /// The document's path covering `path`. The server treats a trailing slash as optional,
     /// so either form counts; the document lists the canonical one.
     fn covered<'a>(templates: &'a [String], path: &str) -> Option<&'a str> {
         let other = match path.strip_suffix('/') {
@@ -151,7 +138,7 @@ mod tests {
         format!("/{}", out.join("/"))
     }
 
-    /// Every path the Worker serves that we can name: the routes its data produces, every path
+    /// Every path the server serves that we can name: the routes its data produces, every path
     /// literal in its source that it answers, the static assets, and everything a page links to.
     fn served_paths() -> BTreeSet<String> {
         let mut seeds: Vec<String> = vec!["/".into(), format!("/{SHA}/register/register.yaml")];
@@ -204,7 +191,7 @@ mod tests {
             };
             seen.insert(path.clone());
             if ty.starts_with("text/html") {
-                let html = site::reply("GET", &path, &NONCE).unwrap().body.unwrap();
+                let html = site::reply("GET", &path).unwrap().body.unwrap();
                 for l in links(&String::from_utf8(html).unwrap(), &path) {
                     queue.push_back((l, true));
                 }
@@ -231,7 +218,7 @@ mod tests {
             .collect();
         assert!(
             missing.is_empty(),
-            "served by the Worker but not in openapi.json: {missing:?}"
+            "served by the server but not in openapi.json: {missing:?}"
         );
     }
 
@@ -296,7 +283,7 @@ mod tests {
     fn the_routers_json_has_exactly_the_described_fields() {
         let doc = doc();
         let body = |path: &str| -> Value {
-            let r = match site::reply("GET", path, &NONCE) {
+            let r = match site::reply("GET", path) {
                 Some(r) => r,
                 None => block_on(core::route("GET", SITE, path, &GitHub)),
             };
@@ -345,10 +332,7 @@ mod tests {
     #[test]
     fn it_is_openapi_3_0_for_this_host() {
         let doc = doc();
-        assert_eq!(
-            doc["openapi"], "3.0.3",
-            "Cloudflare schema validation takes 3.0.x"
-        );
+        assert_eq!(doc["openapi"], "3.0.3", "schema validators take 3.0.x");
         assert_eq!(doc["servers"][0]["url"], SITE);
         assert_eq!(doc["servers"].as_array().unwrap().len(), 1);
     }
@@ -395,7 +379,7 @@ mod tests {
     #[test]
     fn the_document_is_served_at_both_paths_as_json() {
         for path in ["/openapi.json", "/.well-known/openapi.json"] {
-            let r = site::reply("GET", path, &NONCE).unwrap();
+            let r = site::reply("GET", path).unwrap();
             assert_eq!(r.status, 200, "{path}");
             assert_eq!(r.header("content-type"), Some("application/json"), "{path}");
             assert_eq!(
@@ -410,8 +394,7 @@ mod tests {
 
     #[test]
     fn every_page_links_the_document_as_its_service_description() {
-        let html =
-            String::from_utf8(site::reply("GET", "/", &NONCE).unwrap().body.unwrap()).unwrap();
+        let html = String::from_utf8(site::reply("GET", "/").unwrap().body.unwrap()).unwrap();
         assert!(html.contains(
             r#"<link rel="service-desc" type="application/openapi+json" href="/openapi.json"/>"#
         ));

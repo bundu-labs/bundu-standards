@@ -4,7 +4,7 @@ name: All checks green
 # red or orange. This job waits until every other check on the commit has
 # finished, then passes only if each one passed or was skipped. Failed,
 # cancelled, timed out, neutral, action required, stale or still pending all
-# block. Make this one check required on staging and main, for pull requests
+# block. Make this one check required on main, for pull requests
 # and for the merge queue, and no merge can get past a red or unfinished check,
 # required or not.
 

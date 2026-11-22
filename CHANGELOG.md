@@ -8,7 +8,7 @@ stable term's meaning.
 From 2026-10-04 releases follow the org versioning policy
 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): a release
 to `main` is the next minor above the highest tag (so the next is 0.2.0),
-merges into `staging` are patches, and a major is only released by hand.
+and a major is only released by hand. Work is trunk-based on `main`.
 Versions released before then are not renumbered.
 
 ## Unreleased
@@ -334,6 +334,10 @@ Versions released before then are not renumbered.
 
 ### Removed
 
+- Every reference to a `staging` branch: `staging-version.yml` (it only tagged merges into
+  `staging`), the `staging` target in Dependabot, CI and the docs. Work is trunk-based on `main`
+  and every merge to `main` is a minor release. vocab's register entry now says it is served
+  from a Docker build on self-hosted Coolify, not Fly (register and seed regenerated).
 - The retired Astro site `workers/standards` (its `wrangler.jsonc`, `package.json`, lockfile and
   JavaScript tests), `workers/standards-api/wrangler.toml`, the `worker` dependency and the
   wasm32 build. Its accessibility checks on the CSS colour pairs, focus styles and hit regions

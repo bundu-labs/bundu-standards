@@ -4,13 +4,12 @@ name: Release
 # tag (x.y.z -> x.y+1.0, org policy nyuchi/.github#80): once the checks pass,
 # the `release` job tags vX.Y.Z and creates a GitHub release whose notes are
 # that version's CHANGELOG.md section, or the "## Unreleased" section when
-# there is none. A commit that is already tagged releases nothing. Merges into
-# staging are tagged as patches by staging-version.yml; a MAJOR is only ever
-# released by hand (run this workflow with bump: major).
+# there is none. A commit that is already tagged releases nothing. A MAJOR is
+# only ever released by hand (run this workflow with bump: major).
 #
 # The version comes from the tags, through the org's next-version action. It
-# is not read from Cargo.toml: that is the bundu-vocab crate's own version,
-# which the staging patch tags left behind (issue #131).
+# is not read from Cargo.toml: that is the bundu-vocab crate's own version
+# (issue #131).
 #
 # The file is named main-release.yml on purpose: the org's auto-release.yml
 # (the bundu-release app) skips repos that have it and tag their own

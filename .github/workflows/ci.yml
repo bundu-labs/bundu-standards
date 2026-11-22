@@ -6,7 +6,7 @@ on:
   # The merge queue tests the exact commit it is about to merge.
   merge_group:
   push:
-    branches: [main, staging]
+    branches: [main]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -148,7 +148,7 @@ jobs:
 
   comment:
     needs: [test, contract, register]
-    # Push runs (main, staging) have no pull request to comment on.
+    # Push runs (main) have no pull request to comment on.
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     name: PR Status Comment

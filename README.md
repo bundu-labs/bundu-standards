@@ -252,8 +252,7 @@ already tagged releases nothing. No one pushes tags by hand.
 Releases follow the org policy
 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)):
 
-- A merge into `staging` is a patch (x.y.z → x.y.z+1), tagged automatically.
-- A release to `main` is a minor (x.y.z → x.y+1.0), computed from the tags.
+- Work is trunk-based: pull requests merge into `main`. A merge to `main` is a minor (x.y.z → x.y+1.0), computed from the tags.
   No file holds the release version: `version` in `Cargo.toml` is the
   `bundu-vocab` crate's own and is not read for releases.
 - A major is only released by hand: run the Release workflow with

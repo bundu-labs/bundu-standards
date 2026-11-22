@@ -60,6 +60,6 @@ docker build --build-arg BIN=standards -t standards .   # or BIN=vocab; from the
 
 ## Branching
 
-Pull requests go to `staging`. Never push to `main`. A merge into `staging` is a
-patch, a release to `main` is a minor. Add a `CHANGELOG.md` entry for every
+Trunk-based: open a pull request against `main`; never push to `main` directly.
+A merge to `main` is a minor release. Add a `CHANGELOG.md` entry for every
 change.

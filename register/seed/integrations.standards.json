@@ -78,7 +78,7 @@
     "specificationUrl": "https://vocab.bundu.org",
     "documentationUrl": "https://github.com/bundu-labs/bundu-standards",
     "stewardOrganisation": "Bundu Foundation",
-    "usageNotes": "Served by the Fly app bundu-vocab (jnb) from bundu-labs/bundu-standards. Every term dereferences to JSON-LD, or HTML when asked for it. A term the platform emits under vocab.bundu.org must be in the live index. Cited by: entity.entities.additionalType, entity.entities.recognitionBasis, identity.persons.notificationPreferences.",
+    "usageNotes": "Served from a Docker build of bundu-labs/bundu-standards on self-hosted Coolify. Every term dereferences to JSON-LD, or HTML when asked for it. A term the platform emits under vocab.bundu.org must be in the live index. Cited by: entity.entities.additionalType, entity.entities.recognitionBasis, identity.persons.notificationPreferences.",
     "isActive": true,
     "bundu": {
       "isFoundational": true,

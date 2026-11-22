@@ -470,7 +470,7 @@ mod tests {
             "001e# service=git-upload-pack\n0000\
              0155{a} HEAD\0multi_ack symref=HEAD:refs/heads/main\n\
              003f{SHA} refs/heads/main\n\
-             0044{b} refs/heads/staging\n0000"
+             0044{b} refs/heads/release\n0000"
         );
         let f = fake(move |u| {
             if u == LATEST_URL {

@@ -69,8 +69,8 @@ jobs:
             sleep 1
           done
           test "$(curl -sf http://127.0.0.1:8080/healthz)" = '{"status":"ok"}'
-          curl -sf http://127.0.0.1:8080/ | grep -q '<html'
-          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/no-such-page-here)" = 404
+          curl -sf -H 'Accept: text/html' http://127.0.0.1:8080/ | grep -q '<html'
+          test "$(curl -s -o /dev/null -w '%{http_code}' -H 'Accept: text/html' http://127.0.0.1:8080/no-such-page-here)" = 404
           if [ "${{ matrix.bin }}" = standards ]; then
             curl -sf http://127.0.0.1:8080/register/index.json | grep -q '"standards"'
             test "$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:8080/)" = 405

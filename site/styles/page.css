@@ -2,14 +2,13 @@
  *
  * Every value is a token: a colour, a size, a space, a radius, a type step, a line height, a
  * weight, a motion or a hit region comes from `var(--token)`. The token layer is tokens.css (the
- * Mzizi tokens, vendored) and pending.tokens.css (values Mzizi lacks, proposed upstream); the only
- * literals here are 0, percentages and keywords. build.rs bundles the two token files in,
+ * Mzizi tokens, vendored); the only literals here are 0, percentages and keywords. build.rs
+ * bundles the token file in,
  * drops the tokens no rule uses, and minifies; `css_audit` fails on a literal. The Bundu floor
  * (45px touch / 24px desktop hit regions, 17px / 15px body, 14px captions, 9px between controls,
  * 1.5 leading) is in the tokens: `--target-floor`, `--fs-body`, `--fs-caption`,
  * `--space-control-gap`, `--lh-body`. */
 @import "../tokens/tokens.css";
-@import "../tokens/pending.tokens.css";
 
 :root {
   color-scheme: light dark;

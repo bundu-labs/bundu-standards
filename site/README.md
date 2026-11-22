@@ -26,10 +26,10 @@ JavaScript runtime: Dioxus components rendered on the server (Mzizi Roots), one
 Every value in `styles/page.css` is `var(--token)`. The token layer is `tokens/tokens.css`, the
 Mzizi tokens (`styles/pattern/tokens.css` of mzizi-dev/mzizi-registry), vendored by
 `tools/vendor-tokens.sh` at the commit pinned in `tokens/PIN`; CI runs `--check` and fails on
-drift, and `--update` re-pins to the head of main. A value Mzizi has no token for lives in
-`tokens/pending.tokens.css`, with a name proposed upstream, never in page CSS.
+drift, and `--update` re-pins to the head of main. A value Mzizi has no token for is proposed upstream (the nine chrome tokens
+were, and are in the pinned file), never typed into page CSS.
 
-`build.rs` bundles page CSS and both token files with Lightning CSS (`lightningcss`
+`build.rs` bundles page CSS and the token file with Lightning CSS (`lightningcss`
 `=1.0.0-alpha.72`, feature `bundler`: the crate, version and browser targets of mzizi-registry's
 `mzizi-css`: Chrome and Edge 111, Firefox 113, Safari 16.2), drops every custom property no rule
 uses, and minifies. Rust only, no JavaScript. The sites serve the result at `/styles/site.css`

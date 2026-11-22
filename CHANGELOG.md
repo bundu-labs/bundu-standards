@@ -27,8 +27,8 @@ Versions released before then are not renumbered.
 - **The CSS audit reads the parsed stylesheet, not regexes.** `css_audit` (feature `audit`) walks
   the `lightningcss` rules: a literal in page CSS fails, and the resolved tokens are held to the
   floor for both themes and both pointer tiers (thresholds from `mzizi-tokens` where it has them).
-  Values with no Mzizi token (border and ring widths, the measure, the eyebrow tracking, the
-  off-screen offset) are in `site/tokens/pending.tokens.css`, proposed upstream.
+  The values Mzizi had no token for (border and ring widths, the measure, the eyebrow tracking,
+  the off-screen offset) were added upstream (mzizi-registry#747) and are in the pinned token file.
 
 ### Changed
 

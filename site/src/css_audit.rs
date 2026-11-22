@@ -5,7 +5,7 @@
 //! - `styles/page.css`, the page styles as written: every declaration is walked, and a literal
 //!   colour, length, time or bare number anywhere in it fails the audit. Page CSS takes every
 //!   value from a token (`var(--token)`); the literals live in the token layer (`tokens.css`,
-//!   the Mzizi tokens, and `pending.tokens.css`), nowhere else. It also declares no custom
+//!   the Mzizi tokens), nowhere else. It also declares no custom
 //!   property of its own.
 //! - the bundle `build.rs` makes from it (page CSS plus the tokens it uses), whose token blocks
 //!   are resolved for both themes and both pointer tiers and held to the Bundu floor: APCA and

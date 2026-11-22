@@ -8,7 +8,7 @@
 # The source is styles/pattern/tokens.css of mzizi-dev/mzizi-registry, generated there from the
 # palette and the floor (`pnpm pattern:generate`). The commit is pinned in site/tokens/PIN so a
 # build never changes under us; CI runs --check. A value this site needs that the file lacks is
-# proposed upstream, not typed into page CSS (see site/tokens/pending.tokens.css).
+# proposed upstream, not typed into page CSS.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 REPO=mzizi-dev/mzizi-registry

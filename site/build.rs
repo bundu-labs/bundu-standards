@@ -2,8 +2,8 @@
 //!
 //! The pipeline is mzizi-registry's (`mzizi-rs/crates/mzizi-css`): the same `lightningcss`
 //! crate and version, and the same browser targets. Page CSS `@import`s the token layer
-//! (`tokens/tokens.css`, the Mzizi tokens, vendored by `tools/vendor-tokens.sh`, and
-//! `tokens/pending.tokens.css`); this bundles them into one sheet, drops every custom property no
+//! (`tokens/tokens.css`, the Mzizi tokens, vendored by `tools/vendor-tokens.sh`); this bundles
+//! it into one sheet, drops every custom property no
 //! rule uses (directly or through another token), and writes two files to OUT_DIR:
 //!
 //! - `bundle.css`, the pruned sheet, readable, which `css_audit` parses;

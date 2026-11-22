@@ -13,11 +13,27 @@ JavaScript runtime: Dioxus components rendered on the server (Mzizi Roots), one
   resolvable references, header cells with `scope`, keyboard help in the footer of every page
   (Tab, Shift+Tab, Enter, a link to the accessibility statement, no `accesskey`), no zoom lock, no inline style, handler or
   script, because the CSP allows none).
-- `css_audit::audit(css)`: the stylesheet's own tokens, in both themes: APCA Lc 75 for text
-  (60 for control edges and the focus ring) and WCAG 7:1 / 3:1, the Bundu floor (45px / 24px
-  hit regions, 17px / 15px body, 14px captions, 17px inset, 9px gaps, 1.5 leading), a visible
-  3px `:focus-visible`, forced colours, reduced motion, wrapping, `.sr-only`, no text below the
-  caption floor. `apca` implements APCA-W3 0.1.9; `mzizi-tokens` has no function for it.
+- `css_audit` (feature `audit`, for tests): parses the stylesheet with `lightningcss`. It lints
+  `styles/page.css` as written (a literal colour, length, time or bare number fails; page CSS
+  declares no token), and holds the bundle's resolved tokens, in both themes and both pointer
+  tiers, to the Bundu floor: APCA Lc 75 for text (30 for a control's edge and the focus ring) and
+  WCAG 7:1 / 3:1, the hit region (45px touch from `mzizi-tokens`, 24px fine pointer), 9px between
+  controls, 17px page edge, 17/15px body, 14px captions, 1.5 leading, a visible `:focus-visible`
+  ring, forced colours, reduced motion, wrapping, `.sr-only`.
+
+## Styles: tokens only
+
+Every value in `styles/page.css` is `var(--token)`. The token layer is `tokens/tokens.css`, the
+Mzizi tokens (`styles/pattern/tokens.css` of mzizi-dev/mzizi-registry), vendored by
+`tools/vendor-tokens.sh` at the commit pinned in `tokens/PIN`; CI runs `--check` and fails on
+drift, and `--update` re-pins to the head of main. A value Mzizi has no token for is proposed upstream (the nine chrome tokens
+were, and are in the pinned file), never typed into page CSS.
+
+`build.rs` bundles page CSS and the token file with Lightning CSS (`lightningcss`
+`=1.0.0-alpha.72`, `default-features = false`: the crate, version, features and browser targets of mzizi-registry's
+`mzizi-css`: Chrome and Edge 111, Firefox 113, Safari 16.2), drops every custom property no rule
+uses, and minifies. Rust only, no JavaScript. The sites serve the result at `/styles/site.css`
+with an `ETag` (a hash of the bytes).
 
 Each site runs both audits over every page it renders in `cargo test`.
 

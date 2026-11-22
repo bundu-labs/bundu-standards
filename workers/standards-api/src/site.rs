@@ -41,6 +41,9 @@ pub fn reply(method: &str, path: &str) -> Option<Reply> {
     headers.push(("content-type", content_type.to_owned()));
     // The pages change only on a release, which redeploys the server.
     headers.push(("cache-control", "public, max-age=300".to_owned()));
+    if path == CSS_PATH {
+        headers.push(("etag", bundu_site::CSS_ETAG.to_owned()));
+    }
     if cors {
         headers.push(("access-control-allow-origin", "*".to_owned()));
     }
@@ -113,7 +116,11 @@ mod tests {
     fn the_stylesheet_is_served() {
         let r = reply("GET", "/styles/site.css").unwrap();
         assert_eq!(r.header("content-type"), Some("text/css; charset=utf-8"));
-        assert!(r.body.unwrap().starts_with(b"/* standards.bundu.org"));
+        assert_eq!(r.header("etag"), Some(bundu_site::CSS_ETAG));
+        assert!(r.header("etag").unwrap().starts_with('"'));
+        let body = String::from_utf8(r.body.unwrap()).unwrap();
+        assert!(body.starts_with(":root{"), "minified, token layer first");
+        assert!(body.contains("var(--target-floor)"));
     }
 
     #[test]

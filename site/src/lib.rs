@@ -3,11 +3,13 @@
 //!
 //! [`Document`] is the whole page: head, skip link, header, `main` with the copy control, and
 //! footer. The stylesheet is [`CSS`], served by each site at [`CSS_PATH`]. [`audit`] checks a
-//! rendered page against the accessibility rules both sites keep, and [`css_audit`] checks the
-//! stylesheet itself; each site runs both over its pages in `cargo test`.
+//! rendered page against the accessibility rules both sites keep, and `css_audit` (feature
+//! `audit`) checks the stylesheet itself: no literal value outside the token layer, and the Bundu
+//! floor on the resolved tokens. Each site runs both in `cargo test`.
 
 pub mod audit;
 pub mod components;
+#[cfg(feature = "audit")]
 pub mod css_audit;
 
 use components::copy_control::CopyControl;
@@ -17,8 +19,11 @@ use dioxus::prelude::*;
 
 pub use components::site_header::{current, NavLink};
 
-/// The stylesheet both sites serve.
-pub const CSS: &str = include_str!("../styles/site.css");
+/// The stylesheet both sites serve: `styles/page.css` bundled with the tokens it uses and minified
+/// by Lightning CSS in `build.rs`.
+pub const CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/site.css"));
+/// Its entity tag: a hash of the bytes, so a changed sheet is a changed tag.
+pub const CSS_ETAG: &str = include_str!(concat!(env!("OUT_DIR"), "/site.css.etag"));
 pub const CSS_PATH: &str = "/styles/site.css";
 
 /// What a site tells the shell about a page.

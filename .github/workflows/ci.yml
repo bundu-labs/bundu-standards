@@ -76,6 +76,19 @@ jobs:
             test "$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:8080/)" = 405
           fi
 
+  # The token layer is vendored from mzizi-dev/mzizi-registry at a pinned commit (site/tokens/PIN),
+  # never edited by hand: fail if the committed file differs from the pinned one.
+  design-tokens:
+    runs-on: ubuntu-latest
+    name: Design tokens
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Vendored tokens match the pinned commit
+        run: site/tools/vendor-tokens.sh --check
+
   # The published URIs are a permanent contract. This catches the failure
   # mode that matters most: a term that stops resolving, or one whose
   # definition silently changes shape.
@@ -147,7 +160,7 @@ jobs:
         run: deno test --allow-read tools/ecosystem_test.ts
 
   comment:
-    needs: [test, contract, register]
+    needs: [test, contract, register, design-tokens]
     # Push runs (main) have no pull request to comment on.
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -180,6 +193,7 @@ jobs:
             |-------|--------|
             | Vocabulary Contract | ✅ Pass |
             | Both sites: format, clippy, tests, image | ✅ Pass |
+            | Design tokens | ✅ Pass |
             ${deployInfo}
 
             ---

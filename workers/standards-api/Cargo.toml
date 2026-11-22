@@ -39,3 +39,4 @@ pulldown-cmark = { version = "0.13", default-features = false, features = ["html
 
 [dev-dependencies]
 pollster = "0.4"
+bundu-site = { path = "../../site", features = ["audit"] }

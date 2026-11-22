@@ -46,7 +46,7 @@ fn primary_json(files: &serde_json::Map<String, serde_json::Value>) -> Option<se
     serde_json::from_str(files[name].as_str()?).ok()
 }
 
-/// The stylesheet (`styles/site.css`), served at [`CSS_PATH`].
+/// The stylesheet (`site/styles/page.css`, built by Lightning CSS), served at [`CSS_PATH`].
 pub use bundu_site::{CSS, CSS_PATH};
 /// Where the OpenAPI description is served; also at `/.well-known/openapi.json`.
 pub const OPENAPI_PATH: &str = "/openapi.json";
@@ -549,7 +549,7 @@ mod tests {
     /// themes, focus, hit regions, spacing floors, reduced motion.
     #[test]
     fn the_stylesheet_passes_the_shared_accessibility_audit() {
-        assert_eq!(bundu_site::css_audit::audit(CSS), Vec::<String>::new());
+        assert_eq!(bundu_site::css_audit::audit_shipped(), Vec::<String>::new());
     }
 
     /// Status is text, never colour alone: every badge carries "Status: " for a screen reader.
@@ -866,9 +866,13 @@ mod tests {
 
     #[test]
     fn the_site_keeps_the_hit_areas_of_the_floor() {
-        assert!(CSS.contains("--hit: 45px;"));
-        assert!(CSS.contains("--hit: 24px;"));
-        assert!(!CSS.contains("--hit: 49px") && !CSS.contains("--hit: 28px"));
+        // The Mzizi floor token, 45px (2.8125rem) on touch and 24px (1.5rem) with a fine pointer.
+        assert!(CSS.contains("--target-floor:2.8125rem"));
+        assert!(CSS.contains("--target-floor:1.5rem"));
+        assert!(
+            !CSS.contains("--hit:"),
+            "the old hand-made hit token is gone"
+        );
     }
 
     #[test]

@@ -566,6 +566,7 @@ async fn site_css() -> Response {
         [
             (header::CONTENT_TYPE, "text/css; charset=utf-8"),
             (header::CACHE_CONTROL, "public, max-age=300"),
+            (header::ETAG, bundu_site::CSS_ETAG),
         ],
         bundu_site::CSS,
     )
@@ -681,10 +682,7 @@ mod tests {
     /// floors, reduced motion (see `bundu-site`'s `css_audit`).
     #[test]
     fn the_stylesheet_keeps_the_bundu_floor() {
-        assert_eq!(
-            bundu_site::css_audit::audit(bundu_site::CSS),
-            Vec::<String>::new()
-        );
+        assert_eq!(bundu_site::css_audit::audit_shipped(), Vec::<String>::new());
     }
 
     /// Every page the vocabulary renders passes the shared accessibility audit: the index, every
@@ -1036,7 +1034,7 @@ mod tests {
         let html =
             body(term(Path("notificationPreference".into()), accept("text/html")).await).await;
         assert!(
-            bundu_site::CSS.contains("overflow-wrap: anywhere"),
+            bundu_site::css_audit::PAGE_SOURCE.contains("overflow-wrap: anywhere"),
             "long term names and URIs wrap (the shared stylesheet)"
         );
         assert!(

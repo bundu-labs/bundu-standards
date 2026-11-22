@@ -23,6 +23,7 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 [dev-dependencies]
+bundu-site = { path = "site", features = ["audit"] }
 # Drives the real router in tests (ServiceExt::oneshot).
 tower = { version = "0.5", features = ["util"] }
 

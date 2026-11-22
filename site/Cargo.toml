@@ -7,7 +7,21 @@ license = "Apache-2.0"
 description = "The shared page shell, stylesheet and accessibility audit of standards.bundu.org and vocab.bundu.org"
 publish = false
 
+[features]
+# The CSS audit (`css_audit`, `BUNDLE`) parses the stylesheet with Lightning CSS. Each site turns
+# it on for its tests only, so the parser never ships in a server binary.
+audit = ["dep:lightningcss", "dep:mzizi-tokens"]
+
 [dependencies]
 # Mzizi Roots: the shell is Dioxus components rendered on the server, like the pages.
 dioxus = { version = "0.7", default-features = false, features = ["macro", "html", "signals", "hooks"] }
 dioxus-ssr = "0.7"
+lightningcss = { version = "=1.0.0-alpha.72", default-features = false, optional = true }
+# The Bundu floor's numbers (45px hit region, 9px control gap, ...), for the audit to hold the
+# stylesheet to: read from the crate, not retyped.
+mzizi-tokens = { version = "0.11", optional = true }
+
+# build.rs bundles tokens.css into the page CSS and minifies it with Lightning CSS: the same
+# crate, version and browser targets as mzizi-registry's `mzizi-css` (the Rust build there).
+[build-dependencies]
+lightningcss = { version = "=1.0.0-alpha.72", default-features = false, features = ["bundler"] }

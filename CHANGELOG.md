@@ -13,6 +13,23 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+### Design tokens
+
+- **Every site style value comes from a Mzizi token** (#157). `site/styles/page.css` holds no
+  literal colour, size, space, radius, type step, line height, weight or hit region: they are
+  `var(--token)`s from `site/tokens/tokens.css`, the Mzizi tokens vendored from mzizi-registry at
+  a pinned commit (`site/tools/vendor-tokens.sh`, `--check` in CI). `build.rs` bundles page CSS and
+  the tokens with the `lightningcss` crate (`=1.0.0-alpha.72`, feature `bundler`; the version and
+  browser targets of mzizi-registry's `mzizi-css`), prunes unused tokens and minifies; the served
+  `/styles/site.css` carries an `ETag`. The hand-typed colours (including the dark `--muted`
+  `#d6d2c8`) are gone, so the pages take the Mzizi neutrals: a cooler ground and greyer text than
+  before, and the register's cobalt focus ring.
+- **The CSS audit reads the parsed stylesheet, not regexes.** `css_audit` (feature `audit`) walks
+  the `lightningcss` rules: a literal in page CSS fails, and the resolved tokens are held to the
+  floor for both themes and both pointer tiers (thresholds from `mzizi-tokens` where it has them).
+  Values with no Mzizi token (border and ring widths, the measure, the eyebrow tracking, the
+  off-screen offset) are in `site/tokens/pending.tokens.css`, proposed upstream.
+
 ### Changed
 
 - **standards.bundu.org is a plain container, and Cloudflare is gone from the repository.**

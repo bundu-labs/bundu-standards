@@ -28,13 +28,14 @@ COPY workers/standards-api/Cargo.toml workers/standards-api/
 COPY site/Cargo.toml site/
 RUN mkdir -p src site/src workers/standards-api/src \
  && : > site/src/lib.rs \
+ && echo 'fn main() {}' > site/build.rs \
  && echo 'fn main() {}' > src/main.rs \
  && echo 'fn main() {}' > workers/standards-api/src/main.rs \
  && : > workers/standards-api/src/lib.rs \
  && echo 'fn main() {}' > workers/standards-api/build.rs \
  && case "$BIN" in standards) PKG=bundu-standards-api ;; vocab) PKG=bundu-vocab ;; *) echo "BIN must be standards or vocab" >&2; exit 1 ;; esac \
  && cargo build --release --locked -p "$PKG" \
- && rm -rf src site/src workers/standards-api/src workers/standards-api/build.rs
+ && rm -rf src site/src site/build.rs workers/standards-api/src workers/standards-api/build.rs
 
 COPY src ./src
 COPY site ./site
@@ -42,7 +43,7 @@ COPY workers/standards-api ./workers/standards-api
 COPY register ./register
 COPY standards ./standards
 # Touch, so cargo notices the real sources replaced the stubs.
-RUN touch src/main.rs site/src/lib.rs workers/standards-api/build.rs workers/standards-api/src/main.rs workers/standards-api/src/lib.rs \
+RUN touch src/main.rs site/build.rs site/src/lib.rs workers/standards-api/build.rs workers/standards-api/src/main.rs workers/standards-api/src/lib.rs \
  && case "$BIN" in standards) PKG=bundu-standards-api; EXE=bundu-standards ;; vocab) PKG=bundu-vocab; EXE=bundu-vocab ;; esac \
  && cargo build --release --locked -p "$PKG" --bin "$EXE" \
  && cp "target/release/$EXE" /server

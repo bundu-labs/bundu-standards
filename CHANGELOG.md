@@ -319,7 +319,7 @@ Versions released before then are not renumbered.
   since failed and the live site stayed on the deploy from before #88. The `test` script runs
   the 25 tests on Node again, and CI runs them on Deno through `test:deno`.
 
-### Added
+### Shared UI and accessibility
 
 - **One look for both sites: `site/` (`bundu-site`).** standards.bundu.org and vocab.bundu.org
   render in the same Mzizi-style shell (skip link, header, labelled nav, copy control, footer)

@@ -1,7 +1,7 @@
-//! Reads `register/register.yaml` once, at build time, and writes it as JSON for the Worker.
+//! Reads `register/register.yaml` once, at build time, and writes it as JSON for the server.
 //!
-//! The YAML parser stays out of the wasm: the Worker only parses the JSON this writes. The
-//! register is checked here too (through the same `register.rs` the Worker uses), so a bad
+//! The YAML parser stays out of the binary: the server only parses the JSON this writes. The
+//! register is checked here too (through the same `register.rs` the server uses), so a bad
 //! register fails the build instead of the first request.
 
 use std::{env, fs, path::Path};
@@ -41,11 +41,12 @@ fn main() {
     let out = Path::new(&env::var("OUT_DIR").unwrap()).join("register.json");
     fs::write(&out, &json).unwrap();
     documents(&json);
+    assets();
 }
 
 /// Our own standards, published beside the register: every entry whose `url` is a page on
 /// standards.bundu.org gets that page, built from `standards/<slug>/`. The README becomes the
-/// page (rendered here, so no Markdown parser ships in the wasm) and the data files are served
+/// page (rendered here, so no Markdown parser ships) and the data files are served
 /// as they are. A register URL with no folder behind it fails the build, so the register can
 /// never link to a page that does not exist.
 fn documents(register_json: &str) {
@@ -139,4 +140,35 @@ fn scalar(v: &serde_yaml::Value) -> String {
         serde_yaml::Value::Bool(b) => b.to_string(),
         other => panic!("register.yaml: expected a scalar, found {other:?}"),
     }
+}
+
+const PUBLIC: &str = "public";
+
+/// Lists `public/` for `assets.rs`: the URL path and the bytes of every file but `_headers`
+/// (which `assets.rs` reads as rules, not as a file to serve). A new file there is served
+/// with no code change.
+fn assets() {
+    println!("cargo:rerun-if-changed={PUBLIC}");
+    let root = fs::canonicalize(PUBLIC).expect("public/ exists");
+    let mut entries: Vec<_> = fs::read_dir(&root).unwrap().flatten().collect();
+    entries.sort_by_key(|e| e.file_name());
+    let mut out = String::from("pub static FILES: &[(&str, &[u8])] = &[\n");
+    for e in entries {
+        let name = e.file_name().to_string_lossy().into_owned();
+        if name.starts_with('.') || name.starts_with('_') || !e.path().is_file() {
+            continue;
+        }
+        println!("cargo:rerun-if-changed={PUBLIC}/{name}");
+        out.push_str(&format!(
+            "    ({:?}, include_bytes!({:?})),\n",
+            format!("/{name}"),
+            e.path().to_string_lossy()
+        ));
+    }
+    out.push_str("];\n");
+    fs::write(
+        Path::new(&env::var("OUT_DIR").unwrap()).join("assets.rs"),
+        out,
+    )
+    .unwrap();
 }

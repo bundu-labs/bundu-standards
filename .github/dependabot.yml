@@ -5,24 +5,20 @@
 # to be malicious or broken; the cooldown does not delay security updates.
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: /workers/standards
+  - package-ecosystem: cargo
+    directory: /
     target-branch: staging
     schedule:
       interval: weekly
     cooldown:
       default-days: 7
-    groups:
-      astro:
-        patterns:
-          - "astro"
-          - "@astrojs/*"
     labels:
       - dependencies
-      - javascript
+      - rust
 
+  # The standards server is its own package, with its own lockfile.
   - package-ecosystem: cargo
-    directory: /
+    directory: /workers/standards-api
     target-branch: staging
     schedule:
       interval: weekly

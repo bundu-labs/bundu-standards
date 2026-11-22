@@ -8,7 +8,7 @@
 [![Vocabulary: CC0 1.0](https://img.shields.io/badge/vocabulary-CC0_1.0-lightgrey.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
 ![Rust](https://img.shields.io/badge/Rust-2021_edition-000000?logo=rust&logoColor=white)
 
-**Version:** 0.2.0 | **Live:** [vocab.bundu.org](https://vocab.bundu.org) | **Deploys to:** Fly.io (`bundu-vocab`, Johannesburg) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
+**Version:** 0.2.0 | **Vocabulary:** vocab.bundu.org (moving from Fly to Coolify) | **Standards site:** [standards.bundu.org](https://standards.bundu.org) | **Docs:** [docs.bundu.org](https://docs.bundu.org)
 
 ---
 
@@ -198,9 +198,9 @@ Or embed the context to refer to terms by short name:
 | `/`               | Index of every term                         |
 | `/{Term}`         | A single term                               |
 | `/context.jsonld` | JSON-LD context mapping short names to URIs |
-| `/health`         | Liveness probe                              |
+| `/healthz`        | Liveness probe, `{"status":"ok"}`           |
 
-Everything except `/health` negotiates on `Accept`. HTML when the caller asks
+Everything except `/healthz` negotiates on `Accept`. HTML when the caller asks
 for it, JSON-LD otherwise — so `curl` gets data rather than markup.
 
 ## Development
@@ -218,26 +218,34 @@ define, which is the property that makes the namespace trustworthy.
 
 ## Deployment
 
-Production deploys run from GitHub Actions after CI passes on `main`:
-[`.github/workflows/fly-deploy.yml`](.github/workflows/fly-deploy.yml) starts
-when the `CI` workflow succeeds on a push to `main`, checks out the commit CI
-tested, runs `flyctl deploy --remote-only` to the Fly app `bundu-vocab`, then
-checks that vocab.bundu.org still answers. It needs the repository secret
-`FLY_API_TOKEN`, a deploy token scoped to `bundu-vocab` (an owner step);
-without it the deploy is skipped with a notice. It can be re-run from the
-Actions tab (`workflow_dispatch`, `main` only).
+Both sites are built the same way and deploy from this repository to Coolify, as
+two apps from one [`Dockerfile`](Dockerfile) at the repository root. They differ
+only in the build argument `BIN` and the domain:
 
-The first deploy of an app is manual (`fly deploy`); every later one is CI.
+| App       | `BIN`                 | Crate                                              | Domain              |
+| --------- | --------------------- | -------------------------------------------------- | ------------------- |
+| standards | `standards` (default) | [`workers/standards-api/`](workers/standards-api/) | standards.bundu.org |
+| vocab     | `vocab`               | the root crate (`src/`)                            | vocab.bundu.org     |
 
-Releases are automatic too. Every release merge to `main` is tagged, once the
+Both are one Cargo workspace with one `Cargo.lock`, use axum on tokio, listen on
+`LISTEN_ADDR` (default `0.0.0.0:8080`) and answer `GET /healthz` with
+`{"status":"ok"}`. In Coolify: build pack Dockerfile, Dockerfile location
+`/Dockerfile`, base directory `/`, a build argument `BIN=vocab` for the vocab
+app, port 8080, health check path `/healthz` (checked from outside the
+container: the image is distroless and has no `HEALTHCHECK`). See
+[`workers/standards-api/README.md`](workers/standards-api/README.md) for the
+standards server's settings.
+
+vocab.bundu.org's cutover from Fly is pending; Fly wiring (`fly.toml`, the
+deploy workflow) is removed. The vocabulary's liveness path is now `/healthz`
+(it was `/health`). The DNS record for `vocab.bundu.org` must point at the
+running instance before any published `additionalType` URI will resolve.
+
+Releases are automatic. Every release merge to `main` is tagged, once the
 checks pass, by [`.github/workflows/main-release.yml`](.github/workflows/main-release.yml):
 it takes the next minor above the highest tag and creates a GitHub release from
-that version's `CHANGELOG.md` section, or from `## Unreleased`. It doesn't wait
-for the deploy. A commit that is already tagged releases nothing. No one pushes tags by hand.
-
-Fly.io, Johannesburg, one always-warm machine. The DNS record for
-`vocab.bundu.org` must point at this app before any published `additionalType`
-URI will resolve.
+that version's `CHANGELOG.md` section, or from `## Unreleased`. A commit that is
+already tagged releases nothing. No one pushes tags by hand.
 
 ## Versioning
 

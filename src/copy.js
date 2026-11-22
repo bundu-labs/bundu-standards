@@ -1,5 +1,5 @@
 // Copy this page as Markdown or JSON. Shared, byte for byte, by standards.bundu.org
-// (workers/standards/public/copy.js) and vocab.bundu.org (src/copy.js); a test keeps the
+// (workers/standards-api/public/copy.js) and vocab.bundu.org (src/copy.js); a test keeps the
 // two copies identical.
 //
 // The control is in the page with `hidden`. Without this script it stays hidden, so a

@@ -1,8 +1,9 @@
 # standards-api: standards.bundu.org in Rust
 
-standards.bundu.org as one Rust Cloudflare Worker (`workers-rs`): the pages people read and the
-file endpoint machines read. It is the Deno and Rust pilot (#87), and it replaces the Astro
-Worker in `workers/standards` once the custom domain moves here.
+standards.bundu.org as one small native Rust server (axum on tokio): the pages people read and
+the file endpoint machines read. It ships as a container (the `Dockerfile` at the repository
+root) with no JavaScript runtime, and nothing else at run time: the register, the pages, the
+stylesheet and the static files are compiled into the binary.
 
 | Route                                                   | Answer                                                                        |
 | ------------------------------------------------------- | ----------------------------------------------------------------------------- |
@@ -12,60 +13,72 @@ Worker in `workers/standards` once the custom domain moves here.
 | `/register/latest`                                      | the head of `main` and the URLs of the four files (REST API, then git's refs) |
 | `/healthz`                                              | `{"status":"ok"}`                                                             |
 | `/openapi.json`, `/.well-known/openapi.json`            | the OpenAPI 3.0.3 description of every route here (`openapi.json`)            |
-| favicons, `robots.txt`                                  | static assets from `../standards/public`, with its `_headers`                 |
+| favicons, `robots.txt`, `copy.js`, `ecosystem.jsonld`   | the static files of `public/`, with the rules of `public/_headers`            |
 | anything else                                           | an RFC 9457 problem: 404, or 405 for a method other than GET, HEAD or OPTIONS |
 
 - `build.rs` reads `register/register.yaml` at build time, checks it, and writes it into the
-  Worker as JSON, so a bad register fails the build and no YAML parser ships in the wasm.
-- `src/register.rs`, `src/pages.rs` and `src/site.rs` are the pages: the Rust port of
-  `register.js`, `Base.astro` and its four pages. Same markup, same classes and text, styled by
-  the same `site.css`. A standard's status is the Mzizi `Badge` from `mzizi-ui`; the site ships
-  no Tailwind, so the badge's own classes are inert and `.chip` styles it.
-- `src/core.rs` is the file endpoint. Its tests are the cases of
-  `workers/standards/test/files.test.js`. `src/lib.rs` is the Worker glue (wasm32 only).
-
-- `openapi.json` describes every route above, GET and HEAD only, for API clients and Cloudflare
-  API Shield schema validation; every page links it (`rel="service-desc"`). `src/openapi.rs`
-  serves it and its tests hold it to the router: a route the Worker serves (from the register,
+  binary as JSON, so a bad register fails the build. It also renders the READMEs of `standards/`
+  into pages and lists `public/` for the static files.
+- `src/register.rs`, `src/pages.rs` and `src/site.rs` are the pages. A standard's status is the
+  Mzizi `Badge` from `mzizi-ui`; the site ships no Tailwind, so the badge's own classes are inert
+  and `.chip` (in `styles/site.css`) styles it.
+- `src/core.rs` is the file endpoint: it reads four files of this repository from GitHub at a
+  commit the caller names, and nothing else (it is not an open proxy). `src/github.rs` is its
+  HTTPS client (rustls, no OpenSSL; 5 s to connect, 10 s in all, 3 redirects, 8 MiB at most).
+- `src/assets.rs` serves `public/` before anything else and applies `public/_headers` to it:
+  the security headers and the content security policy, `ecosystem.jsonld`'s content type and
+  CORS. The pages carry the same headers from `src/site.rs`, and a test holds the two policies
+  equal. Static files revalidate every time (`max-age=0, must-revalidate`, with an `ETag`).
+- `src/server.rs` is the order of answering (static files, the site, the file endpoint) and an
+  in-process cache of the file endpoint's successful GETs, for as long as their own
+  `cache-control` says (a commit's files for a day at most, `/register/latest` for 5 minutes),
+  at most 512 entries.
+- `openapi.json` describes every route above, GET and HEAD only, for API clients. `src/openapi.rs`
+  serves it and its tests hold it to the router: a route the server serves (from the register,
   our standards' files, the assets, the path literals in the source, or a link on any page) that
-  it leaves out fails `cargo test`, and so does a path in it the Worker does not serve or serves
+  it leaves out fails `cargo test`, and so does a path in it the server does not serve or serves
   with another content type. Add a route, add it to `openapi.json`.
 
-All of it has no platform dependency apart from `lib.rs`, and is tested natively.
+## Configuration
+
+| Variable        | Default                       | Meaning                                                                    |
+| --------------- | ----------------------------- | -------------------------------------------------------------------------- |
+| `LISTEN_ADDR`   | `0.0.0.0:8080`                | where to listen                                                            |
+| `PUBLIC_ORIGIN` | `https://standards.bundu.org` | the origin the answers name themselves by (the URLs in `/register/latest`) |
+
+`PUBLIC_ORIGIN` is set rather than read from the `Host` header, so a forged header cannot put
+another origin into an answer that is then cached. No other setting, and no secret: the server
+reads a public repository.
 
 ## Commands
 
 ```sh
-cargo test                                               # natively
-cargo clippy --all-targets -- -D warnings
-cargo build --release --target wasm32-unknown-unknown
-npx wrangler deploy --dry-run                            # runs worker-build; about 340 KiB gzip
+cargo run                                                # http://0.0.0.0:8080 (LISTEN_ADDR to change it)
+cargo test --locked
+cargo clippy --all-targets --locked -- -D warnings
+cargo fmt --check
+docker build --build-arg BIN=standards -t bundu-standards ../..   # the context is the repository root
+docker run --rm -p 8080:8080 bundu-standards
 ```
 
-## Turning it on
+## Deploying on Coolify
 
-**Done on 2026-11-17.** This Worker serves standards.bundu.org, and only its `wrangler.toml`
-declares the route; the Astro Worker's was removed in the same change, so a deploy of it can no
-longer take the domain back. Step 4 remains. The steps, as they were followed:
+Coolify builds the root `Dockerfile` (shared with vocab.bundu.org, which is `BIN=vocab`) and runs
+the image:
 
-1. Deploy this Worker as `bundu-standards-api`. Either connect it in Workers Builds (root
-   directory `workers/standards-api`, deploy command `npx wrangler deploy`; the build needs
-   Rust, which `wrangler.toml`'s build command uses), or run `npx wrangler deploy` here once.
-2. Check it on its preview URL against standards.bundu.org.
-3. Move the custom domain `standards.bundu.org` from `bundu-standards` to
-   `bundu-standards-api` (Workers, Settings, Domains & Routes), then add
-   `routes = [{ pattern = "standards.bundu.org", custom_domain = true }]` to `wrangler.toml`
-   in a PR, so the next deploy keeps it.
-4. Once it has run for a while, delete `workers/standards` in a PR, and move `public/` and
-   `site.css` here.
+1. New resource, from the public repository `bundu-labs/bundu-standards`, branch `main`.
+2. Build pack: **Dockerfile**. Base directory `/`, Dockerfile location `/Dockerfile`. The context
+   must be the repository root: the build reads `register/` and `standards/` as well as this
+   directory.
+3. Ports exposes: `8080`. Build argument `BIN` stays at its default, `standards`. No environment variable is needed; set `PUBLIC_ORIGIN` only if the
+   public origin is not `https://standards.bundu.org`.
+4. Health check: enable it in Coolify with path `/healthz`, port `8080`, but expect the
+   in-container form to fail. The image is distroless, with no shell and no `curl`, and has no
+   `HEALTHCHECK` on purpose. Check `GET /healthz` from outside the container (an uptime monitor
+   or the proxy's own probe), which answers `{"status":"ok"}`.
+5. Domain: `standards.bundu.org` on the Coolify proxy, which terminates TLS. The server speaks
+   plain HTTP on 8080 and sets no HSTS; add it at the proxy if wanted.
 
-Checked before the PR:
-
-- All 108 pages and `/register/index.json` match the Astro build (`astro build` at the same
-  commit). The JSON is byte for byte the same; the HTML has the same elements, attributes and
-  text. The one difference is a fix: the home page now reads "103 adopted, 2 proposed", where
-  Astro dropped the space after the comma.
-- On local workerd (`wrangler dev`): every page answers 200 with the security headers from
-  `_headers`, the assets are served, and the file endpoint behaves as before.
-- Earlier (#90): the four files at commit `0f859fa` matched the live JS endpoint byte for
-  byte, as did their content types, `cache-control` and `etag`.
+The image runs as the non-root user (uid 65532) and needs outbound HTTPS to `github.com`,
+`api.github.com` and `raw.githubusercontent.com` for `/register/latest` and the commit files;
+the pages and static files need nothing.

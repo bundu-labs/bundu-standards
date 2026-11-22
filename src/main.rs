@@ -62,7 +62,18 @@ async fn main() {
 fn app() -> Router {
     Router::new()
         .route("/", get(index))
-        .route("/health", get(|| async { "ok" }))
+        .route(
+            "/healthz",
+            get(|| async {
+                (
+                    [
+                        (axum::http::header::CONTENT_TYPE, "application/json"),
+                        (axum::http::header::CACHE_CONTROL, "no-store"),
+                    ],
+                    r#"{"status":"ok"}"#,
+                )
+            }),
+        )
         .route("/context.jsonld", get(context))
         .route("/favicon-32x32.png", get(|| icon(FAVICON_32)))
         .route("/favicon-16x16.png", get(|| icon(FAVICON_16)))
@@ -203,7 +214,7 @@ async fn context() -> Response {
 
 // The official Bundu mark (copper), as shipped by www.bundu.org: a
 // light-surface and a dark-surface pair, picked by the browser's colour
-// scheme, never redrawn. The same files are in workers/standards/public; a
+// scheme, never redrawn. The same files are in workers/standards-api/public; a
 // test keeps the two copies identical.
 const FAVICON_32: &[u8] = include_bytes!("brand/favicon-32x32.png");
 const FAVICON_16: &[u8] = include_bytes!("brand/favicon-16x16.png");
@@ -225,7 +236,7 @@ async fn icon(bytes: &'static [u8]) -> Response {
 // ── Handlers ─────────────────────────────────────────────────────────────
 
 /// The script behind "Copy this page as": the same file standards.bundu.org serves from
-/// workers/standards/public/copy.js. A test keeps the two identical.
+/// workers/standards-api/public/copy.js. A test keeps the two identical.
 const COPY_JS: &str = include_str!("copy.js");
 
 async fn copy_js() -> Response {
@@ -673,7 +684,7 @@ mod tests {
     #[test]
     fn brand_icons_match_the_standards_site() {
         let site =
-            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("workers/standards/public");
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("workers/standards-api/public");
         for (name, bytes) in [
             ("favicon-32x32.png", FAVICON_32),
             ("favicon-16x16.png", FAVICON_16),
@@ -1075,8 +1086,8 @@ mod tests {
     fn the_copy_script_is_the_same_file_on_both_sites() {
         assert_eq!(
             COPY_JS,
-            include_str!("../workers/standards/public/copy.js"),
-            "src/copy.js and workers/standards/public/copy.js must stay identical"
+            include_str!("../workers/standards-api/public/copy.js"),
+            "src/copy.js and workers/standards-api/public/copy.js must stay identical"
         );
     }
 
@@ -1117,7 +1128,7 @@ mod tests {
         use tower::ServiceExt;
         for (path, status) in [
             ("/", StatusCode::OK),
-            ("/health", StatusCode::OK),
+            ("/healthz", StatusCode::OK),
             ("/context.jsonld", StatusCode::OK),
             ("/copy.js", StatusCode::OK),
             ("/favicon-32x32.png", StatusCode::OK),

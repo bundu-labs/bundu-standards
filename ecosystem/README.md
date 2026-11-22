@@ -4,12 +4,12 @@ The one place the Bundu ecosystem's identity, four pillars, shared foundations, 
 products are written down (#105, #106). Websites, documentation, APIs and agents read it;
 none of them keeps its own version.
 
-| File                                           | What it is                                   |
-| ---------------------------------------------- | -------------------------------------------- |
-| `ecosystem.yaml`                               | The source. The only file edited by hand.    |
-| `ECOSYSTEM.md`                                 | Generated: the record as tables, for people. |
-| `ecosystem.jsonld`                             | Generated: the record as schema.org JSON-LD. |
-| `../workers/standards/public/ecosystem.jsonld` | Generated: served at standards.bundu.org.    |
+| File                                               | What it is                                   |
+| -------------------------------------------------- | -------------------------------------------- |
+| `ecosystem.yaml`                                   | The source. The only file edited by hand.    |
+| `ECOSYSTEM.md`                                     | Generated: the record as tables, for people. |
+| `ecosystem.jsonld`                                 | Generated: the record as schema.org JSON-LD. |
+| `../workers/standards-api/public/ecosystem.jsonld` | Generated: served at standards.bundu.org.    |
 
 ```sh
 deno run --allow-read --allow-write tools/ecosystem.ts write   # after editing ecosystem.yaml

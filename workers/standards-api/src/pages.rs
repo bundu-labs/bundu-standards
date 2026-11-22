@@ -1,7 +1,6 @@
 //! The pages of standards.bundu.org, rendered on the server with Dioxus (Mzizi Roots).
 //!
-//! The Rust port of `workers/standards/src/layouts/Base.astro` and its four pages. Same
-//! markup, same classes, same text: `site.css` styles both. A standard's status is the Mzizi
+//! The pages: the layout and its page kinds, styled by `styles/site.css`. A standard's status is the Mzizi
 //! [`Badge`] (`mzizi-ui`), which carries the registry's `data-slot` and `data-portal`; the
 //! site ships no Tailwind, so its `.chip` rules give the badge its look.
 
@@ -46,8 +45,8 @@ fn primary_json(files: &serde_json::Map<String, serde_json::Value>) -> Option<se
     serde_json::from_str(files[name].as_str()?).ok()
 }
 
-/// The stylesheet, served at [`CSS_PATH`]. One file for the Astro and the Rust builds.
-pub const CSS: &str = include_str!("../../standards/src/styles/site.css");
+/// The stylesheet (`styles/site.css`), served at [`CSS_PATH`].
+pub const CSS: &str = include_str!("../styles/site.css");
 pub const CSS_PATH: &str = "/styles/site.css";
 /// Where the OpenAPI description is served; also at `/.well-known/openapi.json`.
 pub const OPENAPI_PATH: &str = "/openapi.json";
@@ -59,7 +58,7 @@ pub struct Page {
 }
 
 /// The page for `path`, or `None` when this module has no page there. Trailing slashes are
-/// optional, as with Astro's `trailingSlash: "ignore"`.
+/// optional, as the site always did.
 pub fn render(path: &str) -> Option<Page> {
     let trimmed = path.trim_end_matches('/');
     let r = &*REGISTER;
@@ -98,7 +97,7 @@ pub fn render(path: &str) -> Option<Page> {
             content_type: "application/json; charset=utf-8",
             body: register::index_json(r, SITE),
         }),
-        // This host's OpenAPI description, for API clients and Cloudflare's schema validation.
+        // This host's OpenAPI description, for API clients and schema validators.
         OPENAPI_PATH | "/.well-known/openapi.json" => Some(Page {
             content_type: "application/json",
             body: crate::openapi::OPENAPI.to_owned(),
@@ -186,7 +185,7 @@ fn document(
     format!("<!doctype html><html lang=\"en\">{body}</html>")
 }
 
-/// aria-current for a main navigation link, as Base.astro worked it out: the register's
+/// aria-current for a main navigation link, as the layout works it out: the register's
 /// pages count as the register.
 fn current(path: &str, href: &str) -> Option<&'static str> {
     if href == "/" {

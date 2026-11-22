@@ -84,14 +84,15 @@ refuses a download that does not match. The endpoint is a convenience and an
 address that survives a repository move; it is never what a consumer has to
 trust. This matters most for `tools/register.py`, which a consumer runs.
 
-The site is `workers/standards-api/`, a Rust Worker (workers-rs) that has served
-standards.bundu.org since 2026-11-17, and the only Worker that declares that route.
-Its pages (`/register/`, one per standard, `/register/index.json`) are rendered from
-`register/register.yaml` at build time, so they cannot drift from it. Its stylesheet
-and favicons are still read from `workers/standards/public/`.
+The site is `workers/standards-api/`, a small native Rust server (axum, no JavaScript
+runtime) that runs as a container: the root `Dockerfile` builds it, listens on port 8080
+and answers `GET /healthz`. Its pages (`/register/`, one per standard,
+`/register/index.json`) are rendered from `register/register.yaml` at build time, so they
+cannot drift from it. Its stylesheet (`styles/site.css`) and static files (`public/`:
+favicons, `robots.txt`, `copy.js`, `ecosystem.jsonld` and the `_headers` rules) are built
+into the binary. The server is deployed as a plain container on Coolify; see
+`workers/standards-api/README.md`. The repository holds no deploy secrets. CI tests the
+crate natively and smoke-tests the image on every pull request.
 
-The Astro Worker in `workers/standards/` (`bundu-standards`) is retired as the site.
-Its route was removed when the domain moved, and the directory stays only until its
-`public/` and `site.css` move to the Rust Worker (step 4 in
-`workers/standards-api/README.md`). The repository holds no Cloudflare secrets. CI
-tests and builds both Workers on every pull request.
+`vocab.bundu.org` (the root crate) is built by the same `Dockerfile` with `BIN=vocab` and also
+deploys to Coolify; its cutover from Fly is pending.

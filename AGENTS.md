@@ -53,7 +53,9 @@ python3 register/tools/register.py write    # regenerate REGISTER.md and the see
 python3 register/tools/register.py check    # lint; generated files must be current
 python3 register/tools/register.py live FILE # compare a database export with the register
 python3 -m unittest discover register/tools
-cargo fmt --all -- --check && cargo clippy --all-targets -- -D warnings && cargo test
+# One Cargo workspace: the vocab crate (root) and the standards server (workers/standards-api)
+cargo fmt --all -- --check && cargo clippy --workspace --all-targets --locked -- -D warnings && cargo test --workspace --locked
+docker build --build-arg BIN=standards -t standards .   # or BIN=vocab; from the repository root
 ```
 
 ## Branching

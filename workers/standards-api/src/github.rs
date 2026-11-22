@@ -7,7 +7,7 @@ use crate::core::{Fetch, Upstream, USER_AGENT};
 use std::time::Duration;
 
 /// The largest upstream body read. The four register files are well under a megabyte.
-const MAX_BODY: usize = 8 * 1024 * 1024;
+const MAX_BODY: usize = 1024 * 1024;
 
 pub struct GitHub {
     client: reqwest::Client,

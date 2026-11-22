@@ -10,16 +10,39 @@ use std::collections::HashMap;
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
-/// The most answers kept. A commit's files are immutable and `latest` is one key, so the
-/// working set is small; the bound stops a stream of distinct commits from growing the heap.
-const MAX_ENTRIES: usize = 512;
+/// The most bytes kept in all. A commit's files are immutable and `latest` is one key, so the
+/// working set is a few hundred kilobytes; the bound stops a stream of distinct commits from
+/// growing the heap, whatever the size of each answer.
+const MAX_BYTES: usize = 32 * 1024 * 1024;
+/// The largest single answer kept. The register's files are under a megabyte.
+const MAX_ENTRY_BYTES: usize = 1024 * 1024;
+/// What every entry costs besides its body (key, headers, bookkeeping), so many tiny entries
+/// are bounded too.
+const OVERHEAD: usize = 512;
 /// No answer is kept longer than a day, even an immutable one.
 const MAX_AGE: Duration = Duration::from_secs(24 * 60 * 60);
+/// A 404 is kept this long, so a stream of unknown commits does not reach GitHub each time.
+const NEGATIVE_TTL: Duration = Duration::from_secs(60);
 
-/// The file endpoint's successful answers, by [`core::cache_key`].
+/// The file endpoint's answers, by [`core::cache_key`]: successes for as long as their own
+/// `cache-control` says, and 404s briefly.
 #[derive(Default)]
 pub struct Cache {
-    entries: Mutex<HashMap<String, (Instant, Reply)>>,
+    inner: Mutex<Inner>,
+}
+
+#[derive(Default)]
+struct Inner {
+    entries: HashMap<String, (Instant, usize, Reply)>,
+    bytes: usize,
+}
+
+impl Inner {
+    fn remove(&mut self, key: &str) {
+        if let Some((_, size, _)) = self.entries.remove(key) {
+            self.bytes -= size;
+        }
+    }
 }
 
 impl Cache {
@@ -27,38 +50,65 @@ impl Cache {
         Self::default()
     }
 
+    fn lock(&self) -> std::sync::MutexGuard<'_, Inner> {
+        self.inner.lock().unwrap_or_else(|e| e.into_inner())
+    }
+
     fn get(&self, key: &str) -> Option<Reply> {
-        let mut entries = self.entries.lock().unwrap_or_else(|e| e.into_inner());
-        match entries.get(key) {
-            Some((expires, reply)) if *expires > Instant::now() => Some(reply.clone()),
+        let mut inner = self.lock();
+        match inner.entries.get(key) {
+            Some((expires, _, reply)) if *expires > Instant::now() => Some(reply.clone()),
             Some(_) => {
-                entries.remove(key);
+                inner.remove(key);
                 None
             }
             None => None,
         }
     }
 
+    /// Keep a reply if it may be kept and is small enough, evicting the entries that expire
+    /// soonest until it fits.
     fn put(&self, key: String, reply: &Reply) {
-        let Some(ttl) = max_age(reply).filter(|t| !t.is_zero()) else {
-            return;
+        let ttl = match reply.status {
+            200 => match max_age(reply).filter(|t| !t.is_zero()) {
+                Some(t) => t.min(MAX_AGE),
+                None => return,
+            },
+            404 => NEGATIVE_TTL,
+            _ => return,
         };
-        let now = Instant::now();
-        let mut entries = self.entries.lock().unwrap_or_else(|e| e.into_inner());
-        if entries.len() >= MAX_ENTRIES {
-            entries.retain(|_, (expires, _)| *expires > now);
+        let body = reply.body.as_ref().map_or(0, Vec::len);
+        if body > MAX_ENTRY_BYTES {
+            return;
         }
-        if entries.len() >= MAX_ENTRIES {
-            // Still full of live answers: drop the one that expires first.
-            if let Some(oldest) = entries
+        let size = body + OVERHEAD + key.len();
+        let now = Instant::now();
+        let mut inner = self.lock();
+        inner.remove(&key);
+        if inner.bytes + size > MAX_BYTES {
+            let expired: Vec<String> = inner
+                .entries
                 .iter()
-                .min_by_key(|(_, (expires, _))| *expires)
+                .filter(|(_, (expires, _, _))| *expires <= now)
                 .map(|(k, _)| k.clone())
-            {
-                entries.remove(&oldest);
+                .collect();
+            for k in expired {
+                inner.remove(&k);
             }
         }
-        entries.insert(key, (now + ttl.min(MAX_AGE), reply.clone()));
+        while inner.bytes + size > MAX_BYTES {
+            let Some(soonest) = inner
+                .entries
+                .iter()
+                .min_by_key(|(_, (expires, _, _))| *expires)
+                .map(|(k, _)| k.clone())
+            else {
+                break;
+            };
+            inner.remove(&soonest);
+        }
+        inner.bytes += size;
+        inner.entries.insert(key, (now + ttl, size, reply.clone()));
     }
 }
 
@@ -99,9 +149,7 @@ pub async fn handle(
     }
     let reply = core::route(method, origin, path, fetch).await;
     if let Some(key) = key {
-        if reply.status == 200 {
-            cache.put(key, &reply);
-        }
+        cache.put(key, &reply);
     }
     reply
 }
@@ -163,25 +211,48 @@ mod tests {
     }
 
     #[test]
-    fn errors_and_no_store_answers_are_not_kept() {
+    fn no_store_answers_are_not_kept_and_a_404_is_kept_briefly() {
         let f = Counting(Cell::new(0));
         let c = Cache::new();
         get("/healthz", &f, &c);
-        get(&format!("/{SHA}/register/other.txt"), &f, &c);
-        assert!(c.entries.lock().unwrap().is_empty());
+        assert!(c.lock().entries.is_empty());
+        let missing = format!("/{SHA}/register/other.txt");
+        get(&missing, &f, &c);
+        assert_eq!(c.lock().entries.len(), 1, "the 404 is kept for a minute");
+    }
+
+    fn big(len: usize) -> Reply {
+        Reply {
+            status: 200,
+            headers: vec![("cache-control", "public, max-age=60".to_owned())],
+            body: Some(vec![0; len]),
+        }
     }
 
     #[test]
-    fn the_cache_is_bounded() {
+    fn the_cache_is_bounded_in_bytes_and_evicts_to_fit() {
         let c = Cache::new();
-        let reply = Reply {
-            status: 200,
-            headers: vec![("cache-control", "public, max-age=60".to_owned())],
-            body: None,
-        };
-        for i in 0..MAX_ENTRIES + 10 {
-            c.put(format!("k{i}"), &reply);
+        // Each is under the per-entry limit; together they far exceed the total.
+        for i in 0..200 {
+            c.put(format!("k{i}"), &big(MAX_ENTRY_BYTES - 1));
+            assert!(c.lock().bytes <= MAX_BYTES, "after {i}");
         }
-        assert_eq!(c.entries.lock().unwrap().len(), MAX_ENTRIES);
+        let inner = c.lock();
+        assert!(inner.entries.len() < 40 && !inner.entries.is_empty());
+        assert_eq!(
+            inner.bytes,
+            inner.entries.values().map(|(_, s, _)| *s).sum::<usize>()
+        );
+    }
+
+    #[test]
+    fn a_body_over_the_limit_is_not_kept_and_tiny_entries_are_bounded_too() {
+        let c = Cache::new();
+        c.put("huge".into(), &big(MAX_ENTRY_BYTES + 1));
+        assert!(c.lock().entries.is_empty());
+        for i in 0..(MAX_BYTES / OVERHEAD) + 100 {
+            c.put(format!("k{i}"), &big(0));
+        }
+        assert!(c.lock().bytes <= MAX_BYTES);
     }
 }

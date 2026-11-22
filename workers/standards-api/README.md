@@ -24,7 +24,7 @@ stylesheet and the static files are compiled into the binary.
   and `.chip` (in `styles/site.css`) styles it.
 - `src/core.rs` is the file endpoint: it reads four files of this repository from GitHub at a
   commit the caller names, and nothing else (it is not an open proxy). `src/github.rs` is its
-  HTTPS client (rustls, no OpenSSL; 5 s to connect, 10 s in all, 3 redirects, 8 MiB at most).
+  HTTPS client (rustls, no OpenSSL; 5 s to connect, 10 s in all, 3 redirects, 1 MiB at most).
 - `src/assets.rs` serves `public/` before anything else and applies `public/_headers` to it:
   the security headers and the content security policy, `ecosystem.jsonld`'s content type and
   CORS. The pages carry the same headers from `src/site.rs`, and a test holds the two policies
@@ -32,7 +32,7 @@ stylesheet and the static files are compiled into the binary.
 - `src/server.rs` is the order of answering (static files, the site, the file endpoint) and an
   in-process cache of the file endpoint's successful GETs, for as long as their own
   `cache-control` says (a commit's files for a day at most, `/register/latest` for 5 minutes),
-  at most 512 entries.
+  at most 32 MiB in all and 1 MiB an answer, evicting the soonest to expire; a 404 is kept for a minute so unknown commits do not reach GitHub each time.
 - `openapi.json` describes every route above, GET and HEAD only, for API clients. `src/openapi.rs`
   serves it and its tests hold it to the router: a route the server serves (from the register,
   our standards' files, the assets, the path literals in the source, or a link on any page) that

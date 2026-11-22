@@ -19,7 +19,7 @@ Versions released before then are not renumbered.
   literal colour, size, space, radius, type step, line height, weight or hit region: they are
   `var(--token)`s from `site/tokens/tokens.css`, the Mzizi tokens vendored from mzizi-registry at
   a pinned commit (`site/tools/vendor-tokens.sh`, `--check` in CI). `build.rs` bundles page CSS and
-  the tokens with the `lightningcss` crate (`=1.0.0-alpha.72`, feature `bundler`; the version and
+  the tokens with the `lightningcss` crate (`=1.0.0-alpha.72`, `default-features = false`, no `bundler` feature because it pulls `rkyv` 0.7, RUSTSEC-2026-0235; `build.rs` inlines the `@import` itself; the version, features and
   browser targets of mzizi-registry's `mzizi-css`), prunes unused tokens and minifies; the served
   `/styles/site.css` carries an `ETag`. The hand-typed colours (including the dark `--muted`
   `#d6d2c8`) are gone, so the pages take the Mzizi neutrals: a cooler ground and greyer text than

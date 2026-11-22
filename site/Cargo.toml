@@ -21,7 +21,8 @@ lightningcss = { version = "=1.0.0-alpha.72", default-features = false, optional
 # stylesheet to: read from the crate, not retyped.
 mzizi-tokens = { version = "0.11", optional = true }
 
-# build.rs bundles tokens.css into the page CSS and minifies it with Lightning CSS: the same
-# crate, version and browser targets as mzizi-registry's `mzizi-css` (the Rust build there).
+# build.rs inlines tokens.css into the page CSS and minifies it with Lightning CSS: the same
+# crate, version, features and browser targets as mzizi-registry's `mzizi-css` (the Rust build there).
+# No `bundler` feature: it pulls rkyv 0.7 (RUSTSEC-2026-0235) through the source-map crates.
 [build-dependencies]
-lightningcss = { version = "=1.0.0-alpha.72", default-features = false, features = ["bundler"] }
+lightningcss = { version = "=1.0.0-alpha.72", default-features = false }

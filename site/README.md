@@ -30,7 +30,7 @@ drift, and `--update` re-pins to the head of main. A value Mzizi has no token fo
 were, and are in the pinned file), never typed into page CSS.
 
 `build.rs` bundles page CSS and the token file with Lightning CSS (`lightningcss`
-`=1.0.0-alpha.72`, feature `bundler`: the crate, version and browser targets of mzizi-registry's
+`=1.0.0-alpha.72`, `default-features = false`: the crate, version, features and browser targets of mzizi-registry's
 `mzizi-css`: Chrome and Edge 111, Firefox 113, Safari 16.2), drops every custom property no rule
 uses, and minifies. Rust only, no JavaScript. The sites serve the result at `/styles/site.css`
 with an `ETag` (a hash of the bytes).

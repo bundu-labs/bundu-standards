@@ -11,12 +11,11 @@
 //!
 //! No JavaScript, no npm: Rust only.
 
-use lightningcss::bundler::{Bundler, FileProvider};
 use lightningcss::printer::PrinterOptions;
 use lightningcss::properties::custom::CustomPropertyName;
 use lightningcss::properties::Property;
 use lightningcss::rules::CssRule;
-use lightningcss::stylesheet::ParserOptions;
+use lightningcss::stylesheet::{ParserOptions, StyleSheet};
 use lightningcss::targets::{Browsers, Targets};
 use std::collections::BTreeSet;
 use std::{env, fs, path::Path};
@@ -143,14 +142,33 @@ fn prune(rules: &mut Vec<CssRule<'_>>, needed: &BTreeSet<String>) {
     });
 }
 
+/// A stylesheet with its `@import "<path>";` lines replaced by the files they name (paths are
+/// relative to the importing file). Lightning CSS's own bundler would do this, but it pulls in the
+/// source-map crates, and with them `rkyv` 0.7 (RUSTSEC-2026-0235): not needed to inline a file.
+fn inline_imports(path: &Path) -> String {
+    let text = fs::read_to_string(path).unwrap_or_else(|e| panic!("read {}: {e}", path.display()));
+    let dir = path.parent().unwrap_or(Path::new("."));
+    let mut out = String::new();
+    for line in text.lines() {
+        match line
+            .trim()
+            .strip_prefix("@import \"")
+            .and_then(|r| r.strip_suffix("\";"))
+        {
+            Some(rel) => out.push_str(&inline_imports(&dir.join(rel))),
+            None => out.push_str(line),
+        }
+        out.push('\n');
+    }
+    out
+}
+
 fn main() {
     println!("cargo:rerun-if-changed=styles");
     println!("cargo:rerun-if-changed=tokens");
-    let fs_provider = FileProvider::new();
-    let mut bundler = Bundler::new(&fs_provider, None, ParserOptions::default());
-    let mut sheet = bundler
-        .bundle(Path::new("styles/page.css"))
-        .expect("bundle styles/page.css and the token files it imports");
+    let source = inline_imports(Path::new("styles/page.css"));
+    let mut sheet = StyleSheet::parse(&source, ParserOptions::default())
+        .expect("parse styles/page.css with the token file it imports");
 
     let mut needed = BTreeSet::new();
     used_by_pages(&sheet.rules.0, &mut needed);

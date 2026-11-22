@@ -300,6 +300,30 @@ pub fn audit(html: &str) -> Vec<String> {
             _ => {}
         }
     }
+    // Keyboard help is a requirement (proposed Bundu floor): on every page, in the footer, visible,
+    // reached with Tab. It names the keys the page needs (Tab, Shift+Tab, Enter) and links to
+    // the accessibility statement, which is where a barrier is reported. The page defines no
+    // shortcut of its own (so none can lack help or clash with the browser's or a screen
+    // reader's keys): `accesskey` is forbidden.
+    let footer = html
+        .find("<footer")
+        .zip(html.find("</footer>"))
+        .map(|(a, b)| &html[a..b])
+        .unwrap_or("");
+    for needle in ["<kbd>Tab</kbd>", "<kbd>Shift</kbd>", "<kbd>Enter</kbd>"] {
+        if !footer.contains(needle) {
+            bad(format!("the footer's keyboard help lacks {needle}"));
+        }
+    }
+    if !footer.contains("accessibility") {
+        bad("the footer's keyboard help does not link to the accessibility statement".into());
+    }
+    if html.contains(" accesskey=") {
+        bad(
+            "accesskey defines a shortcut that can clash with the browser's or a screen reader's"
+                .into(),
+        );
+    }
     for id in dup {
         bad(format!("duplicate id {id}"));
     }
@@ -352,7 +376,7 @@ pub fn audit(html: &str) -> Vec<String> {
 mod tests {
     use super::*;
 
-    const GOOD: &str = r##"<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>T</title><meta name="description" content="d"><link rel="canonical" href="https://x/"><script type="application/json" id="page-json">{"a":1}</script><script src="/copy.js" defer></script></head><body><a class="skip" href="#main">Skip</a><header class="site"><a href="/"><img alt="" src="/i.png">Home</a><nav aria-label="Main"><ul><li><a href="/x">X</a></li></ul></nav></header><main id="main" tabindex="-1"><h1>H</h1><h2>S</h2><label for="f">F</label><select id="f"></select><button type="button">Go</button><table><caption>C</caption><tr><th scope="row">a</th></tr></table></main><footer class="site"><p>f</p></footer></body></html>"##;
+    const GOOD: &str = r##"<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>T</title><meta name="description" content="d"><link rel="canonical" href="https://x/"><script type="application/json" id="page-json">{"a":1}</script><script src="/copy.js" defer></script></head><body><a class="skip" href="#main">Skip</a><header class="site"><a href="/"><img alt="" src="/i.png">Home</a><nav aria-label="Main"><ul><li><a href="/x">X</a></li></ul></nav></header><main id="main" tabindex="-1"><h1>H</h1><h2>S</h2><label for="f">F</label><select id="f"></select><button type="button">Go</button><table><caption>C</caption><tr><th scope="row">a</th></tr></table></main><footer class="site"><p>Every page works with a keyboard alone: <kbd>Tab</kbd> moves forward, <kbd>Shift</kbd>+<kbd>Tab</kbd> moves back, <kbd>Enter</kbd> follows a link. Read the <a href="/accessibility/">accessibility statement</a>.</p></footer></body></html>"##;
 
     #[test]
     fn a_good_page_has_no_problems() {
@@ -361,7 +385,7 @@ mod tests {
 
     #[test]
     fn each_rule_catches_its_fault() {
-        let cases: [(&str, String); 14] = [
+        let cases: [(&str, String); 16] = [
             ("lang", GOOD.replace(" lang=\"en\"", "")),
             ("alt", GOOD.replace(" alt=\"\"", "")),
             ("heading", GOOD.replace("<h2>S</h2>", "<h3>S</h3>")),
@@ -388,6 +412,8 @@ mod tests {
             ("scope", GOOD.replace(" scope=\"row\"", "")),
             ("zoom", GOOD.replace("initial-scale=1", "maximum-scale=1")),
             ("id", GOOD.replace("id=\"f\"", "id=\"main\"")),
+            ("keyboard help", GOOD.replace("<kbd>Shift</kbd>", "Shift")),
+            ("accesskey", GOOD.replace("<h1>", "<h1 accesskey=\"h\">")),
         ];
         for (name, html) in cases {
             assert!(!audit(&html).is_empty(), "{name} was not caught");

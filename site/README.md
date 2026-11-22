@@ -10,7 +10,8 @@ JavaScript runtime: Dioxus components rendered on the server (Mzizi Roots), one
 - `audit::audit(html)`: the rules both sites keep on every rendered page (`lang`, skip link
   first, one `main`, one banner, one footer, labelled navigation, one `h1` and no skipped
   heading level, names for links, buttons and fields, `alt` on images, unique ids and
-  resolvable references, header cells with `scope`, no zoom lock, no inline style, handler or
+  resolvable references, header cells with `scope`, keyboard help in the footer of every page
+  (Tab, Shift+Tab, Enter, a link to the accessibility statement, no `accesskey`), no zoom lock, no inline style, handler or
   script, because the CSP allows none).
 - `css_audit::audit(css)`: the stylesheet's own tokens, in both themes: APCA Lc 75 for text
   (60 for control edges and the focus ring) and WCAG 7:1 / 3:1, the Bundu floor (45px / 24px

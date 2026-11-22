@@ -38,5 +38,5 @@ serde_yaml = "0.9"
 pulldown-cmark = { version = "0.13", default-features = false, features = ["html"] }
 
 [dev-dependencies]
-pollster = "0.4"
+pollster = "1.0"
 bundu-site = { path = "../../site", features = ["audit"] }

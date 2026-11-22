@@ -79,7 +79,7 @@ pub fn render(path: &str) -> Option<Page> {
         "/register" => html(document(
             path,
             rsx! { RegisterTab { status: "adopted" } },
-            ("Register · Bundu standards".into(), TAB_DESCRIPTION.into()),
+            ("Register — Bundu standards".into(), TAB_DESCRIPTION.into()),
             Some(register::defined_term_set(r, SITE)),
             Some(register::tab_json(r, "adopted", SITE)),
         )),
@@ -87,7 +87,7 @@ pub fn render(path: &str) -> Option<Page> {
             path,
             rsx! { RegisterTab { status: "proposed" } },
             (
-                "Proposed · Register · Bundu standards".into(),
+                "Proposed register — Bundu standards".into(),
                 TAB_DESCRIPTION.into(),
             ),
             None,
@@ -125,7 +125,7 @@ pub fn render(path: &str) -> Option<Page> {
                 path,
                 rsx! { StandardDocument { slug: slug.to_owned() } },
                 (
-                    format!("{} · Bundu standards", s.name),
+                    format!("{} — Bundu standards", s.name),
                     register::one_line(&s.governs).replace('`', ""),
                 ),
                 None,
@@ -139,7 +139,7 @@ pub fn render(path: &str) -> Option<Page> {
                 path,
                 rsx! { StandardPage { id: s.id.clone() } },
                 (
-                    format!("{} · Bundu standards", s.name),
+                    format!("{} — Bundu standards", s.name),
                     register::one_line(&s.governs).replace('`', ""),
                 ),
                 Some(register::defined_term_page(s, SITE)),
@@ -161,7 +161,7 @@ fn home_meta() -> (String, String) {
 
 fn accessibility_meta() -> (String, String) {
     (
-        "Accessibility · Bundu standards".into(),
+        "Accessibility — Bundu standards".into(),
         "How standards.bundu.org and vocab.bundu.org work for everyone, with a keyboard, a screen reader, zoom or colour-blind vision, and how to report a barrier.".into(),
     )
 }

@@ -332,6 +332,15 @@ Versions released before then are not renumbered.
   standards' pages had `th` without `scope`, and dark-theme `--muted` was only APCA Lc 56
   (now `#d6d2c8`, Lc 77).
 
+- **No repeated words in titles and headings.** A page's title is `<page> — <site>` (the site
+  name alone on the home page), with no word in both halves; the `h1` does not repeat the
+  site name; a heading does not restate its parent. vocab's index was "The Bundu vocabulary
+  — Bundu vocabulary" and is now "Bundu vocabulary"; vocab's "vocab.bundu.org /" crumb above each
+  heading is gone (the header already names the site); standards' titles use "—" like vocab's,
+  and the proposed register is "Proposed register — Bundu standards". The rule is checked on
+  every page of both sites by `bundu-site`'s audit (the org name "Bundu", which starts every
+  site name, is not counted as a repeat).
+
 ### Removed
 
 - Every reference to a `staging` branch: `staging-version.yml` (it only tagged merges into

@@ -130,6 +130,10 @@ pub fn audit(html: &str) -> Vec<String> {
     let mut noindex = false;
     let mut tables_without_header = 0;
     let mut in_table: Option<bool> = None; // has a header cell yet
+    let mut cur_head: Option<(u8, String)> = None;
+    let mut headings: Vec<(u8, String)> = Vec::new();
+    let mut brand_open = false;
+    let mut brand = String::new();
 
     for (text, tag) in &toks {
         if in_title {
@@ -138,11 +142,23 @@ pub fn audit(html: &str) -> Vec<String> {
         if let Some((_, n)) = named.as_mut() {
             n.push_str(text.trim());
         }
+        if let Some((_, h)) = cur_head.as_mut() {
+            h.push_str(text);
+        }
+        if brand_open {
+            brand.push_str(text);
+        }
         let Some(t) = tag else { continue };
         if t.closing {
             match t.name.as_str() {
                 "title" => in_title = false,
+                "h1" | "h2" | "h3" | "h4" | "h5" | "h6" => {
+                    if let Some(h) = cur_head.take() {
+                        headings.push(h);
+                    }
+                }
                 "a" | "button" => {
+                    brand_open = false;
                     if let Some((kind, name)) = named.take() {
                         if name.trim().is_empty() {
                             bad(format!("a {kind} with no accessible name"));
@@ -245,8 +261,14 @@ pub fn audit(html: &str) -> Vec<String> {
                     ));
                 }
                 last_heading = level;
+                cur_head = Some((level, String::new()));
             }
             "a" => {
+                if a.get("class")
+                    .is_some_and(|c| c.split(' ').any(|c| c == "brand"))
+                {
+                    brand_open = true;
+                }
                 if in_body && !first_link_seen {
                     first_link_seen = true;
                     if a.get("class").map(String::as_str) != Some("skip")
@@ -324,6 +346,9 @@ pub fn audit(html: &str) -> Vec<String> {
                 .into(),
         );
     }
+    for m in repetition(&title, &brand, &headings) {
+        bad(m);
+    }
     for id in dup {
         bad(format!("duplicate id {id}"));
     }
@@ -372,11 +397,80 @@ pub fn audit(html: &str) -> Vec<String> {
     p
 }
 
+/// Lower-case words of a text: letters and digits only.
+fn words(s: &str) -> Vec<String> {
+    s.split(|c: char| !c.is_alphanumeric())
+        .filter(|w| !w.is_empty())
+        .map(str::to_lowercase)
+        .collect()
+}
+
+/// Words that carry no meaning of their own, and the org's name, which every site of the estate
+/// starts with: "Bundu floor — Bundu standards" is not a repeat, "Standards — Bundu standards" is.
+const NEUTRAL: [&str; 9] = ["the", "of", "and", "a", "an", "for", "to", "in", "bundu"];
+
+/// Repetition between a page's title, the site name (the brand in the header) and its headings.
+///
+/// - The title is `<page> — <site>` (or just `<site>` on the home page); the site half is the
+///   brand, and no word of it is repeated in the page half (the shared org name aside).
+/// - The `h1` does not repeat the site name, except on the home page, which is the site.
+/// - A heading does not restate its parent heading.
+pub fn repetition(title: &str, brand: &str, headings: &[(u8, String)]) -> Vec<String> {
+    let mut p = Vec::new();
+    let norm = |s: &str| words(s).join(" ");
+    let title = title.split_whitespace().collect::<Vec<_>>().join(" ");
+    let brand = brand.split_whitespace().collect::<Vec<_>>().join(" ");
+    let home = norm(&title) == norm(&brand);
+    match title.rsplit_once(" — ") {
+        Some((page, site)) => {
+            if norm(site) != norm(&brand) {
+                p.push(format!(
+                    "the title's site half {site:?} is not the brand {brand:?}"
+                ));
+            }
+            let site_words: Vec<String> = words(site)
+                .into_iter()
+                .filter(|w| !NEUTRAL.contains(&w.as_str()))
+                .collect();
+            for w in words(page) {
+                if site_words.contains(&w) {
+                    p.push(format!("the title {title:?} repeats {w:?} in both halves"));
+                }
+            }
+        }
+        None if !home => p.push(format!(
+            "the title {title:?} is neither the site name nor \"<page> — <site>\""
+        )),
+        None => {}
+    }
+    let site_phrase = norm(&brand);
+    let mut stack: Vec<(u8, String)> = Vec::new();
+    for (level, text) in headings {
+        let text = text.split_whitespace().collect::<Vec<_>>().join(" ");
+        let n = norm(&text);
+        if *level == 1 && !home && !site_phrase.is_empty() && n.contains(&site_phrase) {
+            p.push(format!("the h1 {text:?} repeats the site name {brand:?}"));
+        }
+        while stack.last().is_some_and(|(l, _)| l >= level) {
+            stack.pop();
+        }
+        if let Some((_, parent)) = stack.last() {
+            if parent.len() >= 4 && n.contains(parent.as_str()) {
+                p.push(format!(
+                    "the heading {text:?} restates its parent {parent:?}"
+                ));
+            }
+        }
+        stack.push((*level, n));
+    }
+    p
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const GOOD: &str = r##"<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>T</title><meta name="description" content="d"><link rel="canonical" href="https://x/"><script type="application/json" id="page-json">{"a":1}</script><script src="/copy.js" defer></script></head><body><a class="skip" href="#main">Skip</a><header class="site"><a href="/"><img alt="" src="/i.png">Home</a><nav aria-label="Main"><ul><li><a href="/x">X</a></li></ul></nav></header><main id="main" tabindex="-1"><h1>H</h1><h2>S</h2><label for="f">F</label><select id="f"></select><button type="button">Go</button><table><caption>C</caption><tr><th scope="row">a</th></tr></table></main><footer class="site"><p>Every page works with a keyboard alone: <kbd>Tab</kbd> moves forward, <kbd>Shift</kbd>+<kbd>Tab</kbd> moves back, <kbd>Enter</kbd> follows a link. Read the <a href="/accessibility/">accessibility statement</a>.</p></footer></body></html>"##;
+    const GOOD: &str = r##"<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>T — Home</title><meta name="description" content="d"><link rel="canonical" href="https://x/"><script type="application/json" id="page-json">{"a":1}</script><script src="/copy.js" defer></script></head><body><a class="skip" href="#main">Skip</a><header class="site"><a class="brand" href="/"><img alt="" src="/i.png">Home</a><nav aria-label="Main"><ul><li><a href="/x">X</a></li></ul></nav></header><main id="main" tabindex="-1"><h1>H</h1><h2>S</h2><label for="f">F</label><select id="f"></select><button type="button">Go</button><table><caption>C</caption><tr><th scope="row">a</th></tr></table></main><footer class="site"><p>Every page works with a keyboard alone: <kbd>Tab</kbd> moves forward, <kbd>Shift</kbd>+<kbd>Tab</kbd> moves back, <kbd>Enter</kbd> follows a link. Read the <a href="/accessibility/">accessibility statement</a>.</p></footer></body></html>"##;
 
     #[test]
     fn a_good_page_has_no_problems() {
@@ -418,5 +512,66 @@ mod tests {
         for (name, html) in cases {
             assert!(!audit(&html).is_empty(), "{name} was not caught");
         }
+    }
+
+    #[test]
+    fn repetition_between_title_and_headings_is_caught() {
+        let h = |l: u8, s: &str| (l, s.to_owned());
+        let ok = |title: &str, brand: &str, hs: &[(u8, String)]| repetition(title, brand, hs);
+        // Fine: a page, a site, an h1 that is the page, headings that add something.
+        assert!(ok(
+            "Register — Bundu standards",
+            "Bundu standards",
+            &[h(1, "Register"), h(2, "On this page")]
+        )
+        .is_empty());
+        // The home page is the site: title and h1 may be its name.
+        assert!(ok(
+            "Bundu standards",
+            "Bundu standards",
+            &[h(1, "Bundu standards")]
+        )
+        .is_empty());
+        // The org's name starts every site, so a standard called "Bundu floor" is not a repeat.
+        assert!(ok(
+            "Bundu floor — Bundu standards",
+            "Bundu standards",
+            &[h(1, "Bundu floor")]
+        )
+        .is_empty());
+        // Caught: the same words on both sides of the title.
+        assert!(!ok(
+            "Standards — Bundu standards",
+            "Bundu standards",
+            &[h(1, "Standards")]
+        )
+        .is_empty());
+        // Caught: the site half is not the brand.
+        assert!(!ok(
+            "Register — Standards",
+            "Bundu standards",
+            &[h(1, "Register")]
+        )
+        .is_empty());
+        // Caught: no site half on a page that is not home.
+        assert!(!ok("Register", "Bundu standards", &[h(1, "Register")]).is_empty());
+        // Caught: the h1 repeats the site name.
+        assert!(!ok(
+            "Register — Bundu standards",
+            "Bundu standards",
+            &[h(1, "Register of Bundu standards")]
+        )
+        .is_empty());
+        // Caught: a heading restates its parent.
+        assert!(!ok(
+            "Family — Bundu vocabulary",
+            "Bundu vocabulary",
+            &[
+                h(1, "Family"),
+                h(2, "Family tree"),
+                h(3, "Using the family tree")
+            ]
+        )
+        .is_empty());
     }
 }

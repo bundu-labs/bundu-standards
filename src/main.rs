@@ -312,7 +312,6 @@ async fn index(headers: HeaderMap) -> Response {
         Some(index_jsonld()),
         &format!(
             r#"<header>
-  <p class="eyebrow">vocab.bundu.org</p>
   <h1>The Bundu vocabulary</h1>
   <p class="lede">RDF terms for concepts schema.org has no word for, published
   for every Bundu standard across every domain. Each term had to earn its
@@ -410,7 +409,7 @@ async fn term(Path(name): Path<String>, headers: HeaderMap) -> Response {
         Some(term_jsonld(t)),
         &format!(
             r#"<header>
-  <p class="eyebrow"><a href="/">vocab.bundu.org</a> / {kind}</p>
+  <p class="eyebrow">{kind}</p>
   <h1><code class="term">{id}</code></h1>
   <p class="lede">{comment}</p>
 </header>
@@ -465,7 +464,6 @@ fn not_found(name: &str, as_html: bool) -> Response {
                 None,
                 &format!(
                     r#"<header>
-  <p class="eyebrow"><a href="/">vocab.bundu.org</a></p>
   <h1>Not a term</h1>
   <p class="lede">This vocabulary defines no term called
   <code>{}</code>. See <a href="/">the index</a> for what it does define.</p>
@@ -526,7 +524,13 @@ fn page(title: &str, path: Option<&str>, data: Option<Value>, body: &str) -> Str
         path: path.unwrap_or("/").to_owned(),
         canonical: path.is_some(),
         origin: NAMESPACE.trim_end_matches('/').to_owned(),
-        title: format!("{title} — Bundu vocabulary"),
+        // The home page is the site, so its title is the site name; every other page is
+        // "<page> — <site>", with no word in both halves.
+        title: if path == Some("/") {
+            "Bundu vocabulary".to_owned()
+        } else {
+            format!("{title} — Bundu vocabulary")
+        },
         description: "The Bundu vocabulary: RDF terms for concepts schema.org has no word for."
             .into(),
         brand: "Bundu vocabulary".into(),

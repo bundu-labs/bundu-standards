@@ -13,6 +13,7 @@ stylesheet and the static files are compiled into the binary.
 | `/register/latest`                                      | the head of `main` and the URLs of the four files (REST API, then git's refs) |
 | `/healthz`                                              | `{"status":"ok"}`                                                             |
 | `/openapi.json`, `/.well-known/openapi.json`            | the OpenAPI 3.0.3 description of every route here (`openapi.json`)            |
+| `/llms.txt`, `/llms-full.txt`                           | the pages as text for machines: an index, and every page in full (`llms.rs`)  |
 | favicons, `robots.txt`, `copy.js`, `ecosystem.jsonld`   | the static files of `public/`, with the rules of `public/_headers`            |
 | anything else                                           | an RFC 9457 problem: 404, or 405 for a method other than GET, HEAD or OPTIONS |
 
@@ -22,6 +23,13 @@ stylesheet and the static files are compiled into the binary.
 - `src/register.rs`, `src/pages.rs` and `src/site.rs` are the pages. A standard's status is the
   Mzizi `Badge` from `mzizi-ui`; the site ships no Tailwind, so the badge's own classes are inert
   and `.chip` (in `styles/site.css`) styles it.
+- `src/llms.rs` is `/llms.txt` (register `llms_txt`, the index: a line with the URL and
+  description of every page) and `/llms-full.txt` (every page in one file, in the layout docs.bundu.org serves:
+  `# Title`, a blank line, `Source: <the page's URL>`, the description, then the body as
+  Markdown). A page's body is what its "Copy this page as Markdown" control gives (the rules of
+  `public/copy.js`, ported to Rust); our own standards' body is their README, with its links made
+  absolute. Both are built from the rendered pages, and a test holds `/llms-full.txt` to every
+  page the OpenAPI crawl finds.
 - `src/core.rs` is the file endpoint: it reads four files of this repository from GitHub at a
   commit the caller names, and nothing else (it is not an open proxy). `src/github.rs` is its
   HTTPS client (rustls, no OpenSSL; 5 s to connect, 10 s in all, 3 redirects, 1 MiB at most).

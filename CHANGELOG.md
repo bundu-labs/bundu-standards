@@ -202,7 +202,7 @@ Versions released before then are not renumbered.
 
 ### Added
 
-- **standards.bundu.org can be read as text: `/llms.txt` and `/llms-full.txt`.** Assistants that
+- **standards.bundu.org can be read as text: `/llms.txt` and `/llms-full.txt`** (#160). Assistants that
   read our sites live at question time (Shamwari among them) read a site's `/llms-full.txt`; both
   answered 404 before. `/llms-full.txt` is every page (the home page, the register's two tabs,
   the accessibility statement, our six standards and the register entry of every standard) in the

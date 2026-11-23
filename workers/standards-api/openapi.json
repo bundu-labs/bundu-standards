@@ -1161,6 +1161,98 @@
         }
       }
     },
+    "/llms.txt": {
+      "get": {
+        "tags": ["pages"],
+        "summary": "The pages, as an index for machines",
+        "description": "The llmstxt.org index of the site: its name, a one-line description, and a Markdown link with the description of every page.",
+        "operationId": "getLlmsTxt",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "text/plain; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": ["pages"],
+        "summary": "The pages, as an index for machines (headers only)",
+        "operationId": "headLlmsTxt",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/llms-full.txt": {
+      "get": {
+        "tags": ["pages"],
+        "summary": "Every page as text",
+        "description": "Every page of the site in one file: for each, a `# Title` line, a `Source:` line with the page's URL, its description, and its body as Markdown.",
+        "operationId": "getLlmsFullTxt",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            },
+            "content": {
+              "text/plain; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": ["pages"],
+        "summary": "Every page as text (headers only)",
+        "operationId": "headLlmsFullTxt",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/PublicCache"
+              },
+              "Access-Control-Allow-Origin": {
+                "$ref": "#/components/headers/AnyOrigin"
+              }
+            }
+          }
+        }
+      }
+    },
     "/register/index.json": {
       "get": {
         "tags": ["register"],

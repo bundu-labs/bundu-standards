@@ -202,6 +202,20 @@ Versions released before then are not renumbered.
 
 ### Added
 
+- **standards.bundu.org can be read as text: `/llms.txt` and `/llms-full.txt`.** Assistants that
+  read our sites live at question time (Shamwari among them) read a site's `/llms-full.txt`; both
+  answered 404 before. `/llms-full.txt` is every page (the home page, the register's two tabs,
+  the accessibility statement, our six standards and the register entry of every standard) in the
+  layout docs.bundu.org serves: `# Title`, a blank line, `Source: <the page's absolute URL>`, the
+  page's description, then its body as Markdown with its headings. A page's body is what its
+  "Copy this page as Markdown" control gives (the rules of `copy.js`, ported to Rust in
+  `workers/standards-api/src/llms.rs`); our own standards are their README as written, with
+  relative links made absolute. `/llms.txt` is the index (register `llms_txt`, adopted): the
+  site's name, a one-line description and a `- [Title](url): description` line for every page.
+  Both are built once from the rendered pages, served as `text/plain; charset=utf-8` and open to
+  any origin, and are in `openapi.json`; a test holds `/llms-full.txt` to every page the OpenAPI
+  crawl finds.
+
 - **standards.bundu.org publishes an OpenAPI description** at `/openapi.json`
   and `/.well-known/openapi.json` (OpenAPI 3.0.3, for Cloudflare API Shield
   schema validation), linked from every page's `<head>` as `service-desc`. It

@@ -222,6 +222,25 @@ mod tests {
         );
     }
 
+    /// `/llms-full.txt` holds every page the crawl finds, and nothing that is not a page.
+    #[test]
+    fn every_page_the_server_serves_is_in_the_full_text() {
+        let listed: BTreeSet<String> = crate::llms::sections()
+            .into_iter()
+            .flat_map(|(_, p)| p)
+            .collect();
+        let pages: BTreeSet<String> = served_paths()
+            .into_iter()
+            .filter(|p| serves(p).is_some_and(|t| t.starts_with("text/html")))
+            .map(|p| if p.ends_with('/') { p } else { format!("{p}/") })
+            .collect();
+        assert_eq!(pages, listed);
+        for p in &pages {
+            let source = format!("\nSource: {SITE}{p}\n");
+            assert_eq!(crate::llms::FULL.matches(&source).count(), 1, "{p}");
+        }
+    }
+
     #[test]
     fn the_check_catches_a_route_left_out() {
         let served = served_paths();

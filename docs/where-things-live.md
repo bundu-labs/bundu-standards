@@ -88,7 +88,8 @@ The site is `workers/standards-api/`, a small native Rust server (axum, no JavaS
 runtime) that runs as a container: the root `Dockerfile` builds it, listens on port 8080
 and answers `GET /healthz`. Its pages (`/register/`, one per standard,
 `/register/index.json`) are rendered from `register/register.yaml` at build time, so they
-cannot drift from it. Its stylesheet (`styles/site.css`) and static files (`public/`:
+cannot drift from it, and `/llms.txt` and `/llms-full.txt` give the same pages as text for
+machines. Its stylesheet (`styles/site.css`) and static files (`public/`:
 favicons, `robots.txt`, `copy.js`, `ecosystem.jsonld` and the `_headers` rules) are built
 into the binary. The server is deployed as a plain container on Coolify; see
 `workers/standards-api/README.md`. The repository holds no deploy secrets. CI tests the

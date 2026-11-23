@@ -50,6 +50,11 @@ fn primary_json(files: &serde_json::Map<String, serde_json::Value>) -> Option<se
 pub use bundu_site::{CSS, CSS_PATH};
 /// Where the OpenAPI description is served; also at `/.well-known/openapi.json`.
 pub const OPENAPI_PATH: &str = "/openapi.json";
+/// Where the index of the pages, for machines that read the site as text, is served
+/// (llmstxt.org); [`LLMS_FULL_PATH`] is every page in full.
+pub const LLMS_PATH: &str = "/llms.txt";
+/// Where every page is served as one text file (`crate::llms`).
+pub const LLMS_FULL_PATH: &str = "/llms-full.txt";
 
 /// A rendered page or document.
 pub struct Page {
@@ -101,6 +106,15 @@ pub fn render(path: &str) -> Option<Page> {
         OPENAPI_PATH | "/.well-known/openapi.json" => Some(Page {
             content_type: "application/json",
             body: crate::openapi::OPENAPI.to_owned(),
+        }),
+        // The site as text, for machines that read it (`crate::llms`).
+        LLMS_PATH => Some(Page {
+            content_type: crate::llms::CONTENT_TYPE,
+            body: crate::llms::INDEX.clone(),
+        }),
+        LLMS_FULL_PATH => Some(Page {
+            content_type: crate::llms::CONTENT_TYPE,
+            body: crate::llms::FULL.clone(),
         }),
         "/accessibility" => html(document(
             path,

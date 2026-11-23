@@ -206,6 +206,10 @@ mod tests {
         assert_eq!(r.header("x-content-type-options"), Some("nosniff"));
         assert_eq!(r.header("referrer-policy"), Some("no-referrer"));
         assert_eq!(r.header("x-frame-options"), Some("DENY"));
+        assert_eq!(
+            r.header("strict-transport-security"),
+            Some("max-age=31536000")
+        );
         assert!(r
             .header("content-security-policy")
             .unwrap()

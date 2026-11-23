@@ -6,10 +6,12 @@ use crate::pages::{self, CSS, CSS_PATH};
 
 /// The security headers every page carries (the same as `public/_headers`), besides the
 /// content security policy, which is [`CSP`].
-const SECURITY: [(&str, &str); 4] = [
+const SECURITY: [(&str, &str); 5] = [
     ("x-content-type-options", "nosniff"),
     ("referrer-policy", "no-referrer"),
     ("x-frame-options", "DENY"),
+    // No includeSubDomains: every bundu.org host would be pinned to HTTPS for a year.
+    ("strict-transport-security", "max-age=31536000"),
     (
         "permissions-policy",
         "geolocation=(), camera=(), microphone=()",
@@ -102,6 +104,10 @@ mod tests {
             .unwrap()
             .contains("default-src 'none'"));
         assert_eq!(r.header("x-frame-options"), Some("DENY"));
+        assert_eq!(
+            r.header("strict-transport-security"),
+            Some("max-age=31536000")
+        );
         assert_eq!(r.header("access-control-allow-origin"), None);
     }
 

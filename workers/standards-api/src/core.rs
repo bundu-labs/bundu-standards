@@ -38,10 +38,11 @@ pub const FILES: [(&str, &str); 4] = [
     ("tools/register.py", "text/x-python; charset=utf-8"),
 ];
 
-const COMMON: [(&str, &str); 3] = [
+const COMMON: [(&str, &str); 4] = [
     ("access-control-allow-origin", "*"),
     ("x-content-type-options", "nosniff"),
     ("referrer-policy", "no-referrer"),
+    ("strict-transport-security", "max-age=31536000"),
 ];
 
 /// An upstream answer: its status and body. A network failure is `Err`.
@@ -340,6 +341,10 @@ mod tests {
         assert!(res.header("cache-control").unwrap().contains("immutable"));
         assert_eq!(res.header("access-control-allow-origin"), Some("*"));
         assert_eq!(res.header("x-content-type-options"), Some("nosniff"));
+        assert_eq!(
+            res.header("strict-transport-security"),
+            Some("max-age=31536000")
+        );
         assert!(res.header("content-type").unwrap().contains("yaml"));
     }
 

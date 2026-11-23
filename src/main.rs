@@ -581,6 +581,7 @@ async fn security_headers(mut res: Response) -> Response {
         ("x-content-type-options", "nosniff"),
         ("referrer-policy", "no-referrer"),
         ("x-frame-options", "DENY"),
+        ("strict-transport-security", "max-age=31536000"),
         ("permissions-policy", "geolocation=(), camera=(), microphone=()"),
         (
             "content-security-policy",

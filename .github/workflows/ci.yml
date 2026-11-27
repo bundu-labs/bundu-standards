@@ -71,6 +71,20 @@ jobs:
           test "$(curl -sf http://127.0.0.1:8080/healthz)" = '{"status":"ok"}'
           curl -sf -H 'Accept: text/html' http://127.0.0.1:8080/ | grep -q '<html'
           test "$(curl -s -o /dev/null -w '%{http_code}' -H 'Accept: text/html' http://127.0.0.1:8080/no-such-page-here)" = 404
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/favicon.ico)" = 200
+          curl -sf http://127.0.0.1:8080/robots.txt | grep -q 'Allow: /'
+          # The HEALTHCHECK command, run inside the (shell-less) container as Docker runs it.
+          docker exec site /server healthcheck
+          # One JSON line per request, with no query string in it.
+          curl -s -o /dev/null 'http://127.0.0.1:8080/log-probe?secret=1'
+          docker logs site 2>&1 | grep '"path":"/log-probe"' | grep -q '"status":404'
+          if docker logs site 2>&1 | grep -q 'secret=1'; then echo 'query string was logged'; exit 1; fi
+          # Docker's own health state, from the Dockerfile's HEALTHCHECK.
+          for _ in $(seq 1 40); do
+            [ "$(docker inspect --format '{{.State.Health.Status}}' site)" = healthy ] && break
+            sleep 2
+          done
+          test "$(docker inspect --format '{{.State.Health.Status}}' site)" = healthy
           if [ "${{ matrix.bin }}" = standards ]; then
             curl -sf http://127.0.0.1:8080/register/index.json | grep -q '"standards"'
             test "$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:8080/)" = 405

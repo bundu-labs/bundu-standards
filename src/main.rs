@@ -14,10 +14,12 @@
 mod terms;
 
 use std::net::SocketAddr;
+use std::time::Instant;
 
 use axum::{
-    extract::Path,
+    extract::{Path, Request},
     http::{header, HeaderMap, StatusCode},
+    middleware::Next,
     response::{IntoResponse, Response},
     routing::get,
     Router,
@@ -34,8 +36,18 @@ const JSON_LD: &str = "application/ld+json";
 /// W3C vocabulary status, for `vs:term_status`.
 const VS: &str = "http://www.w3.org/2003/06/sw-vocab-status/ns#";
 
+fn main() {
+    // `server healthcheck`: what the Dockerfile's HEALTHCHECK runs. The runtime image has no
+    // shell and no curl, so the binary asks its own /healthz.
+    // nosemgrep: rust.lang.security.args.args -- picks a subcommand, nothing security depends on it
+    if bundu_site::ops::is_healthcheck_command(std::env::args()) {
+        std::process::exit(bundu_site::ops::healthcheck_exit_code());
+    }
+    serve();
+}
+
 #[tokio::main]
-async fn main() {
+async fn serve() {
     tracing_subscriber::fmt()
         .with_env_filter(
             tracing_subscriber::EnvFilter::try_from_default_env()
@@ -82,10 +94,38 @@ fn app() -> Router {
         .route("/favicon-16x16-dark.png", get(|| icon(FAVICON_16_DARK)))
         .route("/apple-touch-icon.png", get(|| icon(APPLE_TOUCH_ICON)))
         .route("/copy.js", get(copy_js))
+        .route("/favicon.ico", get(|| icon_as(FAVICON_ICO, "image/x-icon")))
+        .route("/robots.txt", get(robots))
         .route("/{term}", get(term))
         .layer(axum::middleware::map_response(security_headers))
         .layer(CompressionLayer::new())
         .layer(TraceLayer::new_for_http())
+        .layer(axum::middleware::from_fn(request_log))
+}
+
+/// One JSON line per request in the container log: method, path without the query string,
+/// status and duration. Nothing about the caller. It is the outermost layer, so it times the
+/// whole answer and sees the status the client gets.
+async fn request_log(req: Request, next: Next) -> Response {
+    let method = req.method().as_str().to_owned();
+    let path = req.uri().path().to_owned();
+    let started = Instant::now();
+    let res = next.run(req).await;
+    bundu_site::ops::log_request(&method, &path, res.status().as_u16(), started.elapsed());
+    res
+}
+
+/// Everything is public and meant to be read, so crawlers may take all of it. There is no
+/// sitemap to point to.
+async fn robots() -> Response {
+    (
+        [
+            (header::CONTENT_TYPE, "text/plain; charset=utf-8"),
+            (header::CACHE_CONTROL, "public, max-age=3600"),
+        ],
+        "User-agent: *\nAllow: /\n",
+    )
+        .into_response()
 }
 
 /// Does the caller want HTML?
@@ -223,11 +263,17 @@ const FAVICON_16: &[u8] = include_bytes!("brand/favicon-16x16.png");
 const FAVICON_32_DARK: &[u8] = include_bytes!("brand/favicon-32x32-dark.png");
 const FAVICON_16_DARK: &[u8] = include_bytes!("brand/favicon-16x16-dark.png");
 const APPLE_TOUCH_ICON: &[u8] = include_bytes!("brand/apple-touch-icon.png");
+/// The 16 and 32 pixel marks as one .ico, for the browsers and tools that ask for /favicon.ico.
+const FAVICON_ICO: &[u8] = include_bytes!("brand/favicon.ico");
 
 async fn icon(bytes: &'static [u8]) -> Response {
+    icon_as(bytes, "image/png").await
+}
+
+async fn icon_as(bytes: &'static [u8], content_type: &'static str) -> Response {
     (
         [
-            (header::CONTENT_TYPE, "image/png"),
+            (header::CONTENT_TYPE, content_type),
             (header::CACHE_CONTROL, "public, max-age=86400"),
         ],
         bytes,
@@ -621,8 +667,12 @@ mod tests {
             ("favicon-32x32-dark.png", FAVICON_32_DARK),
             ("favicon-16x16-dark.png", FAVICON_16_DARK),
             ("apple-touch-icon.png", APPLE_TOUCH_ICON),
+            ("favicon.ico", FAVICON_ICO),
         ] {
-            assert!(bytes.starts_with(b"\x89PNG"), "{name} is not a PNG");
+            assert!(
+                bytes.starts_with(b"\x89PNG") || bytes.starts_with(b"\0\0\x01\0"),
+                "{name} is not a PNG or an ICO"
+            );
             assert_eq!(
                 std::fs::read(site.join(name)).unwrap(),
                 bytes,
@@ -1055,6 +1105,8 @@ mod tests {
             ("/context.jsonld", StatusCode::OK),
             ("/copy.js", StatusCode::OK),
             ("/favicon-32x32.png", StatusCode::OK),
+            ("/favicon.ico", StatusCode::OK),
+            ("/robots.txt", StatusCode::OK),
             ("/Family", StatusCode::OK),
             ("/notATerm", StatusCode::NOT_FOUND),
         ] {
@@ -1065,5 +1117,33 @@ mod tests {
             let res = app().oneshot(req).await.unwrap();
             assert_eq!(res.status(), status, "{path}");
         }
+    }
+
+    #[tokio::test]
+    async fn favicon_ico_and_robots_txt_are_served_with_their_types() {
+        use tower::ServiceExt;
+        let get = |path: &'static str| async move {
+            let req = axum::http::Request::builder()
+                .uri(path)
+                .body(axum::body::Body::empty())
+                .unwrap();
+            app().oneshot(req).await.unwrap()
+        };
+        let ico = get("/favicon.ico").await;
+        assert_eq!(ico.status(), StatusCode::OK);
+        assert_eq!(ico.headers()[header::CONTENT_TYPE], "image/x-icon");
+        let bytes = axum::body::to_bytes(ico.into_body(), usize::MAX)
+            .await
+            .unwrap();
+        assert_eq!(&bytes[..4], b"\0\0\x01\0", "an ICO header");
+        let robots = get("/robots.txt").await;
+        assert_eq!(robots.status(), StatusCode::OK);
+        assert!(robots.headers()[header::CONTENT_TYPE]
+            .to_str()
+            .unwrap()
+            .starts_with("text/plain"));
+        let text = body(robots).await;
+        assert!(text.contains("User-agent: *") && text.contains("Allow: /"));
+        assert!(!text.contains("Sitemap"), "there is no sitemap to name");
     }
 }

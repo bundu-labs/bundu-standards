@@ -1957,6 +1957,47 @@
         }
       }
     },
+    "/favicon.ico": {
+      "get": {
+        "tags": ["assets"],
+        "summary": "Favicon, 16 and 32 px, as one icon",
+        "description": "A static file, for the browsers and tools that ask for /favicon.ico.",
+        "operationId": "getFaviconIco",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            },
+            "content": {
+              "image/x-icon": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": ["assets"],
+        "summary": "Favicon, 16 and 32 px, as one icon (headers only)",
+        "operationId": "headFaviconIco",
+        "responses": {
+          "200": {
+            "description": "OK: the GET response's headers, without a body.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/AssetCache"
+              }
+            }
+          }
+        }
+      }
+    },
     "/favicon-16x16.png": {
       "get": {
         "tags": ["assets"],

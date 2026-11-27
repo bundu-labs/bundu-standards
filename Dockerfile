@@ -11,9 +11,10 @@
 # is read at run time: everything the server serves is inside the binary.
 #
 # Both listen on LISTEN_ADDR (default 0.0.0.0:8080), answer GET /healthz with {"status":"ok"},
-# and run as the distroless non-root user. There is no HEALTHCHECK on purpose: the runtime image
-# has no shell and no curl, so a check inside the container cannot work. Check /healthz from
-# outside it (Coolify's health check path, a monitor).
+# and run as the distroless non-root user. The runtime image has no shell and no curl, so the
+# HEALTHCHECK runs the binary itself: `/server healthcheck` does a local GET of /healthz and exits
+# 0 on a 200 (exec form, no shell). Coolify honours a Dockerfile HEALTHCHECK. Each request leaves
+# one JSON line (method, path, status, duration_ms) in the container log, nothing about the caller.
 
 # Bookworm, to match the distroless debian12 runtime's glibc.
 FROM rust:1.90-slim-bookworm AS build
@@ -53,4 +54,5 @@ COPY --from=build /server /server
 ENV LISTEN_ADDR=0.0.0.0:8080
 EXPOSE 8080
 USER nonroot:nonroot
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD ["/server", "healthcheck"]
 ENTRYPOINT ["/server"]

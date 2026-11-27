@@ -15,6 +15,7 @@ use bundu_standards_api::core::Reply;
 use bundu_standards_api::github::GitHub;
 use bundu_standards_api::server::{self, Cache};
 use std::sync::Arc;
+use std::time::Instant;
 
 struct App {
     origin: String,
@@ -23,7 +24,9 @@ struct App {
 }
 
 async fn handle(State(app): State<Arc<App>>, req: Request) -> Response<Body> {
+    let started = Instant::now();
     let method = req.method().as_str().to_owned();
+    // The path alone: the query string can carry anything, so it is never read, let alone logged.
     let path = req.uri().path().to_owned();
     let if_none_match = req
         .headers()
@@ -38,6 +41,9 @@ async fn handle(State(app): State<Arc<App>>, req: Request) -> Response<Body> {
         &app.cache,
     )
     .await;
+    let status = reply.status;
+    // One JSON line per request: method, path, status, duration. Nothing about the caller.
+    bundu_site::ops::log_request(&method, &path, status, started.elapsed());
     to_response(reply)
 }
 
@@ -74,8 +80,18 @@ async fn shutdown() {
     tokio::select! { () = ctrl_c => {}, () = term => {} }
 }
 
+fn main() {
+    // `server healthcheck`: what the Dockerfile's HEALTHCHECK runs. The runtime image has no
+    // shell and no curl, so the binary asks its own /healthz.
+    // nosemgrep: rust.lang.security.args.args -- picks a subcommand, nothing security depends on it
+    if bundu_site::ops::is_healthcheck_command(std::env::args()) {
+        std::process::exit(bundu_site::ops::healthcheck_exit_code());
+    }
+    serve();
+}
+
 #[tokio::main]
-async fn main() {
+async fn serve() {
     let addr = std::env::var("LISTEN_ADDR").unwrap_or_else(|_| "0.0.0.0:8080".to_owned());
     let origin = std::env::var("PUBLIC_ORIGIN")
         .unwrap_or_else(|_| "https://standards.bundu.org".to_owned())

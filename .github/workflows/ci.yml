@@ -78,7 +78,7 @@ jobs:
           # One JSON line per request, with no query string in it.
           curl -s -o /dev/null 'http://127.0.0.1:8080/log-probe?secret=1'
           docker logs site 2>&1 | grep '"path":"/log-probe"' | grep -q '"status":404'
-          ! docker logs site 2>&1 | grep -q 'secret=1'
+          if docker logs site 2>&1 | grep -q 'secret=1'; then echo 'query string was logged'; exit 1; fi
           # Docker's own health state, from the Dockerfile's HEALTHCHECK.
           for _ in $(seq 1 40); do
             [ "$(docker inspect --format '{{.State.Health.Status}}' site)" = healthy ] && break

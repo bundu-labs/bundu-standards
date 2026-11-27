@@ -39,6 +39,7 @@ const VS: &str = "http://www.w3.org/2003/06/sw-vocab-status/ns#";
 fn main() {
     // `server healthcheck`: what the Dockerfile's HEALTHCHECK runs. The runtime image has no
     // shell and no curl, so the binary asks its own /healthz.
+    // nosemgrep: rust.lang.security.args.args -- picks a subcommand, nothing security depends on it
     if bundu_site::ops::is_healthcheck_command(std::env::args()) {
         std::process::exit(bundu_site::ops::healthcheck_exit_code());
     }

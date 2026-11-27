@@ -164,6 +164,7 @@ mod tests {
             "/ecosystem.jsonld",
             "/apple-touch-icon.png",
             "/favicon-16x16.png",
+            "/favicon.ico",
         ] {
             assert!(find(name).is_some(), "{name}");
         }
@@ -171,6 +172,17 @@ mod tests {
         assert!(reply("GET", "/_headers", None).is_none());
         assert!(reply("GET", "/nope.txt", None).is_none());
         assert!(reply("POST", "/robots.txt", None).is_none());
+    }
+
+    #[test]
+    fn favicon_ico_is_an_icon_and_robots_txt_allows_everything() {
+        let ico = reply("GET", "/favicon.ico", None).unwrap();
+        assert_eq!(ico.status, 200);
+        assert_eq!(ico.header("content-type"), Some("image/x-icon"));
+        assert_eq!(&ico.body.unwrap()[..4], b"\0\0\x01\0", "an ICO header");
+        let robots = reply("GET", "/robots.txt", None).unwrap();
+        let text = String::from_utf8(robots.body.unwrap()).unwrap();
+        assert!(text.contains("User-agent: *") && text.contains("Allow: /"));
     }
 
     #[test]

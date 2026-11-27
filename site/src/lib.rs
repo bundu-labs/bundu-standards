@@ -11,6 +11,7 @@ pub mod audit;
 pub mod components;
 #[cfg(feature = "audit")]
 pub mod css_audit;
+pub mod ops;
 
 use components::copy_control::CopyControl;
 use components::site_header::SiteHeader;

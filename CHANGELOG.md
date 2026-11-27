@@ -13,6 +13,18 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+### Operations
+
+- **A real container health check.** Each binary has a `healthcheck` subcommand (`/server
+  healthcheck`): a local `GET /healthz` on the loopback at the listen port, a 3 second timeout, exit
+  0 only on a 200. The Dockerfile's `HEALTHCHECK` runs it in exec form, because the distroless image
+  has no shell and no curl. The code is `bundu_site::ops`, shared by both sites, std only.
+- **One JSON line per request** on standard output: `method`, `path` (never the query string),
+  `status`, `duration_ms`. No address, user agent or headers. Paths are cut at 200 characters.
+- **`/favicon.ico` on both sites** (the official copper mark, 16 and 32 px in one icon, cut from the
+  existing PNGs) and **`/robots.txt` on vocab.bundu.org** (allow all; there is no sitemap to name).
+  standards.bundu.org already served `/robots.txt`. CI starts each image and checks all of this.
+
 ### Design tokens
 
 - **Every site style value comes from a Mzizi token** (#157). `site/styles/page.css` holds no

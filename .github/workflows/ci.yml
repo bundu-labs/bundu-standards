@@ -76,8 +76,14 @@ jobs:
           # The HEALTHCHECK command, run inside the (shell-less) container as Docker runs it.
           docker exec site /server healthcheck
           # And the way Coolify runs its health check: CMD-SHELL with curl or wget.
-          docker exec site /bin/sh -c "curl -s -f 'http://localhost:8080/healthz' > /dev/null || wget -q -O- 'http://localhost:8080/healthz' > /dev/null"
-          if docker exec site /bin/sh -c "wget -q -O- 'http://localhost:8080/no-such-page-here' > /dev/null" 2>/dev/null; then echo 'wget accepted a 404'; exit 1; fi
+          ok="curl -s -f http://localhost:8080/healthz > /dev/null"
+          ok="$ok || wget -q -O- http://localhost:8080/healthz > /dev/null"
+          docker exec site /bin/sh -c "$ok"
+          missing="wget -q -O- http://localhost:8080/no-such-page-here > /dev/null"
+          if docker exec site /bin/sh -c "$missing" 2>/dev/null; then
+            echo 'wget accepted a 404'
+            exit 1
+          fi
           # One JSON line per request, with no query string in it.
           curl -s -o /dev/null 'http://127.0.0.1:8080/log-probe?secret=1'
           docker logs site 2>&1 | grep '"path":"/log-probe"' | grep -q '"status":404'

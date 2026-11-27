@@ -19,6 +19,10 @@ Versions released before then are not renumbered.
   healthcheck`): a local `GET /healthz` on the loopback at the listen port, a 3 second timeout, exit
   0 only on a 200. The Dockerfile's `HEALTHCHECK` runs it in exec form, because the distroless image
   has no shell and no curl. The code is `bundu_site::ops`, shared by both sites, std only.
+- **`/bin/sh` and `wget` for Coolify's health check.** An enabled Coolify check replaces the
+  Dockerfile's `HEALTHCHECK` and runs as `CMD-SHELL curl ... || wget ...`, so the image carries a
+  static busybox as `/bin/sh` and `/bin/wget` and nothing else (no curl, no package manager).
+  Coolify checks `GET /healthz` on port 8080. The Dockerfile `HEALTHCHECK` stays for plain Docker.
 - **One JSON line per request** on standard output: `method`, `path` (never the query string),
   `status`, `duration_ms`. No address, user agent or headers. Paths are cut at 200 characters.
 - **`/favicon.ico` on both sites** (the official copper mark, 16 and 32 px in one icon, cut from the

@@ -102,7 +102,7 @@
     return parts.join(" — ").replace(/\n/g, " ");
   };
 
-  const cell = (c) => tidy(inline(c)).replace(/\|/g, "\\|").replace(/\n/g, " ");
+  const cell = (c) => tidy(inline(c)).replace(/[\\|]/g, "\\$&").replace(/\n/g, " ");
 
   const table = (t) => {
     const out = [];

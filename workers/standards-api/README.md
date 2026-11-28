@@ -21,8 +21,8 @@ stylesheet and the static files are compiled into the binary.
   binary as JSON, so a bad register fails the build. It also renders the READMEs of `standards/`
   into pages and lists `public/` for the static files.
 - `src/register.rs`, `src/pages.rs` and `src/site.rs` are the pages. A standard's status is the
-  Mzizi `Badge` from `mzizi-ui`; the site ships no Tailwind, so the badge's own classes are inert
-  and `.chip` (in `styles/site.css`) styles it.
+  Mzizi `Badge` from `mzizi-roots` (unstyled: `data-slot` and `data-variant`, no classes); the
+  site ships no Tailwind, so `.chip` (in `styles/site.css`) styles it.
 - `src/llms.rs` is `/llms.txt` (register `llms_txt`, the index: a line with the URL and
   description of every page) and `/llms-full.txt` (every page in one file, in the layout docs.bundu.org serves:
   `# Title`, a blank line, `Source: <the page's URL>`, the description, then the body as

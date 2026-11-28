@@ -224,7 +224,7 @@ dependencies = [
  "bundu-site",
  "dioxus",
  "dioxus-ssr",
- "mzizi-ui",
+ "mzizi-roots",
  "pollster",
  "pulldown-cmark",
  "reqwest",
@@ -1384,10 +1384,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "mzizi-tokens"
-version = "0.7.0"
+name = "mzizi-roots"
+version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c19c251c460c223e4dcd75903d521fa110cf3c162713bcccbb53aa8877703e92"
+checksum = "0359c6d1e1a622a9a7841fa5b56813d3001243339fc9375a1646a4a3fde924b3"
+dependencies = [
+ "mzizi-tokens 0.12.0",
+ "url",
+]
 
 [[package]]
 name = "mzizi-tokens"
@@ -1396,15 +1400,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cc7ea74a779d81d882c8a6c0a355f9894c732a7eb88a997a0908605b432a2d71"
 
 [[package]]
-name = "mzizi-ui"
-version = "0.7.0"
+name = "mzizi-tokens"
+version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a9a1cd7ff498098623af2f955a7dfd3c30b181ca88434f8569f8591fc0df1893"
-dependencies = [
- "dioxus",
- "mzizi-tokens 0.7.0",
- "url",
-]
+checksum = "d7b732c4986e772381eb7a9eb7d8652e8840b218543ee5ce5a3050cc6edc9a09"
 
 [[package]]
 name = "nu-ansi-term"

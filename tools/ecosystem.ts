@@ -205,7 +205,7 @@ export function table(head: string[], rows: string[][]): string[] {
   return [line(head), "| " + width.map((w) => "-".repeat(w)).join(" | ") + " |", ...rows.map(line)];
 }
 
-const cell = (s: unknown) => String(s ?? "").replace(/\s+/g, " ").replace(/\|/g, "\\|").trim();
+const cell = (s: unknown) => String(s ?? "").replace(/\s+/g, " ").replace(/[\\|]/g, "\\$&").trim();
 
 /** The record as Markdown tables. */
 export function toMarkdown(eco: Ecosystem): string {

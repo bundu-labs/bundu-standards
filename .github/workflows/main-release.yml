@@ -82,7 +82,7 @@ jobs:
 
       - name: Compute the version
         id: v
-        uses: nyuchi/.github/.github/actions/next-version@a15f924d44ec13cfe045908059e1628f0ab41733  # v0.17.0
+        uses: nyuchi/.github/.github/actions/next-version@187fa66b62a3a21eb4a42fd197ba93ce9f97d54a  # v0.29.0
         with:
           channel: main
           bump: ${{ inputs.bump || '' }}

@@ -1,13 +1,13 @@
 //! The pages of standards.bundu.org, rendered on the server with Dioxus (Mzizi Roots).
 //!
 //! The pages: the layout and its page kinds, styled by `styles/site.css`. A standard's status is the Mzizi
-//! [`Badge`] (`mzizi-ui`), which carries the registry's `data-slot` and `data-portal`; the
+//! badge (`mzizi-roots`), which carries the registry's `data-slot` and `data-portal`; the
 //! site ships no Tailwind, so its `.chip` rules give the badge its look.
 
 use crate::register::{self, Register, Standard, SITE};
 use bundu_site::NavLink;
 use dioxus::prelude::*;
-use mzizi_ui::{Badge, BadgeVariant};
+use mzizi_roots::components::badge::{self, BadgeVariant};
 use std::sync::LazyLock;
 
 /// The register, parsed once per isolate from the JSON `build.rs` wrote.
@@ -245,11 +245,16 @@ fn Status(status: String) -> Element {
     } else {
         BadgeVariant::Secondary
     };
+    // The badge is unstyled and takes text only, so the screen-reader prefix sits beside it in a
+    // wrapper; the wrapper carries `data-md`, which is what the Markdown view reads.
+    let chip = badge::render(&badge::RenderProps {
+        variant,
+        class: format!("chip {status}"),
+        text: status.clone(),
+    });
+    let inner = format!(r#"<span class="sr-only">Status: </span>{chip}"#);
     rsx! {
-        Badge { variant, class: "chip {status}", "data-md": " ({status})",
-            span { class: "sr-only", "Status: " }
-            "{status}"
-        }
+        span { "data-md": " ({status})", dangerous_inner_html: "{inner}" }
     }
 }
 
@@ -666,7 +671,7 @@ mod tests {
     fn a_status_is_a_mzizi_badge_with_a_text_label() {
         let html = page("/register/");
         assert!(html.contains(r#"data-slot="badge""#));
-        assert!(html.contains(r#"<span class="sr-only">Status: </span>adopted</span>"#));
+        assert!(html.contains(r#"<span class="sr-only">Status: </span><span data-slot="badge""#));
         let c = REGISTER.counts;
         assert_eq!(html.matches(r#"data-slot="badge""#).count(), c.adopted);
         assert!(html.contains(&format!("<p>{} adopted standards.", c.adopted)));

@@ -50,4 +50,4 @@ pushed from here.
 | `lib.rs` `Document`          | the page frame; the registry has `discover-shell` for Astro, no Rust shell |
 | `css_audit.rs` `apca`        | APCA-W3 0.1.9, for `mzizi-tokens`                                          |
 
-The status badge is `mzizi-ui`'s `Badge`; no other primitive is used.
+The status badge is `mzizi-roots`' `Badge`; no other primitive is used.

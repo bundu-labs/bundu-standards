@@ -21,7 +21,7 @@ serde_json = { version = "1", features = ["preserve_order"] }
 # Mzizi Roots: the pages are Dioxus components rendered on the server, with the Mzizi badge.
 dioxus = { version = "0.7", default-features = false, features = ["macro", "html"] }
 dioxus-ssr = "0.7"
-mzizi-ui = "0.7"
+mzizi-roots = { version = "0.12", default-features = false }
 bundu-site = { path = "../../site" }
 # The server: axum on tokio, and a small HTTPS client (rustls, no OpenSSL) for the file
 # endpoint's reads of GitHub.

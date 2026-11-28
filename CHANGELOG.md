@@ -13,6 +13,14 @@ Versions released before then are not renumbered.
 
 ## Unreleased
 
+### Dependencies
+
+- **`mzizi-ui` 0.7 to 0.8 and the status badge.** `Badge` and `BadgeVariant` left `mzizi-ui` for
+  `mzizi-roots` (unstyled, Dioxus-free). The standards site now depends on `mzizi-roots` 0.12 (core only,
+  no default features) and renders the badge through `badge::render`; the "Status: " prefix for a
+  screen reader and the Markdown view's `data-md` are kept. Page titles and the keyboard help are
+  unchanged.
+
 ### Operations
 
 - **A real container health check.** Each binary has a `healthcheck` subcommand (`/server
